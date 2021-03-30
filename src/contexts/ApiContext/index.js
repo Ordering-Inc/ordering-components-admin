@@ -24,7 +24,6 @@ export const ApiProvider = ({ settings, children }) => {
   useEffect(() => {
     setApiSettings(Object.assign(settings.api, { project: settings.project }))
     setOrdering(new Ordering(Object.assign(settings.api, { project: settings.project })))
-    console.log(settings, 'settings')
   }, [settings])
 
   useEffect(() => {
