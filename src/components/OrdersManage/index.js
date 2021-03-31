@@ -299,8 +299,10 @@ export const OrdersManage = (props) => {
     }
     if (user.level === 0) {
       socket.join('orders')
+      socket.join('messages_orders')
     } else {
       socket.join(`orders_${user?.id}`)
+      socket.join(`messages_orders_${user?.id}`)
     }
     socket.on('orders_register', handleRegisterOrder)
     return () => {

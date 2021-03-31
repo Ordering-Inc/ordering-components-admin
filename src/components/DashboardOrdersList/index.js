@@ -605,14 +605,6 @@ export const DashboardOrdersList = (props) => {
     }
   }, [orderList.orders, pagination, orderBy, socket])
 
-  useEffect(() => {
-    if (!session.user) return
-    socket.join('messages_orders')
-    return () => {
-      socket.leave('messages_orders')
-    }
-  }, [socket, session])
-
   return (
     <>
       {UIComponent && (

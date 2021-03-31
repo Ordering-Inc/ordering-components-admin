@@ -422,14 +422,14 @@ var Messages = function Messages(props) {
   }, [messages, socket, order === null || order === void 0 ? void 0 : order.status]);
   (0, _react.useEffect)(function () {
     if (asDashboard) {
-      socket.join("messages_orders_".concat(orderId, "_0"));
+      socket.join("messages_orders_".concat(orderId, "_").concat(user === null || user === void 0 ? void 0 : user.level));
     } else {
       socket.join("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
     }
 
     return function () {
       if (asDashboard) {
-        socket.leave("messages_orders_".concat(orderId, "_0"));
+        socket.leave("messages_orders_".concat(orderId, "_").concat(user === null || user === void 0 ? void 0 : user.level));
       } else {
         socket.leave("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
       }

@@ -709,8 +709,10 @@ var OrdersManage = function OrdersManage(props) {
 
     if (user.level === 0) {
       socket.join('orders');
+      socket.join('messages_orders');
     } else {
       socket.join("orders_".concat(user === null || user === void 0 ? void 0 : user.id));
+      socket.join("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
     }
 
     socket.on('orders_register', handleRegisterOrder);

@@ -929,13 +929,6 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('message', handleNewMessage);
     };
   }, [orderList.orders, pagination, orderBy, socket]);
-  (0, _react.useEffect)(function () {
-    if (!session.user) return;
-    socket.join('messages_orders');
-    return function () {
-      socket.leave('messages_orders');
-    };
-  }, [socket, session]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     orderList: orderList,
     pagination: pagination,
