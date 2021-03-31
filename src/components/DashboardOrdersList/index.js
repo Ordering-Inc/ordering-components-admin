@@ -502,8 +502,10 @@ export const DashboardOrdersList = (props) => {
 
   useEffect(() => {
     if (orderList.loading) return
-    const handleUpdateOrder = (order) => {
-      const found = orderList.orders.find(_order => _order.id === order.id)
+    const handleUpdateOrder = (_order) => {
+      const found = orderList.orders.find(order => _order.id === order.id)
+      const totalPrice = getTotalPrice(_order)
+      const order = { ..._order, summary: { total: totalPrice } }
       let orders = []
       if (found) {
         orders = orderList.orders.filter(_order => {
