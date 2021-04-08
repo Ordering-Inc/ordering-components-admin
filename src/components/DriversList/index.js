@@ -85,7 +85,7 @@ export const DriversList = (props) => {
         requestsState.drivers.cancel()
       }
     }
-  }, [])
+  }, [drivers])
 
   return (
     <>
