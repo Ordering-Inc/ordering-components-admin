@@ -282,11 +282,9 @@ export const OrdersManage = (props) => {
       })
       setDriversList({ ...driversList, drivers: drivers })
     }
-    socket.join('drivers')
     socket.on('drivers_update', handleUpdateDriver)
     socket.on('tracking_driver', handleTrackingDriver)
     return () => {
-      socket.leave('drivers')
       socket.off('drivers_update', handleUpdateDriver)
       socket.off('tracking_driver', handleTrackingDriver)
     }
@@ -297,6 +295,7 @@ export const OrdersManage = (props) => {
     const handleRegisterOrder = (order) => {
       events.emit('order_added', order.id)
     }
+    socket.join('drivers')
     if (user.level === 0) {
       socket.join('orders')
       socket.join('messages_orders')
@@ -307,6 +306,7 @@ export const OrdersManage = (props) => {
     socket.on('orders_register', handleRegisterOrder)
     return () => {
       socket.leave('orders')
+      socket.leave('drivers')
       socket.off('orders_register', handleRegisterOrder)
     }
   }, [socket, loading, user])

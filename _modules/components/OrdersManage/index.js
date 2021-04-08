@@ -691,11 +691,9 @@ var OrdersManage = function OrdersManage(props) {
       }));
     };
 
-    socket.join('drivers');
     socket.on('drivers_update', handleUpdateDriver);
     socket.on('tracking_driver', handleTrackingDriver);
     return function () {
-      socket.leave('drivers');
       socket.off('drivers_update', handleUpdateDriver);
       socket.off('tracking_driver', handleTrackingDriver);
     };
@@ -706,6 +704,8 @@ var OrdersManage = function OrdersManage(props) {
     var handleRegisterOrder = function handleRegisterOrder(order) {
       events.emit('order_added', order.id);
     };
+
+    socket.join('drivers');
 
     if (user.level === 0) {
       socket.join('orders');
@@ -718,6 +718,7 @@ var OrdersManage = function OrdersManage(props) {
     socket.on('orders_register', handleRegisterOrder);
     return function () {
       socket.leave('orders');
+      socket.leave('drivers');
       socket.off('orders_register', handleRegisterOrder);
     };
   }, [socket, loading, user]);
