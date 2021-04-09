@@ -17,9 +17,9 @@ export const MetaFields = (props) => {
    */
   const [metaFieldsList, setMetaFieldsList] = useState({ metaFields: [], loading: true, error: null })
   /**
-   * object to save delete action state
+   * object to save action state
    */
-  const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [actionState, setActionState] = useState({ loading: false, result: { error: false } })
 
   /**
    * Method to get meta fields from API
@@ -47,7 +47,7 @@ export const MetaFields = (props) => {
    */
   const handleDeleteMetaField = async (metaFieldId) => {
     try {
-      setActionStatus({ loading: true, error: null })
+      setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'DELETE',
         headers: {
@@ -61,9 +61,70 @@ export const MetaFields = (props) => {
           return _metaField.id !== metaFieldId
         })
         setMetaFieldsList({ ...metaFieldsList, metaFields: metaFields })
+        setActionState({
+          loading: false,
+          result: {
+            error: false
+          }
+        })
       }
-    } catch (err) {
-      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    } catch (error) {
+      setActionState({
+        result: {
+          error: true,
+          result: error.message
+        },
+        loading: false
+      })
+    }
+  }
+
+  /**
+   * Method to add meta fields from API
+   */
+  const handeAddMetaField = async (values) => {
+    try {
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        },
+        body: JSON.stringify(values)
+      }
+      const response = await fetch(`${ordering.root}/orders/${orderId}/metafields`, requestOptions)
+      const { error, result } = await response.json()
+      if (error) {
+        setActionState({
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      } else {
+        let metafields = []
+        metafields = [...metaFieldsList.metaFields, result]
+        setMetaFieldsList({
+          ...metaFieldsList,
+          metaFields: metafields
+        })
+        setActionState({
+          loading: false,
+          result: {
+            error: false
+          }
+        })
+      }
+    } catch (error) {
+      setActionState({
+        result: {
+          error: true,
+          result: error.message
+        },
+        loading: false
+      })
     }
   }
 
@@ -77,8 +138,9 @@ export const MetaFields = (props) => {
         <UIComponent
           {...props}
           metaFieldsList={metaFieldsList}
-          actionStatus={actionStatus}
+          actionState={actionState}
           handleDeleteMetaField={handleDeleteMetaField}
+          handeAddMetaField={handeAddMetaField}
         />
       )}
     </>

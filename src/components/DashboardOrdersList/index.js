@@ -72,10 +72,12 @@ export const DashboardOrdersList = (props) => {
 
   const getProductPrice = (product) => {
     let subOptionPrice = 0
-    if (product.options.length > 0) {
-      for (const option of product.options) {
-        for (const suboption of option.suboptions) {
-          subOptionPrice += suboption.quantity * suboption.price
+    if (Array.isArray(product.options)) {
+      if (product.options.length > 0) {
+        for (const option of product.options) {
+          for (const suboption of option.suboptions) {
+            subOptionPrice += suboption.quantity * suboption.price
+          }
         }
       }
     }

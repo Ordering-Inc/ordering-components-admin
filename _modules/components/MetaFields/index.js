@@ -25,6 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -72,17 +80,19 @@ var MetaFields = function MetaFields(props) {
       metaFieldsList = _useState2[0],
       setMetaFieldsList = _useState2[1];
   /**
-   * object to save delete action state
+   * object to save action state
    */
 
 
   var _useState3 = (0, _react.useState)({
     loading: false,
-    error: null
+    result: {
+      error: false
+    }
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionStatus = _useState4[0],
-      setActionStatus = _useState4[1];
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
    * Method to get meta fields from API
    */
@@ -158,10 +168,9 @@ var MetaFields = function MetaFields(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setActionStatus({
-                loading: true,
-                error: null
-              });
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
               requestOptions = {
                 method: 'DELETE',
                 headers: {
@@ -182,6 +191,12 @@ var MetaFields = function MetaFields(props) {
                 setMetaFieldsList(_objectSpread(_objectSpread({}, metaFieldsList), {}, {
                   metaFields: metaFields
                 }));
+                setActionState({
+                  loading: false,
+                  result: {
+                    error: false
+                  }
+                });
               }
 
               _context2.next = 12;
@@ -190,10 +205,13 @@ var MetaFields = function MetaFields(props) {
             case 9:
               _context2.prev = 9;
               _context2.t0 = _context2["catch"](0);
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: false,
-                error: [_context2.t0.message]
-              }));
+              setActionState({
+                result: {
+                  error: true,
+                  result: _context2.t0.message
+                },
+                loading: false
+              });
 
             case 12:
             case "end":
@@ -207,14 +225,101 @@ var MetaFields = function MetaFields(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+   * Method to add meta fields from API
+   */
+
+
+  var handeAddMetaField = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(values) {
+      var requestOptions, response, _yield$response$json2, error, result, metafields;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                },
+                body: JSON.stringify(values)
+              };
+              _context3.next = 5;
+              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/metafields"), requestOptions);
+
+            case 5:
+              response = _context3.sent;
+              _context3.next = 8;
+              return response.json();
+
+            case 8:
+              _yield$response$json2 = _context3.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (error) {
+                setActionState({
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
+                });
+              } else {
+                metafields = [];
+                metafields = [].concat(_toConsumableArray(metaFieldsList.metaFields), [result]);
+                setMetaFieldsList(_objectSpread(_objectSpread({}, metaFieldsList), {}, {
+                  metaFields: metafields
+                }));
+                setActionState({
+                  loading: false,
+                  result: {
+                    error: false
+                  }
+                });
+              }
+
+              _context3.next = 17;
+              break;
+
+            case 14:
+              _context3.prev = 14;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                result: {
+                  error: true,
+                  result: _context3.t0.message
+                },
+                loading: false
+              });
+
+            case 17:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 14]]);
+    }));
+
+    return function handeAddMetaField(_x2) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     getMetaFields();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     metaFieldsList: metaFieldsList,
-    actionStatus: actionStatus,
-    handleDeleteMetaField: handleDeleteMetaField
+    actionState: actionState,
+    handleDeleteMetaField: handleDeleteMetaField,
+    handeAddMetaField: handeAddMetaField
   })));
 };
 
