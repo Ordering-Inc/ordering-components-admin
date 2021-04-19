@@ -74,6 +74,7 @@ var OrdersManage = function OrdersManage(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       _useSession2$ = _useSession2[0],
+      user = _useSession2$.user,
       token = _useSession2$.token,
       loading = _useSession2$.loading;
 
@@ -690,27 +691,37 @@ var OrdersManage = function OrdersManage(props) {
       }));
     };
 
-    socket.join('drivers');
     socket.on('drivers_update', handleUpdateDriver);
     socket.on('tracking_driver', handleTrackingDriver);
     return function () {
-      socket.leave('drivers');
       socket.off('drivers_update', handleUpdateDriver);
       socket.off('tracking_driver', handleTrackingDriver);
     };
   }, [socket, loading, driversList.drivers]);
   (0, _react.useEffect)(function () {
+    if (!user) return;
+
     var handleRegisterOrder = function handleRegisterOrder(order) {
       events.emit('order_added', order.id);
     };
 
-    socket.join('orders');
+    socket.join('drivers');
+
+    if (user.level === 0) {
+      socket.join('orders');
+      socket.join('messages_orders');
+    } else {
+      socket.join("orders_".concat(user === null || user === void 0 ? void 0 : user.id));
+      socket.join("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
+    }
+
     socket.on('orders_register', handleRegisterOrder);
     return function () {
       socket.leave('orders');
+      socket.leave('drivers');
       socket.off('orders_register', handleRegisterOrder);
     };
-  }, [socket, loading]);
+  }, [socket, loading, user]);
   /**
    * Listening multi orders action start to change status
    */

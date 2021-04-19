@@ -176,7 +176,14 @@ var OrdersFilter = function OrdersFilter(props) {
 
 
   var handleChangeFromDate = function handleChangeFromDate(fromDate) {
-    var fromDatetime = (0, _dayjs.default)(fromDate).format('YYYY-MM-DD HH:mm:ss');
+    var fromDatetime;
+
+    if (fromDate !== null) {
+      fromDatetime = (0, _dayjs.default)(fromDate).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+      fromDatetime = null;
+    }
+
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       deliveryFromDatetime: fromDatetime
     }));
@@ -188,7 +195,14 @@ var OrdersFilter = function OrdersFilter(props) {
 
 
   var handleChangeEndDate = function handleChangeEndDate(endDate) {
-    var endDatetime = (0, _dayjs.default)(endDate).format('YYYY-MM-DD HH:mm:ss');
+    var endDatetime;
+
+    if (endDate !== null) {
+      endDatetime = (0, _dayjs.default)(endDate).format('YYYY-MM-DD HH:mm:ss');
+    } else {
+      endDate = null;
+    }
+
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       deliveryEndDatetime: endDatetime
     }));

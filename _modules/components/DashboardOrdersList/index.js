@@ -163,32 +163,34 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   var getProductPrice = function getProductPrice(product) {
     var subOptionPrice = 0;
 
-    if (product.options.length > 0) {
-      var _iterator = _createForOfIteratorHelper(product.options),
-          _step;
+    if (Array.isArray(product.options)) {
+      if (product.options.length > 0) {
+        var _iterator = _createForOfIteratorHelper(product.options),
+            _step;
 
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var option = _step.value;
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var option = _step.value;
 
-          var _iterator2 = _createForOfIteratorHelper(option.suboptions),
-              _step2;
+            var _iterator2 = _createForOfIteratorHelper(option.suboptions),
+                _step2;
 
-          try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var suboption = _step2.value;
-              subOptionPrice += suboption.quantity * suboption.price;
+            try {
+              for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+                var suboption = _step2.value;
+                subOptionPrice += suboption.quantity * suboption.price;
+              }
+            } catch (err) {
+              _iterator2.e(err);
+            } finally {
+              _iterator2.f();
             }
-          } catch (err) {
-            _iterator2.e(err);
-          } finally {
-            _iterator2.f();
           }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
         }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
       }
     }
 
@@ -799,10 +801,18 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
-    var handleUpdateOrder = function handleUpdateOrder(order) {
-      var found = orderList.orders.find(function (_order) {
+    var handleUpdateOrder = function handleUpdateOrder(_order) {
+      var found = orderList.orders.find(function (order) {
         return _order.id === order.id;
       });
+      var totalPrice = getTotalPrice(_order);
+
+      var order = _objectSpread(_objectSpread({}, _order), {}, {
+        summary: {
+          total: totalPrice
+        }
+      });
+
       var orders = [];
 
       if (found) {
@@ -929,13 +939,6 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('message', handleNewMessage);
     };
   }, [orderList.orders, pagination, orderBy, socket]);
-  (0, _react.useEffect)(function () {
-    if (!session.user) return;
-    socket.join('messages_orders');
-    return function () {
-      socket.leave('messages_orders');
-    };
-  }, [socket, session]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     orderList: orderList,
     pagination: pagination,

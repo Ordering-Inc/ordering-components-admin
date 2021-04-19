@@ -216,7 +216,7 @@ var DriversList = function DriversList(props) {
         requestsState.drivers.cancel();
       }
     };
-  }, []);
+  }, [drivers]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversList: driversList,
     driverActionStatus: driverActionStatus,
