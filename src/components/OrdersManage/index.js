@@ -14,7 +14,7 @@ export const OrdersManage = (props) => {
 
   const [ordering] = useApi()
   const socket = useWebsocket()
-  const [{ token, loading }] = useSession()
+  const [{ user, token, loading }] = useSession()
   const [events] = useEvent()
 
   const requestsState = {}
@@ -282,27 +282,34 @@ export const OrdersManage = (props) => {
       })
       setDriversList({ ...driversList, drivers: drivers })
     }
-    socket.join('drivers')
     socket.on('drivers_update', handleUpdateDriver)
     socket.on('tracking_driver', handleTrackingDriver)
     return () => {
-      socket.leave('drivers')
       socket.off('drivers_update', handleUpdateDriver)
       socket.off('tracking_driver', handleTrackingDriver)
     }
   }, [socket, loading, driversList.drivers])
 
   useEffect(() => {
+    if (!user) return
     const handleRegisterOrder = (order) => {
       events.emit('order_added', order.id)
     }
-    socket.join('orders')
+    socket.join('drivers')
+    if (user.level === 0) {
+      socket.join('orders')
+      socket.join('messages_orders')
+    } else {
+      socket.join(`orders_${user?.id}`)
+      socket.join(`messages_orders_${user?.id}`)
+    }
     socket.on('orders_register', handleRegisterOrder)
     return () => {
       socket.leave('orders')
+      socket.leave('drivers')
       socket.off('orders_register', handleRegisterOrder)
     }
-  }, [socket, loading])
+  }, [socket, loading, user])
 
   /**
    * Listening multi orders action start to change status

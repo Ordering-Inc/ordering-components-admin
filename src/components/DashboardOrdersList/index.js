@@ -72,10 +72,12 @@ export const DashboardOrdersList = (props) => {
 
   const getProductPrice = (product) => {
     let subOptionPrice = 0
-    if (product.options.length > 0) {
-      for (const option of product.options) {
-        for (const suboption of option.suboptions) {
-          subOptionPrice += suboption.quantity * suboption.price
+    if (Array.isArray(product.options)) {
+      if (product.options.length > 0) {
+        for (const option of product.options) {
+          for (const suboption of option.suboptions) {
+            subOptionPrice += suboption.quantity * suboption.price
+          }
         }
       }
     }
@@ -502,8 +504,10 @@ export const DashboardOrdersList = (props) => {
 
   useEffect(() => {
     if (orderList.loading) return
-    const handleUpdateOrder = (order) => {
-      const found = orderList.orders.find(_order => _order.id === order.id)
+    const handleUpdateOrder = (_order) => {
+      const found = orderList.orders.find(order => _order.id === order.id)
+      const totalPrice = getTotalPrice(_order)
+      const order = { ..._order, summary: { total: totalPrice } }
       let orders = []
       if (found) {
         orders = orderList.orders.filter(_order => {
@@ -604,14 +608,6 @@ export const DashboardOrdersList = (props) => {
       socket.off('message', handleNewMessage)
     }
   }, [orderList.orders, pagination, orderBy, socket])
-
-  useEffect(() => {
-    if (!session.user) return
-    socket.join('messages_orders')
-    return () => {
-      socket.leave('messages_orders')
-    }
-  }, [socket, session])
 
   return (
     <>

@@ -164,13 +164,13 @@ export const Messages = (props) => {
 
   useEffect(() => {
     if (asDashboard) {
-      socket.join(`messages_orders_${orderId}_0`)
+      socket.join(`messages_orders_${orderId}_${user?.level}`)
     } else {
       socket.join(`messages_orders_${user?.id}`)
     }
     return () => {
       if (asDashboard) {
-        socket.leave(`messages_orders_${orderId}_0`)
+        socket.leave(`messages_orders_${orderId}_${user?.level}`)
       } else {
         socket.leave(`messages_orders_${user?.id}`)
       }
