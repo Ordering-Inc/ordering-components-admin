@@ -82,7 +82,12 @@ export const OrdersFilter = (props) => {
    * * @param {date} fromDate start date
   */
   const handleChangeFromDate = (fromDate) => {
-    const fromDatetime = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
+    let fromDatetime
+    if (fromDate !== null) {
+      fromDatetime = dayjs(fromDate).format('YYYY-MM-DD HH:mm:ss')
+    } else {
+      fromDatetime = null
+    }
     setFilterValues({ ...filterValues, deliveryFromDatetime: fromDatetime })
   }
   /**
@@ -90,7 +95,12 @@ export const OrdersFilter = (props) => {
    * * @param {date} endDate end date
   */
   const handleChangeEndDate = (endDate) => {
-    const endDatetime = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
+    let endDatetime
+    if (endDate !== null) {
+      endDatetime = dayjs(endDate).format('YYYY-MM-DD HH:mm:ss')
+    } else {
+      endDate = null
+    }
     setFilterValues({ ...filterValues, deliveryEndDatetime: endDatetime })
   }
   /**

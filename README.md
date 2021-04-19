@@ -1,1 +1,1 @@
-# ordering-components
+# ordering-components-admin
