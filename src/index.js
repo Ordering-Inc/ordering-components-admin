@@ -62,6 +62,7 @@ import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UpsellingPage } from './components/UpsellingPage'
+import { UserList } from './components/UserList'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
 import { OrderDetails } from './components/OrderDetails'
 import { OrderReview } from './components/OrderReview'
@@ -159,6 +160,7 @@ export {
   SingleProductCard,
   UserFormDetails,
   UpsellingPage,
+  UserList,
   WrapperGoogleMaps,
   OrderDetails,
   OrderReview,
