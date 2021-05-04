@@ -63,6 +63,7 @@ import { SingleProductCard } from './components/SingleProductCard'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UpsellingPage } from './components/UpsellingPage'
 import { UserList } from './components/UserList'
+import { UserTypeFilter } from './components/UserTypeFilter'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
 import { OrderDetails } from './components/OrderDetails'
 import { OrderReview } from './components/OrderReview'
@@ -161,6 +162,7 @@ export {
   UserFormDetails,
   UpsellingPage,
   UserList,
+  UserTypeFilter,
   WrapperGoogleMaps,
   OrderDetails,
   OrderReview,
