@@ -405,6 +405,12 @@ Object.defineProperty(exports, "UserList", {
     return _UserList.UserList;
   }
 });
+Object.defineProperty(exports, "UserTypeFilter", {
+  enumerable: true,
+  get: function get() {
+    return _UserTypeFilter.UserTypeFilter;
+  }
+});
 Object.defineProperty(exports, "WrapperGoogleMaps", {
   enumerable: true,
   get: function get() {
@@ -847,6 +853,8 @@ var _UserFormDetails = require("./components/UserFormDetails");
 var _UpsellingPage = require("./components/UpsellingPage");
 
 var _UserList = require("./components/UserList");
+
+var _UserTypeFilter = require("./components/UserTypeFilter");
 
 var _WrapperGoogleMaps = require("./components/WrapperGoogleMaps");
 
