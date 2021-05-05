@@ -257,6 +257,7 @@ var UserList = function UserList(props) {
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     usersList: usersList,
+    setUsersList: setUsersList,
     userTypeSelected: userTypeSelected,
     handleChangeUserType: handleChangeUserType,
     paginationProps: paginationProps,

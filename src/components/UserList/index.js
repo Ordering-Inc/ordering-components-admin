@@ -136,6 +136,7 @@ export const UserList = (props) => {
           <UIComponent
             {...props}
             usersList={usersList}
+            setUsersList={setUsersList}
             userTypeSelected={userTypeSelected}
             handleChangeUserType={handleChangeUserType}
             paginationProps={paginationProps}
