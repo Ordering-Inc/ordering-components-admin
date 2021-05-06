@@ -464,6 +464,9 @@ export const DashboardOrdersList = (props) => {
     const orders = orderList.orders.filter(_order => {
       return _order.id !== deletedOrderId
     })
+
+    loadOrders()
+    
     setOrderList({ ...orderList, orders })
   }, [deletedOrderId])
 
