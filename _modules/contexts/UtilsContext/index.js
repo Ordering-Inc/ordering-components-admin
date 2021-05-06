@@ -170,7 +170,7 @@ var UtilsProviders = function UtilsProviders(_ref) {
     var formatTime = (options === null || options === void 0 ? void 0 : options.formatTime) || ((_configState$configs$9 = configState.configs.format_time) === null || _configState$configs$9 === void 0 ? void 0 : _configState$configs$9.value) || '24';
     var formatDate = {
       inputFormat: (options === null || options === void 0 ? void 0 : options.inputFormat) || ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD hh:mm:ss A', 'YYYY-MM-DD hh:mm:ss'],
-      outputFormat: (options === null || options === void 0 ? void 0 : options.outputFormat) || (formatTime === '24' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD hh:mm:ss A'),
+      outputFormat: (options === null || options === void 0 ? void 0 : options.outputFormat) || (formatTime === '24' ? 'YYYY-MM-DD HH:mm' : 'YYYY-MM-DD hh:mm A'),
       utc: typeof (options === null || options === void 0 ? void 0 : options.utc) === 'boolean' ? options === null || options === void 0 ? void 0 : options.utc : true
     };
 

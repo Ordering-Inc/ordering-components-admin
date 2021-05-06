@@ -754,6 +754,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     var orders = orderList.orders.filter(function (_order) {
       return _order.id !== deletedOrderId;
     });
+    loadOrders();
     setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
       orders: orders
     }));
