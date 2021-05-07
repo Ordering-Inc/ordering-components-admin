@@ -6,10 +6,15 @@ export const UserList = (props) => {
   const {
     UIComponent,
     paginationSettings,
-    propsToFetch
+    propsToFetch,
+    isSearchByUserId,
+    isSearchByCustomerEmail,
+    isSearchByCustomerPhone
   } = props
 
   const [usersList, setUsersList] = useState({ users: [], loading: true, error: null })
+  const [filterValues, setFilterValues] = useState({})
+  const [searchVal, setSearchVal] = useState(null)
   const [userTypeSelected, setUserTypeSelected] = useState(3)
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
@@ -17,11 +22,20 @@ export const UserList = (props) => {
     totalItems: null,
     totalPages: null
   })
+  const [spinLoading, setSpinLoading] = useState(false)
   const [ordering] = useApi()
 
   useEffect(() => {
     getUsers(true, false)
   }, [userTypeSelected])
+
+  useEffect(() => {
+    if (searchVal !== null && !usersList.loading) getUsers(true, false)
+  }, [searchVal])
+
+  useEffect(() => {
+    if (Object.keys(filterValues).length > 0 && !usersList.loading) getUsers(true, false)
+  }, [filterValues])
 
   /**
    * Get users by params, order options and filters
@@ -45,9 +59,130 @@ export const UserList = (props) => {
         conditions.push({ attribute: 'level', value: userTypeSelected })
       }
 
+      if (searchVal) {
+        const searchConditions = []
+        if (isSearchByUserId) {
+          searchConditions.push(
+            {
+              attribute: 'id',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchVal}%`)
+              }
+            }
+          )
+        }
+        if (isSearchByCustomerEmail) {
+          searchConditions.push(
+            {
+              attribute: 'email',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchVal}%`)
+              }
+            }
+          )
+        }
+
+        if (isSearchByCustomerPhone) {
+          searchConditions.push(
+            {
+              attribute: 'cellphone',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchVal}%`)
+              }
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
+      }
+
+      if (Object.keys(filterValues).length) {
+        const filterConditions = []
+        if (filterValues.name && filterValues.name !== null) {
+          filterConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${filterValues.name}%`)
+              }
+            }
+          )
+        }
+        if (filterValues.lastname && filterValues.lastname !== null) {
+          filterConditions.push(
+            {
+              attribute: 'lastname',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${filterValues.lastname}%`)
+              }
+            }
+          )
+        }
+        if (filterValues.email && filterValues.email !== null) {
+          filterConditions.push(
+            {
+              attribute: 'email',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${filterValues.email}%`)
+              }
+            }
+          )
+        }
+        if (filterValues.email_verified !== undefined) {
+          filterConditions.push(
+            {
+              attribute: 'email_verified',
+              value: filterValues.email_verified
+            }
+          )
+        }
+        if (filterValues.phone && filterValues.phone !== null) {
+          filterConditions.push(
+            {
+              attribute: 'phone',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${filterValues.phone}%`)
+              }
+            }
+          )
+        }
+        if (filterValues.phone_verified !== undefined) {
+          filterConditions.push(
+            {
+              attribute: 'phone_verified',
+              value: filterValues.phone_verified
+            }
+          )
+        }
+        if (filterValues.id && parseInt(filterValues.id) > 0) {
+          filterConditions.push(
+            {
+              attribute: 'id',
+              value: parseInt(filterValues.id)
+            }
+          )
+        }
+        if (filterConditions.length) {
+          conditions.push({
+            conector: 'AND',
+            conditions: filterConditions
+          })
+        }
+      }
+
       if (conditions.length) {
         where = {
-          conditions
+          conditions,
+          conector: 'AND'
         }
       }
 
@@ -90,7 +225,7 @@ export const UserList = (props) => {
    */
   const getUserById = async (userId, enabled) => {
     try {
-      setUsersList({ ...usersList, loading: true })
+      setSpinLoading(true)
 
       const fetchEndpoint = ordering.users(userId)
       const { content: { result } } = await fetchEndpoint.save({ enabled: !enabled })
@@ -106,9 +241,9 @@ export const UserList = (props) => {
 
       setUsersList({
         ...usersList,
-        users: users,
-        loading: false
+        users: users
       })
+      setSpinLoading(false)
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
         setUsersList({
@@ -125,7 +260,7 @@ export const UserList = (props) => {
    * @param {object} userType User type
    */
   const handleChangeUserType = (userType) => {
-    if (userType !== userTypeSelected) {
+    if (userType !== userTypeSelected && !usersList.loading) {
       setUserTypeSelected(userType)
     }
   }
@@ -137,11 +272,16 @@ export const UserList = (props) => {
             {...props}
             usersList={usersList}
             setUsersList={setUsersList}
+            filterValues={filterValues}
+            setFilterValues={setFilterValues}
             userTypeSelected={userTypeSelected}
             handleChangeUserType={handleChangeUserType}
             paginationProps={paginationProps}
             getUserById={getUserById}
             getUsers={getUsers}
+            searchVal={searchVal}
+            onSearch={setSearchVal}
+            spinLoading={spinLoading}
           />
         )
       }
@@ -154,6 +294,21 @@ UserList.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user ID
+   */
+  isSearchByUserId: PropTypes.bool,
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user email
+   */
+  isSearchByCustomerEmail: PropTypes.bool,
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user phone
+   */
+  isSearchByCustomerPhone: PropTypes.bool,
   /**
    * Array of user props to fetch
    */
