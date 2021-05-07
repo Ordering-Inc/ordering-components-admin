@@ -50,7 +50,10 @@ var UserList = function UserList(props) {
 
   var UIComponent = props.UIComponent,
       paginationSettings = props.paginationSettings,
-      propsToFetch = props.propsToFetch;
+      propsToFetch = props.propsToFetch,
+      isSearchByUserId = props.isSearchByUserId,
+      isSearchByCustomerEmail = props.isSearchByCustomerEmail,
+      isSearchByCustomerPhone = props.isSearchByCustomerPhone;
 
   var _useState = (0, _react.useState)({
     users: [],
@@ -61,20 +64,35 @@ var UserList = function UserList(props) {
       usersList = _useState2[0],
       setUsersList = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(3),
+  var _useState3 = (0, _react.useState)({}),
       _useState4 = _slicedToArray(_useState3, 2),
-      userTypeSelected = _useState4[0],
-      setUserTypeSelected = _useState4[1];
+      filterValues = _useState4[0],
+      setFilterValues = _useState4[1];
 
-  var _useState5 = (0, _react.useState)({
+  var _useState5 = (0, _react.useState)(null),
+      _useState6 = _slicedToArray(_useState5, 2),
+      searchVal = _useState6[0],
+      setSearchVal = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(3),
+      _useState8 = _slicedToArray(_useState7, 2),
+      userTypeSelected = _useState8[0],
+      setUserTypeSelected = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({
     currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
     pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
     totalItems: null,
     totalPages: null
   }),
-      _useState6 = _slicedToArray(_useState5, 2),
-      paginationProps = _useState6[0],
-      setPaginationProps = _useState6[1];
+      _useState10 = _slicedToArray(_useState9, 2),
+      paginationProps = _useState10[0],
+      setPaginationProps = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      spinLoading = _useState12[0],
+      setSpinLoading = _useState12[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -83,6 +101,12 @@ var UserList = function UserList(props) {
   (0, _react.useEffect)(function () {
     getUsers(true, false);
   }, [userTypeSelected]);
+  (0, _react.useEffect)(function () {
+    if (searchVal !== null && !usersList.loading) getUsers(true, false);
+  }, [searchVal]);
+  (0, _react.useEffect)(function () {
+    if (Object.keys(filterValues).length > 0 && !usersList.loading) getUsers(true, false);
+  }, [filterValues]);
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
@@ -90,7 +114,7 @@ var UserList = function UserList(props) {
 
   var getUsers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch, nextPage) {
-      var parameters, paginationParams, where, conditions, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
+      var parameters, paginationParams, where, conditions, searchConditions, filterConditions, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -116,17 +140,129 @@ var UserList = function UserList(props) {
                 });
               }
 
+              if (searchVal) {
+                searchConditions = [];
+
+                if (isSearchByUserId) {
+                  searchConditions.push({
+                    attribute: 'id',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchVal, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByCustomerEmail) {
+                  searchConditions.push({
+                    attribute: 'email',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchVal, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByCustomerPhone) {
+                  searchConditions.push({
+                    attribute: 'cellphone',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchVal, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (Object.keys(filterValues).length) {
+                filterConditions = [];
+
+                if (filterValues.name && filterValues.name !== null) {
+                  filterConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues.name, "%"))
+                    }
+                  });
+                }
+
+                if (filterValues.lastname && filterValues.lastname !== null) {
+                  filterConditions.push({
+                    attribute: 'lastname',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues.lastname, "%"))
+                    }
+                  });
+                }
+
+                if (filterValues.email && filterValues.email !== null) {
+                  filterConditions.push({
+                    attribute: 'email',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues.email, "%"))
+                    }
+                  });
+                }
+
+                if (filterValues.email_verified !== undefined) {
+                  filterConditions.push({
+                    attribute: 'email_verified',
+                    value: filterValues.email_verified
+                  });
+                }
+
+                if (filterValues.phone && filterValues.phone !== null) {
+                  filterConditions.push({
+                    attribute: 'phone',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues.phone, "%"))
+                    }
+                  });
+                }
+
+                if (filterValues.phone_verified !== undefined) {
+                  filterConditions.push({
+                    attribute: 'phone_verified',
+                    value: filterValues.phone_verified
+                  });
+                }
+
+                if (filterValues.id && parseInt(filterValues.id) > 0) {
+                  filterConditions.push({
+                    attribute: 'id',
+                    value: parseInt(filterValues.id)
+                  });
+                }
+
+                if (filterConditions.length) {
+                  conditions.push({
+                    conector: 'AND',
+                    conditions: filterConditions
+                  });
+                }
+              }
+
               if (conditions.length) {
                 where = {
-                  conditions: conditions
+                  conditions: conditions,
+                  conector: 'AND'
                 };
               }
 
               fetchEndpoint = where ? ordering.users().select(propsToFetch).parameters(parameters).where(where) : ordering.users().select(propsToFetch).parameters(parameters);
-              _context.next = 12;
+              _context.next = 14;
               return fetchEndpoint.get();
 
-            case 12:
+            case 14:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               result = _yield$fetchEndpoint$2.result;
@@ -148,11 +284,11 @@ var UserList = function UserList(props) {
                 totalItems: pagination.total,
                 nextPageItems: nextPageItems
               }));
-              _context.next = 26;
+              _context.next = 28;
               break;
 
-            case 23:
-              _context.prev = 23;
+            case 25:
+              _context.prev = 25;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -162,12 +298,12 @@ var UserList = function UserList(props) {
                 }));
               }
 
-            case 26:
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 23]]);
+      }, _callee, null, [[0, 25]]);
     }));
 
     return function getUsers(_x, _x2) {
@@ -189,9 +325,7 @@ var UserList = function UserList(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
-                loading: true
-              }));
+              setSpinLoading(true);
               fetchEndpoint = ordering.users(userId);
               _context2.next = 5;
               return fetchEndpoint.save({
@@ -214,14 +348,14 @@ var UserList = function UserList(props) {
               }
 
               setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
-                users: users,
-                loading: false
+                users: users
               }));
-              _context2.next = 16;
+              setSpinLoading(false);
+              _context2.next = 17;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 14:
+              _context2.prev = 14;
               _context2.t0 = _context2["catch"](0);
 
               if (_context2.t0.constructor.name !== 'Cancel') {
@@ -231,12 +365,12 @@ var UserList = function UserList(props) {
                 }));
               }
 
-            case 16:
+            case 17:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 14]]);
     }));
 
     return function getUserById(_x3, _x4) {
@@ -250,7 +384,7 @@ var UserList = function UserList(props) {
 
 
   var handleChangeUserType = function handleChangeUserType(userType) {
-    if (userType !== userTypeSelected) {
+    if (userType !== userTypeSelected && !usersList.loading) {
       setUserTypeSelected(userType);
     }
   };
@@ -258,11 +392,16 @@ var UserList = function UserList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     usersList: usersList,
     setUsersList: setUsersList,
+    filterValues: filterValues,
+    setFilterValues: setFilterValues,
     userTypeSelected: userTypeSelected,
     handleChangeUserType: handleChangeUserType,
     paginationProps: paginationProps,
     getUserById: getUserById,
-    getUsers: getUsers
+    getUsers: getUsers,
+    searchVal: searchVal,
+    onSearch: setSearchVal,
+    spinLoading: spinLoading
   })));
 };
 
@@ -272,6 +411,24 @@ UserList.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
+
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user ID
+   */
+  isSearchByUserId: _propTypes.default.bool,
+
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user email
+   */
+  isSearchByCustomerEmail: _propTypes.default.bool,
+
+  /**
+   * Enable/Disable search option
+   * Search Users list by a user phone
+   */
+  isSearchByCustomerPhone: _propTypes.default.bool,
 
   /**
    * Array of user props to fetch
