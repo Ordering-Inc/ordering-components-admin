@@ -65,6 +65,7 @@ import { UserFormDetails } from './components/UserFormDetails'
 import { UpsellingPage } from './components/UpsellingPage'
 import { UserExport } from './components/UserExport'
 import { UserList } from './components/UserList'
+import { UserOrderList } from './components/UserOrderList'
 import { UsersFilter } from './components/UsersFilter'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
@@ -167,6 +168,7 @@ export {
   UpsellingPage,
   UserExport,
   UserList,
+  UserOrderList,
   UsersFilter,
   UserTypeFilter,
   WrapperGoogleMaps,

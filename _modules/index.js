@@ -417,6 +417,12 @@ Object.defineProperty(exports, "UserList", {
     return _UserList.UserList;
   }
 });
+Object.defineProperty(exports, "UserOrderList", {
+  enumerable: true,
+  get: function get() {
+    return _UserOrderList.UserOrderList;
+  }
+});
 Object.defineProperty(exports, "UsersFilter", {
   enumerable: true,
   get: function get() {
@@ -875,6 +881,8 @@ var _UpsellingPage = require("./components/UpsellingPage");
 var _UserExport = require("./components/UserExport");
 
 var _UserList = require("./components/UserList");
+
+var _UserOrderList = require("./components/UserOrderList");
 
 var _UsersFilter = require("./components/UsersFilter");
 
