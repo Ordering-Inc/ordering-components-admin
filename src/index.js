@@ -62,6 +62,7 @@ import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UpsellingPage } from './components/UpsellingPage'
+import { UserExport } from './components/UserExport'
 import { UserList } from './components/UserList'
 import { UsersFilter } from './components/UsersFilter'
 import { UserTypeFilter } from './components/UserTypeFilter'
@@ -162,6 +163,7 @@ export {
   SingleProductCard,
   UserFormDetails,
   UpsellingPage,
+  UserExport,
   UserList,
   UsersFilter,
   UserTypeFilter,

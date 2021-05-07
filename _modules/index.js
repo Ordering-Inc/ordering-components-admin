@@ -399,6 +399,12 @@ Object.defineProperty(exports, "UpsellingPage", {
     return _UpsellingPage.UpsellingPage;
   }
 });
+Object.defineProperty(exports, "UserExport", {
+  enumerable: true,
+  get: function get() {
+    return _UserExport.UserExport;
+  }
+});
 Object.defineProperty(exports, "UserList", {
   enumerable: true,
   get: function get() {
@@ -857,6 +863,8 @@ var _SingleProductCard = require("./components/SingleProductCard");
 var _UserFormDetails = require("./components/UserFormDetails");
 
 var _UpsellingPage = require("./components/UpsellingPage");
+
+var _UserExport = require("./components/UserExport");
 
 var _UserList = require("./components/UserList");
 
