@@ -21,6 +21,12 @@ Object.defineProperty(exports, "AddressList", {
     return _AddressList.AddressList;
   }
 });
+Object.defineProperty(exports, "AddUser", {
+  enumerable: true,
+  get: function get() {
+    return _AddUser.AddUser;
+  }
+});
 Object.defineProperty(exports, "BaseComponent", {
   enumerable: true,
   get: function get() {
@@ -741,6 +747,8 @@ var _AddressDetails = require("./components/AddressDetails");
 var _AddressForm = require("./components/AddressForm");
 
 var _AddressList = require("./components/AddressList");
+
+var _AddUser = require("./components/AddUser");
 
 var _BaseComponent = require("./components/BaseComponent");
 

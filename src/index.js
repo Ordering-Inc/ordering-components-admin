@@ -1,6 +1,7 @@
 import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
+import { AddUser } from './components/AddUser'
 import { BaseComponent } from './components/BaseComponent'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
@@ -100,6 +101,7 @@ export {
   AddressDetails,
   AddressForm,
   AddressList,
+  AddUser,
   BaseComponent,
   BusinessAndProductList,
   BusinessBasicInformation,
