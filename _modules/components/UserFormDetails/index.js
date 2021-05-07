@@ -31,6 +31,14 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -58,23 +66,23 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var UserFormDetails = function UserFormDetails(props) {
   var UIComponent = props.UIComponent,
-      useSessionUser = props.useSessionUser,
-      refreshSessionUser = props.refreshSessionUser,
       useDefualtSessionManager = props.useDefualtSessionManager,
-      userId = props.userId,
       user = props.user,
       useValidationFields = props.useValidationFields,
       handleButtonUpdateClick = props.handleButtonUpdateClick,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      setSelectedUser = props.setSelectedUser,
+      onClose = props.onClose,
+      setUsersList = props.setUsersList,
+      usersList = props.usersList;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
   var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 2),
-      session = _useSession2[0],
-      changeUser = _useSession2[1].changeUser;
+      _useSession2 = _slicedToArray(_useSession, 1),
+      session = _useSession2[0];
 
   var _useValidationsFields = (0, _ValidationsFieldsContext.useValidationFields)(),
       _useValidationsFields2 = _slicedToArray(_useValidationsFields, 1),
@@ -106,53 +114,7 @@ var UserFormDetails = function UserFormDetails(props) {
       formState = _useState6[0],
       setFormState = _useState6[1];
 
-  var requestsState = {};
   var accessToken = useDefualtSessionManager ? session.token : props.accessToken;
-  (0, _react.useEffect)(function () {
-    if ((userId || useSessionUser && refreshSessionUser) && !session.loading && !props.userData) {
-      setUserState(_objectSpread(_objectSpread({}, userState), {}, {
-        loading: true
-      }));
-      var source = {};
-      requestsState.user = source;
-      ordering.setAccessToken(accessToken).users(useSessionUser && refreshSessionUser ? session.user.id : userId).get({
-        cancelToken: source
-      }).then(function (response) {
-        setUserState({
-          loading: false,
-          result: response.content
-        });
-
-        if (response.content.result) {
-          changeUser(_objectSpread(_objectSpread({}, session.user), response.content.result));
-        }
-      }).catch(function (err) {
-        if (err.constructor.name !== 'Cancel') {
-          setUserState({
-            loading: false,
-            result: {
-              error: true,
-              result: err.message
-            }
-          });
-        }
-      });
-    } else {
-      setUserState({
-        loading: false,
-        result: {
-          error: false,
-          result: useSessionUser && !refreshSessionUser ? session.user : user
-        }
-      });
-    }
-
-    return function () {
-      if (requestsState.user) {
-        requestsState.user.cancel();
-      }
-    };
-  }, [session.loading]);
   /**
    * Clean formState
    */
@@ -161,27 +123,96 @@ var UserFormDetails = function UserFormDetails(props) {
     return setFormState(_objectSpread(_objectSpread({}, formState), values));
   };
   /**
-   * Default fuction for user profile workflow
+   * Delete selected a user
    */
 
 
-  var handleUpdateClick = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(changes, isImage, image) {
-      var response, _props$userData, _formState$changes, photo, _changes, _props$userData2;
+  var deleteUser = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var response, _users, selectedItem, index;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              _context.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context.next = 4;
+              return ordering.users((user === null || user === void 0 ? void 0 : user.id) || userState.result.result.id).delete();
+
+            case 4:
+              response = _context.sent;
+
+              if (!response.content.error) {
+                _users = _toConsumableArray(usersList.users);
+                selectedItem = _users.filter(function (item) {
+                  return item.id === user.id;
+                })[0];
+                index = _users.indexOf(selectedItem);
+
+                if (index > -1) {
+                  _users.splice(index, 1);
+                }
+
+                setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+                  users: _users
+                }));
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false
+                }));
+                onClose();
+              }
+
+              _context.next = 11;
+              break;
+
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context.t0.message
+                },
+                loading: false
+              }));
+
+            case 11:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 8]]);
+    }));
+
+    return function deleteUser() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Default fuction for user profile workflow
+   */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(changes, isImage, image) {
+      var response, _formState$changes, photo, _changes;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
               if (!handleButtonUpdateClick) {
-                _context.next = 2;
+                _context2.next = 2;
                 break;
               }
 
-              return _context.abrupt("return", handleButtonUpdateClick(userState.result.result, formState.changes));
+              return _context2.abrupt("return", handleButtonUpdateClick(userState.result.result, formState.changes));
 
             case 2:
-              _context.prev = 2;
+              _context2.prev = 2;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -191,48 +222,48 @@ var UserFormDetails = function UserFormDetails(props) {
               }
 
               if (!isImage) {
-                _context.next = 13;
+                _context2.next = 14;
                 break;
               }
 
-              _context.next = 8;
-              return ordering.users((props === null || props === void 0 ? void 0 : (_props$userData = props.userData) === null || _props$userData === void 0 ? void 0 : _props$userData.id) || userState.result.result.id).save({
+              _context2.next = 8;
+              return ordering.users((user === null || user === void 0 ? void 0 : user.id) || userState.result.result.id).save({
                 photo: image || formState.changes.photo
               }, {
                 accessToken: accessToken
               });
 
             case 8:
-              response = _context.sent;
+              response = _context2.sent;
               _formState$changes = formState.changes, photo = _formState$changes.photo, _changes = _objectWithoutProperties(_formState$changes, ["photo"]);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : _changes,
                 result: response.content,
                 loading: false
               }));
-              _context.next = 17;
+              if (!response.content.error) setSelectedUser(response.content.result);
+              _context2.next = 18;
               break;
 
-            case 13:
-              _context.next = 15;
-              return ordering.users((props === null || props === void 0 ? void 0 : (_props$userData2 = props.userData) === null || _props$userData2 === void 0 ? void 0 : _props$userData2.id) || userState.result.result.id).save(formState.changes, {
+            case 14:
+              _context2.next = 16;
+              return ordering.users((user === null || user === void 0 ? void 0 : user.id) || userState.result.result.id).save(formState.changes, {
                 accessToken: accessToken
               });
 
-            case 15:
-              response = _context.sent;
+            case 16:
+              response = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
                 result: response.content,
                 loading: false
               }));
 
-            case 17:
+            case 18:
               if (!response.content.error) {
                 setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                   result: _objectSpread(_objectSpread({}, userState.result), response.content)
                 }));
-                changeUser(_objectSpread(_objectSpread({}, session.user), response.content.result));
 
                 if (handleSuccessUpdate) {
                   handleSuccessUpdate(response.content.result);
@@ -243,30 +274,30 @@ var UserFormDetails = function UserFormDetails(props) {
                 }
               }
 
-              _context.next = 23;
+              _context2.next = 24;
               break;
 
-            case 20:
-              _context.prev = 20;
-              _context.t0 = _context["catch"](2);
+            case 21:
+              _context2.prev = 21;
+              _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
-                  result: _context.t0.message
+                  result: _context2.t0.message
                 },
                 loading: false
               }));
 
-            case 23:
+            case 24:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, null, [[2, 20]]);
+      }, _callee2, null, [[2, 21]]);
     }));
 
     return function handleUpdateClick(_x, _x2, _x3) {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -330,9 +361,9 @@ var UserFormDetails = function UserFormDetails(props) {
 
 
   var isRequiredField = function isRequiredField(fieldName) {
-    var _validationFields$fie4, _validationFields$fie5, _validationFields$fie6;
+    var _validationFields$fie4, _validationFields$fie5, _validationFields$fie6, _validationFields$fie7, _validationFields$fie8, _validationFields$fie9, _validationFields$fie10, _validationFields$fie11;
 
-    return useValidationFields && !validationFields.loading && ((_validationFields$fie4 = validationFields.fields) === null || _validationFields$fie4 === void 0 ? void 0 : _validationFields$fie4.checkout[fieldName]) && ((_validationFields$fie5 = validationFields.fields) === null || _validationFields$fie5 === void 0 ? void 0 : _validationFields$fie5.checkout[fieldName].enabled) && ((_validationFields$fie6 = validationFields.fields) === null || _validationFields$fie6 === void 0 ? void 0 : _validationFields$fie6.checkout[fieldName].required);
+    return useValidationFields && !validationFields.loading && ((_validationFields$fie4 = validationFields.fields) === null || _validationFields$fie4 === void 0 ? void 0 : (_validationFields$fie5 = _validationFields$fie4.checkout) === null || _validationFields$fie5 === void 0 ? void 0 : _validationFields$fie5[fieldName]) && ((_validationFields$fie6 = validationFields.fields) === null || _validationFields$fie6 === void 0 ? void 0 : (_validationFields$fie7 = _validationFields$fie6.checkout) === null || _validationFields$fie7 === void 0 ? void 0 : (_validationFields$fie8 = _validationFields$fie7[fieldName]) === null || _validationFields$fie8 === void 0 ? void 0 : _validationFields$fie8.enabled) && ((_validationFields$fie9 = validationFields.fields) === null || _validationFields$fie9 === void 0 ? void 0 : (_validationFields$fie10 = _validationFields$fie9.checkout) === null || _validationFields$fie10 === void 0 ? void 0 : (_validationFields$fie11 = _validationFields$fie10[fieldName]) === null || _validationFields$fie11 === void 0 ? void 0 : _validationFields$fie11.required);
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
@@ -343,13 +374,15 @@ var UserFormDetails = function UserFormDetails(props) {
     validationFields: validationFields,
     showField: showField,
     setFormState: setFormState,
+    selectedUser: user,
     isRequiredField: isRequiredField,
     handleChangeInput: handleChangeInput,
     handleButtonUpdateClick: handleUpdateClick,
     handlechangeImage: handlechangeImage,
     toggleIsEdit: function toggleIsEdit() {
       return setIsEdit(!isEdit);
-    }
+    },
+    deleteUser: deleteUser
   })));
 };
 
@@ -359,6 +392,31 @@ UserFormDetails.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
+
+  /**
+   * Object Users list
+   */
+  usersList: _propTypes.default.object,
+
+  /**
+   * Function to change user lists
+   */
+  setUsersList: _propTypes.default.func,
+
+  /**
+   * Function to close modal
+   */
+  onClose: _propTypes.default.func,
+
+  /**
+   * Object selected a user data to update
+   */
+  user: _propTypes.default.object,
+
+  /**
+   * Function to change user data
+   */
+  setSelectedUser: _propTypes.default.func,
 
   /**
    * Use session user to details
@@ -397,24 +455,6 @@ UserFormDetails.propTypes = {
 
     if (props[propName] && (props.useSessionUser || props.user !== undefined)) {
       return new Error("Invalid prop `".concat(propName, "` must be without `useSessionUser` and `user`."));
-    }
-  },
-
-  /**
-   * User object
-   * If you provide user object the component not get user form Ordering API
-   */
-  user: function user(props, propName) {
-    if (props[propName] !== undefined && _typeof(props[propName]) !== 'object') {
-      return new Error("Invalid prop `".concat(propName, "` of type `").concat(_typeof(props[propName]), "` supplied to `UserFormDetails`, expected `object`."));
-    }
-
-    if (props.userId === undefined && !props.useSessionUser && !props[propName]) {
-      return new Error("Invalid prop `".concat(propName, "` must be true when `useSessionUser` and `userId` is not present."));
-    }
-
-    if (props[propName] && (props.useSessionUser || props.userId !== undefined)) {
-      return new Error("Invalid prop `".concat(propName, "` must be without `useSessionUser` and `userId`."));
     }
   },
 
