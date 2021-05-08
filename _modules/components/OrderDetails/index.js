@@ -135,7 +135,7 @@ var OrderDetails = function OrderDetails(props) {
               setMessages(_objectSpread(_objectSpread({}, messages), {}, {
                 loading: true
               }));
-              url = userCustomerId ? "".concat(ordering.root, "/orders/").concat(orderId, "/messages?mode=dashboard") : "".concat(ordering.root, "/orders/").concat(orderId, "/messages");
+              url = "".concat(ordering.root, "/orders/").concat(orderId, "/messages?mode=dashboard");
               _context.next = 5;
               return fetch(url, {
                 method: 'GET',
