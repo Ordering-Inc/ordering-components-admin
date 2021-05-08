@@ -19,7 +19,12 @@ export const OrderDetails = (props) => {
   const [orderState, setOrderState] = useState({ order: null, loading: !props.order, error: null })
   const [messageErrors, setMessageErrors] = useState({ status: null, loading: false, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [messages, setMessages] = useState({ loading: true, error: null, messages: [] })
+  const [messagesReadList, setMessagesReadList] = useState(false)
+
   const socket = useWebsocket()
+
+  const accessToken = props.accessToken || token
 
   /**
    * Method to format a price number
@@ -113,7 +118,7 @@ export const OrderDetails = (props) => {
     }
     if (userCustomerId) {
       options.query = {
-        mode:'dashboard'
+        mode: 'dashboard'
       }
     }
     try {
@@ -166,6 +171,24 @@ export const OrderDetails = (props) => {
     }
   }
 
+  const readMessages = async () => {
+    const messageId = messages?.messages[messages?.messages?.length - 1]?.id
+    try {
+      const response = await fetch(`${ordering.root}/orders/${orderState.order?.id}/messages/${messageId}/read`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      const { result } = await response.json()
+
+      setMessagesReadList(result)
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
+
   useEffect(() => {
     if (props.order) {
       setOrderState({
@@ -200,6 +223,10 @@ export const OrderDetails = (props) => {
     }
   }, [orderState.order, socket, loading])
 
+  useEffect(() => {
+    loadMessages()
+  }, [orderId])
+
   return (
     <>
       {UIComponent && (
@@ -211,6 +238,10 @@ export const OrderDetails = (props) => {
           formatPrice={formatPrice}
           handlerSubmit={handlerSubmitSpotNumber}
           handleUpdateOrderStatus={handleUpdateOrderStatus}
+          messages={messages}
+          setMessages={setMessages}
+          messagesReadList={messagesReadList}
+          readMessages={readMessages}
         />
       )}
     </>

@@ -9,8 +9,10 @@ export const Messages = (props) => {
     UIComponent,
     orderId,
     customHandleSend,
-    order,
+    messages: orderMessages,
+    setMessages: setOrderMessages,
     asDashboard,
+    order,
     handleUpdateOrderForUnreadCount
   } = props
 
@@ -25,6 +27,7 @@ export const Messages = (props) => {
   const [readMessages, setReadMessages] = useState({ loading: true, error: null, messages: [] })
   const [image, setImage] = useState(null)
   const socket = useWebsocket()
+
   /**
    * Method to send message
    */
@@ -72,6 +75,7 @@ export const Messages = (props) => {
       setSendMessages({ loading: false, error: [error.Messages] })
     }
   }
+
   /**
    * Method to Load message for first time
    */
@@ -100,11 +104,13 @@ export const Messages = (props) => {
       setMessages({ ...messages, loading: false, error: [error.Messages] })
     }
   }
+
   /**
    * Method to Load message for first time
    * @param {number} messageId order message Id
    */
   const handleReadMessages = async (messageId) => {
+    if (orderMessages && setOrderMessages) return
     try {
       setReadMessages({ ...readMessages, loading: true })
       const functionFetch = `${ordering.root}/orders/${orderId}/messages/${messageId}/read?order_id=${orderId}&order_message_id=${messageId}`
@@ -140,11 +146,12 @@ export const Messages = (props) => {
   }
 
   useEffect(() => {
+    if (messages.loading || (orderMessages && setOrderMessages)) return
     loadMessages()
   }, [orderId])
 
   useEffect(() => {
-    if (messages.loading) return
+    if (messages.loading || (orderMessages && setOrderMessages)) return
     const handleNewMessage = (message) => {
       if (message.order.id === orderId) {
         const found = messages.messages.find(_message => _message.id === message.id)
@@ -182,7 +189,7 @@ export const Messages = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          messages={messages}
+          messages={orderMessages || messages}
           image={image}
           canRead={canRead}
           handleSend={handleSend}
@@ -208,6 +215,11 @@ Messages.propTypes = {
    * @param {object} message Message to send
    */
   handleClickSetDefault: PropTypes.func,
+  /**
+   * @param {object} message
+   * handleCustomClick, function to get click event and return message without default behavior
+   */
+  customHandleSend: PropTypes.func,
   /**
    * Components types before [PUT HERE COMPONENT NAME]
    * Array of type components, the parent props will pass to these components
