@@ -72,6 +72,9 @@ var UsersFilter = function UsersFilter(props) {
 
   var clearFilter = function clearFilter() {
     setFilterValues({});
+    setFilterState(_objectSpread(_objectSpread({}, filterState), {}, {
+      changes: {}
+    }));
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {

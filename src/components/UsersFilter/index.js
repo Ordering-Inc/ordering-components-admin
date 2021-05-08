@@ -27,6 +27,7 @@ export const UsersFilter = (props) => {
 
   const clearFilter = () => {
     setFilterValues({})
+    setFilterState({...filterState, changes: {}})
   }
 
   return (
