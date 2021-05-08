@@ -53,7 +53,7 @@ var UsersFilter = function UsersFilter(props) {
 
   (0, _react.useEffect)(function () {
     setFilterState(_objectSpread(_objectSpread({}, filterState), {}, {
-      changes: _objectSpread({}, filterValues)
+      changes: _objectSpread({}, filterValues.changes)
     }));
   }, [filterValues]);
 
@@ -65,16 +65,22 @@ var UsersFilter = function UsersFilter(props) {
 
   var applyFilter = function applyFilter() {
     if (Object.keys(filterState.changes).length > 0) {
-      setFilterValues(_objectSpread({}, filterState.changes));
+      setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+        changes: _objectSpread({}, filterState.changes)
+      }));
       onCloseModal();
     }
   };
 
   var clearFilter = function clearFilter() {
-    setFilterValues({});
+    setFilterValues({
+      clear: true,
+      changes: {}
+    });
     setFilterState(_objectSpread(_objectSpread({}, filterState), {}, {
       changes: {}
     }));
+    onCloseModal();
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {

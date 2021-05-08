@@ -11,7 +11,7 @@ export const UsersFilter = (props) => {
   const [filterState, setFilterState] = useState({ loading: false, changes: {} })
 
   useEffect(() => {
-    setFilterState({ ...filterState, changes: { ...filterValues } })
+    setFilterState({ ...filterState, changes: { ...filterValues.changes } })
   }, [filterValues])
 
   const handleChangeInput = (name, val) => {
@@ -20,14 +20,15 @@ export const UsersFilter = (props) => {
 
   const applyFilter = () => {
     if (Object.keys(filterState.changes).length > 0) {
-      setFilterValues({ ...filterState.changes })
+      setFilterValues({ ...filterValues, changes: { ...filterState.changes } })
       onCloseModal()
     }
   }
 
   const clearFilter = () => {
-    setFilterValues({})
-    setFilterState({...filterState, changes: {}})
+    setFilterValues({ clear: true, changes: {} })
+    setFilterState({ ...filterState, changes: {} })
+    onCloseModal()
   }
 
   return (

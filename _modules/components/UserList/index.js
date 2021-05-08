@@ -64,7 +64,10 @@ var UserList = function UserList(props) {
       usersList = _useState2[0],
       setUsersList = _useState2[1];
 
-  var _useState3 = (0, _react.useState)({}),
+  var _useState3 = (0, _react.useState)({
+    clear: false,
+    changes: {}
+  }),
       _useState4 = _slicedToArray(_useState3, 2),
       filterValues = _useState4[0],
       setFilterValues = _useState4[1];
@@ -105,7 +108,7 @@ var UserList = function UserList(props) {
     if (searchVal !== null && !usersList.loading) getUsers(true, false);
   }, [searchVal]);
   (0, _react.useEffect)(function () {
-    if (Object.keys(filterValues).length > 0 && !usersList.loading) getUsers(true, false);
+    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false);
   }, [filterValues]);
   /**
    * Get users by params, order options and filters
@@ -114,7 +117,7 @@ var UserList = function UserList(props) {
 
   var getUsers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch, nextPage) {
-      var parameters, paginationParams, where, conditions, searchConditions, filterConditions, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
+      var parameters, paginationParams, where, conditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -179,67 +182,67 @@ var UserList = function UserList(props) {
                 });
               }
 
-              if (Object.keys(filterValues).length) {
+              if (Object.keys(filterValues.changes).length) {
                 filterConditions = [];
 
-                if (filterValues.name && filterValues.name !== null) {
+                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$changes = filterValues.changes) === null || _filterValues$changes === void 0 ? void 0 : _filterValues$changes.name) && (filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$changes2 = filterValues.changes) === null || _filterValues$changes2 === void 0 ? void 0 : _filterValues$changes2.name) !== null) {
                   filterConditions.push({
                     attribute: 'name',
                     value: {
                       condition: 'ilike',
-                      value: encodeURI("%".concat(filterValues.name, "%"))
+                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$changes3 = filterValues.changes) === null || _filterValues$changes3 === void 0 ? void 0 : _filterValues$changes3.name, "%"))
                     }
                   });
                 }
 
-                if (filterValues.lastname && filterValues.lastname !== null) {
+                if (filterValues.changes.lastname && filterValues.changes.lastname !== null) {
                   filterConditions.push({
                     attribute: 'lastname',
                     value: {
                       condition: 'ilike',
-                      value: encodeURI("%".concat(filterValues.lastname, "%"))
+                      value: encodeURI("%".concat(filterValues.changes.lastname, "%"))
                     }
                   });
                 }
 
-                if (filterValues.email && filterValues.email !== null) {
+                if (filterValues.changes.email && filterValues.changes.email !== null) {
                   filterConditions.push({
                     attribute: 'email',
                     value: {
                       condition: 'ilike',
-                      value: encodeURI("%".concat(filterValues.email, "%"))
+                      value: encodeURI("%".concat(filterValues.changes.email, "%"))
                     }
                   });
                 }
 
-                if (filterValues.email_verified !== undefined) {
+                if (filterValues.changes.email_verified !== undefined) {
                   filterConditions.push({
                     attribute: 'email_verified',
-                    value: filterValues.email_verified
+                    value: filterValues.changes.email_verified
                   });
                 }
 
-                if (filterValues.phone && filterValues.phone !== null) {
+                if (filterValues.changes.phone && filterValues.changes.phone !== null) {
                   filterConditions.push({
                     attribute: 'phone',
                     value: {
                       condition: 'ilike',
-                      value: encodeURI("%".concat(filterValues.phone, "%"))
+                      value: encodeURI("%".concat(filterValues.changes.phone, "%"))
                     }
                   });
                 }
 
-                if (filterValues.phone_verified !== undefined) {
+                if (filterValues.changes.phone_verified !== undefined) {
                   filterConditions.push({
                     attribute: 'phone_verified',
-                    value: filterValues.phone_verified
+                    value: filterValues.changes.phone_verified
                   });
                 }
 
-                if (filterValues.id && parseInt(filterValues.id) > 0) {
+                if (filterValues.changes.id && parseInt(filterValues.changes.id) > 0) {
                   filterConditions.push({
                     attribute: 'id',
-                    value: parseInt(filterValues.id)
+                    value: parseInt(filterValues.changes.id)
                   });
                 }
 

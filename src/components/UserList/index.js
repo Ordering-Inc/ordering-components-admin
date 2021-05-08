@@ -13,7 +13,7 @@ export const UserList = (props) => {
   } = props
 
   const [usersList, setUsersList] = useState({ users: [], loading: true, error: null })
-  const [filterValues, setFilterValues] = useState({})
+  const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchVal, setSearchVal] = useState(null)
   const [userTypeSelected, setUserTypeSelected] = useState(3)
   const [paginationProps, setPaginationProps] = useState({
@@ -34,7 +34,7 @@ export const UserList = (props) => {
   }, [searchVal])
 
   useEffect(() => {
-    if (Object.keys(filterValues).length > 0 && !usersList.loading) getUsers(true, false)
+    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false)
   }, [filterValues])
 
   /**
@@ -101,73 +101,73 @@ export const UserList = (props) => {
         })
       }
 
-      if (Object.keys(filterValues).length) {
+      if (Object.keys(filterValues.changes).length) {
         const filterConditions = []
-        if (filterValues.name && filterValues.name !== null) {
+        if (filterValues?.changes?.name && filterValues?.changes?.name !== null) {
           filterConditions.push(
             {
               attribute: 'name',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${filterValues.name}%`)
+                value: encodeURI(`%${filterValues?.changes?.name}%`)
               }
             }
           )
         }
-        if (filterValues.lastname && filterValues.lastname !== null) {
+        if (filterValues.changes.lastname && filterValues.changes.lastname !== null) {
           filterConditions.push(
             {
               attribute: 'lastname',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${filterValues.lastname}%`)
+                value: encodeURI(`%${filterValues.changes.lastname}%`)
               }
             }
           )
         }
-        if (filterValues.email && filterValues.email !== null) {
+        if (filterValues.changes.email && filterValues.changes.email !== null) {
           filterConditions.push(
             {
               attribute: 'email',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${filterValues.email}%`)
+                value: encodeURI(`%${filterValues.changes.email}%`)
               }
             }
           )
         }
-        if (filterValues.email_verified !== undefined) {
+        if (filterValues.changes.email_verified !== undefined) {
           filterConditions.push(
             {
               attribute: 'email_verified',
-              value: filterValues.email_verified
+              value: filterValues.changes.email_verified
             }
           )
         }
-        if (filterValues.phone && filterValues.phone !== null) {
+        if (filterValues.changes.phone && filterValues.changes.phone !== null) {
           filterConditions.push(
             {
               attribute: 'phone',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${filterValues.phone}%`)
+                value: encodeURI(`%${filterValues.changes.phone}%`)
               }
             }
           )
         }
-        if (filterValues.phone_verified !== undefined) {
+        if (filterValues.changes.phone_verified !== undefined) {
           filterConditions.push(
             {
               attribute: 'phone_verified',
-              value: filterValues.phone_verified
+              value: filterValues.changes.phone_verified
             }
           )
         }
-        if (filterValues.id && parseInt(filterValues.id) > 0) {
+        if (filterValues.changes.id && parseInt(filterValues.changes.id) > 0) {
           filterConditions.push(
             {
               attribute: 'id',
-              value: parseInt(filterValues.id)
+              value: parseInt(filterValues.changes.id)
             }
           )
         }
