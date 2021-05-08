@@ -62,13 +62,23 @@ export const Messages = (props) => {
       const response = await fetch(`${ordering.root}/orders/${orderId}/messages`, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` }, body: JSON.stringify(body) })
       const { error, result } = await response.json()
       if (!error) {
-        setMessages({
-          ...messages,
-          messages: [
-            ...messages.messages,
-            result
-          ]
-        })
+        if (setOrderMessages && orderMessages) {
+          setOrderMessages({
+            ...orderMessages,
+            messages: [
+              ...orderMessages.messages,
+              result
+            ]
+          })
+        } else {
+          setMessages({
+            ...messages,
+            messages: [
+              ...messages.messages,
+              result
+            ]
+          })
+        }
       }
       setSendMessages({ loading: false, error: error ? result : null })
     } catch (error) {

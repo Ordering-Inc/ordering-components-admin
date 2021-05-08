@@ -39,8 +39,8 @@ export const OrderDetails = (props) => {
     try {
       setMessages({ ...messages, loading: true })
       const url = userCustomerId
-        ? `${ordering.root}/orders/${orderState.order?.id}/messages?mode=dashboard`
-        : `${ordering.root}/orders/${orderState.order?.id}/messages`
+        ? `${ordering.root}/orders/${orderId}/messages?mode=dashboard`
+        : `${ordering.root}/orders/${orderId}/messages`
       const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` } })
       const { error, result } = await response.json()
       if (!error) {
@@ -71,7 +71,7 @@ export const OrderDetails = (props) => {
         ...messageErrors,
         loading: true
       })
-      const { status } = await fetch(`${ordering.root}/orders/${orderState.order?.id}/messages`, {
+      const { status } = await fetch(`${ordering.root}/orders/${orderId}/messages`, {
         method: 'post',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ export const OrderDetails = (props) => {
         body: JSON.stringify({
           can_see: '0,2,3',
           comment: `I am on the parking number: ${spot}`,
-          order_id: orderState.order?.id,
+          order_id: orderId,
           type: 2
         })
       })
@@ -174,7 +174,7 @@ export const OrderDetails = (props) => {
   const readMessages = async () => {
     const messageId = messages?.messages[messages?.messages?.length - 1]?.id
     try {
-      const response = await fetch(`${ordering.root}/orders/${orderState.order?.id}/messages/${messageId}/read`, {
+      const response = await fetch(`${ordering.root}/orders/${orderId}/messages/${messageId}/read`, {
         method: 'GET',
         headers: {
           Authorization: `Bearer ${token}`,
