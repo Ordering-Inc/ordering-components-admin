@@ -242,7 +242,7 @@ var UserFormDetails = function UserFormDetails(props) {
                 loading: false
               }));
               if (!response.content.error) setSelectedUser(response.content.result);
-              _context2.next = 20;
+              _context2.next = 19;
               break;
 
             case 14:
@@ -275,9 +275,8 @@ var UserFormDetails = function UserFormDetails(props) {
                 result: response.content,
                 loading: false
               }));
-              onClose();
 
-            case 20:
+            case 19:
               if (!response.content.error) {
                 setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                   result: _objectSpread(_objectSpread({}, userState.result), response.content)
@@ -292,11 +291,11 @@ var UserFormDetails = function UserFormDetails(props) {
                 }
               }
 
-              _context2.next = 26;
+              _context2.next = 25;
               break;
 
-            case 23:
-              _context2.prev = 23;
+            case 22:
+              _context2.prev = 22;
               _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -306,12 +305,12 @@ var UserFormDetails = function UserFormDetails(props) {
                 loading: false
               }));
 
-            case 26:
+            case 25:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 23]]);
+      }, _callee2, null, [[2, 22]]);
     }));
 
     return function handleUpdateClick(_x, _x2, _x3) {

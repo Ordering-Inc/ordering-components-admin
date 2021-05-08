@@ -117,7 +117,6 @@ export const UserFormDetails = (props) => {
           result: response.content,
           loading: false
         })
-        onClose()
       }
 
       if (!response.content.error) {
