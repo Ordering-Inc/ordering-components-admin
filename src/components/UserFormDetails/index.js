@@ -99,18 +99,6 @@ export const UserFormDetails = (props) => {
         response = await ordering.users(user?.id || userState.result.result.id).save(formState.changes, {
           accessToken: accessToken
         })
-        if(!response.content.error) {
-          let _users = [...usersList.users]
-          const selectedItem = _users.filter(item => item.id === user.id)[0]
-          const index = _users.indexOf(selectedItem)
-          if (index > -1) {
-            _users[index] = response.content.result
-          }
-          setUsersList({
-            ...usersList,
-            users: _users
-          })
-        }
         setFormState({
           ...formState,
           changes: response.content.error ? formState.changes : {},
@@ -120,6 +108,16 @@ export const UserFormDetails = (props) => {
       }
 
       if (!response.content.error) {
+        let _users = [...usersList.users]
+        const selectedItem = _users.filter(item => item.id === user.id)[0]
+        const index = _users.indexOf(selectedItem)
+        if (index > -1) {
+          _users[index] = response.content.result
+        }
+        setUsersList({
+          ...usersList,
+          users: _users
+        })
         setUserState({
           ...userState,
           result: {
