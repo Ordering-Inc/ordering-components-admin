@@ -38,9 +38,7 @@ export const OrderDetails = (props) => {
   const loadMessages = async () => {
     try {
       setMessages({ ...messages, loading: true })
-      const url = userCustomerId
-        ? `${ordering.root}/orders/${orderId}/messages?mode=dashboard`
-        : `${ordering.root}/orders/${orderId}/messages`
+      const url = `${ordering.root}/orders/${orderId}/messages?mode=dashboard`
       const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` } })
       const { error, result } = await response.json()
       if (!error) {
