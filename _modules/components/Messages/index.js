@@ -412,7 +412,7 @@ var Messages = function Messages(props) {
   }();
 
   (0, _react.useEffect)(function () {
-    if (messages.loading || orderMessages && setOrderMessages) return;
+    if (orderMessages && setOrderMessages) return;
     loadMessages();
   }, [orderId]);
   (0, _react.useEffect)(function () {
