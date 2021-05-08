@@ -156,7 +156,7 @@ export const Messages = (props) => {
   }
 
   useEffect(() => {
-    if (messages.loading || (orderMessages && setOrderMessages)) return
+    if (orderMessages && setOrderMessages) return
     loadMessages()
   }, [orderId])
 
