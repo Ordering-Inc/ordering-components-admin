@@ -92,10 +92,15 @@ var UserList = function UserList(props) {
       paginationProps = _useState10[0],
       setPaginationProps = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(false),
+  var _useState11 = (0, _react.useState)({}),
       _useState12 = _slicedToArray(_useState11, 2),
-      spinLoading = _useState12[0],
-      setSpinLoading = _useState12[1];
+      paginationDetail = _useState12[0],
+      setPaginationDetail = _useState12[1];
+
+  var _useState13 = (0, _react.useState)(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      spinLoading = _useState14[0],
+      setSpinLoading = _useState14[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -287,11 +292,12 @@ var UserList = function UserList(props) {
                 totalItems: pagination.total,
                 nextPageItems: nextPageItems
               }));
-              _context.next = 28;
+              setPaginationDetail(_objectSpread({}, pagination));
+              _context.next = 29;
               break;
 
-            case 25:
-              _context.prev = 25;
+            case 26:
+              _context.prev = 26;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -301,12 +307,12 @@ var UserList = function UserList(props) {
                 }));
               }
 
-            case 28:
+            case 29:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 25]]);
+      }, _callee, null, [[0, 26]]);
     }));
 
     return function getUsers(_x, _x2) {
@@ -404,7 +410,8 @@ var UserList = function UserList(props) {
     getUsers: getUsers,
     searchVal: searchVal,
     onSearch: setSearchVal,
-    spinLoading: spinLoading
+    spinLoading: spinLoading,
+    paginationDetail: paginationDetail
   })));
 };
 

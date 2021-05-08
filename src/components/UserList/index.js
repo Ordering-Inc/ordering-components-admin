@@ -22,6 +22,7 @@ export const UserList = (props) => {
     totalItems: null,
     totalPages: null
   })
+  const [paginationDetail, setPaginationDetail] = useState({})
   const [spinLoading, setSpinLoading] = useState(false)
   const [ordering] = useApi()
 
@@ -208,6 +209,7 @@ export const UserList = (props) => {
         totalItems: pagination.total,
         nextPageItems
       })
+      setPaginationDetail({ ...pagination })
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
         setUsersList({
@@ -282,6 +284,7 @@ export const UserList = (props) => {
             searchVal={searchVal}
             onSearch={setSearchVal}
             spinLoading={spinLoading}
+            paginationDetail={paginationDetail}
           />
         )
       }
