@@ -108,7 +108,7 @@ export const UserFormDetails = (props) => {
       }
 
       if (!response.content.error) {
-        let _users = [...usersList.users]
+        const _users = [...usersList.users]
         const selectedItem = _users.filter(item => item.id === user.id)[0]
         const index = _users.indexOf(selectedItem)
         if (index > -1) {
