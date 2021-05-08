@@ -201,9 +201,15 @@ var Messages = function Messages(props) {
               result = _yield$response$json.result;
 
               if (!error) {
-                setMessages(_objectSpread(_objectSpread({}, messages), {}, {
-                  messages: [].concat(_toConsumableArray(messages.messages), [result])
-                }));
+                if (setOrderMessages && orderMessages) {
+                  setOrderMessages(_objectSpread(_objectSpread({}, orderMessages), {}, {
+                    messages: [].concat(_toConsumableArray(orderMessages.messages), [result])
+                  }));
+                } else {
+                  setMessages(_objectSpread(_objectSpread({}, messages), {}, {
+                    messages: [].concat(_toConsumableArray(messages.messages), [result])
+                  }));
+                }
               }
 
               setSendMessages({

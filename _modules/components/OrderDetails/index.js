@@ -125,7 +125,7 @@ var OrderDetails = function OrderDetails(props) {
 
   var loadMessages = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _orderState$order, _orderState$order2, url, response, _yield$response$json, error, result;
+      var url, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -135,7 +135,7 @@ var OrderDetails = function OrderDetails(props) {
               setMessages(_objectSpread(_objectSpread({}, messages), {}, {
                 loading: true
               }));
-              url = userCustomerId ? "".concat(ordering.root, "/orders/").concat((_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.id, "/messages?mode=dashboard") : "".concat(ordering.root, "/orders/").concat((_orderState$order2 = orderState.order) === null || _orderState$order2 === void 0 ? void 0 : _orderState$order2.id, "/messages");
+              url = userCustomerId ? "".concat(ordering.root, "/orders/").concat(orderId, "/messages?mode=dashboard") : "".concat(ordering.root, "/orders/").concat(orderId, "/messages");
               _context.next = 5;
               return fetch(url, {
                 method: 'GET',
@@ -199,7 +199,7 @@ var OrderDetails = function OrderDetails(props) {
 
   var sendMessage = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(spot) {
-      var _orderState$order3, _orderState$order4, _yield$fetch, status;
+      var _yield$fetch, status;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -210,7 +210,7 @@ var OrderDetails = function OrderDetails(props) {
                 loading: true
               }));
               _context2.next = 4;
-              return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : _orderState$order3.id, "/messages"), {
+              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages"), {
                 method: 'post',
                 headers: {
                   Authorization: "Bearer ".concat(token),
@@ -219,7 +219,7 @@ var OrderDetails = function OrderDetails(props) {
                 body: JSON.stringify({
                   can_see: '0,2,3',
                   comment: "I am on the parking number: ".concat(spot),
-                  order_id: (_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.id,
+                  order_id: orderId,
                   type: 2
                 })
               });
@@ -399,7 +399,7 @@ var OrderDetails = function OrderDetails(props) {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
       var _messages$messages, _messages$messages2;
 
-      var messageId, _orderState$order5, response, _yield$response$json2, result;
+      var messageId, response, _yield$response$json2, result;
 
       return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
@@ -408,7 +408,7 @@ var OrderDetails = function OrderDetails(props) {
               messageId = messages === null || messages === void 0 ? void 0 : (_messages$messages = messages.messages[(messages === null || messages === void 0 ? void 0 : (_messages$messages2 = messages.messages) === null || _messages$messages2 === void 0 ? void 0 : _messages$messages2.length) - 1]) === null || _messages$messages === void 0 ? void 0 : _messages$messages.id;
               _context5.prev = 1;
               _context5.next = 4;
-              return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order5 = orderState.order) === null || _orderState$order5 === void 0 ? void 0 : _orderState$order5.id, "/messages/").concat(messageId, "/read"), {
+              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages/").concat(messageId, "/read"), {
                 method: 'GET',
                 headers: {
                   Authorization: "Bearer ".concat(token),
