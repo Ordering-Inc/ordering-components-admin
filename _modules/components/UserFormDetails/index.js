@@ -198,7 +198,7 @@ var UserFormDetails = function UserFormDetails(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(changes, isImage, image) {
-      var response, _formState$changes, photo, _changes;
+      var response, _formState$changes, photo, _changes, _users, selectedItem, index;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -242,7 +242,7 @@ var UserFormDetails = function UserFormDetails(props) {
                 loading: false
               }));
               if (!response.content.error) setSelectedUser(response.content.result);
-              _context2.next = 18;
+              _context2.next = 20;
               break;
 
             case 14:
@@ -253,13 +253,31 @@ var UserFormDetails = function UserFormDetails(props) {
 
             case 16:
               response = _context2.sent;
+
+              if (!response.content.error) {
+                _users = _toConsumableArray(usersList.users);
+                selectedItem = _users.filter(function (item) {
+                  return item.id === user.id;
+                })[0];
+                index = _users.indexOf(selectedItem);
+
+                if (index > -1) {
+                  _users[index] = response.content.result;
+                }
+
+                setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+                  users: _users
+                }));
+              }
+
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
                 result: response.content,
                 loading: false
               }));
+              onClose();
 
-            case 18:
+            case 20:
               if (!response.content.error) {
                 setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                   result: _objectSpread(_objectSpread({}, userState.result), response.content)
@@ -274,11 +292,11 @@ var UserFormDetails = function UserFormDetails(props) {
                 }
               }
 
-              _context2.next = 24;
+              _context2.next = 26;
               break;
 
-            case 21:
-              _context2.prev = 21;
+            case 23:
+              _context2.prev = 23;
               _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -288,12 +306,12 @@ var UserFormDetails = function UserFormDetails(props) {
                 loading: false
               }));
 
-            case 24:
+            case 26:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 21]]);
+      }, _callee2, null, [[2, 23]]);
     }));
 
     return function handleUpdateClick(_x, _x2, _x3) {
