@@ -19,7 +19,12 @@ export const OrderDetails = (props) => {
   const [orderState, setOrderState] = useState({ order: null, loading: !props.order, error: null })
   const [messageErrors, setMessageErrors] = useState({ status: null, loading: false, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [messages, setMessages] = useState({ loading: true, error: null, messages: [] })
+  const [messagesReadList, setMessagesReadList] = useState(false)
+
   const socket = useWebsocket()
+
+  const accessToken = props.accessToken || token
 
   /**
    * Method to format a price number
@@ -33,9 +38,7 @@ export const OrderDetails = (props) => {
   const loadMessages = async () => {
     try {
       setMessages({ ...messages, loading: true })
-      const url = userCustomerId
-        ? `${ordering.root}/orders/${orderState.order?.id}/messages?mode=dashboard`
-        : `${ordering.root}/orders/${orderState.order?.id}/messages`
+      const url = `${ordering.root}/orders/${orderId}/messages?mode=dashboard`
       const response = await fetch(url, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${accessToken}` } })
       const { error, result } = await response.json()
       if (!error) {
@@ -66,7 +69,7 @@ export const OrderDetails = (props) => {
         ...messageErrors,
         loading: true
       })
-      const { status } = await fetch(`${ordering.root}/orders/${orderState.order?.id}/messages`, {
+      const { status } = await fetch(`${ordering.root}/orders/${orderId}/messages`, {
         method: 'post',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -75,7 +78,7 @@ export const OrderDetails = (props) => {
         body: JSON.stringify({
           can_see: '0,2,3',
           comment: `I am on the parking number: ${spot}`,
-          order_id: orderState.order?.id,
+          order_id: orderId,
           type: 2
         })
       })
@@ -113,7 +116,7 @@ export const OrderDetails = (props) => {
     }
     if (userCustomerId) {
       options.query = {
-        mode:'dashboard'
+        mode: 'dashboard'
       }
     }
     try {
@@ -166,6 +169,24 @@ export const OrderDetails = (props) => {
     }
   }
 
+  const readMessages = async () => {
+    const messageId = messages?.messages[messages?.messages?.length - 1]?.id
+    try {
+      const response = await fetch(`${ordering.root}/orders/${orderId}/messages/${messageId}/read`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      const { result } = await response.json()
+
+      setMessagesReadList(result)
+    } catch (e) {
+      console.log(e.message)
+    }
+  }
+
   useEffect(() => {
     if (props.order) {
       setOrderState({
@@ -200,6 +221,10 @@ export const OrderDetails = (props) => {
     }
   }, [orderState.order, socket, loading])
 
+  useEffect(() => {
+    loadMessages()
+  }, [orderId])
+
   return (
     <>
       {UIComponent && (
@@ -211,6 +236,10 @@ export const OrderDetails = (props) => {
           formatPrice={formatPrice}
           handlerSubmit={handlerSubmitSpotNumber}
           handleUpdateOrderStatus={handleUpdateOrderStatus}
+          messages={messages}
+          setMessages={setMessages}
+          messagesReadList={messagesReadList}
+          readMessages={readMessages}
         />
       )}
     </>
