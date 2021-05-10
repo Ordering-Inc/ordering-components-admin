@@ -94,7 +94,22 @@ var OrderDetails = function OrderDetails(props) {
       actionStatus = _useState6[0],
       setActionStatus = _useState6[1];
 
+  var _useState7 = (0, _react.useState)({
+    loading: true,
+    error: null,
+    messages: []
+  }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      messages = _useState8[0],
+      setMessages = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(false),
+      _useState10 = _slicedToArray(_useState9, 2),
+      messagesReadList = _useState10[0],
+      setMessagesReadList = _useState10[1];
+
   var socket = (0, _WebsocketContext.useWebsocket)();
+  var accessToken = props.accessToken || token;
   /**
    * Method to format a price number
    * @param {Number} price
@@ -110,7 +125,7 @@ var OrderDetails = function OrderDetails(props) {
 
   var loadMessages = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _orderState$order, _orderState$order2, url, response, _yield$response$json, error, result;
+      var url, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -120,7 +135,7 @@ var OrderDetails = function OrderDetails(props) {
               setMessages(_objectSpread(_objectSpread({}, messages), {}, {
                 loading: true
               }));
-              url = userCustomerId ? "".concat(ordering.root, "/orders/").concat((_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.id, "/messages?mode=dashboard") : "".concat(ordering.root, "/orders/").concat((_orderState$order2 = orderState.order) === null || _orderState$order2 === void 0 ? void 0 : _orderState$order2.id, "/messages");
+              url = "".concat(ordering.root, "/orders/").concat(orderId, "/messages?mode=dashboard");
               _context.next = 5;
               return fetch(url, {
                 method: 'GET',
@@ -184,7 +199,7 @@ var OrderDetails = function OrderDetails(props) {
 
   var sendMessage = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(spot) {
-      var _orderState$order3, _orderState$order4, _yield$fetch, status;
+      var _yield$fetch, status;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -195,7 +210,7 @@ var OrderDetails = function OrderDetails(props) {
                 loading: true
               }));
               _context2.next = 4;
-              return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : _orderState$order3.id, "/messages"), {
+              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages"), {
                 method: 'post',
                 headers: {
                   Authorization: "Bearer ".concat(token),
@@ -204,7 +219,7 @@ var OrderDetails = function OrderDetails(props) {
                 body: JSON.stringify({
                   can_see: '0,2,3',
                   comment: "I am on the parking number: ".concat(spot),
-                  order_id: (_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.id,
+                  order_id: orderId,
                   type: 2
                 })
               });
@@ -380,6 +395,57 @@ var OrderDetails = function OrderDetails(props) {
     };
   }();
 
+  var readMessages = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      var _messages$messages, _messages$messages2;
+
+      var messageId, response, _yield$response$json2, result;
+
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              messageId = messages === null || messages === void 0 ? void 0 : (_messages$messages = messages.messages[(messages === null || messages === void 0 ? void 0 : (_messages$messages2 = messages.messages) === null || _messages$messages2 === void 0 ? void 0 : _messages$messages2.length) - 1]) === null || _messages$messages === void 0 ? void 0 : _messages$messages.id;
+              _context5.prev = 1;
+              _context5.next = 4;
+              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages/").concat(messageId, "/read"), {
+                method: 'GET',
+                headers: {
+                  Authorization: "Bearer ".concat(token),
+                  'Content-Type': 'application/json'
+                }
+              });
+
+            case 4:
+              response = _context5.sent;
+              _context5.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json2 = _context5.sent;
+              result = _yield$response$json2.result;
+              setMessagesReadList(result);
+              _context5.next = 15;
+              break;
+
+            case 12:
+              _context5.prev = 12;
+              _context5.t0 = _context5["catch"](1);
+              console.log(_context5.t0.message);
+
+            case 15:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[1, 12]]);
+    }));
+
+    return function readMessages() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (props.order) {
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
@@ -414,13 +480,20 @@ var OrderDetails = function OrderDetails(props) {
       socket.off('update_order', handleUpdateOrder);
     };
   }, [orderState.order, socket, loading]);
+  (0, _react.useEffect)(function () {
+    loadMessages();
+  }, [orderId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     order: orderState,
     messageErrors: messageErrors,
     actionStatus: actionStatus,
     formatPrice: formatPrice,
     handlerSubmit: handlerSubmitSpotNumber,
-    handleUpdateOrderStatus: handleUpdateOrderStatus
+    handleUpdateOrderStatus: handleUpdateOrderStatus,
+    messages: messages,
+    setMessages: setMessages,
+    messagesReadList: messagesReadList,
+    readMessages: readMessages
   })));
 };
 

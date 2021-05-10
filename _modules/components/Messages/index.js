@@ -61,8 +61,10 @@ var Messages = function Messages(props) {
   var UIComponent = props.UIComponent,
       orderId = props.orderId,
       customHandleSend = props.customHandleSend,
-      order = props.order,
+      orderMessages = props.messages,
+      setOrderMessages = props.setMessages,
       asDashboard = props.asDashboard,
+      order = props.order,
       handleUpdateOrderForUnreadCount = props.handleUpdateOrderForUnreadCount;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -199,9 +201,15 @@ var Messages = function Messages(props) {
               result = _yield$response$json.result;
 
               if (!error) {
-                setMessages(_objectSpread(_objectSpread({}, messages), {}, {
-                  messages: [].concat(_toConsumableArray(messages.messages), [result])
-                }));
+                if (setOrderMessages && orderMessages) {
+                  setOrderMessages(_objectSpread(_objectSpread({}, orderMessages), {}, {
+                    messages: [].concat(_toConsumableArray(orderMessages.messages), [result])
+                  }));
+                } else {
+                  setMessages(_objectSpread(_objectSpread({}, messages), {}, {
+                    messages: [].concat(_toConsumableArray(messages.messages), [result])
+                  }));
+                }
               }
 
               setSendMessages({
@@ -318,12 +326,20 @@ var Messages = function Messages(props) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.prev = 0;
+              if (!(orderMessages && setOrderMessages)) {
+                _context3.next = 2;
+                break;
+              }
+
+              return _context3.abrupt("return");
+
+            case 2:
+              _context3.prev = 2;
               setReadMessages(_objectSpread(_objectSpread({}, readMessages), {}, {
                 loading: true
               }));
               functionFetch = "".concat(ordering.root, "/orders/").concat(orderId, "/messages/").concat(messageId, "/read?order_id=").concat(orderId, "&order_message_id=").concat(messageId);
-              _context3.next = 5;
+              _context3.next = 7;
               return fetch(functionFetch, {
                 method: 'GET',
                 headers: {
@@ -332,12 +348,12 @@ var Messages = function Messages(props) {
                 }
               });
 
-            case 5:
+            case 7:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 10;
               return response.json();
 
-            case 8:
+            case 10:
               _yield$response$json3 = _context3.sent;
               error = _yield$response$json3.error;
               result = _yield$response$json3.result;
@@ -371,23 +387,23 @@ var Messages = function Messages(props) {
                 }));
               }
 
-              _context3.next = 17;
+              _context3.next = 19;
               break;
 
-            case 14:
-              _context3.prev = 14;
-              _context3.t0 = _context3["catch"](0);
+            case 16:
+              _context3.prev = 16;
+              _context3.t0 = _context3["catch"](2);
               setReadMessages(_objectSpread(_objectSpread({}, readMessages), {}, {
                 loading: false,
                 error: [_context3.t0.Messages]
               }));
 
-            case 17:
+            case 19:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 14]]);
+      }, _callee3, null, [[2, 16]]);
     }));
 
     return function handleReadMessages(_x) {
@@ -396,10 +412,11 @@ var Messages = function Messages(props) {
   }();
 
   (0, _react.useEffect)(function () {
+    if (orderMessages && setOrderMessages) return;
     loadMessages();
   }, [orderId]);
   (0, _react.useEffect)(function () {
-    if (messages.loading) return;
+    if (messages.loading || orderMessages && setOrderMessages) return;
 
     var handleNewMessage = function handleNewMessage(message) {
       if (message.order.id === orderId) {
@@ -436,7 +453,7 @@ var Messages = function Messages(props) {
     };
   }, [socket, orderId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    messages: messages,
+    messages: orderMessages || messages,
     image: image,
     canRead: canRead,
     handleSend: handleSend,
@@ -461,6 +478,12 @@ Messages.propTypes = {
    * @param {object} message Message to send
    */
   handleClickSetDefault: _propTypes.default.func,
+
+  /**
+   * @param {object} message
+   * handleCustomClick, function to get click event and return message without default behavior
+   */
+  customHandleSend: _propTypes.default.func,
 
   /**
    * Components types before [PUT HERE COMPONENT NAME]
