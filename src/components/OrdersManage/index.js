@@ -275,8 +275,15 @@ export const OrdersManage = (props) => {
     const handleTrackingDriver = (trackingData) => {
       let drivers = []
       drivers = driversList.drivers.filter(_driver => {
-        if (_driver.id === trackingData.id) {
-          _driver.location = trackingData.location
+        if (_driver.id === trackingData.driver_id) {
+          if (typeof trackingData.location === 'string') {
+            const trackingLocation = trackingData.location
+            const _location = trackingLocation.replaceAll('\\', '')
+            const location = JSON.parse(_location)
+            _driver.location = location
+          } else {
+            _driver.location = trackingData.location
+          }
         }
         return true
       })
