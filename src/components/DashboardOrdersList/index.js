@@ -271,6 +271,17 @@ export const DashboardOrdersList = (props) => {
 
     if (Object.keys(filterValues).length) {
       const filterConditons = []
+      if (filterValues?.orderId) {
+        filterConditons.push(
+          {
+            attribute: 'id',
+            value: {
+              condition: 'ilike',
+              value: encodeURI(`%${filterValues?.orderId}%`)
+            }
+          }
+        )
+      }
       if (filterValues.deliveryFromDatetime !== null) {
         filterConditons.push(
           {
@@ -466,7 +477,7 @@ export const DashboardOrdersList = (props) => {
     })
 
     loadOrders()
-    
+
     setOrderList({ ...orderList, orders })
   }, [deletedOrderId])
 
