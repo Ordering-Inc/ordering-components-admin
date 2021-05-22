@@ -19,11 +19,12 @@ const configFile = {
 }
 
 Sentry.init({
-  environment: process.env.NODE_ENV,
+  environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
   dsn: 'https://1937ee8a67fd41f29e362ad2244f4368@o460529.ingest.sentry.io/5681465',
   integrations: [
     new Integrations.BrowserTracing()
   ],
+  release: 'ordering-components-admin@' + process.env.npm_package_version,
   tracesSampleRate: 1.0
 })
 
