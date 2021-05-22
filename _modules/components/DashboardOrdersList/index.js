@@ -463,6 +463,16 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
               if (Object.keys(filterValues).length) {
                 filterConditons = [];
 
+                if (filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId) {
+                  filterConditons.push({
+                    attribute: 'id',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId, "%"))
+                    }
+                  });
+                }
+
                 if (filterValues.deliveryFromDatetime !== null) {
                   filterConditons.push({
                     attribute: 'delivery_datetime',
