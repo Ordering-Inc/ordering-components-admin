@@ -12,6 +12,7 @@ export const OrdersFilter = (props) => {
    * This property is used to set in state the current value
    */
   const [filterValues, setFilterValues] = useState({
+    orderId: null,
     groupTypes: [],
     dateType: null,
     deliveryFromDatetime: null,
@@ -23,6 +24,15 @@ export const OrdersFilter = (props) => {
     deliveryTypes: [],
     paymethodIds: []
   })
+
+  /**
+   * Changer order Id
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeOrderId = (e) => {
+    const orderId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
+    setFilterValues({ ...filterValues, orderId })
+  }
 
   /**
    * Change group type
@@ -186,6 +196,7 @@ export const OrdersFilter = (props) => {
   */
   const handleResetFilterValues = () => {
     setFilterValues({
+      orderId: null,
       groupTypes: [],
       deliveryFromDatetime: null,
       deliveryEndDatetime: null,
@@ -222,6 +233,7 @@ export const OrdersFilter = (props) => {
           {...props}
           filterValues={filterValues}
           singleDriverIds={singleDriverIds}
+          handleChangeOrderId={handleChangeOrderId}
           handleChangeGroup={handleChangeGroup}
           handleChangeDateType={handleChangeDateType}
           handleChangeFromDate={handleChangeFromDate}
