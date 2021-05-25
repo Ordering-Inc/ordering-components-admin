@@ -27,6 +27,5 @@ export const EventProvider = ({ children }) => {
  */
 export const useEvent = () => {
   const configManager = useContext(EventContext)
-  console.log(configManager, 'this is config manager')
   return configManager || [new Emitter()]
 }

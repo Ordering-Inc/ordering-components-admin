@@ -4,7 +4,6 @@ export class Emitter {
   }
 
   on (name, listener) {
-    console.log(name, listener, 'this is on event')
     if (!this._events[name]) {
       this._events[name] = []
     }
@@ -23,7 +22,6 @@ export class Emitter {
   }
 
   emit (name, ...data) {
-    console.log(name, ...data, this._events[name], 'this is emit data')
     if (!this._events[name]) {
       return
     }
