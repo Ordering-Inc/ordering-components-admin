@@ -44,6 +44,7 @@ exports.EventProvider = EventProvider;
 
 var useEvent = function useEvent() {
   var configManager = (0, _react.useContext)(EventContext);
+  console.log(configManager, 'this is config manager');
   return configManager || [new _Emitter.Emitter()];
 };
 

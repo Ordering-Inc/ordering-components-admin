@@ -4,6 +4,7 @@ export class Emitter {
   }
 
   on (name, listener) {
+    console.log(name, listener, 'this is on event')
     if (!this._events[name]) {
       this._events[name] = []
     }
