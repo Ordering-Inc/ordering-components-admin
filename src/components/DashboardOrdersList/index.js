@@ -518,10 +518,8 @@ export const DashboardOrdersList = (props) => {
 
   useEffect(() => {
     if (orderList.loading) return
-    const handleUpdateOrder = (_order) => {
-      const found = orderList.orders.find(order => _order.id === order.id)
-      const totalPrice = getTotalPrice(_order)
-      const order = { ..._order, summary: { total: totalPrice } }
+    const handleUpdateOrder = (order) => {
+      const found = orderList.orders.find(_order => _order.id === order.id)
       let orders = []
       if (found) {
         orders = orderList.orders.filter(_order => {
@@ -563,23 +561,23 @@ export const DashboardOrdersList = (props) => {
         }
       }
     }
-    const handleRegisterOrder = (_order) => {
-      const found = orderList.orders.find(order => order.id === _order.id)
+    const handleRegisterOrder = (order) => {
+      const found = orderList.orders.find(_order => _order.id === order.id)
       if (found) return
-      const totalPrice = getTotalPrice(_order)
-      const order = { ..._order, status: 0, summary: { total: totalPrice } }
       let orders = []
-      if (orderStatus.includes(0) && isFilteredOrder(_order)) {
-        orders = [order, ...orderList.orders]
-        const _orders = sortOrdersArray(orderBy, orders)
-        pagination.total++
-        setPagination({
-          ...pagination
-        })
-        setOrderList({
-          ...orderList,
-          orders: _orders
-        })
+      if (isFilteredOrder(order)) {
+        if ((orderStatus.includes(0) && order.status === 0) || (orderStatus.includes(13) && order.status === 13)) {
+          orders = [order, ...orderList.orders]
+          const _orders = sortOrdersArray(orderBy, orders)
+          pagination.total++
+          setPagination({
+            ...pagination
+          })
+          setOrderList({
+            ...orderList,
+            orders: _orders
+          })
+        }
       }
     }
 
