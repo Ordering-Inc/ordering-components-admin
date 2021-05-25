@@ -22,6 +22,7 @@ export class Emitter {
   }
 
   emit (name, ...data) {
+    console.log(name, ...data, this._events[name], 'this is emit data')
     if (!this._events[name]) {
       return
     }

@@ -43,9 +43,13 @@ var Emitter = /*#__PURE__*/function () {
   }, {
     key: "emit",
     value: function emit(name) {
+      var _console;
+
       for (var _len = arguments.length, data = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         data[_key - 1] = arguments[_key];
       }
+
+      (_console = console).log.apply(_console, [name].concat(data, [this._events[name], 'this is emit data']));
 
       if (!this._events[name]) {
         return;
