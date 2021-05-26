@@ -812,18 +812,10 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
-    var handleUpdateOrder = function handleUpdateOrder(_order) {
-      var found = orderList.orders.find(function (order) {
+    var handleUpdateOrder = function handleUpdateOrder(order) {
+      var found = orderList.orders.find(function (_order) {
         return _order.id === order.id;
       });
-      var totalPrice = getTotalPrice(_order);
-
-      var order = _objectSpread(_objectSpread({}, _order), {}, {
-        summary: {
-          total: totalPrice
-        }
-      });
-
       var orders = [];
 
       if (found) {
@@ -869,32 +861,25 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       }
     };
 
-    var handleRegisterOrder = function handleRegisterOrder(_order) {
-      var found = orderList.orders.find(function (order) {
-        return order.id === _order.id;
+    var handleRegisterOrder = function handleRegisterOrder(order) {
+      var found = orderList.orders.find(function (_order) {
+        return _order.id === order.id;
       });
       if (found) return;
-      var totalPrice = getTotalPrice(_order);
-
-      var order = _objectSpread(_objectSpread({}, _order), {}, {
-        status: 0,
-        summary: {
-          total: totalPrice
-        }
-      });
-
       var orders = [];
 
-      if (orderStatus.includes(0) && isFilteredOrder(_order)) {
-        orders = [order].concat(_toConsumableArray(orderList.orders));
+      if (isFilteredOrder(order)) {
+        if (orderStatus.includes(0) && order.status === 0 || orderStatus.includes(13) && order.status === 13) {
+          orders = [order].concat(_toConsumableArray(orderList.orders));
 
-        var _orders = sortOrdersArray(orderBy, orders);
+          var _orders = sortOrdersArray(orderBy, orders);
 
-        pagination.total++;
-        setPagination(_objectSpread({}, pagination));
-        setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
-          orders: _orders
-        }));
+          pagination.total++;
+          setPagination(_objectSpread({}, pagination));
+          setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
+            orders: _orders
+          }));
+        }
       }
     };
 
