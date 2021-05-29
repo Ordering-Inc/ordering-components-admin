@@ -141,8 +141,8 @@ export const Messages = (props) => {
           })
           setMessages({ ...messages, messages: _messages })
         }
-        handleUpdateOrderForUnreadCount(null)
-        handleUpdateOrderForUnreadCount(orderId)
+        handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(null)
+        handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(orderId)
       } else {
         setReadMessages({
           ...readMessages,
