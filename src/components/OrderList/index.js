@@ -390,7 +390,7 @@ export const OrderList = (props) => {
   }, [searchValue])
 
   /**
-   * Listening sesssion, filter values, orders, order statuses change
+   * Listening sesssion and filter values change
    */
   useEffect(() => {
     if (orders) {
@@ -422,7 +422,7 @@ export const OrderList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, filterValues, orders, orderStatus])
+  }, [session, filterValues, orders])
 
   useEffect(() => {
     if (orderList.loading) return

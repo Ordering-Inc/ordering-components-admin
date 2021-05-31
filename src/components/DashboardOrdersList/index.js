@@ -514,7 +514,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders, orderStatus])
 
   useEffect(() => {
     if (orderList.loading) return
