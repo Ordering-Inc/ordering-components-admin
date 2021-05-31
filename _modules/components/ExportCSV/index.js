@@ -63,7 +63,8 @@ var ExportCSV = function ExportCSV(props) {
 
   var _useState = (0, _react.useState)({
     loading: false,
-    error: null
+    error: null,
+    result: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
       actionStatus = _useState2[0],
@@ -75,7 +76,8 @@ var ExportCSV = function ExportCSV(props) {
 
   var getCSV = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, functionFetch, response, fileSuffix;
+      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -185,37 +187,43 @@ var ExportCSV = function ExportCSV(props) {
 
             case 10:
               response = _context.sent;
-              fileSuffix = new Date().getTime();
-              _context.next = 14;
-              return response.blob().then(function (blob) {
-                var url = window.URL.createObjectURL(blob);
-                var a = document.createElement('a');
-                a.href = url;
-                a.download = "orders_".concat(fileSuffix, ".csv");
-                a.click();
-              });
+              _context.next = 13;
+              return response.json();
 
-            case 14:
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: false
-              }));
-              _context.next = 20;
+            case 13:
+              _yield$response$json = _context.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+
+              if (!error) {
+                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                  loading: false,
+                  result: result
+                }));
+              } else {
+                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                  loading: true,
+                  error: result
+                }));
+              }
+
+              _context.next = 22;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](2);
-              setActionStatus({
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: _context.t0
-              });
+              }));
 
-            case 20:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 19]]);
     }));
 
     return function getCSV(_x) {
