@@ -601,7 +601,7 @@ var OrderList = function OrderList(props) {
     loadOrders();
   }, [searchValue]);
   /**
-   * Listening sesssion and filter values change
+   * Listening sesssion, filter values, orders, order statuses change
    */
 
   (0, _react.useEffect)(function () {
@@ -639,7 +639,7 @@ var OrderList = function OrderList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, filterValues, orders]);
+  }, [session, filterValues, orders, orderStatus]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
