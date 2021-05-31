@@ -808,7 +808,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders, orderStatus]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
