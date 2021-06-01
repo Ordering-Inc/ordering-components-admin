@@ -199,7 +199,7 @@ export const Messages = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          messages={orderMessages || messages}
+          messages={messages}
           image={image}
           canRead={canRead}
           handleSend={handleSend}
