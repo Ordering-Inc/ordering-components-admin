@@ -188,6 +188,20 @@ var OrdersManage = function OrdersManage(props) {
       selectedOrderIds = _useState26[0],
       setSelectedOrderIds = _useState26[1];
   /**
+   * Object to save order substatuses
+   */
+
+
+  var _useState27 = (0, _react.useState)({
+    pending: [0],
+    inProgress: [7],
+    completed: [1],
+    cancelled: [2]
+  }),
+      _useState28 = _slicedToArray(_useState27, 2),
+      selectedSubOrderStatus = _useState28[0],
+      setSelectedSubOrderStatus = _useState28[1];
+  /**
    * Save ids of orders selected
    * @param {string} orderId order id
    */
@@ -771,6 +785,8 @@ var OrdersManage = function OrdersManage(props) {
     deletedOrderId: deletedOrderId,
     startMulitOrderStatusChange: startMulitOrderStatusChange,
     startMulitOrderDelete: startMulitOrderDelete,
+    selectedSubOrderStatus: selectedSubOrderStatus,
+    handleSelectedSubOrderStatus: setSelectedSubOrderStatus,
     handleSelectedOrderIds: handleSelectedOrderIds,
     handleRemoveSelectedOrderId: handleRemoveSelectedOrderId,
     handleChangeSearch: handleChangeSearch,
