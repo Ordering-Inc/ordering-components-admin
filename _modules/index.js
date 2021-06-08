@@ -267,6 +267,12 @@ Object.defineProperty(exports, "OrderList", {
     return _OrderList.OrderList;
   }
 });
+Object.defineProperty(exports, "OrderNotification", {
+  enumerable: true,
+  get: function get() {
+    return _OrderNotification.OrderNotification;
+  }
+});
 Object.defineProperty(exports, "OrdersFilter", {
   enumerable: true,
   get: function get() {
@@ -795,6 +801,8 @@ var _MyOrders = require("./components/MyOrders");
 var _MyOrdersList = require("./components/MyOrdersList");
 
 var _OrderList = require("./components/OrderList");
+
+var _OrderNotification = require("./components/OrderNotification");
 
 var _OrdersFilter = require("./components/OrdersFilter");
 
