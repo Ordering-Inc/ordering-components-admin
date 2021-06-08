@@ -50,7 +50,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var DriversList = function DriversList(props) {
   var drivers = props.drivers,
       UIComponent = props.UIComponent,
-      propsToFetch = props.propsToFetch;
+      propsToFetch = props.propsToFetch,
+      isSearchByName = props.isSearchByName,
+      isSearchByCellphone = props.isSearchByCellphone;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -125,6 +127,26 @@ var DriversList = function DriversList(props) {
       _useState12 = _slicedToArray(_useState11, 2),
       driversSubfilter = _useState12[0],
       setDriversSubfilter = _useState12[1];
+  /**
+   * search value
+   */
+
+
+  var _useState13 = (0, _react.useState)(null),
+      _useState14 = _slicedToArray(_useState13, 2),
+      searchValue = _useState14[0],
+      setSearchValue = _useState14[1];
+  /**
+   * Change text to search
+   * @param {string} search Search value
+   */
+
+
+  var handleChangeSearch = function handleChangeSearch(search) {
+    if (search !== searchValue) {
+      setSearchValue(search);
+    }
+  };
   /**
    * Method to assign driver to order from API
    * @param {object} assign assigned order id and driver id
@@ -247,7 +269,7 @@ var DriversList = function DriversList(props) {
 
   var getDrivers = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var source, _yield$ordering$setAc2, result;
+      var source, where, conditions, searchConditions, _yield$ordering$setAc2, result;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -259,15 +281,62 @@ var DriversList = function DriversList(props) {
               }));
               source = {};
               requestsState.drivers = source;
-              _context2.next = 6;
-              return ordering.setAccessToken(session.token).users().select(propsToFetch).where([{
+              where = null;
+              conditions = [];
+              conditions.push({
                 attribute: 'level',
                 value: [4]
-              }]).get({
+              });
+
+              if (searchValue) {
+                searchConditions = [];
+
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                  searchConditions.push({
+                    attribute: 'lastname',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByCellphone) {
+                  searchConditions.push({
+                    attribute: 'cellphone',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
+              _context2.next = 11;
+              return ordering.setAccessToken(session.token).users().select(propsToFetch).where(where).get({
                 cancelToken: source
               });
 
-            case 6:
+            case 11:
               _yield$ordering$setAc2 = _context2.sent;
               result = _yield$ordering$setAc2.content.result;
               setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
@@ -275,23 +344,23 @@ var DriversList = function DriversList(props) {
                 drivers: result
               }));
               getOnlineOfflineDrivers(result);
-              _context2.next = 15;
+              _context2.next = 20;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 17:
+              _context2.prev = 17;
               _context2.t0 = _context2["catch"](0);
               setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
                 loading: false,
                 error: _context2.t0.message
               }));
 
-            case 15:
+            case 20:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 17]]);
     }));
 
     return function getDrivers() {
@@ -322,7 +391,7 @@ var DriversList = function DriversList(props) {
         requestsState.drivers.cancel();
       }
     };
-  }, [drivers]);
+  }, [drivers, searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversList: driversList,
     onlineDrivers: onlineDrivers,
@@ -330,6 +399,8 @@ var DriversList = function DriversList(props) {
     driverActionStatus: driverActionStatus,
     driversIsOnline: driversIsOnline,
     driversSubfilter: driversSubfilter,
+    searchValue: searchValue,
+    handleChangeSearch: handleChangeSearch,
     handleChangeDriverIsOnline: handleChangeDriverIsOnline,
     handleChangeDriversSubFilter: handleChangeDriversSubFilter,
     handleAssignDriver: handleAssignDriver
