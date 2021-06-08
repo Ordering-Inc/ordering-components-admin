@@ -40,6 +40,7 @@ import { MomentOption } from './components/MomentOption'
 import { MyOrders } from './components/MyOrders'
 import { MyOrdersList } from './components/MyOrdersList'
 import { OrderList } from './components/OrderList'
+import { OrderNotification } from './components/OrderNotification'
 import { OrdersFilter } from './components/OrdersFilter'
 import { OrdersManage } from './components/OrdersManage'
 import { OrdersOverview } from './components/OrdersOverview'
@@ -136,6 +137,7 @@ export {
   MyOrders,
   MyOrdersList,
   OrderList,
+  OrderNotification,
   OrdersFilter,
   OrdersManage,
   OrdersOverview,
