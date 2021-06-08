@@ -7,7 +7,9 @@ export const DriversList = (props) => {
   const {
     drivers,
     UIComponent,
-    propsToFetch
+    propsToFetch,
+    isSearchByName,
+    isSearchByCellphone
   } = props
 
   const [ordering] = useApi()
@@ -42,6 +44,21 @@ export const DriversList = (props) => {
     busy: true,
     notBusy: true
   })
+  /**
+   * search value
+   */
+  const [searchValue, setSearchValue] = useState(null)
+
+  /**
+   * Change text to search
+   * @param {string} search Search value
+   */
+  const handleChangeSearch = (search) => {
+    if (search !== searchValue) {
+      setSearchValue(search)
+    }
+  }
+
 
   /**
    * Method to assign driver to order from API
@@ -112,11 +129,62 @@ export const DriversList = (props) => {
       setDriversList({ ...driversList, loading: true })
       const source = {}
       requestsState.drivers = source
+
+      let where = null
+      const conditions = []
+      conditions.push({ attribute: 'level', value: [4] })
+      
+      if (searchValue) {
+        const searchConditions = []
+        if (isSearchByName) {
+          searchConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+          searchConditions.push(
+            {
+              attribute: 'lastname',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        if (isSearchByCellphone) {
+          searchConditions.push(
+            {
+              attribute: 'cellphone',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
+      }
+
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+
       const { content: { result } } = await ordering
         .setAccessToken(session.token)
         .users()
         .select(propsToFetch)
-        .where([{ attribute: 'level', value: [4] }])
+        .where(where)
         .get({ cancelToken: source })
 
       setDriversList({
@@ -155,7 +223,7 @@ export const DriversList = (props) => {
         requestsState.drivers.cancel()
       }
     }
-  }, [drivers])
+  }, [drivers, searchValue])
 
   return (
     <>
@@ -168,6 +236,8 @@ export const DriversList = (props) => {
           driverActionStatus={driverActionStatus}
           driversIsOnline={driversIsOnline}
           driversSubfilter={driversSubfilter}
+          searchValue={searchValue}
+          handleChangeSearch={handleChangeSearch}
           handleChangeDriverIsOnline={handleChangeDriverIsOnline}
           handleChangeDriversSubFilter={handleChangeDriversSubFilter}
           handleAssignDriver={handleAssignDriver}
