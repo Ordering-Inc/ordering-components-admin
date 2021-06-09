@@ -8,8 +8,8 @@ export const UsersList = (props) => {
     paginationSettings,
     propsToFetch,
     isSearchByUserId,
-    isSearchByCustomerEmail,
-    isSearchByCustomerPhone
+    isSearchByUserEmail,
+    isSearchByUserPhone
   } = props
 
   const [usersList, setUsersList] = useState({ users: [], loading: true, error: null })
@@ -73,7 +73,7 @@ export const UsersList = (props) => {
             }
           )
         }
-        if (isSearchByCustomerEmail) {
+        if (isSearchByUserEmail) {
           searchConditions.push(
             {
               attribute: 'email',
@@ -85,7 +85,7 @@ export const UsersList = (props) => {
           )
         }
 
-        if (isSearchByCustomerPhone) {
+        if (isSearchByUserPhone) {
           searchConditions.push(
             {
               attribute: 'cellphone',
@@ -306,12 +306,12 @@ UsersList.propTypes = {
    * Enable/Disable search option
    * Search Users list by a user email
    */
-  isSearchByCustomerEmail: PropTypes.bool,
+  isSearchByUserEmail: PropTypes.bool,
   /**
    * Enable/Disable search option
    * Search Users list by a user phone
    */
-  isSearchByCustomerPhone: PropTypes.bool,
+  isSearchByUserPhone: PropTypes.bool,
   /**
    * Array of user props to fetch
    */

@@ -52,8 +52,8 @@ var UsersList = function UsersList(props) {
       paginationSettings = props.paginationSettings,
       propsToFetch = props.propsToFetch,
       isSearchByUserId = props.isSearchByUserId,
-      isSearchByCustomerEmail = props.isSearchByCustomerEmail,
-      isSearchByCustomerPhone = props.isSearchByCustomerPhone;
+      isSearchByUserEmail = props.isSearchByUserEmail,
+      isSearchByUserPhone = props.isSearchByUserPhone;
 
   var _useState = (0, _react.useState)({
     users: [],
@@ -161,7 +161,7 @@ var UsersList = function UsersList(props) {
                   });
                 }
 
-                if (isSearchByCustomerEmail) {
+                if (isSearchByUserEmail) {
                   searchConditions.push({
                     attribute: 'email',
                     value: {
@@ -171,7 +171,7 @@ var UsersList = function UsersList(props) {
                   });
                 }
 
-                if (isSearchByCustomerPhone) {
+                if (isSearchByUserPhone) {
                   searchConditions.push({
                     attribute: 'cellphone',
                     value: {
@@ -432,13 +432,13 @@ UsersList.propTypes = {
    * Enable/Disable search option
    * Search Users list by a user email
    */
-  isSearchByCustomerEmail: _propTypes.default.bool,
+  isSearchByUserEmail: _propTypes.default.bool,
 
   /**
    * Enable/Disable search option
    * Search Users list by a user phone
    */
-  isSearchByCustomerPhone: _propTypes.default.bool,
+  isSearchByUserPhone: _propTypes.default.bool,
 
   /**
    * Array of user props to fetch

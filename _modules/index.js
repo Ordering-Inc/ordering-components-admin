@@ -723,6 +723,12 @@ Object.defineProperty(exports, "UsersList", {
     return _UsersList.UsersList;
   }
 });
+Object.defineProperty(exports, "UserTypeFilter", {
+  enumerable: true,
+  get: function get() {
+    return _UserTypeFilter.UserTypeFilter;
+  }
+});
 
 var _AddressDetails = require("./components/AddressDetails");
 
@@ -913,3 +919,5 @@ var _ResetPassword = require("./components/ResetPassword");
 var _Analitycs = require("./components/Analitycs");
 
 var _UsersList = require("./components/UsersList");
+
+var _UserTypeFilter = require("./components/UserTypeFilter");
