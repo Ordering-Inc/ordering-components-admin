@@ -717,6 +717,12 @@ Object.defineProperty(exports, "Analytics", {
     return _Analitycs.Analytics;
   }
 });
+Object.defineProperty(exports, "UsersList", {
+  enumerable: true,
+  get: function get() {
+    return _UsersList.UsersList;
+  }
+});
 
 var _AddressDetails = require("./components/AddressDetails");
 
@@ -860,8 +866,6 @@ var _PhoneAutocomplete = require("./components/PhoneAutocomplete");
 
 var _BusinessesMap = require("./components/BusinessesMap");
 
-var _UsersList = require("./components/UsersList");
-
 var _ConfigContext = require("./contexts/ConfigContext");
 
 var _LanguageContext = require("./contexts/LanguageContext");
@@ -907,3 +911,5 @@ var _FloatingButton = require("./components/FloatingButton");
 var _ResetPassword = require("./components/ResetPassword");
 
 var _Analitycs = require("./components/Analitycs");
+
+var _UsersList = require("./components/UsersList");

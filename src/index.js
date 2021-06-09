@@ -69,7 +69,6 @@ import { OrderReview } from './components/OrderReview'
 import { CmsContent } from './components/CmsContent'
 import { PhoneAutocomplete } from './components/PhoneAutocomplete'
 import { BusinessesMap } from './components/BusinessesMap'
-import { UsersList } from './components/UsersList'
 import { ConfigContext, ConfigProvider, useConfig } from './contexts/ConfigContext'
 import { LanguageContext, LanguageProvider, useLanguage } from './contexts/LanguageContext'
 import { OrderContext, OrderProvider, useOrder } from './contexts/OrderContext'
@@ -93,6 +92,7 @@ import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/Str
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
 import { Analytics } from './components/Analitycs'
+import { UsersList } from './components/UsersList'
 
 export {
   AddressDetails,
@@ -179,6 +179,7 @@ export {
   FloatingButton,
   ResetPassword,
   Analytics,
+  UsersList,
   // Contexts
   ConfigContext,
   ConfigProvider,
