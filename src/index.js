@@ -93,6 +93,7 @@ import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
+import { UserTypeFilter } from './components/UserTypeFilter'
 
 export {
   AddressDetails,
@@ -180,6 +181,7 @@ export {
   ResetPassword,
   Analytics,
   UsersList,
+  UserTypeFilter,
   // Contexts
   ConfigContext,
   ConfigProvider,
