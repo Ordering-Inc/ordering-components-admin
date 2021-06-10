@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
-import { useApi } from '../../contexts/ApiContext'
+// import { useApi } from '../../contexts/ApiContext'
+// import { useSession } from '../../contexts/SessionContext'
+import { useApi, useSession } from 'ordering-components-admin'
 
 export const UsersList = (props) => {
   const {
@@ -13,6 +15,7 @@ export const UsersList = (props) => {
   } = props
 
   const [ordering] = useApi()
+  const [session] = useSession()
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchVal, setSearchVal] = useState(null)
@@ -26,6 +29,7 @@ export const UsersList = (props) => {
   const [paginationDetail, setPaginationDetail] = useState({})
   const [spinLoading, setSpinLoading] = useState(false)
   const [selectedUserActiveState, setSelectedUserActiveState] = useState(true)
+  const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
 
   /**
    * Get users by params, order options and filters
@@ -181,8 +185,8 @@ export const UsersList = (props) => {
       }
 
       const fetchEndpoint = where
-        ? ordering.users().select(propsToFetch).parameters(parameters).where(where)
-        : ordering.users().select(propsToFetch).parameters(parameters)
+        ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where)
+        : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters)
       const { content: { result, pagination } } = await fetchEndpoint.get()
       usersList.users = result
 
@@ -254,7 +258,7 @@ export const UsersList = (props) => {
    * Change user type
    * @param {object} userType User type
    */
-  const handleChangeUserType = (userType) => {
+  const handleSelectedUserTypes = (userType) => {
     let _userTypesSelected
     if (userTypesSelected.includes(userType)) {
       _userTypesSelected = userTypesSelected.filter(type => type !== userType)
@@ -265,10 +269,72 @@ export const UsersList = (props) => {
   }
 
   /**
-   * change user active state for filter
+   * Method to change user active state for filter
    */
   const handleChangeUserActiveState = () => {
     setSelectedUserActiveState(!selectedUserActiveState)
+  }
+
+  /**
+   * Method to change user type from API
+   * @param {Object} user user id and new type
+   */
+  const handleChangeUserType = async (user) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const requestsState = {}
+      const source = {}
+      requestsState.updateOrder = source
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ level: user.level }, { cancelToken: source })
+      setActionStatus({
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const users = usersList.users.filter(_user => {
+          if (_user.id === user.id) {
+            _user.level = user.level
+          }
+          return true
+        })
+        setUsersList({ ...usersList, users })
+      }
+    } catch (err) {
+      setActionStatus({ loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to change user enable/disable
+   * @param {Object} user user id and enable state
+   */
+
+  const handleChangeActiveUser = async (user) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const requestsState = {}
+      const source = {}
+      requestsState.updateOrder = source
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ enabled: user.enabled }, { cancelToken: source })
+      setActionStatus({
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const users = usersList.users.filter(_user => {
+          let valid = true
+          if (_user.id === user.id) {
+            if (user.enabled === !selectedUserActiveState) {
+              valid = false
+            } 
+          }
+          return valid
+        })
+        setUsersList({ ...usersList, users })
+      }
+    } catch (err) {
+      setActionStatus({ loading: false, error: [err.message] })
+    }
   }
 
   useEffect(() => {
@@ -291,7 +357,7 @@ export const UsersList = (props) => {
             filterValues={filterValues}
             setFilterValues={setFilterValues}
             userTypesSelected={userTypesSelected}
-            handleChangeUserType={handleChangeUserType}
+            handleSelectedUserTypes={handleSelectedUserTypes}
             paginationProps={paginationProps}
             getUserById={getUserById}
             getUsers={getUsers}
@@ -301,6 +367,8 @@ export const UsersList = (props) => {
             paginationDetail={paginationDetail}
             selectedUserActiveState={selectedUserActiveState}
             handleChangeUserActiveState={handleChangeUserActiveState}
+            handleChangeUserType={handleChangeUserType}
+            handleChangeActiveUser={handleChangeActiveUser}
           />
         )
       }
