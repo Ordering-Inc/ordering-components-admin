@@ -23,6 +23,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -55,9 +63,13 @@ var UsersList = function UsersList(props) {
       isSearchByUserEmail = props.isSearchByUserEmail,
       isSearchByUserPhone = props.isSearchByUserPhone;
 
+  var _useApi = (0, _ApiContext.useApi)(),
+      _useApi2 = _slicedToArray(_useApi, 1),
+      ordering = _useApi2[0];
+
   var _useState = (0, _react.useState)({
     users: [],
-    loading: true,
+    loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -77,10 +89,10 @@ var UsersList = function UsersList(props) {
       searchVal = _useState6[0],
       setSearchVal = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(3),
+  var _useState7 = (0, _react.useState)([0, 1, 2, 3]),
       _useState8 = _slicedToArray(_useState7, 2),
-      userTypeSelected = _useState8[0],
-      setUserTypeSelected = _useState8[1];
+      userTypesSelected = _useState8[0],
+      setUserTypesSelected = _useState8[1];
 
   var _useState9 = (0, _react.useState)({
     currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
@@ -102,23 +114,15 @@ var UsersList = function UsersList(props) {
       spinLoading = _useState14[0],
       setSpinLoading = _useState14[1];
 
-  var _useApi = (0, _ApiContext.useApi)(),
-      _useApi2 = _slicedToArray(_useApi, 1),
-      ordering = _useApi2[0];
-
-  (0, _react.useEffect)(function () {
-    getUsers(true, false);
-  }, [userTypeSelected]);
-  (0, _react.useEffect)(function () {
-    if (searchVal !== null && !usersList.loading) getUsers(true, false);
-  }, [searchVal]);
-  (0, _react.useEffect)(function () {
-    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false);
-  }, [filterValues]);
+  var _useState15 = (0, _react.useState)(true),
+      _useState16 = _slicedToArray(_useState15, 2),
+      selectedUserActiveState = _useState16[0],
+      setSelectedUserActiveState = _useState16[1];
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
    */
+
 
   var getUsers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch, nextPage) {
@@ -140,11 +144,15 @@ var UsersList = function UsersList(props) {
               parameters = _objectSpread(_objectSpread({}, parameters), paginationParams);
               where = null;
               conditions = [];
+              conditions.push({
+                attribute: 'enabled',
+                value: selectedUserActiveState
+              });
 
-              if (userTypeSelected) {
+              if (userTypesSelected.length > 0) {
                 conditions.push({
                   attribute: 'level',
-                  value: userTypeSelected
+                  value: userTypesSelected
                 });
               }
 
@@ -267,10 +275,10 @@ var UsersList = function UsersList(props) {
               }
 
               fetchEndpoint = where ? ordering.users().select(propsToFetch).parameters(parameters).where(where) : ordering.users().select(propsToFetch).parameters(parameters);
-              _context.next = 14;
+              _context.next = 15;
               return fetchEndpoint.get();
 
-            case 14:
+            case 15:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               result = _yield$fetchEndpoint$2.result;
@@ -293,11 +301,11 @@ var UsersList = function UsersList(props) {
                 nextPageItems: nextPageItems
               }));
               setPaginationDetail(_objectSpread({}, pagination));
-              _context.next = 29;
+              _context.next = 30;
               break;
 
-            case 26:
-              _context.prev = 26;
+            case 27:
+              _context.prev = 27;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -307,12 +315,12 @@ var UsersList = function UsersList(props) {
                 }));
               }
 
-            case 29:
+            case 30:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 26]]);
+      }, _callee, null, [[0, 27]]);
     }));
 
     return function getUsers(_x, _x2) {
@@ -393,17 +401,40 @@ var UsersList = function UsersList(props) {
 
 
   var handleChangeUserType = function handleChangeUserType(userType) {
-    if (userType !== userTypeSelected && !usersList.loading) {
-      setUserTypeSelected(userType);
+    var _userTypesSelected;
+
+    if (userTypesSelected.includes(userType)) {
+      _userTypesSelected = userTypesSelected.filter(function (type) {
+        return type !== userType;
+      });
+    } else {
+      _userTypesSelected = [].concat(_toConsumableArray(userTypesSelected), [userType]);
     }
+
+    setUserTypesSelected(_userTypesSelected);
+  };
+  /**
+   * change user active state for filter
+   */
+
+
+  var handleChangeUserActiveState = function handleChangeUserActiveState() {
+    setSelectedUserActiveState(!selectedUserActiveState);
   };
 
+  (0, _react.useEffect)(function () {
+    if (usersList.loading) return;
+    getUsers(true, false);
+  }, [userTypesSelected, selectedUserActiveState, searchVal]);
+  (0, _react.useEffect)(function () {
+    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false);
+  }, [filterValues]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     usersList: usersList,
     setUsersList: setUsersList,
     filterValues: filterValues,
     setFilterValues: setFilterValues,
-    userTypeSelected: userTypeSelected,
+    userTypesSelected: userTypesSelected,
     handleChangeUserType: handleChangeUserType,
     paginationProps: paginationProps,
     getUserById: getUserById,
@@ -411,7 +442,9 @@ var UsersList = function UsersList(props) {
     searchVal: searchVal,
     onSearch: setSearchVal,
     spinLoading: spinLoading,
-    paginationDetail: paginationDetail
+    paginationDetail: paginationDetail,
+    selectedUserActiveState: selectedUserActiveState,
+    handleChangeUserActiveState: handleChangeUserActiveState
   })));
 };
 
