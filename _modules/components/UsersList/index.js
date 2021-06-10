@@ -15,6 +15,8 @@ var _propTypes = _interopRequireWildcard(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _SessionContext = require("../../contexts/SessionContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -67,6 +69,10 @@ var UsersList = function UsersList(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      session = _useSession2[0];
+
   var _useState = (0, _react.useState)({
     users: [],
     loading: false,
@@ -118,6 +124,14 @@ var UsersList = function UsersList(props) {
       _useState16 = _slicedToArray(_useState15, 2),
       selectedUserActiveState = _useState16[0],
       setSelectedUserActiveState = _useState16[1];
+
+  var _useState17 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState18 = _slicedToArray(_useState17, 2),
+      actionStatus = _useState18[0],
+      setActionStatus = _useState18[1];
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
@@ -274,7 +288,7 @@ var UsersList = function UsersList(props) {
                 };
               }
 
-              fetchEndpoint = where ? ordering.users().select(propsToFetch).parameters(parameters).where(where) : ordering.users().select(propsToFetch).parameters(parameters);
+              fetchEndpoint = where ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where) : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters);
               _context.next = 15;
               return fetchEndpoint.get();
 
@@ -400,7 +414,7 @@ var UsersList = function UsersList(props) {
    */
 
 
-  var handleChangeUserType = function handleChangeUserType(userType) {
+  var handleSelectedUserTypes = function handleSelectedUserTypes(userType) {
     var _userTypesSelected;
 
     if (userTypesSelected.includes(userType)) {
@@ -414,13 +428,165 @@ var UsersList = function UsersList(props) {
     setUserTypesSelected(_userTypesSelected);
   };
   /**
-   * change user active state for filter
+   * Method to change user active state for filter
    */
 
 
   var handleChangeUserActiveState = function handleChangeUserActiveState() {
     setSelectedUserActiveState(!selectedUserActiveState);
   };
+  /**
+   * Method to change user type from API
+   * @param {Object} user user id and new type
+   */
+
+
+  var handleChangeUserType = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(user) {
+      var requestsState, source, _yield$ordering$setAc, _yield$ordering$setAc2, error, result, users;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestsState = {};
+              source = {};
+              requestsState.updateOrder = source;
+              _context3.next = 7;
+              return ordering.setAccessToken(session.token).users(user.id).save({
+                level: user.level
+              }, {
+                cancelToken: source
+              });
+
+            case 7:
+              _yield$ordering$setAc = _context3.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
+              setActionStatus({
+                loading: false,
+                error: error ? result : null
+              });
+
+              if (!error) {
+                users = usersList.users.filter(function (_user) {
+                  if (_user.id === user.id) {
+                    _user.level = user.level;
+                  }
+
+                  return true;
+                });
+                setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+                  users: users
+                }));
+              }
+
+              _context3.next = 18;
+              break;
+
+            case 15:
+              _context3.prev = 15;
+              _context3.t0 = _context3["catch"](0);
+              setActionStatus({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 18:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 15]]);
+    }));
+
+    return function handleChangeUserType(_x5) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to change user enable/disable
+   * @param {Object} user user id and enable state
+   */
+
+
+  var handleChangeActiveUser = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(user) {
+      var requestsState, source, _yield$ordering$setAc3, _yield$ordering$setAc4, error, result, users;
+
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestsState = {};
+              source = {};
+              requestsState.updateOrder = source;
+              _context4.next = 7;
+              return ordering.setAccessToken(session.token).users(user.id).save({
+                enabled: user.enabled
+              }, {
+                cancelToken: source
+              });
+
+            case 7:
+              _yield$ordering$setAc3 = _context4.sent;
+              _yield$ordering$setAc4 = _yield$ordering$setAc3.content;
+              error = _yield$ordering$setAc4.error;
+              result = _yield$ordering$setAc4.result;
+              setActionStatus({
+                loading: false,
+                error: error ? result : null
+              });
+
+              if (!error) {
+                users = usersList.users.filter(function (_user) {
+                  var valid = true;
+
+                  if (_user.id === user.id) {
+                    if (user.enabled === !selectedUserActiveState) {
+                      valid = false;
+                    }
+                  }
+
+                  return valid;
+                });
+                setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+                  users: users
+                }));
+              }
+
+              _context4.next = 18;
+              break;
+
+            case 15:
+              _context4.prev = 15;
+              _context4.t0 = _context4["catch"](0);
+              setActionStatus({
+                loading: false,
+                error: [_context4.t0.message]
+              });
+
+            case 18:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 15]]);
+    }));
+
+    return function handleChangeActiveUser(_x6) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (usersList.loading) return;
@@ -435,7 +601,7 @@ var UsersList = function UsersList(props) {
     filterValues: filterValues,
     setFilterValues: setFilterValues,
     userTypesSelected: userTypesSelected,
-    handleChangeUserType: handleChangeUserType,
+    handleSelectedUserTypes: handleSelectedUserTypes,
     paginationProps: paginationProps,
     getUserById: getUserById,
     getUsers: getUsers,
@@ -444,7 +610,9 @@ var UsersList = function UsersList(props) {
     spinLoading: spinLoading,
     paginationDetail: paginationDetail,
     selectedUserActiveState: selectedUserActiveState,
-    handleChangeUserActiveState: handleChangeUserActiveState
+    handleChangeUserActiveState: handleChangeUserActiveState,
+    handleChangeUserType: handleChangeUserType,
+    handleChangeActiveUser: handleChangeActiveUser
   })));
 };
 
