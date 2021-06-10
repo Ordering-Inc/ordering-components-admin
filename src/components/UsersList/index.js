@@ -12,10 +12,11 @@ export const UsersList = (props) => {
     isSearchByUserPhone
   } = props
 
-  const [usersList, setUsersList] = useState({ users: [], loading: true, error: null })
+  const [ordering] = useApi()
+  const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchVal, setSearchVal] = useState(null)
-  const [userTypeSelected, setUserTypeSelected] = useState(3)
+  const [userTypesSelected, setUserTypesSelected] = useState([0, 1, 2, 3])
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
     pageSize: paginationSettings.pageSize ?? 10,
@@ -24,19 +25,7 @@ export const UsersList = (props) => {
   })
   const [paginationDetail, setPaginationDetail] = useState({})
   const [spinLoading, setSpinLoading] = useState(false)
-  const [ordering] = useApi()
-
-  useEffect(() => {
-    getUsers(true, false)
-  }, [userTypeSelected])
-
-  useEffect(() => {
-    if (searchVal !== null && !usersList.loading) getUsers(true, false)
-  }, [searchVal])
-
-  useEffect(() => {
-    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false)
-  }, [filterValues])
+  const [selectedUserActiveState, setSelectedUserActiveState] = useState(true)
 
   /**
    * Get users by params, order options and filters
@@ -54,10 +43,14 @@ export const UsersList = (props) => {
         page_size: paginationProps.pageSize
       }
       parameters = { ...parameters, ...paginationParams }
+
       let where = null
       const conditions = []
-      if (userTypeSelected) {
-        conditions.push({ attribute: 'level', value: userTypeSelected })
+
+      conditions.push({ attribute: 'enabled', value: selectedUserActiveState })
+
+      if (userTypesSelected.length > 0) {
+        conditions.push({ attribute: 'level', value: userTypesSelected })
       }
 
       if (searchVal) {
@@ -262,10 +255,31 @@ export const UsersList = (props) => {
    * @param {object} userType User type
    */
   const handleChangeUserType = (userType) => {
-    if (userType !== userTypeSelected && !usersList.loading) {
-      setUserTypeSelected(userType)
+    let _userTypesSelected
+    if (userTypesSelected.includes(userType)) {
+      _userTypesSelected = userTypesSelected.filter(type => type !== userType)
+    } else {
+      _userTypesSelected = [...userTypesSelected, userType]
     }
+    setUserTypesSelected(_userTypesSelected)
   }
+
+  /**
+   * change user active state for filter
+   */
+  const handleChangeUserActiveState = () => {
+    setSelectedUserActiveState(!selectedUserActiveState)
+  }
+
+  useEffect(() => {
+    if (usersList.loading) return
+    getUsers(true, false)
+  }, [userTypesSelected, selectedUserActiveState, searchVal])
+
+  useEffect(() => {
+    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false)
+  }, [filterValues])
+
   return (
     <>
       {
@@ -276,7 +290,7 @@ export const UsersList = (props) => {
             setUsersList={setUsersList}
             filterValues={filterValues}
             setFilterValues={setFilterValues}
-            userTypeSelected={userTypeSelected}
+            userTypesSelected={userTypesSelected}
             handleChangeUserType={handleChangeUserType}
             paginationProps={paginationProps}
             getUserById={getUserById}
@@ -285,6 +299,8 @@ export const UsersList = (props) => {
             onSearch={setSearchVal}
             spinLoading={spinLoading}
             paginationDetail={paginationDetail}
+            selectedUserActiveState={selectedUserActiveState}
+            handleChangeUserActiveState={handleChangeUserActiveState}
           />
         )
       }
