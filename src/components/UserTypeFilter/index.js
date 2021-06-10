@@ -5,21 +5,27 @@ export const UserTypeFilter = (props) => {
   const {
     userTypes,
     onChangeUserType,
-    defaultUserType,
+    defaultUserTypes,
     UIComponent
   } = props
 
   /**
    * This property is used to set in state the current value
    */
-  const [typeSelected, setTypeSelected] = useState(defaultUserType)
+  const [typesSelected, setTypesSelected] = useState(defaultUserTypes)
 
   /**
    * Handle when select value changes
    * @param {number} userType Select a userType
    */
   const handleChangeUserType = (userType) => {
-    setTypeSelected(userType)
+    let _typesSelected
+    if (typesSelected.includes(userType)) {
+      _typesSelected = typesSelected.filter(type => type !== userType)
+    } else {
+      _typesSelected = [...typesSelected, userType]
+    }
+    setTypesSelected(_typesSelected)
     onChangeUserType(userType)
   }
 
@@ -29,7 +35,7 @@ export const UserTypeFilter = (props) => {
         <UIComponent
           {...props}
           userTypes={userTypes}
-          currentTypeSelected={typeSelected}
+          currentTypesSelected={typesSelected}
           handleChangeUserType={handleChangeUserType}
         />
       )}
@@ -49,7 +55,7 @@ UserTypeFilter.propTypes = {
   /**
    * Default user type to show
    */
-  defaultUserType: PropTypes.number,
+  defaultUserTypes: PropTypes.arrayOf(PropTypes.number),
   /**
    * Function to get userType clicked
    */
