@@ -17,7 +17,7 @@ export const UsersList = (props) => {
   const [session] = useSession()
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
-  const [searchVal, setSearchVal] = useState(null)
+  const [searchValue, setSearchValue] = useState(null)
   const [userTypesSelected, setUserTypesSelected] = useState([0, 1, 2, 3])
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
@@ -26,10 +26,11 @@ export const UsersList = (props) => {
     totalPages: null
   })
   const [paginationDetail, setPaginationDetail] = useState({})
-  const [spinLoading, setSpinLoading] = useState(false)
   const [selectedUserActiveState, setSelectedUserActiveState] = useState(true)
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [selectedUsers, setSelectedUsers] = useState([])
 
+  const [deleteUsersActionState, setDeleteUsersActionState] = useState({ loading: false, error: null })
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
@@ -56,7 +57,7 @@ export const UsersList = (props) => {
         conditions.push({ attribute: 'level', value: userTypesSelected })
       }
 
-      if (searchVal) {
+      if (searchValue) {
         const searchConditions = []
         if (isSearchByUserId) {
           searchConditions.push(
@@ -64,7 +65,7 @@ export const UsersList = (props) => {
               attribute: 'id',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${searchVal}%`)
+                value: encodeURI(`%${searchValue}%`)
               }
             }
           )
@@ -75,7 +76,7 @@ export const UsersList = (props) => {
               attribute: 'email',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${searchVal}%`)
+                value: encodeURI(`%${searchValue}%`)
               }
             }
           )
@@ -87,7 +88,7 @@ export const UsersList = (props) => {
               attribute: 'cellphone',
               value: {
                 condition: 'ilike',
-                value: encodeURI(`%${searchVal}%`)
+                value: encodeURI(`%${searchValue}%`)
               }
             }
           )
@@ -218,42 +219,6 @@ export const UsersList = (props) => {
   }
 
   /**
-   * Edit a user by UserId, order options and filters
-   * @param {number} userId Make a new request or next page
-   */
-  const getUserById = async (userId, enabled) => {
-    try {
-      setSpinLoading(true)
-
-      const fetchEndpoint = ordering.users(userId)
-      const { content: { result } } = await fetchEndpoint.save({ enabled: !enabled })
-      const found = usersList.users.find(user => result.id === user.id)
-      let users = []
-
-      if (found) {
-        users = usersList.users.filter(user => {
-          if (result.id === user.id) user.enabled = result?.enabled
-          return true
-        })
-      }
-
-      setUsersList({
-        ...usersList,
-        users: users
-      })
-      setSpinLoading(false)
-    } catch (err) {
-      if (err.constructor.name !== 'Cancel') {
-        setUsersList({
-          ...usersList,
-          loading: false,
-          error: [err.message]
-        })
-      }
-    }
-  }
-
-  /**
    * Change user type
    * @param {object} userType User type
    */
@@ -286,6 +251,7 @@ export const UsersList = (props) => {
       requestsState.updateOrder = source
       const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ level: user.level }, { cancelToken: source })
       setActionStatus({
+        ...actionStatus,
         loading: false,
         error: error ? result : null
       })
@@ -299,7 +265,7 @@ export const UsersList = (props) => {
         setUsersList({ ...usersList, users })
       }
     } catch (err) {
-      setActionStatus({ loading: false, error: [err.message] })
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
     }
   }
 
@@ -311,11 +277,9 @@ export const UsersList = (props) => {
   const handleChangeActiveUser = async (user) => {
     try {
       setActionStatus({ ...actionStatus, loading: true })
-      const requestsState = {}
-      const source = {}
-      requestsState.updateOrder = source
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ enabled: user.enabled }, { cancelToken: source })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ enabled: user.enabled })
       setActionStatus({
+        ...actionStatus,
         loading: false,
         error: error ? result : null
       })
@@ -332,14 +296,76 @@ export const UsersList = (props) => {
         setUsersList({ ...usersList, users })
       }
     } catch (err) {
-      setActionStatus({ loading: false, error: [err.message] })
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
     }
   }
+
+  /**
+   * Method to delete users from API
+   * @param {Number} userId user id to delete
+   */
+  const handleDeleteUser = async (userId) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const { content } = await ordering.setAccessToken(session.token).users(userId).delete()
+      if (!content.error) {
+        const users = usersList.users.filter(user => user.id !== userId)
+        setUsersList({ ...usersList, users })
+        if (deleteUsersActionState.loading) {
+          const _selectedUsers = [...selectedUsers]
+          _selectedUsers.shift()
+          if (_selectedUsers.length === 0) {
+            setDeleteUsersActionState({ ...deleteUsersActionState, loading: false })
+          }
+          setSelectedUsers(_selectedUsers)
+        }
+      }
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: content.error ? content.result : null
+      })
+    } catch (err) {
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+      if (deleteUsersActionState.loading) {
+        setDeleteUsersActionState({ ...deleteUsersActionState, loading: false, error: [err.message] })
+      }
+    }
+  }
+
+  /**
+   * Method to delete several users from API
+   */
+  const handleDeleteSeveralUsers = () => {
+    setDeleteUsersActionState({ ...deleteUsersActionState, loading: true })
+  }
+
+  /**
+   * Method to change selected users
+   * @param {Number} userId user id to change selected state
+   */
+  const handleSelectedUsers = (userId) => {
+    let _selectedUsers
+    if (selectedUsers.includes(userId)) {
+      _selectedUsers = selectedUsers.filter(id => id !== userId)
+    } else {
+      _selectedUsers = [...selectedUsers, userId]
+    }
+    setSelectedUsers(_selectedUsers)
+  }
+
+  /**
+   * Listening action start to delete several users
+   */
+  useEffect(() => {
+    if (!deleteUsersActionState.loading || selectedUsers.length === 0) return
+    handleDeleteUser(selectedUsers[0])
+  }, [selectedUsers, deleteUsersActionState])
 
   useEffect(() => {
     if (usersList.loading) return
     getUsers(true, false)
-  }, [userTypesSelected, selectedUserActiveState, searchVal])
+  }, [userTypesSelected, selectedUserActiveState, searchValue])
 
   useEffect(() => {
     if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false)
@@ -351,23 +377,26 @@ export const UsersList = (props) => {
         UIComponent && (
           <UIComponent
             {...props}
+            actionStatus={actionStatus}
             usersList={usersList}
-            setUsersList={setUsersList}
             filterValues={filterValues}
             setFilterValues={setFilterValues}
             userTypesSelected={userTypesSelected}
             handleSelectedUserTypes={handleSelectedUserTypes}
             paginationProps={paginationProps}
-            getUserById={getUserById}
             getUsers={getUsers}
-            searchVal={searchVal}
-            onSearch={setSearchVal}
-            spinLoading={spinLoading}
+            searchValue={searchValue}
+            onSearch={setSearchValue}
             paginationDetail={paginationDetail}
             selectedUserActiveState={selectedUserActiveState}
             handleChangeUserActiveState={handleChangeUserActiveState}
             handleChangeUserType={handleChangeUserType}
             handleChangeActiveUser={handleChangeActiveUser}
+            handleDeleteUser={handleDeleteUser}
+            selectedUsers={selectedUsers}
+            handleSelectedUsers={handleSelectedUsers}
+            deleteUsersActionState={deleteUsersActionState}
+            handleDeleteSeveralUsers={handleDeleteSeveralUsers}
           />
         )
       }
