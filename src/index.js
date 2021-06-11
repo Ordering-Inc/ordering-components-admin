@@ -62,6 +62,7 @@ import { SingleBusinessCard } from './components/SingleBusinessCard'
 import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
 import { UserFormDetails } from './components/UserFormDetails'
+import { UsersExportCSV } from './components/UsersExportCSV'
 import { UpsellingPage } from './components/UpsellingPage'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
 import { OrderDetails } from './components/OrderDetails'
@@ -162,6 +163,7 @@ export {
   SingleOrderCard,
   SingleProductCard,
   UserFormDetails,
+  UsersExportCSV,
   UpsellingPage,
   WrapperGoogleMaps,
   OrderDetails,
