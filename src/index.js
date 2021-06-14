@@ -95,6 +95,7 @@ import { ResetPassword } from './components/ResetPassword'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
 import { UserTypeFilter } from './components/UserTypeFilter'
+import { UserDetails } from './components/UserDetails'
 
 export {
   AddressDetails,
@@ -184,6 +185,7 @@ export {
   Analytics,
   UsersList,
   UserTypeFilter,
+  UserDetails,
   // Contexts
   ConfigContext,
   ConfigProvider,
