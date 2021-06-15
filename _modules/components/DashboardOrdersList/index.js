@@ -66,6 +66,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       isOnlyDelivery = props.isOnlyDelivery,
       initialPageSize = props.initialPageSize,
       driverId = props.driverId,
+      customerId = props.customerId,
       loadMorePageSize = props.loadMorePageSize,
       orderIds = props.orderIds,
       deletedOrderId = props.deletedOrderId,
@@ -290,6 +291,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 });
               }
 
+              if (customerId) {
+                conditions.push({
+                  attribute: 'customer_id',
+                  value: customerId
+                });
+              }
+
               if (searchValue) {
                 searchConditions = [];
 
@@ -421,13 +429,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().where(where);
               }
 
-              _context2.next = 16;
+              _context2.next = 17;
               return functionFetch.get(options);
 
-            case 16:
+            case 17:
               return _context2.abrupt("return", _context2.sent);
 
-            case 17:
+            case 18:
             case "end":
               return _context2.stop();
           }
@@ -683,7 +691,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders, orderStatus]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 

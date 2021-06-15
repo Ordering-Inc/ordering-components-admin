@@ -11,6 +11,7 @@ export const DashboardOrdersList = (props) => {
     isOnlyDelivery,
     initialPageSize,
     driverId,
+    customerId,
     loadMorePageSize,
     orderIds,
     deletedOrderId,
@@ -139,6 +140,15 @@ export const DashboardOrdersList = (props) => {
         {
           attribute: 'driver_id',
           value: driverId
+        }
+      )
+    }
+
+    if (customerId) {
+      conditions.push(
+        {
+          attribute: 'customer_id',
+          value: customerId
         }
       )
     }
@@ -440,7 +450,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, orders, orderStatus])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus])
 
   useEffect(() => {
     if (orderList.loading) return
