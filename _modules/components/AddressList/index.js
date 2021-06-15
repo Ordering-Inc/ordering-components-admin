@@ -87,7 +87,7 @@ var AddressList = function AddressList(props) {
   }
 
   var _useState = (0, _react.useState)({
-    loading: true,
+    loading: false,
     error: null,
     addresses: []
   }),
@@ -167,13 +167,20 @@ var AddressList = function AddressList(props) {
   }();
 
   (0, _react.useEffect)(function () {
+    if (props === null || props === void 0 ? void 0 : props.addresses) {
+      setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
+        addresses: props.addresses
+      }));
+      return;
+    }
+
     loadAddresses();
     return function () {
       if (requestsState.list) {
         requestsState.list.cancel();
       }
     };
-  }, []);
+  }, [props.addresses]);
   /**
    * Function to make an address as default address
    * @param {object} address Address to make as default
