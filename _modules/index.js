@@ -729,6 +729,12 @@ Object.defineProperty(exports, "UsersList", {
     return _UsersList.UsersList;
   }
 });
+Object.defineProperty(exports, "UserMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _UserMetaFields.UserMetaFields;
+  }
+});
 Object.defineProperty(exports, "UserTypeFilter", {
   enumerable: true,
   get: function get() {
@@ -933,6 +939,8 @@ var _ResetPassword = require("./components/ResetPassword");
 var _Analitycs = require("./components/Analitycs");
 
 var _UsersList = require("./components/UsersList");
+
+var _UserMetaFields = require("./components/UserMetaFields");
 
 var _UserTypeFilter = require("./components/UserTypeFilter");
 
