@@ -152,7 +152,7 @@ var UserFormDetails = function UserFormDetails(props) {
         requestsState.user.cancel();
       }
     };
-  }, [session.loading]);
+  }, [session.loading, user]);
   /**
    * Clean formState
    */
@@ -167,7 +167,7 @@ var UserFormDetails = function UserFormDetails(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(changes, isImage, image) {
-      var response, _props$userData, _formState$changes, photo, _changes, _props$userData2;
+      var response, _formState$changes, photo, _changes;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -196,7 +196,7 @@ var UserFormDetails = function UserFormDetails(props) {
               }
 
               _context.next = 8;
-              return ordering.users((props === null || props === void 0 ? void 0 : (_props$userData = props.userData) === null || _props$userData === void 0 ? void 0 : _props$userData.id) || userState.result.result.id).save({
+              return ordering.users((user === null || user === void 0 ? void 0 : user.id) || userState.result.result.id).save({
                 photo: image || formState.changes.photo
               }, {
                 accessToken: accessToken
@@ -215,7 +215,7 @@ var UserFormDetails = function UserFormDetails(props) {
 
             case 13:
               _context.next = 15;
-              return ordering.users((props === null || props === void 0 ? void 0 : (_props$userData2 = props.userData) === null || _props$userData2 === void 0 ? void 0 : _props$userData2.id) || userState.result.result.id).save(formState.changes, {
+              return ordering.users((user === null || user === void 0 ? void 0 : user.id) || userState.result.result.id).save(formState.changes, {
                 accessToken: accessToken
               });
 
@@ -232,7 +232,10 @@ var UserFormDetails = function UserFormDetails(props) {
                 setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                   result: _objectSpread(_objectSpread({}, userState.result), response.content)
                 }));
-                changeUser(_objectSpread(_objectSpread({}, session.user), response.content.result));
+
+                if (useSessionUser) {
+                  changeUser(_objectSpread(_objectSpread({}, session.user), response.content.result));
+                }
 
                 if (handleSuccessUpdate) {
                   handleSuccessUpdate(response.content.result);
@@ -286,6 +289,20 @@ var UserFormDetails = function UserFormDetails(props) {
       currentChanges = _defineProperty({}, e.target.name, e.target.value);
     }
 
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+  /**
+   * Update credential data
+   * @param {number} level user level
+   */
+
+
+  var handleChangeUserType = function handleChangeUserType(level) {
+    var currentChanges = {
+      level: level
+    };
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
     }));
@@ -349,7 +366,8 @@ var UserFormDetails = function UserFormDetails(props) {
     handlechangeImage: handlechangeImage,
     toggleIsEdit: function toggleIsEdit() {
       return setIsEdit(!isEdit);
-    }
+    },
+    handleChangeUserType: handleChangeUserType
   })));
 };
 
