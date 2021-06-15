@@ -635,6 +635,24 @@ var UsersList = function UsersList(props) {
     setSelectedUsers(_selectedUsers);
   };
   /**
+   * Method to update users
+   * @param {Object} updatedUser updated user
+   */
+
+
+  var handleSuccessUpdate = function handleSuccessUpdate(updatedUser) {
+    var users = usersList.users.filter(function (user) {
+      if (user.id === updatedUser.id) {
+        Object.assign(user, updatedUser);
+      }
+
+      return true;
+    });
+    setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+      users: users
+    }));
+  };
+  /**
    * Listening action start to delete several users
    */
 
@@ -670,7 +688,8 @@ var UsersList = function UsersList(props) {
     selectedUsers: selectedUsers,
     handleSelectedUsers: handleSelectedUsers,
     deleteUsersActionState: deleteUsersActionState,
-    handleDeleteSeveralUsers: handleDeleteSeveralUsers
+    handleDeleteSeveralUsers: handleDeleteSeveralUsers,
+    handleSuccessUpdate: handleSuccessUpdate
   })));
 };
 

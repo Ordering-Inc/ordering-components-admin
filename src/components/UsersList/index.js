@@ -355,6 +355,23 @@ export const UsersList = (props) => {
   }
 
   /**
+   * Method to update users
+   * @param {Object} updatedUser updated user
+   */
+  const handleSuccessUpdate = (updatedUser) => {
+    const users = usersList.users.filter(user => {
+      if (user.id === updatedUser.id) {
+        Object.assign(user, updatedUser)
+      }
+      return true
+    })
+    setUsersList({
+      ...usersList,
+      users: users
+    })
+  }
+
+  /**
    * Listening action start to delete several users
    */
   useEffect(() => {
@@ -397,6 +414,7 @@ export const UsersList = (props) => {
             handleSelectedUsers={handleSelectedUsers}
             deleteUsersActionState={deleteUsersActionState}
             handleDeleteSeveralUsers={handleDeleteSeveralUsers}
+            handleSuccessUpdate={handleSuccessUpdate}
           />
         )
       }
