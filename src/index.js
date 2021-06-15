@@ -94,6 +94,7 @@ import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
+import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
 
@@ -186,6 +187,7 @@ export {
   UsersList,
   UserTypeFilter,
   UserDetails,
+  UserMetaFields,
   // Contexts
   ConfigContext,
   ConfigProvider,
