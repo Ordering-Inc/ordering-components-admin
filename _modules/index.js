@@ -45,6 +45,12 @@ Object.defineProperty(exports, "BusinessController", {
     return _BusinessController.BusinessController;
   }
 });
+Object.defineProperty(exports, "BusinessDetails", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessDetails.BusinessDetails;
+  }
+});
 Object.defineProperty(exports, "BusinessList", {
   enumerable: true,
   get: function get() {
@@ -109,6 +115,12 @@ Object.defineProperty(exports, "CouponControl", {
   enumerable: true,
   get: function get() {
     return _CouponControl.CouponControl;
+  }
+});
+Object.defineProperty(exports, "DashboardBusinessList", {
+  enumerable: true,
+  get: function get() {
+    return _DashboardBusinessList.DashboardBusinessList;
   }
 });
 Object.defineProperty(exports, "DashboardOrdersList", {
@@ -762,6 +774,8 @@ var _BusinessBasicInformation = require("./components/BusinessBasicInformation")
 
 var _BusinessController = require("./components/BusinessController");
 
+var _BusinessDetails = require("./components/BusinessDetails");
+
 var _BusinessList = require("./components/BusinessList");
 
 var _BusinessInformation = require("./components/BusinessInformation");
@@ -783,6 +797,8 @@ var _Checkout = require("./components/Checkout");
 var _CheckPassword = require("./components/CheckPassword");
 
 var _CouponControl = require("./components/CouponControl");
+
+var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
 var _DashboardOrdersList = require("./components/DashboardOrdersList");
 

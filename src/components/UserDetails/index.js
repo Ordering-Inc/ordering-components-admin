@@ -16,7 +16,6 @@ export const UserDetails = (props) => {
 
   /**
    * Method to get user from API
-   * @param {number} userId user id
    */
   const getUser = async () => {
     try {

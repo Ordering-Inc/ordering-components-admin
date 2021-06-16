@@ -5,6 +5,7 @@ import { BaseComponent } from './components/BaseComponent'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessController } from './components/BusinessController'
+import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessList } from './components/BusinessList'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
@@ -16,6 +17,7 @@ import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CouponControl } from './components/CouponControl'
+import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriverTips } from './components/DriverTips'
@@ -106,6 +108,7 @@ export {
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessController,
+  BusinessDetails,
   BusinessList,
   BusinessInformation,
   BusinessProductsCategories,
@@ -117,6 +120,7 @@ export {
   Checkout,
   CheckPassword,
   CouponControl,
+  DashboardBusinessList,
   DashboardOrdersList,
   DragAndDrop,
   DriverTips,

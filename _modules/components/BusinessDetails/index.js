@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.UserDetails = void 0;
+exports.BusinessDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -47,10 +47,13 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var UserDetails = function UserDetails(props) {
-  var userId = props.userId,
+var BusinessDetails = function BusinessDetails(props) {
+  var business = props.business,
+      businessId = props.businessId,
       propsToFetch = props.propsToFetch,
-      UIComponent = props.UIComponent;
+      UIComponent = props.UIComponent,
+      handleSucessRemoveBusiness = props.handleSucessRemoveBusiness,
+      handleSucessAddBusiness = props.handleSucessAddBusiness;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -61,19 +64,27 @@ var UserDetails = function UserDetails(props) {
       session = _useSession2[0];
 
   var _useState = (0, _react.useState)({
-    user: null,
-    loading: false,
+    business: null,
+    loading: true,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      userState = _useState2[0],
-      setUserState = _useState2[1];
+      businessState = _useState2[0],
+      setBusinessState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionStatus = _useState4[0],
+      setActionStatus = _useState4[1];
   /**
    * Method to get user from API
    */
 
 
-  var getUser = /*#__PURE__*/function () {
+  var getBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
       var fetchEndpoint, _yield$fetchEndpoint$, result, user;
 
@@ -82,10 +93,10 @@ var UserDetails = function UserDetails(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: true
               }));
-              fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch);
+              fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch);
               _context.next = 5;
               return fetchEndpoint.get();
 
@@ -93,7 +104,7 @@ var UserDetails = function UserDetails(props) {
               _yield$fetchEndpoint$ = _context.sent;
               result = _yield$fetchEndpoint$.content.result;
               user = Array.isArray(result) ? null : result;
-              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
                 user: user
               }));
@@ -103,7 +114,7 @@ var UserDetails = function UserDetails(props) {
             case 11:
               _context.prev = 11;
               _context.t0 = _context["catch"](0);
-              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
@@ -116,27 +127,221 @@ var UserDetails = function UserDetails(props) {
       }, _callee, null, [[0, 11]]);
     }));
 
-    return function getUser() {
+    return function getBusinesses() {
       return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to change business enable/disable
+   * @param {Boolean} enabled business enable state
+   */
+
+
+  var handleChangeActiveBusiness = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(enabled) {
+      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              _context2.next = 4;
+              return ordering.setAccessToken(session.token).businesses(businessId).save({
+                enabled: enabled
+              });
+
+            case 4:
+              _yield$ordering$setAc = _context2.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: error ? result : null
+              }));
+
+              if (!error) {
+                handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId);
+              }
+
+              _context2.next = 15;
+              break;
+
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context2.t0.message]
+              }));
+
+            case 15:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 12]]);
+    }));
+
+    return function handleChangeActiveBusiness(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delete business from API
+   */
+
+
+  var handleDeleteBusiness = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _context3.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId), requestOptions);
+
+            case 5:
+              response = _context3.sent;
+              _context3.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context3.sent;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: content.error ? content.result : null
+              }));
+
+              if (!content.error) {
+                handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId);
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context3.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleDeleteBusiness() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to duplicate business from API
+   */
+
+
+  var handleDuplicateBusiness = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _context4.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/duplicate"), requestOptions);
+
+            case 5:
+              response = _context4.sent;
+              _context4.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context4.sent;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: content.error ? content.result : null
+              }));
+
+              if (!content.error) {
+                handleSucessAddBusiness && handleSucessAddBusiness(content === null || content === void 0 ? void 0 : content.result);
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context4.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleDuplicateBusiness() {
+      return _ref4.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (props.user) {
-      setUserState(_objectSpread(_objectSpread({}, userState), {}, {
-        user: props.user
+    if (business) {
+      setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+        loading: false,
+        business: business
       }));
     } else {
-      getUser();
+      getBusinesses();
     }
-  }, [userId]);
+  }, [businessId, business]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    userState: userState
+    businessState: businessState,
+    handleChangeActiveBusiness: handleChangeActiveBusiness,
+    handleDuplicateBusiness: handleDuplicateBusiness,
+    handleDeleteBusiness: handleDeleteBusiness
   })));
 };
 
-exports.UserDetails = UserDetails;
-UserDetails.propTypes = {
+exports.BusinessDetails = BusinessDetails;
+BusinessDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -148,14 +353,14 @@ UserDetails.propTypes = {
   propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
 
   /**
-  * This must be contains userId to fetch
+  * This must be contains businessId to fetch
   */
-  userId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
+  businessId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
 
   /**
   * User, this must be contains an object with all user info
   */
-  user: _propTypes.default.object,
+  business: _propTypes.default.object,
 
   /**
    * Components types before order details
@@ -181,10 +386,10 @@ UserDetails.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-UserDetails.defaultProps = {
+BusinessDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname']
+  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
 };
