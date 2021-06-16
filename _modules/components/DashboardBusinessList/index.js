@@ -60,7 +60,6 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
 
   var UIComponent = props.UIComponent,
       paginationSettings = props.paginationSettings,
-      searchValue = props.searchValue,
       propsToFetch = props.propsToFetch,
       initialPageSize = props.initialPageSize,
       loadMorePageSize = props.loadMorePageSize,
@@ -93,15 +92,20 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       pagination = _useState4[0],
       setPagination = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(true),
+  var _useState5 = (0, _react.useState)(null),
       _useState6 = _slicedToArray(_useState5, 2),
-      selectedBusinessActiveState = _useState6[0],
-      setSelectedBusinessActiveState = _useState6[1];
+      searchValue = _useState6[0],
+      setSearchValue = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(null),
+  var _useState7 = (0, _react.useState)(true),
       _useState8 = _slicedToArray(_useState7, 2),
-      businessTypeSelected = _useState8[0],
-      setBusinessTypeSelected = _useState8[1];
+      selectedBusinessActiveState = _useState8[0],
+      setSelectedBusinessActiveState = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(null),
+      _useState10 = _slicedToArray(_useState9, 2),
+      businessTypeSelected = _useState10[0],
+      setBusinessTypeSelected = _useState10[1];
   /**
    * Method to get businesses from API
    * @param {number, number} pageSize page
@@ -412,6 +416,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,
     pagination: pagination,
+    onSearch: setSearchValue,
     selectedBusinessActiveState: selectedBusinessActiveState,
     loadMoreBusinesses: loadMoreBusinesses,
     handleChangeBusinessActiveState: handleChangeBusinessActiveState,

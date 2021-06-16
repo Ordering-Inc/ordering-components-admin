@@ -7,7 +7,6 @@ export const DashboardBusinessList = (props) => {
   const {
     UIComponent,
     paginationSettings,
-    searchValue,
     propsToFetch,
     initialPageSize,
     loadMorePageSize,
@@ -25,6 +24,7 @@ export const DashboardBusinessList = (props) => {
     pageSize: paginationSettings.pageSize ?? 10
   })
 
+  const [searchValue, setSearchValue] = useState(null)
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
   
@@ -244,6 +244,7 @@ export const DashboardBusinessList = (props) => {
             {...props}
             businessList={businessList}
             pagination={pagination}
+            onSearch={setSearchValue}
             selectedBusinessActiveState={selectedBusinessActiveState}
             loadMoreBusinesses={loadMoreBusinesses}
             handleChangeBusinessActiveState={handleChangeBusinessActiveState}
