@@ -10,7 +10,8 @@ export const UsersList = (props) => {
     propsToFetch,
     isSearchByUserId,
     isSearchByUserEmail,
-    isSearchByUserPhone
+    isSearchByUserPhone,
+    isSearchByUserName
   } = props
 
   const [ordering] = useApi()
@@ -93,6 +94,28 @@ export const UsersList = (props) => {
             }
           )
         }
+
+        if (isSearchByUserName) {
+          searchConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+          searchConditions.push(
+            {
+              attribute: 'lastname',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+
         conditions.push({
           conector: 'OR',
           conditions: searchConditions

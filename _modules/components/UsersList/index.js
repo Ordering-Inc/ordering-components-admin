@@ -63,7 +63,8 @@ var UsersList = function UsersList(props) {
       propsToFetch = props.propsToFetch,
       isSearchByUserId = props.isSearchByUserId,
       isSearchByUserEmail = props.isSearchByUserEmail,
-      isSearchByUserPhone = props.isSearchByUserPhone;
+      isSearchByUserPhone = props.isSearchByUserPhone,
+      isSearchByUserName = props.isSearchByUserName;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -204,6 +205,23 @@ var UsersList = function UsersList(props) {
                 if (isSearchByUserPhone) {
                   searchConditions.push({
                     attribute: 'cellphone',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByUserName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                  searchConditions.push({
+                    attribute: 'lastname',
                     value: {
                       condition: 'ilike',
                       value: encodeURI("%".concat(searchValue, "%"))
