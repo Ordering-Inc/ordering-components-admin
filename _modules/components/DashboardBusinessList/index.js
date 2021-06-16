@@ -64,6 +64,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       initialPageSize = props.initialPageSize,
       loadMorePageSize = props.loadMorePageSize,
       isSearchByBusinessId = props.isSearchByBusinessId,
+      isSearchByBusinessName = props.isSearchByBusinessName,
       isSearchByBusinessEmail = props.isSearchByBusinessEmail,
       isSearchByBusinessPhone = props.isSearchByBusinessPhone;
 
@@ -148,6 +149,16 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 if (isSearchByBusinessId) {
                   searchConditions.push({
                     attribute: 'id',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByBusinessName) {
+                  searchConditions.push({
+                    attribute: 'name',
                     value: {
                       condition: 'ilike',
                       value: encodeURI("%".concat(searchValue, "%"))

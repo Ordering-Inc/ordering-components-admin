@@ -11,6 +11,7 @@ export const DashboardBusinessList = (props) => {
     initialPageSize,
     loadMorePageSize,
     isSearchByBusinessId,
+    isSearchByBusinessName,
     isSearchByBusinessEmail,
     isSearchByBusinessPhone
   } = props
@@ -67,6 +68,19 @@ export const DashboardBusinessList = (props) => {
           }
         )
       }
+
+      if (isSearchByBusinessName) {
+        searchConditions.push(
+          {
+            attribute: 'name',
+            value: {
+              condition: 'ilike',
+              value: encodeURI(`%${searchValue}%`)
+            }
+          }
+        )
+      }
+
       if (isSearchByBusinessEmail) {
         searchConditions.push(
           {
