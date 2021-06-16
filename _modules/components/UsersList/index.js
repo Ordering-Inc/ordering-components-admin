@@ -653,6 +653,24 @@ var UsersList = function UsersList(props) {
     }));
   };
   /**
+   * Method to update addresses of selected user
+   * @param {number, Array} useId and addresses updated addresses
+   */
+
+
+  var handleSuccessAddressesUpdate = function handleSuccessAddressesUpdate(userId, addresses) {
+    var users = usersList.users.filter(function (user) {
+      if (user.id === userId) {
+        user.addresses = _toConsumableArray(addresses);
+      }
+
+      return true;
+    });
+    setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+      users: users
+    }));
+  };
+  /**
    * Listening action start to delete several users
    */
 
@@ -689,7 +707,8 @@ var UsersList = function UsersList(props) {
     handleSelectedUsers: handleSelectedUsers,
     deleteUsersActionState: deleteUsersActionState,
     handleDeleteSeveralUsers: handleDeleteSeveralUsers,
-    handleSuccessUpdate: handleSuccessUpdate
+    handleSuccessUpdate: handleSuccessUpdate,
+    handleSuccessAddressesUpdate: handleSuccessAddressesUpdate
   })));
 };
 

@@ -370,6 +370,22 @@ export const UsersList = (props) => {
       users: users
     })
   }
+  /**
+   * Method to update addresses of selected user
+   * @param {number, Array} useId and addresses updated addresses
+   */
+  const handleSuccessAddressesUpdate = (userId, addresses) => {
+    const users = usersList.users.filter(user => {
+      if (user.id === userId) {
+        user.addresses = [...addresses]
+      }
+      return true
+    })
+    setUsersList({
+      ...usersList,
+      users: users
+    })
+  }
 
   /**
    * Listening action start to delete several users
@@ -415,6 +431,7 @@ export const UsersList = (props) => {
             deleteUsersActionState={deleteUsersActionState}
             handleDeleteSeveralUsers={handleDeleteSeveralUsers}
             handleSuccessUpdate={handleSuccessUpdate}
+            handleSuccessAddressesUpdate={handleSuccessAddressesUpdate}
           />
         )
       }
