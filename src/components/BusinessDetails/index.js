@@ -9,13 +9,14 @@ export const BusinessDetails = (props) => {
     businessId,
     propsToFetch,
     UIComponent,
+    handleSucessUpdateBusiness,
     handleSucessRemoveBusiness,
     handleSucessAddBusiness
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const [businessState, setBusinessState] = useState({ business: null, loading: true,  error: null })
+  const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
 
   /**
@@ -59,7 +60,7 @@ export const BusinessDetails = (props) => {
         error: error ? result : null
       })
       if (!error) {
-        handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId)
+        handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessId)
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -94,7 +95,7 @@ export const BusinessDetails = (props) => {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
     }
   }
-  
+
   /**
    * Method to duplicate business from API
    */
@@ -139,17 +140,17 @@ export const BusinessDetails = (props) => {
 
   return (
     <>
-    {
-      UIComponent && (
-        <UIComponent
-          {...props}
-          businessState={businessState}
-          handleChangeActiveBusiness={handleChangeActiveBusiness}
-          handleDuplicateBusiness={handleDuplicateBusiness}
-          handleDeleteBusiness={handleDeleteBusiness}
-        />
-      )
-    }
+      {
+        UIComponent && (
+          <UIComponent
+            {...props}
+            businessState={businessState}
+            handleChangeActiveBusiness={handleChangeActiveBusiness}
+            handleDuplicateBusiness={handleDuplicateBusiness}
+            handleDeleteBusiness={handleDeleteBusiness}
+          />
+        )
+      }
     </>
   )
 }
@@ -178,22 +179,22 @@ BusinessDetails.propTypes = {
    * Components types before order details
    * Array of type components, the parent props will pass to these components
    */
-   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
-   /**
-    * Components types after order details
-    * Array of type components, the parent props will pass to these components
-    */
-   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
-   /**
-    * Elements before order details
-    * Array of HTML/Components elements, these components will not get the parent props
-    */
-   beforeElements: PropTypes.arrayOf(PropTypes.element),
-   /**
-    * Elements after order details
-    * Array of HTML/Components elements, these components will not get the parent props
-    */
-   afterElements: PropTypes.arrayOf(PropTypes.element)
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
+  /**
+  * Components types after order details
+  * Array of type components, the parent props will pass to these components
+  */
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
+  /**
+  * Elements before order details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
+  /**
+  * Elements after order details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
 BusinessDetails.defaultProps = {
