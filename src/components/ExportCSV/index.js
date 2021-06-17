@@ -10,7 +10,7 @@ export const ExportCSV = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token, loading }] = useSession()
-  const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [actionStatus, setActionStatus] = useState({ loading: false, error: null, result: null })
 
   /**
    * Method to get csv from API
@@ -111,17 +111,26 @@ export const ExportCSV = (props) => {
         : `${ordering.root}/orders.csv?mode=dashboard&orderBy=id`
 
       const response = await fetch(functionFetch, requestOptions)
-      const fileSuffix = new Date().getTime()
-      await response.blob().then(blob => {
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement('a')
-        a.href = url
-        a.download = `orders_${fileSuffix}.csv`
-        a.click()
-      })
-      setActionStatus({ ...actionStatus, loading: false })
+      const { error, result } = await response.json()
+      if (!error) {
+        setActionStatus({
+          ...actionStatus,
+          loading: false,
+          result: result
+        })
+      } else {
+        setActionStatus({
+          ...actionStatus,
+          loading: true,
+          error: result
+        })
+      }
     } catch (err) {
-      setActionStatus({ loading: false, error: err })
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: err
+      })
     }
   }
   return (

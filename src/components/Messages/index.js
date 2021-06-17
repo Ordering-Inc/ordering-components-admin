@@ -141,8 +141,8 @@ export const Messages = (props) => {
           })
           setMessages({ ...messages, messages: _messages })
         }
-        handleUpdateOrderForUnreadCount(null)
-        handleUpdateOrderForUnreadCount(orderId)
+        handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(null)
+        handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(orderId)
       } else {
         setReadMessages({
           ...readMessages,
@@ -199,7 +199,7 @@ export const Messages = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          messages={orderMessages || messages}
+          messages={messages}
           image={image}
           canRead={canRead}
           handleSend={handleSend}
