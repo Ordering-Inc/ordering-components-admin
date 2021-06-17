@@ -28,7 +28,7 @@ export const DashboardBusinessList = (props) => {
   const [searchValue, setSearchValue] = useState(null)
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
-  
+
   /**
    * Method to get businesses from API
    * @param {number, number} pageSize page
@@ -139,7 +139,7 @@ export const DashboardBusinessList = (props) => {
       setBusinessList({
         loading: false,
         businesses: response.content.error ? [] : response.content.result,
-        error: response.content.error ? response.content.result: null
+        error: response.content.error ? response.content.result : null
       })
 
       if (!response.content.error) {
@@ -154,7 +154,7 @@ export const DashboardBusinessList = (props) => {
       }
     } catch (err) {
       if (err?.constructor?.name !== 'Cancel') {
-        setBusinessList({ ...businessList, loading: false, error : [err.message] })
+        setBusinessList({ ...businessList, loading: false, error: [err.message] })
       }
     }
   }
@@ -237,13 +237,25 @@ export const DashboardBusinessList = (props) => {
   }
 
   /**
+   * Method to update the business from the business list
+   * @param {Object} business business to update
+   */
+  const handleSucessUpdateBusiness = (business) => {
+    if (selectedBusinessActiveState === business?.enabled) {
+      handleSucessAddBusiness(business)
+    } else {
+      handleSucessRemoveBusiness(business.id)
+    }
+  }
+
+  /**
    * Listening session
    */
   useEffect(() => {
     if (props.businesses) {
       setBusinessList({
         ...businessList,
-        businesses
+        businesses: props.businesses
       })
     } else {
       loadBusinesses()
@@ -265,6 +277,7 @@ export const DashboardBusinessList = (props) => {
             handleChangeBusinessType={handleChangeBusinessType}
             handleSucessRemoveBusiness={handleSucessRemoveBusiness}
             handleSucessAddBusiness={handleSucessAddBusiness}
+            handleSucessUpdateBusiness={handleSucessUpdateBusiness}
           />
         )
       }
@@ -281,17 +294,17 @@ DashboardBusinessList.propTypes = {
    * Enable/Disable search option
    * Search Businesses list by a business ID
    */
-   isSearchByBusinessId: PropTypes.bool,
+  isSearchByBusinessId: PropTypes.bool,
   /**
    * Enable/Disable search option
    * Search Businesses list by a business email
    */
-   isSearchByBusinessEmail: PropTypes.bool,
+  isSearchByBusinessEmail: PropTypes.bool,
   /**
    * Enable/Disable search option
    * Search Businesses list by a business phone
    */
-   isSearchByBusinessPhone: PropTypes.bool,
+  isSearchByBusinessPhone: PropTypes.bool,
   /**
    * Array of user props to fetch
    */
