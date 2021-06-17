@@ -60,7 +60,7 @@ export const BusinessDetails = (props) => {
         error: error ? result : null
       })
       if (!error) {
-        handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessId)
+        handleSucessUpdateBusiness && handleSucessUpdateBusiness(result)
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
