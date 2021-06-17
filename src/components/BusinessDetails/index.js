@@ -19,7 +19,7 @@ export const BusinessDetails = (props) => {
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
 
   /**
-   * Method to get user from API
+   * Method to get business from API
    */
   const getBusinesses = async () => {
     try {
@@ -29,11 +29,11 @@ export const BusinessDetails = (props) => {
       })
       const fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
       const { content: { result } } = await fetchEndpoint.get()
-      const user = Array.isArray(result) ? null : result
+      const business = Array.isArray(result) ? null : result
       setBusinessState({
         ...businessState,
         loading: false,
-        user
+        business
       })
     } catch (err) {
       setBusinessState({
@@ -171,7 +171,7 @@ BusinessDetails.propTypes = {
     PropTypes.string
   ]),
   /**
-  * User, this must be contains an object with all user info
+  * Business, this must be contains an object with all business info
   */
   business: PropTypes.object,
   /**

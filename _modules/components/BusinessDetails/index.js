@@ -80,13 +80,13 @@ var BusinessDetails = function BusinessDetails(props) {
       actionStatus = _useState4[0],
       setActionStatus = _useState4[1];
   /**
-   * Method to get user from API
+   * Method to get business from API
    */
 
 
   var getBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var fetchEndpoint, _yield$fetchEndpoint$, result, user;
+      var fetchEndpoint, _yield$fetchEndpoint$, result, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -103,10 +103,10 @@ var BusinessDetails = function BusinessDetails(props) {
             case 5:
               _yield$fetchEndpoint$ = _context.sent;
               result = _yield$fetchEndpoint$.content.result;
-              user = Array.isArray(result) ? null : result;
+              _business = Array.isArray(result) ? null : result;
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
-                user: user
+                business: _business
               }));
               _context.next = 14;
               break;
@@ -358,7 +358,7 @@ BusinessDetails.propTypes = {
   businessId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
 
   /**
-  * User, this must be contains an object with all user info
+  * Business, this must be contains an object with all business info
   */
   business: _propTypes.default.object,
 
