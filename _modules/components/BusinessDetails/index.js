@@ -5,21 +5,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AddressList = void 0;
+exports.BusinessDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireDefault(require("prop-types"));
+var _propTypes = _interopRequireWildcard(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _OrderContext = require("../../contexts/OrderContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _CustomerContext = require("../../contexts/CustomerContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -51,15 +47,14 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to control a address list
- * @param {object} props Props of AddressList component
- */
-var AddressList = function AddressList(props) {
-  var UIComponent = props.UIComponent,
-      changeOrderAddressWithDefault = props.changeOrderAddressWithDefault,
-      handleClickSetDefault = props.handleClickSetDefault,
-      handleClickDelete = props.handleClickDelete;
+var BusinessDetails = function BusinessDetails(props) {
+  var business = props.business,
+      businessId = props.businessId,
+      propsToFetch = props.propsToFetch,
+      UIComponent = props.UIComponent,
+      handleSucessUpdateBusiness = props.handleSucessUpdateBusiness,
+      handleSucessRemoveBusiness = props.handleSucessRemoveBusiness,
+      handleSucessAddBusiness = props.handleSucessAddBusiness;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -67,33 +62,16 @@ var AddressList = function AddressList(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      user = _useSession2$.user,
-      token = _useSession2$.token;
-
-  var _useCustomer = (0, _CustomerContext.useCustomer)(),
-      _useCustomer2 = _slicedToArray(_useCustomer, 2),
-      setUserCustomer = _useCustomer2[1].setUserCustomer;
-
-  var userId = props.userId || (user === null || user === void 0 ? void 0 : user.id);
-  var accessToken = props.accessToken || token;
-
-  if (!userId) {
-    throw new Error('`userId` must provide from props or use SessionProviver to wrappe the app.');
-  }
-
-  if (!accessToken) {
-    throw new Error('`accessToken` must provide from props or use SessionProviver to wrappe the app.');
-  }
+      session = _useSession2[0];
 
   var _useState = (0, _react.useState)({
-    loading: false,
-    error: null,
-    addresses: []
+    business: null,
+    loading: true,
+    error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      addressList = _useState2[0],
-      setAddressList = _useState2[1];
+      businessState = _useState2[0],
+      setBusinessState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
@@ -102,56 +80,45 @@ var AddressList = function AddressList(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       actionStatus = _useState4[0],
       setActionStatus = _useState4[1];
-
-  var _useOrder = (0, _OrderContext.useOrder)(),
-      _useOrder2 = _slicedToArray(_useOrder, 2),
-      changeAddress = _useOrder2[1].changeAddress;
-
-  var requestsState = {};
   /**
-   * Function to load addresses from API
+   * Method to get business from API
    */
 
-  var loadAddresses = /*#__PURE__*/function () {
+
+  var getBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var source, _yield$ordering$setAc, content;
+      var fetchEndpoint, _yield$fetchEndpoint$, result, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: true
               }));
-              source = {};
-              requestsState.list = source;
-              _context.next = 6;
-              return ordering.setAccessToken(accessToken).users(userId).addresses().get({
-                cancelToken: source
-              });
+              fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch);
+              _context.next = 5;
+              return fetchEndpoint.get();
 
-            case 6:
-              _yield$ordering$setAc = _context.sent;
-              content = _yield$ordering$setAc.content;
-              setAddressList({
+            case 5:
+              _yield$fetchEndpoint$ = _context.sent;
+              result = _yield$fetchEndpoint$.content.result;
+              _business = Array.isArray(result) ? null : result;
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
-                error: content.error ? content.result : null,
-                addresses: content.error ? [] : content.result
-              });
+                business: _business
+              }));
               _context.next = 14;
               break;
 
             case 11:
               _context.prev = 11;
               _context.t0 = _context["catch"](0);
-
-              if (_context.t0.constructor.name !== 'Cancel') {
-                setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
-                  loading: false,
-                  error: [_context.t0.message]
-                }));
-              }
+              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                loading: false,
+                error: [_context.t0.message]
+              }));
 
             case 14:
             case "end":
@@ -161,250 +128,269 @@ var AddressList = function AddressList(props) {
       }, _callee, null, [[0, 11]]);
     }));
 
-    return function loadAddresses() {
+    return function getBusinesses() {
       return _ref.apply(this, arguments);
     };
   }();
-
-  (0, _react.useEffect)(function () {
-    if (props === null || props === void 0 ? void 0 : props.addresses) {
-      setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
-        addresses: props.addresses
-      }));
-      return;
-    }
-
-    loadAddresses();
-    return function () {
-      if (requestsState.list) {
-        requestsState.list.cancel();
-      }
-    };
-  }, [props.addresses]);
   /**
-   * Function to make an address as default address
-   * @param {object} address Address to make as default
+   * Method to change business enable/disable
+   * @param {Boolean} enabled business enable state
    */
 
-  var handleSetDefault = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(address, userCustomerSetup) {
-      var _yield$ordering$setAc2, content;
+
+  var handleChangeActiveBusiness = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(enabled) {
+      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (userCustomerSetup) {
-                setUserCustomer(userCustomerSetup, true);
-              }
-
-              if (!handleClickSetDefault) {
-                _context2.next = 3;
-                break;
-              }
-
-              return _context2.abrupt("return", handleClickSetDefault(address));
-
-            case 3:
-              _context2.prev = 3;
+              _context2.prev = 0;
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context2.next = 7;
-              return ordering.setAccessToken(accessToken).users(userId).addresses(address.id).save({
-                default: true
+              _context2.next = 4;
+              return ordering.setAccessToken(session.token).businesses(businessId).save({
+                enabled: enabled
               });
 
-            case 7:
-              _yield$ordering$setAc2 = _context2.sent;
-              content = _yield$ordering$setAc2.content;
-              setActionStatus({
+            case 4:
+              _yield$ordering$setAc = _context2.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
-                error: content.error ? content.result : null
-              });
+                error: error ? result : null
+              }));
 
-              if (!content.error && content.result.default) {
-                addressList.addresses.map(function (_address) {
-                  _address.default = _address.id === address.id;
-                  return _address;
-                });
-
-                if (changeOrderAddressWithDefault) {
-                  changeAddress(content.result.id);
-                }
-
-                setAddressList(_objectSpread({}, addressList));
+              if (!error) {
+                handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessId);
               }
 
-              _context2.next = 16;
+              _context2.next = 15;
               break;
 
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](3);
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
 
-            case 16:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[3, 13]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function handleSetDefault(_x, _x2) {
+    return function handleChangeActiveBusiness(_x) {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Function to delete an address
-   * @param {object} address Address to delete
+   * Method to delete business from API
    */
 
 
-  var handleDelete = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(address) {
-      var _yield$ordering$users, content, addresses;
-
+  var handleDeleteBusiness = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              if (!handleClickDelete) {
-                _context3.next = 2;
-                break;
-              }
-
-              return _context3.abrupt("return", handleClickDelete(address));
-
-            case 2:
-              _context3.prev = 2;
+              _context3.prev = 0;
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context3.next = 6;
-              return ordering.users(userId).addresses(address.id).delete({
-                accessToken: accessToken
-              });
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _context3.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId), requestOptions);
 
-            case 6:
-              _yield$ordering$users = _context3.sent;
-              content = _yield$ordering$users.content;
-              setActionStatus({
+            case 5:
+              response = _context3.sent;
+              _context3.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context3.sent;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: content.error ? content.result : null
-              });
+              }));
 
               if (!content.error) {
-                addresses = addressList.addresses.filter(function (_address) {
-                  return _address.id !== address.id;
-                });
-                setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
-                  addresses: addresses
-                }));
+                handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId);
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](2);
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[2, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDelete(_x3) {
+    return function handleDeleteBusiness() {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to duplicate business from API
+   */
 
+
+  var handleDuplicateBusiness = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _context4.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/duplicate"), requestOptions);
+
+            case 5:
+              response = _context4.sent;
+              _context4.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context4.sent;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: content.error ? content.result : null
+              }));
+
+              if (!content.error) {
+                handleSucessAddBusiness && handleSucessAddBusiness(content === null || content === void 0 ? void 0 : content.result);
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context4.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleDuplicateBusiness() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  (0, _react.useEffect)(function () {
+    if (business) {
+      setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+        loading: false,
+        business: business
+      }));
+    } else {
+      getBusinesses();
+    }
+  }, [businessId, business]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    addressList: addressList,
-    setAddressList: setAddressList,
-    actionStatus: actionStatus,
-    handleSetDefault: handleSetDefault,
-    handleDelete: handleDelete
+    businessState: businessState,
+    handleChangeActiveBusiness: handleChangeActiveBusiness,
+    handleDuplicateBusiness: handleDuplicateBusiness,
+    handleDeleteBusiness: handleDeleteBusiness
   })));
 };
 
-exports.AddressList = AddressList;
-AddressList.propTypes = {
+exports.BusinessDetails = BusinessDetails;
+BusinessDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Behavior when click on address
-   * @param {object} address Addres that was clicked
+   * Array of drivers props to fetch
    */
-  handleClickAddress: _propTypes.default.func,
+  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
 
   /**
-   * Custom set default address
-   * @param {object} address Address to make to as default
-   */
-  handleClickSetDefault: _propTypes.default.func,
+  * This must be contains businessId to fetch
+  */
+  businessId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
 
   /**
-   * Custom delete address
-   * @param {object} address Address to make to as default
-   */
-  handleClickDelete: _propTypes.default.func,
+  * Business, this must be contains an object with all business info
+  */
+  business: _propTypes.default.object,
 
   /**
-   * User id to get address from this user
-   * If you don't provide one it is used by the current session by default
-   */
-  userId: _propTypes.default.number,
-
-  /**
-   * Access token to get addresses
-   * If you don't provide one it is used by the current session by default
-   */
-  accessToken: _propTypes.default.string,
-
-  /**
-   * Components types before addresses list
+   * Components types before order details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after addresses list
-   * Array of type components, the parent props will pass to these components
-   */
+  * Components types after order details
+  * Array of type components, the parent props will pass to these components
+  */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before addresses list
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements before order details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after addresses list
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements after order details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-AddressList.defaultProps = {
-  changeOrderAddressWithDefault: true,
+BusinessDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'description', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
 };

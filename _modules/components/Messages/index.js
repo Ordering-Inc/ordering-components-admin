@@ -378,8 +378,8 @@ var Messages = function Messages(props) {
                   }));
                 }
 
-                handleUpdateOrderForUnreadCount(null);
-                handleUpdateOrderForUnreadCount(orderId);
+                handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(null);
+                handleUpdateOrderForUnreadCount && handleUpdateOrderForUnreadCount(orderId);
               } else {
                 setReadMessages(_objectSpread(_objectSpread({}, readMessages), {}, {
                   loading: false,
@@ -453,7 +453,7 @@ var Messages = function Messages(props) {
     };
   }, [socket, orderId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    messages: orderMessages || messages,
+    messages: messages,
     image: image,
     canRead: canRead,
     handleSend: handleSend,

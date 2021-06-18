@@ -5,17 +5,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ExportCSV = void 0;
+exports.UserDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _ApiContext = require("../../contexts/ApiContext");
+var _propTypes = _interopRequireWildcard(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
+
+var _ApiContext = require("../../contexts/ApiContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -47,9 +47,10 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var ExportCSV = function ExportCSV(props) {
-  var UIComponent = props.UIComponent,
-      filterValues = props.filterValues;
+var UserDetails = function UserDetails(props) {
+  var userId = props.userId,
+      propsToFetch = props.propsToFetch,
+      UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -57,220 +58,133 @@ var ExportCSV = function ExportCSV(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      session = _useSession2[0];
 
   var _useState = (0, _react.useState)({
+    user: null,
     loading: false,
-    error: null,
-    result: null
+    error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      actionStatus = _useState2[0],
-      setActionStatus = _useState2[1];
+      userState = _useState2[0],
+      setUserState = _useState2[1];
   /**
-   * Method to get csv from API
+   * Method to get user from API
    */
 
 
-  var getCSV = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
+  var getUser = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var fetchEndpoint, _yield$fetchEndpoint$, result, user;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
-              _context.prev = 2;
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+              _context.prev = 0;
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              filterConditons = [];
+              fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch);
+              _context.next = 5;
+              return fetchEndpoint.get();
 
-              if (filterApply) {
-                if (Object.keys(filterValues).length) {
-                  if (filterValues.statuses !== undefined) {
-                    if (filterValues.statuses.length > 0) {
-                      filterConditons.push({
-                        attribute: 'status',
-                        value: filterValues.statuses
-                      });
-                    } else {
-                      filterConditons.push({
-                        attribute: 'status',
-                        value: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryFromDatetime !== undefined) {
-                    if (filterValues.deliveryFromDatetime !== null) {
-                      filterConditons.push({
-                        attribute: 'delivery_datetime',
-                        value: {
-                          condition: '>=',
-                          value: encodeURI(filterValues.deliveryFromDatetime)
-                        }
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryEndDatetime !== undefined) {
-                    if (filterValues.deliveryEndDatetime !== null) {
-                      filterConditons.push({
-                        attribute: 'delivery_datetime',
-                        value: {
-                          condition: '<=',
-                          value: filterValues.deliveryEndDatetime
-                        }
-                      });
-                    }
-                  }
-
-                  if (filterValues.businessIds !== undefined) {
-                    if (filterValues.businessIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'business_id',
-                        value: filterValues.businessIds
-                      });
-                    }
-                  }
-
-                  if (filterValues.driverIds !== undefined) {
-                    if (filterValues.driverIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'driver_id',
-                        value: filterValues.driverIds
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryTypes !== undefined) {
-                    if (filterValues.deliveryTypes.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'delivery_type',
-                        value: filterValues.deliveryTypes
-                      });
-                    }
-                  }
-
-                  if (filterValues.paymethodIds !== undefined) {
-                    if (filterValues.paymethodIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'paymethod_id',
-                        value: filterValues.paymethodIds
-                      });
-                    }
-                  }
-                }
-              }
-
-              functionFetch = filterApply ? "".concat(ordering.root, "/orders.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/orders.csv?mode=dashboard&orderBy=id");
-              _context.next = 10;
-              return fetch(functionFetch, requestOptions);
-
-            case 10:
-              response = _context.sent;
-              _context.next = 13;
-              return response.json();
-
-            case 13:
-              _yield$response$json = _context.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
-
-              if (!error) {
-                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                  loading: false,
-                  result: result
-                }));
-              } else {
-                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                  loading: true,
-                  error: result
-                }));
-              }
-
-              _context.next = 22;
+            case 5:
+              _yield$fetchEndpoint$ = _context.sent;
+              result = _yield$fetchEndpoint$.content.result;
+              user = Array.isArray(result) ? null : result;
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+                loading: false,
+                user: user
+              }));
+              _context.next = 14;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](2);
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](0);
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: false,
-                error: _context.t0
+                error: [_context.t0.message]
               }));
 
-            case 22:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[0, 11]]);
     }));
 
-    return function getCSV(_x) {
+    return function getUser() {
       return _ref.apply(this, arguments);
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    if (props.user) {
+      setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+        user: props.user
+      }));
+    } else {
+      getUser();
+    }
+  }, [userId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    actionStatus: actionStatus,
-    getCSV: getCSV
+    userState: userState
   })));
 };
 
-exports.ExportCSV = ExportCSV;
-ExportCSV.propTypes = {
+exports.UserDetails = UserDetails;
+UserDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before my orders
+   * Array of drivers props to fetch
+   */
+  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
+
+  /**
+  * This must be contains userId to fetch
+  */
+  userId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
+
+  /**
+  * User, this must be contains an object with all user info
+  */
+  user: _propTypes.default.object,
+
+  /**
+   * Components types before order details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
+   * Components types after order details
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
+   * Elements before order details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
+   * Elements after order details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ExportCSV.defaultProps = {
+UserDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname']
 };

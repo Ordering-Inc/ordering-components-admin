@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ExportCSV = void 0;
+exports.UsersExportCSV = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -47,9 +47,10 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var ExportCSV = function ExportCSV(props) {
+var UsersExportCSV = function UsersExportCSV(props) {
   var UIComponent = props.UIComponent,
-      filterValues = props.filterValues;
+      userTypesSelected = props.userTypesSelected,
+      selectedUserActiveState = props.selectedUserActiveState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -76,8 +77,7 @@ var ExportCSV = function ExportCSV(props) {
 
   var getCSV = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
-
+      var requestOptions, filterConditons, functionFetch, response, fileSuffix;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -104,126 +104,56 @@ var ExportCSV = function ExportCSV(props) {
               filterConditons = [];
 
               if (filterApply) {
-                if (Object.keys(filterValues).length) {
-                  if (filterValues.statuses !== undefined) {
-                    if (filterValues.statuses.length > 0) {
-                      filterConditons.push({
-                        attribute: 'status',
-                        value: filterValues.statuses
-                      });
-                    } else {
-                      filterConditons.push({
-                        attribute: 'status',
-                        value: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryFromDatetime !== undefined) {
-                    if (filterValues.deliveryFromDatetime !== null) {
-                      filterConditons.push({
-                        attribute: 'delivery_datetime',
-                        value: {
-                          condition: '>=',
-                          value: encodeURI(filterValues.deliveryFromDatetime)
-                        }
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryEndDatetime !== undefined) {
-                    if (filterValues.deliveryEndDatetime !== null) {
-                      filterConditons.push({
-                        attribute: 'delivery_datetime',
-                        value: {
-                          condition: '<=',
-                          value: filterValues.deliveryEndDatetime
-                        }
-                      });
-                    }
-                  }
-
-                  if (filterValues.businessIds !== undefined) {
-                    if (filterValues.businessIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'business_id',
-                        value: filterValues.businessIds
-                      });
-                    }
-                  }
-
-                  if (filterValues.driverIds !== undefined) {
-                    if (filterValues.driverIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'driver_id',
-                        value: filterValues.driverIds
-                      });
-                    }
-                  }
-
-                  if (filterValues.deliveryTypes !== undefined) {
-                    if (filterValues.deliveryTypes.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'delivery_type',
-                        value: filterValues.deliveryTypes
-                      });
-                    }
-                  }
-
-                  if (filterValues.paymethodIds !== undefined) {
-                    if (filterValues.paymethodIds.length !== 0) {
-                      filterConditons.push({
-                        attribute: 'paymethod_id',
-                        value: filterValues.paymethodIds
-                      });
-                    }
-                  }
+                if (userTypesSelected.length > 0) {
+                  filterConditons.push({
+                    attribute: 'level',
+                    value: userTypesSelected
+                  });
                 }
+
+                filterConditons.push({
+                  attribute: 'enabled',
+                  value: selectedUserActiveState
+                });
               }
 
-              functionFetch = filterApply ? "".concat(ordering.root, "/orders.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/orders.csv?mode=dashboard&orderBy=id");
+              functionFetch = filterApply ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id");
               _context.next = 10;
               return fetch(functionFetch, requestOptions);
 
             case 10:
               response = _context.sent;
-              _context.next = 13;
-              return response.json();
+              fileSuffix = new Date().getTime();
+              _context.next = 14;
+              return response.blob().then(function (blob) {
+                var url = window.URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = "orders_".concat(fileSuffix, ".csv");
+                a.click();
+              });
 
-            case 13:
-              _yield$response$json = _context.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
-
-              if (!error) {
-                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                  loading: false,
-                  result: result
-                }));
-              } else {
-                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                  loading: true,
-                  error: result
-                }));
-              }
-
-              _context.next = 22;
+            case 14:
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false
+              }));
+              _context.next = 20;
               break;
 
-            case 19:
-              _context.prev = 19;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](2);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 22:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[2, 17]]);
     }));
 
     return function getCSV(_x) {
@@ -237,8 +167,8 @@ var ExportCSV = function ExportCSV(props) {
   })));
 };
 
-exports.ExportCSV = ExportCSV;
-ExportCSV.propTypes = {
+exports.UsersExportCSV = UsersExportCSV;
+UsersExportCSV.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -268,7 +198,7 @@ ExportCSV.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ExportCSV.defaultProps = {
+UsersExportCSV.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
