@@ -9,6 +9,7 @@ import { ApiProvider } from '../ApiContext'
 import { EventProvider } from '../EventContext'
 import { UtilsProviders } from '../UtilsContext'
 import { WebStrategy } from '../../webStrategy'
+import { ValidationFieldsProvider } from '../ValidationsFieldsContext'
 
 /**
  * Create OrderingContext
@@ -30,15 +31,17 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
           <LanguageProvider strategy={webStrategy}>
             <ConfigProvider>
               <UtilsProviders>
-                <SessionProvider strategy={webStrategy}>
-                  <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
-                    <OrderProvider strategy={webStrategy} Alert={Alert}>
-                      <BusinessProvider>
-                        {children}
-                      </BusinessProvider>
-                    </OrderProvider>
-                  </WebsocketProvider>
-                </SessionProvider>
+                <ValidationFieldsProvider>
+                  <SessionProvider strategy={webStrategy}>
+                    <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
+                      <OrderProvider strategy={webStrategy} Alert={Alert}>
+                        <BusinessProvider>
+                          {children}
+                        </BusinessProvider>
+                      </OrderProvider>
+                    </WebsocketProvider>
+                  </SessionProvider>
+                </ValidationFieldsProvider>
               </UtilsProviders>
             </ConfigProvider>
           </LanguageProvider>

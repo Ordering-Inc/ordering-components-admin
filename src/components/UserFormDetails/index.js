@@ -69,7 +69,7 @@ export const UserFormDetails = (props) => {
         requestsState.user.cancel()
       }
     }
-  }, [session.loading])
+  }, [session.loading, user])
 
   /**
    * Clean formState
@@ -90,7 +90,7 @@ export const UserFormDetails = (props) => {
         formState.changes = { ...formState.changes, ...changes }
       }
       if (isImage) {
-        response = await ordering.users(props?.userData?.id || userState.result.result.id).save({ photo: image || formState.changes.photo }, {
+        response = await ordering.users(user?.id || userState.result.result.id).save({ photo: image || formState.changes.photo }, {
           accessToken: accessToken
         })
 
@@ -103,7 +103,7 @@ export const UserFormDetails = (props) => {
           loading: false
         })
       } else {
-        response = await ordering.users(props?.userData?.id || userState.result.result.id).save(formState.changes, {
+        response = await ordering.users(user?.id || userState.result.result.id).save(formState.changes, {
           accessToken: accessToken
         })
         setFormState({
@@ -122,10 +122,12 @@ export const UserFormDetails = (props) => {
             ...response.content
           }
         })
-        changeUser({
-          ...session.user,
-          ...response.content.result
-        })
+        if (useSessionUser) {
+          changeUser({
+            ...session.user,
+            ...response.content.result
+          })
+        }
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
         }
@@ -164,6 +166,20 @@ export const UserFormDetails = (props) => {
       }
     }
 
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...currentChanges }
+    })
+  }
+
+  /**
+   * Update credential data
+   * @param {number} level user level
+   */  
+  const handleChangeUserType = (level) => {
+    const currentChanges = {
+      level: level
+    }
     setFormState({
       ...formState,
       changes: { ...formState.changes, ...currentChanges }
@@ -229,6 +245,7 @@ export const UserFormDetails = (props) => {
           handleButtonUpdateClick={handleUpdateClick}
           handlechangeImage={handlechangeImage}
           toggleIsEdit={() => setIsEdit(!isEdit)}
+          handleChangeUserType={handleChangeUserType}
         />
       )}
     </>

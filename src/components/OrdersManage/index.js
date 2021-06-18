@@ -47,6 +47,15 @@ export const OrdersManage = (props) => {
    * Object to save selected order ids
    */
   const [selectedOrderIds, setSelectedOrderIds] = useState([])
+  /**
+   * Object to save order substatuses
+   */
+  const [selectedSubOrderStatus, setSelectedSubOrderStatus] = useState({
+    pending: [0, 13],
+    inProgress: [7, 8, 4, 9, 3, 14, 18, 19, 20, 21],
+    completed: [1, 11, 15],
+    cancelled: [2, 5, 6, 10, 12, 16, 17]
+  })
 
   /**
    * Save ids of orders selected
@@ -364,6 +373,8 @@ export const OrdersManage = (props) => {
           deletedOrderId={deletedOrderId}
           startMulitOrderStatusChange={startMulitOrderStatusChange}
           startMulitOrderDelete={startMulitOrderDelete}
+          selectedSubOrderStatus={selectedSubOrderStatus}
+          handleSelectedSubOrderStatus={setSelectedSubOrderStatus}
           handleSelectedOrderIds={handleSelectedOrderIds}
           handleRemoveSelectedOrderId={handleRemoveSelectedOrderId}
           handleChangeSearch={handleChangeSearch}
