@@ -241,7 +241,7 @@ export const DashboardBusinessList = (props) => {
    * @param {Object} business business to update
    */
   const handleSucessUpdateBusiness = (business) => {
-    const found = businessList.business.find(_business => _business.id === business.id)
+    const found = businessList.businesses.find(_business => _business.id === business.id)
     if (found) {
       if (selectedBusinessActiveState === business?.enabled) {
         const businesses = businessList.businesses.filter(_business => {
@@ -257,6 +257,8 @@ export const DashboardBusinessList = (props) => {
     } else {
       if (selectedBusinessActiveState === business?.enabled) {
         handleSucessAddBusiness(business)
+      } else {
+        handleSucessRemoveBusiness(business.id)
       }
     }
   }
