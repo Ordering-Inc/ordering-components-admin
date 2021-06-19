@@ -417,10 +417,29 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
 
 
   var handleSucessUpdateBusiness = function handleSucessUpdateBusiness(business) {
-    if (selectedBusinessActiveState === (business === null || business === void 0 ? void 0 : business.enabled)) {
-      handleSucessAddBusiness(business);
+    var found = businessList.business.find(function (_business) {
+      return _business.id === business.id;
+    });
+
+    if (found) {
+      if (selectedBusinessActiveState === (business === null || business === void 0 ? void 0 : business.enabled)) {
+        var businesses = businessList.businesses.filter(function (_business) {
+          if (_business.id === business.id) {
+            Object.assign(_business, business);
+          }
+
+          return true;
+        });
+        setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+          businesses: businesses
+        }));
+      } else {
+        handleSucessRemoveBusiness(business.id);
+      }
     } else {
-      handleSucessRemoveBusiness(business.id);
+      if (selectedBusinessActiveState === (business === null || business === void 0 ? void 0 : business.enabled)) {
+        handleSucessAddBusiness(business);
+      }
     }
   };
   /**
