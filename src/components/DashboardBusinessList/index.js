@@ -241,10 +241,23 @@ export const DashboardBusinessList = (props) => {
    * @param {Object} business business to update
    */
   const handleSucessUpdateBusiness = (business) => {
-    if (selectedBusinessActiveState === business?.enabled) {
-      handleSucessAddBusiness(business)
+    const found = businessList.business.find(_business => _business.id === business.id)
+    if (found) {
+      if (selectedBusinessActiveState === business?.enabled) {
+        const businesses = businessList.businesses.filter(_business => {
+          if (_business.id === business.id) {
+            Object.assign(_business, business)
+          }
+          return true
+        })
+        setBusinessList({ ...businessList, businesses: businesses })
+      } else {
+        handleSucessRemoveBusiness(business.id)
+      }
     } else {
-      handleSucessRemoveBusiness(business.id)
+      if (selectedBusinessActiveState === business?.enabled) {
+        handleSucessAddBusiness(business)
+      }
     }
   }
 
