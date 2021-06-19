@@ -417,7 +417,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
 
 
   var handleSucessUpdateBusiness = function handleSucessUpdateBusiness(business) {
-    var found = businessList.business.find(function (_business) {
+    var found = businessList.businesses.find(function (_business) {
       return _business.id === business.id;
     });
 
@@ -439,6 +439,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     } else {
       if (selectedBusinessActiveState === (business === null || business === void 0 ? void 0 : business.enabled)) {
         handleSucessAddBusiness(business);
+      } else {
+        handleSucessRemoveBusiness(business.id);
       }
     }
   };
