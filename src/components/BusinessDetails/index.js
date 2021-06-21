@@ -126,6 +126,64 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  /**
+   * Method to delet the business owner
+   */
+  const handleDeleteBusinessOwner = async (owners) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const _owners = businessState?.business?.owners.filter(owner => owners.includes(owner.id))
+        const _business = {
+          ...businessState?.business,
+          owners: _owners
+        }
+        setBusinessState({
+          ...businessState,
+          business: _business
+        })
+        handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business)
+      }
+    } catch (err) {
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to delet the business owner
+   */
+  const handleAddBusinessOwner = async (owners, newOwner) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const _owners = [...businessState?.business?.owners, newOwner]
+        const _business = {
+          ...businessState?.business,
+          owners: _owners
+        }
+        setBusinessState({
+          ...businessState,
+          business: _business
+        })
+        handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business)
+      }
+    } catch (err) {
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
     if (business) {
       setBusinessState({
@@ -148,6 +206,8 @@ export const BusinessDetails = (props) => {
             handleChangeActiveBusiness={handleChangeActiveBusiness}
             handleDuplicateBusiness={handleDuplicateBusiness}
             handleDeleteBusiness={handleDeleteBusiness}
+            handleDeleteBusinessOwner={handleDeleteBusinessOwner}
+            handleAddBusinessOwner={handleAddBusinessOwner}
           />
         )
       }

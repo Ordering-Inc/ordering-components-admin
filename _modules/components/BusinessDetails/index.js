@@ -25,6 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -87,7 +95,7 @@ var BusinessDetails = function BusinessDetails(props) {
 
   var getBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var fetchEndpoint, _yield$fetchEndpoint$, result, _business;
+      var fetchEndpoint, _yield$fetchEndpoint$, result, _business2;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -104,10 +112,10 @@ var BusinessDetails = function BusinessDetails(props) {
             case 5:
               _yield$fetchEndpoint$ = _context.sent;
               result = _yield$fetchEndpoint$.content.result;
-              _business = Array.isArray(result) ? null : result;
+              _business2 = Array.isArray(result) ? null : result;
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
-                business: _business
+                business: _business2
               }));
               _context.next = 14;
               break;
@@ -322,6 +330,140 @@ var BusinessDetails = function BusinessDetails(props) {
       return _ref4.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delet the business owner
+   */
+
+
+  var handleDeleteBusinessOwner = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(owners) {
+      var _yield$ordering$setAc3, _yield$ordering$setAc4, error, result, _businessState$busine, _owners, _business;
+
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              _context5.next = 4;
+              return ordering.setAccessToken(session.token).businesses(businessId).save({
+                owners: owners
+              });
+
+            case 4:
+              _yield$ordering$setAc3 = _context5.sent;
+              _yield$ordering$setAc4 = _yield$ordering$setAc3.content;
+              error = _yield$ordering$setAc4.error;
+              result = _yield$ordering$setAc4.result;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: error ? result : null
+              }));
+
+              if (!error) {
+                _owners = businessState === null || businessState === void 0 ? void 0 : (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.owners.filter(function (owner) {
+                  return owners.includes(owner.id);
+                });
+                _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
+                  owners: _owners
+                });
+                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                  business: _business
+                }));
+                handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business);
+              }
+
+              _context5.next = 15;
+              break;
+
+            case 12:
+              _context5.prev = 12;
+              _context5.t0 = _context5["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context5.t0.message]
+              }));
+
+            case 15:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 12]]);
+    }));
+
+    return function handleDeleteBusinessOwner(_x2) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delet the business owner
+   */
+
+
+  var handleAddBusinessOwner = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6(owners, newOwner) {
+      var _yield$ordering$setAc5, _yield$ordering$setAc6, error, result, _businessState$busine2, _owners, _business;
+
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              _context6.next = 4;
+              return ordering.setAccessToken(session.token).businesses(businessId).save({
+                owners: owners
+              });
+
+            case 4:
+              _yield$ordering$setAc5 = _context6.sent;
+              _yield$ordering$setAc6 = _yield$ordering$setAc5.content;
+              error = _yield$ordering$setAc6.error;
+              result = _yield$ordering$setAc6.result;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: error ? result : null
+              }));
+
+              if (!error) {
+                _owners = [].concat(_toConsumableArray(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.owners), [newOwner]);
+                _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
+                  owners: _owners
+                });
+                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                  business: _business
+                }));
+                handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business);
+              }
+
+              _context6.next = 15;
+              break;
+
+            case 12:
+              _context6.prev = 12;
+              _context6.t0 = _context6["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context6.t0.message]
+              }));
+
+            case 15:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[0, 12]]);
+    }));
+
+    return function handleAddBusinessOwner(_x3, _x4) {
+      return _ref6.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (business) {
@@ -337,7 +479,9 @@ var BusinessDetails = function BusinessDetails(props) {
     businessState: businessState,
     handleChangeActiveBusiness: handleChangeActiveBusiness,
     handleDuplicateBusiness: handleDuplicateBusiness,
-    handleDeleteBusiness: handleDeleteBusiness
+    handleDeleteBusiness: handleDeleteBusiness,
+    handleDeleteBusinessOwner: handleDeleteBusinessOwner,
+    handleAddBusinessOwner: handleAddBusinessOwner
   })));
 };
 
