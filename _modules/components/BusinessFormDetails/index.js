@@ -51,9 +51,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * Component to manage business form details behavior without UI component
  */
 var BusinessFormDetails = function BusinessFormDetails(props) {
+  var _session$user;
+
   var UIComponent = props.UIComponent,
       business = props.business,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      handleSucessAddBusiness = props.handleSucessAddBusiness;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -91,9 +94,107 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     return setFormState(_objectSpread(_objectSpread({}, formState), values));
   };
   /**
-   * Default fuction for business profile workflow
+   * deafult params to add the business newly
    */
 
+
+  var defaultAddBusinessParams = {
+    minimum: 0,
+    delivery_price: 0,
+    tax: 0,
+    tax_type: 1,
+    service_fee: 0,
+    enabled: true,
+    owner_id: session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id,
+    schedule: [{
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }, {
+      enabled: true,
+      lapses: [{
+        open: {
+          hour: 0,
+          minute: 0
+        },
+        close: {
+          hour: 23,
+          minute: 59
+        }
+      }]
+    }]
+  };
+  /**
+   * Default fuction for business profile workflow
+   */
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
@@ -156,6 +257,72 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     };
   }();
   /**
+   * Method to add the business
+   */
+
+
+  var handleAddBusiness = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var changes, response;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              changes = _objectSpread(_objectSpread({}, formState.changes), defaultAddBusinessParams);
+              _context2.next = 5;
+              return ordering.businesses().save(changes, {
+                accessToken: session.token
+              });
+
+            case 5:
+              response = _context2.sent;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                changes: response.content.error ? formState.changes : {},
+                result: response.content,
+                loading: false
+              }));
+
+              if (!response.content.error) {
+                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                  businesses: _objectSpread(_objectSpread({}, businessState.business), response.content)
+                }));
+
+                if (handleSucessAddBusiness) {
+                  handleSucessAddBusiness(response.content.result);
+                }
+              }
+
+              _context2.next = 13;
+              break;
+
+            case 10:
+              _context2.prev = 10;
+              _context2.t0 = _context2["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context2.t0.message
+                },
+                loading: false
+              }));
+
+            case 13:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 10]]);
+    }));
+
+    return function handleAddBusiness() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    */
@@ -198,6 +365,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
   };
 
   (0, _react.useEffect)(function () {
+    if (!business) return;
     setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
       business: business
     }));
@@ -209,7 +377,8 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     setFormState: setFormState,
     handleChangeInput: handleChangeInput,
     handleButtonUpdateClick: handleUpdateClick,
-    handlechangeImage: handlechangeImage
+    handlechangeImage: handlechangeImage,
+    handleAddBusiness: handleAddBusiness
   })));
 };
 

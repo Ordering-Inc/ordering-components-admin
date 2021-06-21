@@ -10,7 +10,8 @@ export const BusinessFormDetails = (props) => {
   const {
     UIComponent,
     business,
-    handleSuccessUpdate
+    handleSuccessUpdate,
+    handleSucessAddBusiness
   } = props
 
   const [ordering] = useApi()
@@ -22,6 +23,28 @@ export const BusinessFormDetails = (props) => {
    * Clean formState
    */
   const cleanFormState = (values) => setFormState({ ...formState, ...values })
+
+  /**
+   * deafult params to add the business newly
+   */
+  const defaultAddBusinessParams = {
+    minimum: 0,
+    delivery_price: 0,
+    tax: 0,
+    tax_type: 1,
+    service_fee: 0,
+    enabled: true,
+    owner_id: session?.user?.id,
+    schedule: [
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] }
+    ]
+  }
 
   /**
    * Default fuction for business profile workflow
@@ -49,6 +72,48 @@ export const BusinessFormDetails = (props) => {
         })
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
+        }
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: err.message
+        },
+        loading: false
+      })
+    }
+  }
+
+  /**
+   * Method to add the business
+   */
+  const handleAddBusiness = async () => {
+    try {
+      setFormState({ ...formState, loading: true })
+      const changes = { ...formState.changes, ...defaultAddBusinessParams }
+      const response = await ordering.businesses().save(changes, {
+        accessToken: session.token
+      })
+      setFormState({
+        ...formState,
+        changes: response.content.error ? formState.changes : {},
+        result: response.content,
+        loading: false
+      })
+
+      if (!response.content.error) {
+        setBusinessState({
+          ...businessState,
+          businesses: {
+            ...businessState.business,
+            ...response.content
+          }
+        })
+
+        if (handleSucessAddBusiness) {
+          handleSucessAddBusiness(response.content.result)
         }
       }
     } catch (err) {
@@ -108,6 +173,7 @@ export const BusinessFormDetails = (props) => {
   }
 
   useEffect(() => {
+    if (!business) return
     setBusinessState({ ...businessState, business: business })
   }, [business])
 
@@ -123,6 +189,7 @@ export const BusinessFormDetails = (props) => {
           handleChangeInput={handleChangeInput}
           handleButtonUpdateClick={handleUpdateClick}
           handlechangeImage={handlechangeImage}
+          handleAddBusiness={handleAddBusiness}
         />
       )}
     </>
