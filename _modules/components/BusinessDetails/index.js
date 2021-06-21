@@ -536,5 +536,5 @@ BusinessDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'description', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug', 'owners']
+  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'description', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug', 'owners', 'types']
 };
