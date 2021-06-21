@@ -18,6 +18,7 @@ export const BusinessDetails = (props) => {
   const [session] = useSession()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
    * Method to get business from API
@@ -184,6 +185,46 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  /**
+   * Method to update the business
+   */
+  const handleUpdateBusinessClick = async () => {
+    try {
+      setFormState({ ...formState, loading: true })
+      const response = await ordering.businesses(businessId).save(formState.changes, {
+        accessToken: session.token
+      })
+      setFormState({
+        ...formState,
+        changes: response.content.error ? formState.changes : {},
+        result: response.content,
+        loading: false
+      })
+
+      if (!response.content.error) {
+        setBusinessState({
+          ...businessState,
+          business: {
+            ...businessState.business,
+            ...response.content.result
+          }
+        })
+        if (handleSucessUpdateBusiness) {
+          handleSucessUpdateBusiness(response.content.result)
+        }
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: err.message
+        },
+        loading: false
+      })
+    }
+  }
+
   useEffect(() => {
     if (business) {
       setBusinessState({
@@ -203,11 +244,14 @@ export const BusinessDetails = (props) => {
           <UIComponent
             {...props}
             businessState={businessState}
+            formState={formState}
+            setFormState={setFormState}
             handleChangeActiveBusiness={handleChangeActiveBusiness}
             handleDuplicateBusiness={handleDuplicateBusiness}
             handleDeleteBusiness={handleDeleteBusiness}
             handleDeleteBusinessOwner={handleDeleteBusinessOwner}
             handleAddBusinessOwner={handleAddBusinessOwner}
+            handleUpdateBusinessClick={handleUpdateBusinessClick}
           />
         )
       }

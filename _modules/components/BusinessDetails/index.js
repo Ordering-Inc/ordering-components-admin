@@ -88,6 +88,17 @@ var BusinessDetails = function BusinessDetails(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       actionStatus = _useState4[0],
       setActionStatus = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    changes: {},
+    result: {
+      error: false
+    }
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      formState = _useState6[0],
+      setFormState = _useState6[1];
   /**
    * Method to get business from API
    */
@@ -464,6 +475,71 @@ var BusinessDetails = function BusinessDetails(props) {
       return _ref6.apply(this, arguments);
     };
   }();
+  /**
+   * Method to update the business
+   */
+
+
+  var handleUpdateBusinessClick = /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee7() {
+      var response;
+      return _regenerator.default.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context7.next = 4;
+              return ordering.businesses(businessId).save(formState.changes, {
+                accessToken: session.token
+              });
+
+            case 4:
+              response = _context7.sent;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                changes: response.content.error ? formState.changes : {},
+                result: response.content,
+                loading: false
+              }));
+
+              if (!response.content.error) {
+                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
+                }));
+
+                if (handleSucessUpdateBusiness) {
+                  handleSucessUpdateBusiness(response.content.result);
+                }
+              }
+
+              _context7.next = 12;
+              break;
+
+            case 9:
+              _context7.prev = 9;
+              _context7.t0 = _context7["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context7.t0.message
+                },
+                loading: false
+              }));
+
+            case 12:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7, null, [[0, 9]]);
+    }));
+
+    return function handleUpdateBusinessClick() {
+      return _ref7.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (business) {
@@ -477,11 +553,14 @@ var BusinessDetails = function BusinessDetails(props) {
   }, [businessId, business]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessState: businessState,
+    formState: formState,
+    setFormState: setFormState,
     handleChangeActiveBusiness: handleChangeActiveBusiness,
     handleDuplicateBusiness: handleDuplicateBusiness,
     handleDeleteBusiness: handleDeleteBusiness,
     handleDeleteBusinessOwner: handleDeleteBusinessOwner,
-    handleAddBusinessOwner: handleAddBusinessOwner
+    handleAddBusinessOwner: handleAddBusinessOwner,
+    handleUpdateBusinessClick: handleUpdateBusinessClick
   })));
 };
 
