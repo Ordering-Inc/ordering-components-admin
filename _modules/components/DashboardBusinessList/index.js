@@ -505,7 +505,7 @@ DashboardBusinessList.propTypes = {
 DashboardBusinessList.defaultProps = {
   initialPageSize: 10,
   loadMorePageSize: 10,
-  propsToFetch: ['id', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'location', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types'],
+  propsToFetch: ['id', 'address', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'location', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types'],
   paginationSettings: {
     initialPage: 1,
     pageSize: 10,
