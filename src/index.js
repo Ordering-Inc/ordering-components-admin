@@ -17,6 +17,7 @@ import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
+import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
@@ -121,6 +122,7 @@ export {
   Cart,
   Checkout,
   CheckPassword,
+  CityList,
   CouponControl,
   DashboardBusinessList,
   DashboardOrdersList,
