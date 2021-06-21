@@ -64,7 +64,9 @@ var UsersList = function UsersList(props) {
       isSearchByUserId = props.isSearchByUserId,
       isSearchByUserEmail = props.isSearchByUserEmail,
       isSearchByUserPhone = props.isSearchByUserPhone,
-      isSearchByUserName = props.isSearchByUserName;
+      isSearchByUserName = props.isSearchByUserName,
+      isBusinessOwners = props.isBusinessOwners,
+      deafultUserTypesSelected = props.deafultUserTypesSelected;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -96,7 +98,7 @@ var UsersList = function UsersList(props) {
       searchValue = _useState6[0],
       setSearchValue = _useState6[1];
 
-  var _useState7 = (0, _react.useState)([0, 1, 2, 3]),
+  var _useState7 = (0, _react.useState)(deafultUserTypesSelected),
       _useState8 = _slicedToArray(_useState7, 2),
       userTypesSelected = _useState8[0],
       setUserTypesSelected = _useState8[1];
@@ -164,7 +166,11 @@ var UsersList = function UsersList(props) {
                 page: newFetch ? 1 : nextPage ? paginationProps.currentPage + 1 : paginationProps.currentPage - 1,
                 page_size: paginationProps.pageSize
               };
-              parameters = _objectSpread(_objectSpread({}, parameters), paginationParams);
+
+              if (!isBusinessOwners) {
+                parameters = _objectSpread({}, paginationParams);
+              }
+
               where = null;
               conditions = [];
               conditions.push({
@@ -766,5 +772,6 @@ UsersList.defaultProps = {
     initialPage: 1,
     pageSize: 10,
     controlType: 'infinity'
-  }
+  },
+  deafultUserTypesSelected: [0, 1, 2, 3]
 };
