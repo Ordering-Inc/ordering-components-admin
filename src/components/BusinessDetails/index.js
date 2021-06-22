@@ -5,6 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 
 export const BusinessDetails = (props) => {
   const {
+    asDashboard,
     business,
     businessId,
     propsToFetch,
@@ -29,7 +30,9 @@ export const BusinessDetails = (props) => {
         ...businessState,
         loading: true
       })
-      const fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
+      const fetchEndpoint = asDashboard
+        ? ordering.setAccessToken(session.token).businesses(businessId).asDashboard()
+        : ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
       const { content: { result } } = await fetchEndpoint.get()
       const business = Array.isArray(result) ? null : result
       setBusinessState({
