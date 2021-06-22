@@ -15,6 +15,8 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _SessionContext = require("../../contexts/SessionContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -49,34 +51,50 @@ var BusinessTypeFilter = function BusinessTypeFilter(props) {
   var businessTypes = props.businessTypes,
       onChangeBusinessType = props.onChangeBusinessType,
       defaultBusinessType = props.defaultBusinessType,
-      UIComponent = props.UIComponent;
+      UIComponent = props.UIComponent,
+      handleSuccessAddBusinessType = props.handleSuccessAddBusinessType;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
+
+  var _useState = (0, _react.useState)({
+    loading: false,
+    changes: {},
+    result: {
+      error: false
+    }
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      formState = _useState2[0],
+      setFormState = _useState2[1];
   /**
    * This property is used to set in state the current value
    */
 
 
-  var _useState = (0, _react.useState)(defaultBusinessType),
-      _useState2 = _slicedToArray(_useState, 2),
-      typeSelected = _useState2[0],
-      setTypeSelected = _useState2[1];
+  var _useState3 = (0, _react.useState)(defaultBusinessType),
+      _useState4 = _slicedToArray(_useState3, 2),
+      typeSelected = _useState4[0],
+      setTypeSelected = _useState4[1];
   /**
    * This state save the business type info from API
    */
 
 
-  var _useState3 = (0, _react.useState)({
+  var _useState5 = (0, _react.useState)({
     loading: true,
     error: null,
     types: [],
     pagination: null
   }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      typesState = _useState4[0],
-      setTypesState = _useState4[1];
+      _useState6 = _slicedToArray(_useState5, 2),
+      typesState = _useState6[0],
+      setTypesState = _useState6[1];
   /**
    * Handle when select value changes
    */
@@ -168,6 +186,120 @@ var BusinessTypeFilter = function BusinessTypeFilter(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Default fuction for business profile workflow
+   */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(formState.changes)
+              };
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/business_types"), requestOptions);
+
+            case 5:
+              response = _context2.sent;
+              _context2.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context2.sent;
+
+              if (!(content === null || content === void 0 ? void 0 : content.error)) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: {},
+                  result: content,
+                  loading: false
+                }));
+
+                if (handleSuccessAddBusinessType) {
+                  handleSuccessAddBusinessType(content.result);
+                }
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: formState.changes,
+                  result: content,
+                  loading: false
+                }));
+              }
+
+              _context2.next = 15;
+              break;
+
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context2.t0.message
+                },
+                loading: false
+              }));
+
+            case 15:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 12]]);
+    }));
+
+    return function handleUpdateClick() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeInput = function handleChangeInput(e) {
+    var currentChanges = _defineProperty({}, e.target.name, e.target.value);
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+  /**
+   * Update business type image data
+   * @param {File} file Image to change business type image
+   */
+
+
+  var handlechangeImage = function handlechangeImage(file) {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+          image: reader.result
+        })
+      }));
+    };
+
+    reader.onerror = function (error) {
+      return console.log(error);
+    };
+  };
 
   (0, _react.useEffect)(function () {
     if (businessTypes) {
@@ -183,7 +315,11 @@ var BusinessTypeFilter = function BusinessTypeFilter(props) {
     typesState: typesState,
     businessTypes: businessTypes,
     currentTypeSelected: typeSelected,
-    handleChangeBusinessType: handleChangeBusinessType
+    formState: formState,
+    handleChangeBusinessType: handleChangeBusinessType,
+    handleUpdateClick: handleUpdateClick,
+    handleChangeInput: handleChangeInput,
+    handlechangeImage: handlechangeImage
   })));
 };
 
