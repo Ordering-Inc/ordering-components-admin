@@ -56,7 +56,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessDetails = function BusinessDetails(props) {
-  var business = props.business,
+  var asDashboard = props.asDashboard,
+      business = props.business,
       businessId = props.businessId,
       propsToFetch = props.propsToFetch,
       UIComponent = props.UIComponent,
@@ -116,7 +117,7 @@ var BusinessDetails = function BusinessDetails(props) {
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: true
               }));
-              fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch);
+              fetchEndpoint = asDashboard ? ordering.setAccessToken(session.token).businesses(businessId).asDashboard() : ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch);
               _context.next = 5;
               return fetchEndpoint.get();
 
