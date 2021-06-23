@@ -27,6 +27,12 @@ Object.defineProperty(exports, "BaseComponent", {
     return _BaseComponent.BaseComponent;
   }
 });
+Object.defineProperty(exports, "BasicSettings", {
+  enumerable: true,
+  get: function get() {
+    return _BasicSettings.BasicSettings;
+  }
+});
 Object.defineProperty(exports, "BusinessAndProductList", {
   enumerable: true,
   get: function get() {
@@ -797,6 +803,8 @@ var _AddressForm = require("./components/AddressForm");
 var _AddressList = require("./components/AddressList");
 
 var _BaseComponent = require("./components/BaseComponent");
+
+var _BasicSettings = require("./components/BasicSettings");
 
 var _BusinessAndProductList = require("./components/BusinessAndProductList");
 
