@@ -538,40 +538,6 @@ var BusinessDetails = function BusinessDetails(props) {
     };
   }();
   /**
-   * Method to add the business when new busines iamge is added
-   * @param {Object} result result
-   */
-
-
-  var handleSucessAddBusinessGallery = function handleSucessAddBusinessGallery(result) {
-    var _businessState$busine3;
-
-    var gallery = [].concat(_toConsumableArray(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.gallery), [result]);
-    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-      business: _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
-        gallery: gallery
-      })
-    }));
-  };
-  /**
-   * Method to delete the business image from business gallery
-   * @param {*} id id to delete the business image
-   */
-
-
-  var handleSucessDeleteBusinessGallery = function handleSucessDeleteBusinessGallery(id) {
-    var _businessState$busine4;
-
-    var gallery = businessState === null || businessState === void 0 ? void 0 : (_businessState$busine4 = businessState.business) === null || _businessState$busine4 === void 0 ? void 0 : _businessState$busine4.gallery.filter(function (file) {
-      return file.id !== id;
-    });
-    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-      business: _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
-        gallery: gallery
-      })
-    }));
-  };
-  /**
    * Method to add the business fields when new busines item is added
    */
 
@@ -620,8 +586,6 @@ var BusinessDetails = function BusinessDetails(props) {
     handleDeleteBusinessOwner: handleDeleteBusinessOwner,
     handleAddBusinessOwner: handleAddBusinessOwner,
     handleUpdateBusinessClick: handleUpdateBusinessClick,
-    handleSucessAddBusinessGallery: handleSucessAddBusinessGallery,
-    handleSucessDeleteBusinessGallery: handleSucessDeleteBusinessGallery,
     handleSuccessAddBusinessItem: handleSuccessAddBusinessItem,
     handleSuccessDeleteBusinessItem: handleSuccessDeleteBusinessItem
   })));

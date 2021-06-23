@@ -69,6 +69,12 @@ Object.defineProperty(exports, "BusinessList", {
     return _BusinessList.BusinessList;
   }
 });
+Object.defineProperty(exports, "BusinessMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMetaFields.BusinessMetaFields;
+  }
+});
 Object.defineProperty(exports, "BusinessInformation", {
   enumerable: true,
   get: function get() {
@@ -805,6 +811,8 @@ var _BusinessFormDetails = require("./components/BusinessFormDetails");
 var _BusinessGallery = require("./components/BusinessGallery");
 
 var _BusinessList = require("./components/BusinessList");
+
+var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessInformation = require("./components/BusinessInformation");
 
