@@ -7,7 +7,7 @@ export const BusinessGallery = (props) => {
   const {
     business,
     UIComponent,
-    handleSucessUpdateBusinessGallery,
+    handleSucessAddBusinessGallery,
     handleSucessDeleteBusinessGallery
   } = props
 
@@ -70,8 +70,8 @@ export const BusinessGallery = (props) => {
       })
 
       if (!content.error) {
-        if (handleSucessUpdateBusinessGallery) {
-          handleSucessUpdateBusinessGallery(content.result)
+        if (handleSucessAddBusinessGallery) {
+          handleSucessAddBusinessGallery(content.result)
         }
       }
     } catch (err) {
