@@ -7,6 +7,7 @@ import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessController } from './components/BusinessController'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
+import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessList } from './components/BusinessList'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
@@ -113,6 +114,7 @@ export {
   BusinessController,
   BusinessDetails,
   BusinessFormDetails,
+  BusinessGallery,
   BusinessList,
   BusinessInformation,
   BusinessProductsCategories,
