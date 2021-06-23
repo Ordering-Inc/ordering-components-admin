@@ -45,6 +45,22 @@ export const BusinessGallery = (props) => {
   }
 
   /**
+   * Update business video path
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeBusinessVideo = (e) => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        business_id: business?.id,
+        type: 2,
+        video: e.target.value
+      }
+    })
+  }
+
+  /**
    * Method to update the business
    */
   const handleUpdateBusinessGallery = async () => {
@@ -88,7 +104,7 @@ export const BusinessGallery = (props) => {
   /**
    * Method to delete the business gallery image
    */
-  const handleDeleteBusinessImage = async (id) => {
+  const handleDeleteBusinessGallery = async (id) => {
     try {
       setFormState({ ...formState, loading: true })
       const requestOptions = {
@@ -140,8 +156,9 @@ export const BusinessGallery = (props) => {
           formState={formState}
           handlechangeImage={handlechangeImage}
           cleanFormState={cleanFormState}
+          handleChangeBusinessVideo={handleChangeBusinessVideo}
           handleUpdateBusinessGallery={handleUpdateBusinessGallery}
-          handleDeleteBusinessImage={handleDeleteBusinessImage}
+          handleDeleteBusinessGallery={handleDeleteBusinessGallery}
         />
       )}
     </>

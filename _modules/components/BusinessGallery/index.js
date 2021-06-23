@@ -114,6 +114,21 @@ var BusinessGallery = function BusinessGallery(props) {
     };
   };
   /**
+   * Update business video path
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeBusinessVideo = function handleChangeBusinessVideo(e) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        business_id: business === null || business === void 0 ? void 0 : business.id,
+        type: 2,
+        video: e.target.value
+      })
+    }));
+  };
+  /**
    * Method to update the business
    */
 
@@ -190,7 +205,7 @@ var BusinessGallery = function BusinessGallery(props) {
    */
 
 
-  var handleDeleteBusinessImage = /*#__PURE__*/function () {
+  var handleDeleteBusinessGallery = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id) {
       var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee2$(_context2) {
@@ -248,7 +263,7 @@ var BusinessGallery = function BusinessGallery(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function handleDeleteBusinessImage(_x) {
+    return function handleDeleteBusinessGallery(_x) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -272,8 +287,9 @@ var BusinessGallery = function BusinessGallery(props) {
     formState: formState,
     handlechangeImage: handlechangeImage,
     cleanFormState: cleanFormState,
+    handleChangeBusinessVideo: handleChangeBusinessVideo,
     handleUpdateBusinessGallery: handleUpdateBusinessGallery,
-    handleDeleteBusinessImage: handleDeleteBusinessImage
+    handleDeleteBusinessGallery: handleDeleteBusinessGallery
   })));
 };
 
