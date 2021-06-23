@@ -257,6 +257,33 @@ export const BusinessDetails = (props) => {
     })
   }
 
+  /**
+   * Method to add the business fields when new busines item is added
+   */
+  const handleSuccessAddBusinessItem = (name, result) => {
+    const params = [...businessState?.business[name], result]
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        [name]: params
+      }
+    })
+  }
+  /**
+   * Method to delete the business item from business
+   */
+  const handleSuccessDeleteBusinessItem = (name, id) => {
+    const params = businessState?.business[name].filter(item => item.id !== id)
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        [name]: params
+      }
+    })
+  }
+
   useEffect(() => {
     if (!businessState?.business) return
     handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
@@ -291,6 +318,8 @@ export const BusinessDetails = (props) => {
             handleUpdateBusinessClick={handleUpdateBusinessClick}
             handleSucessAddBusinessGallery={handleSucessAddBusinessGallery}
             handleSucessDeleteBusinessGallery={handleSucessDeleteBusinessGallery}
+            handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
+            handleSuccessDeleteBusinessItem={handleSuccessAddBusinessItem}
           />
         )
       }
