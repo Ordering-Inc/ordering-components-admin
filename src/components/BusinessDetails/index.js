@@ -228,36 +228,6 @@ export const BusinessDetails = (props) => {
   }
 
   /**
-   * Method to add the business when new busines iamge is added
-   * @param {Object} result result
-   */
-  const handleSucessAddBusinessGallery = (result) => {
-    const gallery = [...businessState?.business?.gallery, result]
-    setBusinessState({
-      ...businessState,
-      business: {
-        ...businessState?.business,
-        gallery: gallery
-      }
-    })
-  }
-
-  /**
-   * Method to delete the business image from business gallery
-   * @param {*} id id to delete the business image
-   */
-  const handleSucessDeleteBusinessGallery = (id) => {
-    const gallery = businessState?.business?.gallery.filter(file => file.id !== id)
-    setBusinessState({
-      ...businessState,
-      business: {
-        ...businessState?.business,
-        gallery: gallery
-      }
-    })
-  }
-
-  /**
    * Method to add the business fields when new busines item is added
    */
   const handleSuccessAddBusinessItem = (name, result) => {
@@ -316,8 +286,6 @@ export const BusinessDetails = (props) => {
             handleDeleteBusinessOwner={handleDeleteBusinessOwner}
             handleAddBusinessOwner={handleAddBusinessOwner}
             handleUpdateBusinessClick={handleUpdateBusinessClick}
-            handleSucessAddBusinessGallery={handleSucessAddBusinessGallery}
-            handleSucessDeleteBusinessGallery={handleSucessDeleteBusinessGallery}
             handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
             handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
           />
