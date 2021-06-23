@@ -50,7 +50,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var BusinessGallery = function BusinessGallery(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
-      handleSucessUpdateBusinessGallery = props.handleSucessUpdateBusinessGallery,
+      handleSucessAddBusinessGallery = props.handleSucessAddBusinessGallery,
       handleSucessDeleteBusinessGallery = props.handleSucessDeleteBusinessGallery;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -154,8 +154,8 @@ var BusinessGallery = function BusinessGallery(props) {
               }));
 
               if (!content.error) {
-                if (handleSucessUpdateBusinessGallery) {
-                  handleSucessUpdateBusinessGallery(content.result);
+                if (handleSucessAddBusinessGallery) {
+                  handleSucessAddBusinessGallery(content.result);
                 }
               }
 

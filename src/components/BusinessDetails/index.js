@@ -63,8 +63,12 @@ export const BusinessDetails = (props) => {
         loading: false,
         error: error ? result : null
       })
+
       if (!error) {
-        handleSucessUpdateBusiness && handleSucessUpdateBusiness(result)
+        setBusinessState({
+          ...businessState,
+          business: result
+        })
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -152,7 +156,6 @@ export const BusinessDetails = (props) => {
           ...businessState,
           business: _business
         })
-        handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business)
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -181,7 +184,6 @@ export const BusinessDetails = (props) => {
           ...businessState,
           business: _business
         })
-        handleSucessUpdateBusiness && handleSucessUpdateBusiness(_business)
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -212,9 +214,6 @@ export const BusinessDetails = (props) => {
             ...response.content.result
           }
         })
-        if (handleSucessUpdateBusiness) {
-          handleSucessUpdateBusiness(response.content.result)
-        }
       }
     } catch (err) {
       setFormState({
@@ -227,6 +226,41 @@ export const BusinessDetails = (props) => {
       })
     }
   }
+
+  /**
+   * Method to add the business when new busines iamge is added
+   * @param {Object} result result
+   */
+  const handleSucessAddBusinessGallery = (result) => {
+    const gallery = [...businessState?.business?.gallery, result]
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        gallery: gallery
+      }
+    })
+  }
+
+  /**
+   * Method to delete the business image from business gallery
+   * @param {*} id id to delete the business image
+   */
+  const handleSucessDeleteBusinessGallery = (id) => {
+    const gallery = businessState?.business?.gallery.filter(file => file.id !== id)
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        gallery: gallery
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (!businessState?.business) return
+    handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
+  }, [businessState?.business])
 
   useEffect(() => {
     if (business) {
@@ -255,6 +289,8 @@ export const BusinessDetails = (props) => {
             handleDeleteBusinessOwner={handleDeleteBusinessOwner}
             handleAddBusinessOwner={handleAddBusinessOwner}
             handleUpdateBusinessClick={handleUpdateBusinessClick}
+            handleSucessAddBusinessGallery={handleSucessAddBusinessGallery}
+            handleSucessDeleteBusinessGallery={handleSucessDeleteBusinessGallery}
           />
         )
       }
