@@ -319,7 +319,7 @@ export const BusinessDetails = (props) => {
             handleSucessAddBusinessGallery={handleSucessAddBusinessGallery}
             handleSucessDeleteBusinessGallery={handleSucessDeleteBusinessGallery}
             handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
-            handleSuccessDeleteBusinessItem={handleSuccessAddBusinessItem}
+            handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
           />
         )
       }

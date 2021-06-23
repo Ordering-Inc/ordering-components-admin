@@ -571,6 +571,30 @@ var BusinessDetails = function BusinessDetails(props) {
       })
     }));
   };
+  /**
+   * Method to add the business fields when new busines item is added
+   */
+
+
+  var handleSuccessAddBusinessItem = function handleSuccessAddBusinessItem(name, result) {
+    var params = [].concat(_toConsumableArray(businessState === null || businessState === void 0 ? void 0 : businessState.business[name]), [result]);
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, _defineProperty({}, name, params))
+    }));
+  };
+  /**
+   * Method to delete the business item from business
+   */
+
+
+  var handleSuccessDeleteBusinessItem = function handleSuccessDeleteBusinessItem(name, id) {
+    var params = businessState === null || businessState === void 0 ? void 0 : businessState.business[name].filter(function (item) {
+      return item.id !== id;
+    });
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, _defineProperty({}, name, params))
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     if (!(businessState === null || businessState === void 0 ? void 0 : businessState.business)) return;
@@ -597,7 +621,9 @@ var BusinessDetails = function BusinessDetails(props) {
     handleAddBusinessOwner: handleAddBusinessOwner,
     handleUpdateBusinessClick: handleUpdateBusinessClick,
     handleSucessAddBusinessGallery: handleSucessAddBusinessGallery,
-    handleSucessDeleteBusinessGallery: handleSucessDeleteBusinessGallery
+    handleSucessDeleteBusinessGallery: handleSucessDeleteBusinessGallery,
+    handleSuccessAddBusinessItem: handleSuccessAddBusinessItem,
+    handleSuccessDeleteBusinessItem: handleSuccessDeleteBusinessItem
   })));
 };
 
@@ -652,5 +678,5 @@ BusinessDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'address', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types']
+  propsToFetch: ['id', 'address', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'metafields', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types']
 };
