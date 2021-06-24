@@ -11,61 +11,61 @@ export const BasicSettings = (props) => {
     UIComponent
   } = props
 
+  const [categoryList, setCategoryList] = useState({ categories: [], loading: false, error: null })
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
-  const [actionStatus, setActionStatus] = useState({ loading: false, error: null, result: null })
 
   useEffect(() => {
     getCagegories();
   }, [])
-  
+
   /**
    * Method to get Configration List
    */
-     const getCagegories = async () => {
-      if (loading) return
-      try {
-        setActionStatus({ ...actionStatus, loading: true })
-        const requestOptions = {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
+  const getCagegories = async () => {
+    if (loading) return
+    try {
+      setCategoryList({ ...categoryList, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
-  
-        const functionFetch = `${ordering.root}/config_categories`
-  
-        const response = await fetch(functionFetch, requestOptions)
-        const { error, result } = await response.json()
-        console.log(result);
-        if (!error) {
-          setActionStatus({
-            ...actionStatus,
-            loading: false,
-            result: result
-          })
-        } else {
-          setActionStatus({
-            ...actionStatus,
-            loading: true,
-            error: result
-          })
-        }
-      } catch (err) {
-        setActionStatus({
-          ...actionStatus,
+      }
+
+      const functionFetch = `${ordering.root}/config_categories`
+
+      const response = await fetch(functionFetch, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        setCategoryList({
+          ...categoryList,
           loading: false,
-          error: err
+          categories: result
+        })
+      } else {
+        setCategoryList({
+          ...categoryList,
+          loading: true,
+          error: result
         })
       }
+    } catch (err) {
+      setCategoryList({
+        ...categoryList,
+        loading: false,
+        error: err
+      })
     }
+  }
 
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
+          categoryList={categoryList}
         />
       )}
     </>
