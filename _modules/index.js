@@ -99,6 +99,12 @@ Object.defineProperty(exports, "BusinessReviews", {
     return _BusinessReviews.BusinessReviews;
   }
 });
+Object.defineProperty(exports, "BusinessSchedule", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSchedule.BusinessSchedule;
+  }
+});
 Object.defineProperty(exports, "BusinessSortControl", {
   enumerable: true,
   get: function get() {
@@ -821,6 +827,8 @@ var _BusinessProductsCategories = require("./components/BusinessProductsCategori
 var _BusinessProductsSearch = require("./components/BusinessProductsSearch");
 
 var _BusinessReviews = require("./components/BusinessReviews");
+
+var _BusinessSchedule = require("./components/BusinessSchedule");
 
 var _BusinessSortControl = require("./components/BusinessSortControl");
 

@@ -14,6 +14,7 @@ import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
+import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
@@ -122,6 +123,7 @@ export {
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
+  BusinessSchedule,
   BusinessSortControl,
   BusinessTypeFilter,
   BusinessTypeForm,
