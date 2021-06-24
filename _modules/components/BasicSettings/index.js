@@ -55,7 +55,7 @@ var BasicSettings = function BasicSettings(props) {
       token = _useSession2$.token,
       loading = _useSession2$.loading;
 
-  var _useState = useState({
+  var _useState = (0, _react.useState)({
     loading: false,
     error: null,
     result: null
