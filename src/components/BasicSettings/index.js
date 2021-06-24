@@ -34,7 +34,7 @@ export const BasicSettings = (props) => {
           }
         }
   
-        const functionFetch = `${ordering.root}/language/project/config_categories`
+        const functionFetch = `${ordering.root}/config_categories`
   
         const response = await fetch(functionFetch, requestOptions)
         const { error, result } = await response.json()
