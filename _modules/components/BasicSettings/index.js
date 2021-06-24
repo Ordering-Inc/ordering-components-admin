@@ -15,6 +15,8 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
+var _ApiContext = require("../../contexts/ApiContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -55,6 +57,10 @@ var BasicSettings = function BasicSettings(props) {
       token = _useSession2$.token,
       loading = _useSession2$.loading;
 
+  var _useApi = (0, _ApiContext.useApi)(),
+      _useApi2 = _slicedToArray(_useApi, 1),
+      ordering = _useApi2[0];
+
   var _useState = (0, _react.useState)({
     loading: false,
     error: null,
@@ -68,8 +74,8 @@ var BasicSettings = function BasicSettings(props) {
     getCagegories();
   }, []);
   /**
-  * Method to get Configration List
-  */
+   * Method to get Configration List
+   */
 
   var getCagegories = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
@@ -98,7 +104,7 @@ var BasicSettings = function BasicSettings(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = 'https://apiv4.ordering.co/api_version/language/project/config_categories';
+              functionFetch = "".concat(ordering.root, "/language/project/config_categories");
               _context.next = 8;
               return fetch(functionFetch, requestOptions);
 

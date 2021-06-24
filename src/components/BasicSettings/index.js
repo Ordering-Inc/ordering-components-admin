@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
+import { useApi } from '../../contexts/ApiContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -11,13 +12,14 @@ export const BasicSettings = (props) => {
   } = props
 
   const [{ token, loading }] = useSession()
+  const [ordering] = useApi()
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null, result: null })
 
   useEffect(() => {
     getCagegories();
   }, [])
   
-    /**
+  /**
    * Method to get Configration List
    */
      const getCagegories = async () => {
@@ -32,7 +34,7 @@ export const BasicSettings = (props) => {
           }
         }
   
-        const functionFetch = 'https://apiv4.ordering.co/api_version/language/project/config_categories'
+        const functionFetch = `${ordering.root}/language/project/config_categories`
   
         const response = await fetch(functionFetch, requestOptions)
         const { error, result } = await response.json()
