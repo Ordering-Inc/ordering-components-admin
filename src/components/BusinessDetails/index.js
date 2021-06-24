@@ -22,6 +22,11 @@ export const BusinessDetails = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
+   * Clean formState
+   */
+  const cleanFormState = (values) => setFormState({ ...formState, ...values })
+
+  /**
    * Method to get business from API
    */
   const getBusinesses = async () => {
@@ -191,7 +196,7 @@ export const BusinessDetails = (props) => {
   }
 
   /**
-   * Method to update the business
+   * Method to update the business from the API
    */
   const handleUpdateBusinessClick = async () => {
     try {
@@ -254,6 +259,18 @@ export const BusinessDetails = (props) => {
     })
   }
 
+  /**
+   * Method to update the business
+   */
+  const handleUpdateBusinessState = (result) => {
+    const business = { ...businessState?.business }
+    Object.assign(business, result)
+    setBusinessState({
+      ...businessState,
+      business: business
+    })
+  }
+
   useEffect(() => {
     if (!businessState?.business) return
     handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
@@ -280,12 +297,14 @@ export const BusinessDetails = (props) => {
             businessState={businessState}
             formState={formState}
             setFormState={setFormState}
+            cleanFormState={cleanFormState}
             handleChangeActiveBusiness={handleChangeActiveBusiness}
             handleDuplicateBusiness={handleDuplicateBusiness}
             handleDeleteBusiness={handleDeleteBusiness}
             handleDeleteBusinessOwner={handleDeleteBusinessOwner}
             handleAddBusinessOwner={handleAddBusinessOwner}
             handleUpdateBusinessClick={handleUpdateBusinessClick}
+            handleUpdateBusinessState={handleUpdateBusinessState}
             handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
             handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
           />
