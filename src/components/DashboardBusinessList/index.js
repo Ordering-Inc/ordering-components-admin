@@ -5,6 +5,7 @@ import { useSession } from '../../contexts/SessionContext'
 
 export const DashboardBusinessList = (props) => {
   const {
+    asDashboard,
     UIComponent,
     paginationSettings,
     propsToFetch,
@@ -117,12 +118,9 @@ export const DashboardBusinessList = (props) => {
       }
     }
 
-    const functionFetch = ordering
-      .setAccessToken(session.token)
-      .businesses()
-      .asDashboard()
-      .select(propsToFetch)
-      .where(where)
+    const functionFetch = asDashboard
+      ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where)
+      : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where)
 
     return await functionFetch.get(options)
   }

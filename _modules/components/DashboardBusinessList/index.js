@@ -58,7 +58,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var DashboardBusinessList = function DashboardBusinessList(props) {
   var _paginationSettings$p;
 
-  var UIComponent = props.UIComponent,
+  var asDashboard = props.asDashboard,
+      UIComponent = props.UIComponent,
       paginationSettings = props.paginationSettings,
       propsToFetch = props.propsToFetch,
       initialPageSize = props.initialPageSize,
@@ -199,7 +200,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 };
               }
 
-              functionFetch = ordering.setAccessToken(session.token).businesses().asDashboard().select(propsToFetch).where(where);
+              functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
               _context.next = 10;
               return functionFetch.get(options);
 
