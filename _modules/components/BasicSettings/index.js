@@ -106,7 +106,7 @@ var BasicSettings = function BasicSettings(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = "".concat(ordering.root, "/config_categories");
+              functionFetch = "".concat(ordering.root, "/config_categories?params=description");
               _context.next = 8;
               return fetch(functionFetch, requestOptions);
 
