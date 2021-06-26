@@ -19,6 +19,7 @@ import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { Cart } from './components/Cart'
+import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
@@ -96,6 +97,7 @@ import { PaymentOptionStripe } from './components/PaymentOptionStripe'
 import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirect'
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
 import { StripeElementsForm } from './components/StripeElementsForm'
+import { SubCategory } from './components/SubCategory'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
@@ -128,6 +130,7 @@ export {
   BusinessTypeFilter,
   BusinessTypeForm,
   Cart,
+  CategoryDescription,
   Checkout,
   CheckPassword,
   CityList,
@@ -196,6 +199,7 @@ export {
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,
+  SubCategory,
   CmsContent,
   FloatingButton,
   ResetPassword,
