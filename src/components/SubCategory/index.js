@@ -6,6 +6,7 @@ import { useApi } from '../../contexts/ApiContext'
 export const SubCategory = (props) => {
   const {
     categoryId,
+    configId,
     UIComponent
   } = props
 
@@ -14,17 +15,18 @@ export const SubCategory = (props) => {
   const [ordering] = useApi()
 
   useEffect(() => {
-    getSubCategory();
-  }, [])
+    if (configId) getSubCategory(configId)
+    else if (categoryId) getSubCategory(categoryId)
+  }, [categoryId, configId])
 
   /**
    * Method to get Sub Category List
    */
-  const getSubCategory = async () => {
+  const getSubCategory = async (id) => {
     if (loading) return
     try {
       setSubCategoryState({ ...subCategoryState, loading: true })
-      const { content: { error, result } } = await ordering.configs(categoryId).get();
+      const { content: { error, result } } = await ordering.configs(id).get();
       if (!error) {
         setSubCategoryState({
           ...subCategoryState,
@@ -34,7 +36,7 @@ export const SubCategory = (props) => {
       } else {
         setSubCategoryState({
           ...subCategoryState,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -49,9 +51,10 @@ export const SubCategory = (props) => {
 
   const saveConfiguartion = async (changes) => {
     if (loading) return
+    const id = configId || categoryId
     try {
       setSubCategoryState({ ...subCategoryState, loading: true })
-      const { content: { error, result } } = await ordering.configs(categoryId).save(changes)
+      const { content: { error, result } } = await ordering.configs(id).save(changes)
       if (!error) {
         setSubCategoryState({
           ...subCategoryState,
@@ -61,7 +64,7 @@ export const SubCategory = (props) => {
       } else {
         setSubCategoryState({
           ...subCategoryState,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -92,6 +95,14 @@ SubCategory.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
+  /**
+   * Category_Id, this must be contains an category id for get data from API
+   */
+  categoryId: PropTypes.number,
+  /**
+   * Config_id, this must be contains an config id for get data from API
+   */
+  configId: PropTypes.number,
   /**
    * Array of drivers props to fetch
    */
