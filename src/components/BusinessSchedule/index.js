@@ -32,7 +32,7 @@ export const BusinessSchedule = (props) => {
   const isConflictScheduleTime = (lapses, index, value) => {
     for (let i = 0; i < lapses.length; i++) {
       if (i !== index) {
-        if (convertMinutes(lapses[i].open) < value && convertMinutes(lapses[i].close) > value) {
+        if (convertMinutes(lapses[i].open) <= value && convertMinutes(lapses[i].close) >= value) {
           return true
         }
       }

@@ -130,7 +130,7 @@ var BusinessSchedule = function BusinessSchedule(props) {
   var isConflictScheduleTime = function isConflictScheduleTime(lapses, index, value) {
     for (var i = 0; i < lapses.length; i++) {
       if (i !== index) {
-        if (convertMinutes(lapses[i].open) < value && convertMinutes(lapses[i].close) > value) {
+        if (convertMinutes(lapses[i].open) <= value && convertMinutes(lapses[i].close) >= value) {
           return true;
         }
       }
