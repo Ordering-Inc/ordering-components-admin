@@ -10,6 +10,7 @@ import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
+import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
@@ -120,6 +121,7 @@ export {
   BusinessGallery,
   BusinessList,
   BusinessMenu,
+  BusinessMenuOptions,
   BusinessMetaFields,
   BusinessInformation,
   BusinessProductsCategories,
