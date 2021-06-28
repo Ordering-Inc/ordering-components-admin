@@ -60,7 +60,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var BusinessMenuOptions = function BusinessMenuOptions(props) {
   var business = props.business,
       menu = props.menu,
-      UIComponent = props.UIComponent;
+      UIComponent = props.UIComponent,
+      handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -507,7 +508,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleUpdateBusinessMenuOption = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+      var requestOptions, response, content, _business;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -543,7 +545,20 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 loading: false
               }));
 
-              if (!content.error) {}
+              if (!content.error) {
+                props.onClose() && props.onClose();
+                _business = _objectSpread({}, business);
+
+                _business.menus.filter(function (menu) {
+                  if (menu.id === content.result.id) {
+                    Object.assign(menu, content.result);
+                  }
+
+                  return true;
+                });
+
+                handleUpdateBusinessState && handleUpdateBusinessState(_business);
+              }
 
               _context.next = 16;
               break;
@@ -578,7 +593,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleAddBusinessMenuOption = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, response, content;
+      var _formState$changes, changes, requestOptions, response, content, _business, _menu, products;
+
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -587,23 +603,36 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
+              changes = _objectSpread({}, formState.changes);
+
+              if (!((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.schedule)) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+                    schedule: JSON.stringify(schedule)
+                  })
+                }));
+                changes = _objectSpread(_objectSpread({}, changes), {}, {
+                  schedule: JSON.stringify(schedule)
+                });
+              }
+
               requestOptions = {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
+                body: JSON.stringify(changes)
               };
-              _context2.next = 5;
+              _context2.next = 7;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus"), requestOptions);
 
-            case 5:
+            case 7:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 10;
               return response.json();
 
-            case 8:
+            case 10:
               content = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
@@ -614,13 +643,40 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 loading: false
               }));
 
-              if (!content.error) {}
+              if (!content.error) {
+                props.onClose() && props.onClose();
+                _business = _objectSpread({}, business);
+                _menu = _objectSpread(_objectSpread({}, content.result), {}, {
+                  enabled: true
+                });
+                products = business.categories.reduce(function (products, category) {
+                  return [].concat(_toConsumableArray(products), _toConsumableArray(category.products));
+                }, []).filter(function (product) {
+                  return _menu.products.includes(product.id);
+                });
+                _menu = _objectSpread(_objectSpread({}, _menu), {}, {
+                  products: products
+                });
 
-              _context2.next = 16;
+                _business.menus.push(_menu);
+
+                handleUpdateBusinessState && handleUpdateBusinessState(_business);
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: {},
+                  result: {
+                    error: true,
+                    result: content.result
+                  },
+                  loading: false
+                }));
+              }
+
+              _context2.next = 18;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 15:
+              _context2.prev = 15;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -630,12 +686,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 }
               }));
 
-            case 16:
+            case 18:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 15]]);
     }));
 
     return function handleAddBusinessMenuOption() {
@@ -811,6 +867,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           }
         }]
       }]);
+      setOrderTypeSate({
+        delivery: false,
+        pickup: false,
+        eatin: false,
+        curbside: false,
+        driver_thru: false
+      });
     }
   }, [menu]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {

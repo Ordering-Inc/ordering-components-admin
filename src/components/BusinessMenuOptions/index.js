@@ -7,7 +7,8 @@ export const BusinessMenuOptions = (props) => {
   const {
     business,
     menu,
-    UIComponent
+    UIComponent,
+    handleUpdateBusinessState
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -389,6 +390,15 @@ export const BusinessMenuOptions = (props) => {
       })
 
       if (!content.error) {
+        props.onClose() && props.onClose()
+        const _business = { ...business }
+        _business.menus.filter(menu => {
+          if (menu.id === content.result.id) {
+            Object.assign(menu, content.result)
+          }
+          return true
+        })
+        handleUpdateBusinessState && handleUpdateBusinessState(_business)
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
@@ -401,13 +411,24 @@ export const BusinessMenuOptions = (props) => {
   const handleAddBusinessMenuOption = async () => {
     try {
       setFormState({ ...formState, loading: true })
+      let changes = { ...formState.changes }
+      if (!formState.changes?.schedule) {
+        setFormState({
+          ...formState,
+          changes: {
+            ...formState.changes,
+            schedule: JSON.stringify(schedule)
+          }
+        })
+        changes = { ...changes, schedule: JSON.stringify(schedule) }
+      }
       const requestOptions = {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState?.changes)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/business/${business.id}/menus`, requestOptions)
       const content = await response.json()
@@ -423,6 +444,23 @@ export const BusinessMenuOptions = (props) => {
       })
 
       if (!content.error) {
+        props.onClose() && props.onClose()
+        const _business = { ...business }
+        let _menu = { ...content.result, enabled: true }
+        const products = business.categories.reduce((products, category) => [...products, ...category.products], []).filter(product => _menu.products.includes(product.id))
+        _menu = { ..._menu, products: products }
+        _business.menus.push(_menu)
+        handleUpdateBusinessState && handleUpdateBusinessState(_business)
+      } else {
+        setFormState({
+          ...formState,
+          changes: {},
+          result: {
+            error: true,
+            result: content.result
+          },
+          loading: false
+        })
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
@@ -486,6 +524,13 @@ export const BusinessMenuOptions = (props) => {
         { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
         { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] }
       ])
+      setOrderTypeSate({
+        delivery: false,
+        pickup: false,
+        eatin: false,
+        curbside: false,
+        driver_thru: false
+      })
     }
   }, [menu])
   return (
