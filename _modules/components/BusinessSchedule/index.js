@@ -90,6 +90,30 @@ var BusinessSchedule = function BusinessSchedule(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       selectedCopyDays = _useState6[0],
       setSelectedCopyDays = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isConflict = _useState8[0],
+      setIsConflict = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(null),
+      _useState10 = _slicedToArray(_useState9, 2),
+      openAddScheduleIndex = _useState10[0],
+      setOpenAddScheduleInex = _useState10[1];
+
+  var _useState11 = (0, _react.useState)({
+    open: {
+      hour: 0,
+      minute: 0
+    },
+    close: {
+      hour: 23,
+      minute: 59
+    }
+  }),
+      _useState12 = _slicedToArray(_useState11, 2),
+      addScheduleTime = _useState12[0],
+      setAddScheduleTime = _useState12[1];
   /**
    * Clean selectedCopyDays
    */
@@ -97,6 +121,28 @@ var BusinessSchedule = function BusinessSchedule(props) {
 
   var cleanSelectedCopyDays = function cleanSelectedCopyDays() {
     return setSelectedCopyDays([]);
+  };
+  /**
+   * Method to check valid schedule time
+   */
+
+
+  var isConflictScheduleTime = function isConflictScheduleTime(lapses, index, value) {
+    for (var i = 0; i < lapses.length; i++) {
+      if (i !== index) {
+        if (convertMinutes(lapses[i].open) < value && convertMinutes(lapses[i].close) > value) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  var convertMinutes = function convertMinutes(_ref) {
+    var hour = _ref.hour,
+        minute = _ref.minute;
+    return hour * 60 + minute;
   };
   /**
    * Update schedule time
@@ -111,17 +157,55 @@ var BusinessSchedule = function BusinessSchedule(props) {
   var handleChangeTime = function handleChangeTime(daysOfWeekIndex, isOpen, isHour, index, value) {
     var _schedule = _toConsumableArray(schedule);
 
+    var conflict;
+
     if (isOpen) {
       if (isHour) {
-        _schedule[daysOfWeekIndex].lapses[index].open.hour = parseInt(value);
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
+          hour: parseInt(value),
+          minute: _schedule[daysOfWeekIndex].lapses[index].open.minute
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          _schedule[daysOfWeekIndex].lapses[index].open.hour = parseInt(value);
+        }
       } else {
-        _schedule[daysOfWeekIndex].lapses[index].open.minute = parseInt(value);
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
+          hour: _schedule[daysOfWeekIndex].lapses[index].open.hour,
+          minute: parent(value)
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          _schedule[daysOfWeekIndex].lapses[index].open.minute = parseInt(value);
+        }
       }
     } else {
       if (isHour) {
-        _schedule[daysOfWeekIndex].lapses[index].close.hour = parseInt(value);
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
+          hour: parseInt(value),
+          minute: _schedule[daysOfWeekIndex].lapses[index].close.minute
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          _schedule[daysOfWeekIndex].lapses[index].close.hour = parseInt(value);
+        }
       } else {
-        _schedule[daysOfWeekIndex].lapses[index].close.minute = parseInt(value);
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
+          hour: _schedule[daysOfWeekIndex].lapses[index].close.hour,
+          minute: parent(value)
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          _schedule[daysOfWeekIndex].lapses[index].close.minute = parseInt(value);
+        }
       }
     }
 
@@ -141,25 +225,31 @@ var BusinessSchedule = function BusinessSchedule(props) {
   var handleAddScheduleTime = function handleAddScheduleTime(daysOfWeekIndex) {
     var _schedule = _toConsumableArray(schedule);
 
-    var addTime = {
-      open: {
-        hour: 0,
-        minute: 0
-      },
-      close: {
-        hour: 23,
-        minute: 59
-      }
-    };
-
-    _schedule[daysOfWeekIndex].lapses.push(addTime);
-
-    setSchedule(_schedule);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        schedule: _schedule
-      }
+    var openConflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+      hour: addScheduleTime.open.hour,
+      minute: addScheduleTime.open.minute
     }));
+    var closeConflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+      hour: addScheduleTime.close.hour,
+      minute: addScheduleTime.close.minute
+    }));
+
+    if (openConflict || closeConflict) {
+      setIsConflict(true);
+    } else {
+      _schedule[daysOfWeekIndex].lapses.push(addScheduleTime);
+
+      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
+        return convertMinutes(a.open) - convertMinutes(b.open);
+      });
+
+      setSchedule(_schedule);
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          schedule: _schedule
+        }
+      }));
+    }
   };
   /**
    * Method to delete the schedule time
@@ -203,8 +293,9 @@ var BusinessSchedule = function BusinessSchedule(props) {
 
 
   var handleUpdateBusinessClick = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var response;
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var changes, _yield$ordering$busin, _yield$ordering$busin2, error, result;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -213,28 +304,36 @@ var BusinessSchedule = function BusinessSchedule(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses(business.id).save(formState.changes, {
+              changes = _objectSpread({}, formState.changes);
+              _context.next = 5;
+              return ordering.businesses(business.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 4:
-              response = _context.sent;
+            case 5:
+              _yield$ordering$busin = _context.sent;
+              _yield$ordering$busin2 = _yield$ordering$busin.content;
+              error = _yield$ordering$busin2.error;
+              result = _yield$ordering$busin2.result;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: response.content.error ? formState.changes : {},
-                result: response.content,
+                changes: error ? formState.changes : {},
+                result: {
+                  error: false,
+                  result: result
+                },
                 loading: false
               }));
+              setOpenAddScheduleInex(null);
 
-              if (!response.content.error) {
-                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(response.content.result);
+              if (!error) {
+                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
               }
 
-              _context.next = 12;
+              _context.next = 17;
               break;
 
-            case 9:
-              _context.prev = 9;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -244,16 +343,16 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 loading: false
               }));
 
-            case 12:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 9]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function handleUpdateBusinessClick() {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -315,23 +414,110 @@ var BusinessSchedule = function BusinessSchedule(props) {
       }));
     }
   };
+  /**
+   * Update schedule time
+   * @param {Number} daysOfWeekIndex index of week days
+   * @param {Boolean} isOpen open time if true, else close time
+   * @param {Boolean} isHour hour if true, else minute
+   * @param {String} value changed value
+   */
+
+
+  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(daysOfWeekIndex, isOpen, isHour, value) {
+    var _schedule = _toConsumableArray(schedule);
+
+    var conflict;
+
+    if (isOpen) {
+      if (isHour) {
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+          hour: parseInt(value),
+          minute: addScheduleTime.open.minute
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+            open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
+              hour: parseInt(value)
+            })
+          }));
+        }
+      } else {
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+          hour: addScheduleTime.open.hour,
+          minute: parseInt(value)
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+            open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
+              minute: parseInt(value)
+            })
+          }));
+        }
+      }
+    } else {
+      if (isHour) {
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+          hour: parseInt(value),
+          minute: addScheduleTime.close.minute
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+            close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
+              hour: parseInt(value)
+            })
+          }));
+        }
+      } else {
+        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
+          hour: addScheduleTime.close.hour,
+          minute: parseInt(value)
+        }));
+
+        if (conflict) {
+          setIsConflict(true);
+        } else {
+          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+            close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
+              minute: parseInt(value)
+            })
+          }));
+        }
+      }
+    }
+  };
 
   (0, _react.useEffect)(function () {
-    if (Object.keys(formState.changes).length === 0) return;
+    if (Object.keys(formState.changes).length === 0 || isConflict) return;
     handleUpdateBusinessClick();
-  }, [formState === null || formState === void 0 ? void 0 : formState.changes]);
+  }, [formState === null || formState === void 0 ? void 0 : formState.changes, isConflict]);
   (0, _react.useEffect)(function () {
     setSchedule(business === null || business === void 0 ? void 0 : business.schedule);
   }, [business === null || business === void 0 ? void 0 : business.schedule]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     selectedCopyDays: selectedCopyDays,
+    isConflict: isConflict,
+    setIsConflict: setIsConflict,
     cleanSelectedCopyDays: cleanSelectedCopyDays,
     handleChangeTime: handleChangeTime,
     handleAddScheduleTime: handleAddScheduleTime,
     handleDeleteScheduleTime: handleDeleteScheduleTime,
     handleScheduleTimeActiveState: handleScheduleTimeActiveState,
-    handleSelectCopyTimes: handleSelectCopyTimes
+    handleSelectCopyTimes: handleSelectCopyTimes,
+    addScheduleTime: addScheduleTime,
+    setAddScheduleTime: setAddScheduleTime,
+    handleChangeAddScheduleTime: handleChangeAddScheduleTime,
+    openAddScheduleIndex: openAddScheduleIndex,
+    setOpenAddScheduleInex: setOpenAddScheduleInex
   })));
 };
 
