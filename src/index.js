@@ -5,6 +5,7 @@ import { BaseComponent } from './components/BaseComponent'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessController } from './components/BusinessController'
+import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
@@ -20,6 +21,7 @@ import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
+import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
@@ -116,6 +118,7 @@ export {
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessController,
+  BusinessDeliveryZone,
   BusinessDetails,
   BusinessFormDetails,
   BusinessGallery,
@@ -131,6 +134,7 @@ export {
   BusinessSortControl,
   BusinessTypeFilter,
   BusinessTypeForm,
+  BusinessZoneGoogleMaps,
   Cart,
   Checkout,
   CheckPassword,
