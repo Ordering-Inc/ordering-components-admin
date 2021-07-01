@@ -99,6 +99,12 @@ Object.defineProperty(exports, "BusinessInformation", {
     return _BusinessInformation.BusinessInformation;
   }
 });
+Object.defineProperty(exports, "BusinessPaymethods", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPaymethods.BusinessPaymethods;
+  }
+});
 Object.defineProperty(exports, "BusinessProductsCategories", {
   enumerable: true,
   get: function get() {
@@ -851,6 +857,8 @@ var _BusinessMenuOptions = require("./components/BusinessMenuOptions");
 var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessInformation = require("./components/BusinessInformation");
+
+var _BusinessPaymethods = require("./components/BusinessPaymethods");
 
 var _BusinessProductsCategories = require("./components/BusinessProductsCategories");
 

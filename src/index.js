@@ -14,6 +14,7 @@ import { BusinessMenu } from './components/BusinessMenu'
 import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessInformation } from './components/BusinessInformation'
+import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
@@ -127,6 +128,7 @@ export {
   BusinessMenuOptions,
   BusinessMetaFields,
   BusinessInformation,
+  BusinessPaymethods,
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
