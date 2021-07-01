@@ -200,7 +200,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 };
               }
 
-              functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
+              functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().asDashboard().select(propsToFetch).where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
               _context.next = 10;
               return functionFetch.get(options);
 
@@ -506,7 +506,7 @@ DashboardBusinessList.propTypes = {
 DashboardBusinessList.defaultProps = {
   initialPageSize: 10,
   loadMorePageSize: 10,
-  propsToFetch: ['id', 'address', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'metafields', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types'],
+  propsToFetch: ['id', 'address', 'alcohol', 'categories', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'menus', 'menus_shared', 'metafields', 'name', 'offers', 'open', 'owners', 'paymethods', 'pickup_time', 'reviews', 'schedule', 'slug', 'types', 'zones'],
   paginationSettings: {
     initialPage: 1,
     pageSize: 10,
