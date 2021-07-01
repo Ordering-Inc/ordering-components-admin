@@ -272,7 +272,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
               if (!content.error) {
                 setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
-                  paymethods: [].concat(_toConsumableArray(business.paymethods), [_objectSpread(_objectSpread({}, content.result), {}, {
+                  paymethods: [].concat(_toConsumableArray(businessPaymethodsState.paymethods), [_objectSpread(_objectSpread({}, content.result), {}, {
                     paymethod: paymethod
                   })])
                 }));
@@ -352,7 +352,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                updatedPaymethods = business.paymethods.filter(function (paymethod) {
+                updatedPaymethods = businessPaymethodsState.paymethods.filter(function (paymethod) {
                   if (paymethod.id === paymethodId) {
                     Object.assign(paymethod, content.result);
                   }
@@ -403,7 +403,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              businessPaymethodId = business.paymethods.find(function (paymethod) {
+              businessPaymethodId = businessPaymethodsState.paymethods.find(function (paymethod) {
                 return paymethod.paymethod_id === paymethodId;
               }).id;
               _context5.prev = 1;
@@ -432,7 +432,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                updatedPaymethods = business.paymethods.filter(function (paymethod) {
+                updatedPaymethods = businessPaymethodsState.paymethods.filter(function (paymethod) {
                   return paymethod.paymethod_id !== paymethodId;
                 });
                 setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
@@ -473,12 +473,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
 
   var handleClickPayment = function handleClickPayment(paymethodId) {
-    var found = business.paymethods.find(function (paymethod) {
+    var found = businessPaymethodsState.paymethods.find(function (paymethod) {
       return paymethod.paymethod_id === paymethodId;
     });
 
     if (found) {
-      var businessPaymethod = business.paymethods.find(function (paymethod) {
+      var businessPaymethod = businessPaymethodsState.paymethods.find(function (paymethod) {
         return paymethod.paymethod.id === paymethodId;
       });
       handleUpdateBusinessPaymethodOpton(businessPaymethod.id, {

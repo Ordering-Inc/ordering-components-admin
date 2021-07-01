@@ -76,7 +76,7 @@ export const BusinessPaymethods = (props) => {
         setBusinessPaymethodsState({
           ...businessPaymethodsState,
           paymethods: [
-            ...business.paymethods,
+            ...businessPaymethodsState.paymethods,
             { ...content.result, paymethod: paymethod }
           ]
         })
@@ -108,7 +108,7 @@ export const BusinessPaymethods = (props) => {
       setChangesState(content.error ? changesState : {})
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const updatedPaymethods = business.paymethods.filter(paymethod => {
+        const updatedPaymethods = businessPaymethodsState.paymethods.filter(paymethod => {
           if (paymethod.id === paymethodId) {
             Object.assign(paymethod, content.result)
           }
@@ -126,7 +126,7 @@ export const BusinessPaymethods = (props) => {
    * @param {Number} paymethodId id to delete the business paymethod
    */
   const handleDeleteBusinessPaymethodOption = async (paymethodId) => {
-    const businessPaymethodId = business.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId).id
+    const businessPaymethodId = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId).id
     try {
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
@@ -140,7 +140,7 @@ export const BusinessPaymethods = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const updatedPaymethods = business.paymethods.filter(paymethod => paymethod.paymethod_id !== paymethodId)
+        const updatedPaymethods = businessPaymethodsState.paymethods.filter(paymethod => paymethod.paymethod_id !== paymethodId)
         setBusinessPaymethodsState({ ...businessPaymethodsState, paymethods: updatedPaymethods })
       }
     } catch (err) {
@@ -153,9 +153,9 @@ export const BusinessPaymethods = (props) => {
    * @param {Number} paymethodId id of payment method
    */
   const handleClickPayment = (paymethodId) => {
-    const found = business.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId)
+    const found = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId)
     if (found) {
-      const businessPaymethod = business.paymethods.find(paymethod => paymethod.paymethod.id === paymethodId)
+      const businessPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod.id === paymethodId)
       handleUpdateBusinessPaymethodOpton(businessPaymethod.id, {
         enabled: !businessPaymethod.enabled
       })
