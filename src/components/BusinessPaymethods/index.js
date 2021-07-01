@@ -155,14 +155,15 @@ export const BusinessPaymethods = (props) => {
   const handleClickPayment = (paymethodId) => {
     const found = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId)
     if (found) {
-      const businessPaymethod = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod.id === paymethodId)
-      handleUpdateBusinessPaymethodOpton(businessPaymethod.id, {
-        enabled: !businessPaymethod.enabled
+      handleUpdateBusinessPaymethodOpton(found.id, {
+        enabled: !found.enabled
       })
     } else {
       handleCreateBusinessPaymentOption(paymethodId)
     }
   }
+
+  console.log(businessPaymethodsState)
 
   /**
    * Update credential data

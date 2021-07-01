@@ -478,22 +478,20 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     });
 
     if (found) {
-      var businessPaymethod = businessPaymethodsState.paymethods.find(function (paymethod) {
-        return paymethod.paymethod.id === paymethodId;
-      });
-      handleUpdateBusinessPaymethodOpton(businessPaymethod.id, {
-        enabled: !businessPaymethod.enabled
+      handleUpdateBusinessPaymethodOpton(found.id, {
+        enabled: !found.enabled
       });
     } else {
       handleCreateBusinessPaymentOption(paymethodId);
     }
   };
+
+  console.log(businessPaymethodsState);
   /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    * @param {Boolean} sandbox value if sandbox data is or not
    */
-
 
   var handleChangeInput = function handleChangeInput(e, sandbox) {
     if (sandbox) {
