@@ -200,7 +200,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 };
               }
 
-              functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().asDashboard().select(propsToFetch).where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
+              functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
               _context.next = 10;
               return functionFetch.get(options);
 

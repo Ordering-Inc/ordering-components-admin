@@ -119,7 +119,7 @@ export const DashboardBusinessList = (props) => {
     }
 
     const functionFetch = asDashboard
-      ? ordering.setAccessToken(session.token).businesses().asDashboard().select(propsToFetch).where(where)
+      ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where)
       : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where)
 
     return await functionFetch.get(options)
