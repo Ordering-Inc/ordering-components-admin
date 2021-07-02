@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useApi } from '../ApiContext'
+import { useSession } from '../SessionContext'
 import { useLanguage } from '../LanguageContext'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
@@ -21,6 +22,7 @@ export const ConfigProvider = ({ children }) => {
   const [state, setState] = useState({ loading: true, configs: {} })
   const [languageState] = useLanguage()
   const [ordering] = useApi()
+  const [{ token }] = useSession()
 
   const customConfigs = {
     max_days_preorder: {
@@ -60,7 +62,7 @@ export const ConfigProvider = ({ children }) => {
   const refreshConfigs = async () => {
     try {
       !state.loading && setState({ ...state, loading: true })
-      const { content: { error, result } } = await ordering.configs().asDictionary().get()
+      const { content: { error, result } } = await ordering.setAccessToken(token).configs().asDictionary().get()
       let data = null
       try {
         const response = await fetch('https://ipapi.co/json/')

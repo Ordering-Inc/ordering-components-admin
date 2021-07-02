@@ -13,6 +13,8 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _ApiContext = require("../ApiContext");
 
+var _SessionContext = require("../SessionContext");
+
 var _LanguageContext = require("../LanguageContext");
 
 var _dayjs = _interopRequireDefault(require("dayjs"));
@@ -82,6 +84,10 @@ var ConfigProvider = function ConfigProvider(_ref) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
+
   var customConfigs = {
     max_days_preorder: {
       key: 'max_days_preorder',
@@ -119,7 +125,7 @@ var ConfigProvider = function ConfigProvider(_ref) {
 
   var refreshConfigs = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _data, _data2, _yield$ordering$confi, _yield$ordering$confi2, error, result, data, response, configsResult;
+      var _data, _data2, _yield$ordering$setAc, _yield$ordering$setAc2, error, result, data, response, configsResult;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -130,13 +136,13 @@ var ConfigProvider = function ConfigProvider(_ref) {
                 loading: true
               }));
               _context.next = 4;
-              return ordering.configs().asDictionary().get();
+              return ordering.setAccessToken(token).configs().asDictionary().get();
 
             case 4:
-              _yield$ordering$confi = _context.sent;
-              _yield$ordering$confi2 = _yield$ordering$confi.content;
-              error = _yield$ordering$confi2.error;
-              result = _yield$ordering$confi2.result;
+              _yield$ordering$setAc = _context.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
               data = null;
               _context.prev = 9;
               _context.next = 12;
