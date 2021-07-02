@@ -11,7 +11,9 @@ export const UsersList = (props) => {
     isSearchByUserId,
     isSearchByUserEmail,
     isSearchByUserPhone,
-    isSearchByUserName
+    isSearchByUserName,
+    isBusinessOwners,
+    deafultUserTypesSelected
   } = props
 
   const [ordering] = useApi()
@@ -19,7 +21,7 @@ export const UsersList = (props) => {
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchValue, setSearchValue] = useState(null)
-  const [userTypesSelected, setUserTypesSelected] = useState([0, 1, 2, 3])
+  const [userTypesSelected, setUserTypesSelected] = useState(deafultUserTypesSelected)
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
     pageSize: paginationSettings.pageSize ?? 10,
@@ -47,7 +49,9 @@ export const UsersList = (props) => {
           : (nextPage ? paginationProps.currentPage + 1 : paginationProps.currentPage - 1),
         page_size: paginationProps.pageSize
       }
-      parameters = { ...parameters, ...paginationParams }
+      if (!isBusinessOwners) {
+        parameters = { ...paginationParams }
+      }
 
       let where = null
       const conditions = []
@@ -312,7 +316,7 @@ export const UsersList = (props) => {
           if (_user.id === user.id) {
             if (user.enabled === !selectedUserActiveState) {
               valid = false
-            } 
+            }
           }
           return valid
         })
@@ -490,5 +494,6 @@ UsersList.propTypes = {
 
 UsersList.defaultProps = {
   propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname'],
-  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
+  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
+  deafultUserTypesSelected: [0, 1, 2, 3]
 }

@@ -175,7 +175,7 @@ export const UserFormDetails = (props) => {
   /**
    * Update credential data
    * @param {number} level user level
-   */  
+   */
   const handleChangeUserType = (level) => {
     const currentChanges = {
       level: level
