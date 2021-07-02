@@ -29,10 +29,10 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
       <EventProvider>
         <ApiProvider settings={settings}>
           <LanguageProvider strategy={webStrategy}>
-            <ConfigProvider>
-              <UtilsProviders>
-                <ValidationFieldsProvider>
-                  <SessionProvider strategy={webStrategy}>
+            <SessionProvider strategy={webStrategy}>
+              <ConfigProvider>
+                <UtilsProviders>
+                  <ValidationFieldsProvider>
                     <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
                       <OrderProvider strategy={webStrategy} Alert={Alert}>
                         <BusinessProvider>
@@ -40,10 +40,10 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
                         </BusinessProvider>
                       </OrderProvider>
                     </WebsocketProvider>
-                  </SessionProvider>
-                </ValidationFieldsProvider>
-              </UtilsProviders>
-            </ConfigProvider>
+                  </ValidationFieldsProvider>
+                </UtilsProviders>
+              </ConfigProvider>
+            </SessionProvider>
           </LanguageProvider>
         </ApiProvider>
       </EventProvider>
