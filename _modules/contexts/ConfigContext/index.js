@@ -135,35 +135,36 @@ var ConfigProvider = function ConfigProvider(_ref) {
               !state.loading && setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: true
               }));
-              _context.next = 4;
+              console.log(token, 'token');
+              _context.next = 5;
               return ordering.setAccessToken(token).configs().asDictionary().get();
 
-            case 4:
+            case 5:
               _yield$ordering$setAc = _context.sent;
               _yield$ordering$setAc2 = _yield$ordering$setAc.content;
               error = _yield$ordering$setAc2.error;
               result = _yield$ordering$setAc2.result;
               data = null;
-              _context.prev = 9;
-              _context.next = 12;
+              _context.prev = 10;
+              _context.next = 13;
               return fetch('https://ipapi.co/json/');
 
-            case 12:
+            case 13:
               response = _context.sent;
-              _context.next = 15;
+              _context.next = 16;
               return response.json();
 
-            case 15:
+            case 16:
               data = _context.sent;
-              _context.next = 21;
+              _context.next = 22;
               break;
 
-            case 18:
-              _context.prev = 18;
-              _context.t0 = _context["catch"](9);
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](10);
               data = null;
 
-            case 21:
+            case 22:
               configsResult = _objectSpread(_objectSpread({}, customConfigs), {}, {
                 default_country_code: {
                   value: data && ((_data = data) === null || _data === void 0 ? void 0 : _data.country_code) || 'US',
@@ -174,22 +175,22 @@ var ConfigProvider = function ConfigProvider(_ref) {
                 loading: false,
                 configs: error ? {} : configsResult
               }));
-              _context.next = 28;
+              _context.next = 29;
               break;
 
-            case 25:
-              _context.prev = 25;
+            case 26:
+              _context.prev = 26;
               _context.t1 = _context["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 28:
+            case 29:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 25], [9, 18]]);
+      }, _callee, null, [[0, 26], [10, 19]]);
     }));
 
     return function refreshConfigs() {

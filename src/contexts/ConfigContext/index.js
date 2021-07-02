@@ -62,6 +62,7 @@ export const ConfigProvider = ({ children }) => {
   const refreshConfigs = async () => {
     try {
       !state.loading && setState({ ...state, loading: true })
+      console.log(token, 'token')
       const { content: { error, result } } = await ordering.setAccessToken(token).configs().asDictionary().get()
       let data = null
       try {
