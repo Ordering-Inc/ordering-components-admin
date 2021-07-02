@@ -62,7 +62,6 @@ export const ConfigProvider = ({ children }) => {
   const refreshConfigs = async () => {
     try {
       !state.loading && setState({ ...state, loading: true })
-      console.log(token, 'token')
       const { content: { error, result } } = await ordering.setAccessToken(token).configs().asDictionary().get()
       let data = null
       try {
@@ -95,10 +94,10 @@ export const ConfigProvider = ({ children }) => {
 
   useEffect(() => {
     if (ordering?.project === null) return
-    if (!languageState.loading) {
+    if (!languageState.loading && token) {
       refreshConfigs()
     }
-  }, [languageState, ordering])
+  }, [languageState, ordering, token])
 
   return (
     <ConfigContext.Provider value={[state, functions]}>

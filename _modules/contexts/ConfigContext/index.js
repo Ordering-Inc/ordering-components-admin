@@ -135,36 +135,35 @@ var ConfigProvider = function ConfigProvider(_ref) {
               !state.loading && setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: true
               }));
-              console.log(token, 'token');
-              _context.next = 5;
+              _context.next = 4;
               return ordering.setAccessToken(token).configs().asDictionary().get();
 
-            case 5:
+            case 4:
               _yield$ordering$setAc = _context.sent;
               _yield$ordering$setAc2 = _yield$ordering$setAc.content;
               error = _yield$ordering$setAc2.error;
               result = _yield$ordering$setAc2.result;
               data = null;
-              _context.prev = 10;
-              _context.next = 13;
+              _context.prev = 9;
+              _context.next = 12;
               return fetch('https://ipapi.co/json/');
 
-            case 13:
+            case 12:
               response = _context.sent;
-              _context.next = 16;
+              _context.next = 15;
               return response.json();
 
-            case 16:
+            case 15:
               data = _context.sent;
-              _context.next = 22;
+              _context.next = 21;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](10);
+            case 18:
+              _context.prev = 18;
+              _context.t0 = _context["catch"](9);
               data = null;
 
-            case 22:
+            case 21:
               configsResult = _objectSpread(_objectSpread({}, customConfigs), {}, {
                 default_country_code: {
                   value: data && ((_data = data) === null || _data === void 0 ? void 0 : _data.country_code) || 'US',
@@ -175,22 +174,22 @@ var ConfigProvider = function ConfigProvider(_ref) {
                 loading: false,
                 configs: error ? {} : configsResult
               }));
-              _context.next = 29;
+              _context.next = 28;
               break;
 
-            case 26:
-              _context.prev = 26;
+            case 25:
+              _context.prev = 25;
               _context.t1 = _context["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 29:
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 26], [10, 19]]);
+      }, _callee, null, [[0, 25], [9, 18]]);
     }));
 
     return function refreshConfigs() {
@@ -204,10 +203,10 @@ var ConfigProvider = function ConfigProvider(_ref) {
   (0, _react.useEffect)(function () {
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
 
-    if (!languageState.loading) {
+    if (!languageState.loading && token) {
       refreshConfigs();
     }
-  }, [languageState, ordering]);
+  }, [languageState, ordering, token]);
   return /*#__PURE__*/_react.default.createElement(ConfigContext.Provider, {
     value: [state, functions]
   }, children);
