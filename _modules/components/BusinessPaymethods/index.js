@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ConfigContext = require("../../contexts/ConfigContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -56,9 +58,12 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessPaymethods = function BusinessPaymethods(props) {
+  var _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, _configState$configs4, _configState$configs5;
+
   var business = props.business,
       UIComponent = props.UIComponent,
-      defaultSandboxRequiredGateways = props.defaultSandboxRequiredGateways;
+      defaultSandboxRequiredGateways = props.defaultSandboxRequiredGateways,
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -67,6 +72,10 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
+
+  var _useConfig = (0, _ConfigContext.useConfig)(),
+      _useConfig2 = _slicedToArray(_useConfig, 1),
+      configState = _useConfig2[0];
 
   var _useState = (0, _react.useState)({
     paymethods: [],
@@ -102,10 +111,16 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       changesState = _useState8[0],
       setChangesState = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({}),
+      _useState10 = _slicedToArray(_useState9, 2),
+      stripeConnectData = _useState10[0],
+      setStripeConnectData = _useState10[1];
+
+  var stripeClientId = (configState === null || configState === void 0 ? void 0 : (_configState$configs = configState.configs) === null || _configState$configs === void 0 ? void 0 : (_configState$configs$ = _configState$configs.stripe_connect_sandbox) === null || _configState$configs$ === void 0 ? void 0 : _configState$configs$.value) === '1' ? configState === null || configState === void 0 ? void 0 : (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 ? void 0 : (_configState$configs3 = _configState$configs2.stripe_connect_client_id_sandbox) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value : configState === null || configState === void 0 ? void 0 : (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 ? void 0 : (_configState$configs5 = _configState$configs4.stripe_connect_client_id) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value;
   /**
    * Clean formState
    */
-
 
   var cleanChangesState = function cleanChangesState(values) {
     return setChangesState(_objectSpread({}, values));
@@ -391,53 +406,46 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     };
   }();
   /**
-   * Method to delete the business paymethod option from API
-   * @param {Number} paymethodId id to delete the business paymethod
+   * Method to update the business paymethod option
    */
 
 
-  var handleDeleteBusinessPaymethodOption = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(paymethodId) {
-      var businessPaymethodId, requestOptions, response, content, updatedPaymethods;
+  var handleUpdateBusiness = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              businessPaymethodId = businessPaymethodsState.paymethods.find(function (paymethod) {
-                return paymethod.paymethod_id === paymethodId;
-              }).id;
-              _context5.prev = 1;
+              _context5.prev = 0;
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
               requestOptions = {
-                method: 'DELETE',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(changesState)
               };
-              _context5.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods/").concat(businessPaymethodId), requestOptions);
+              _context5.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id), requestOptions);
 
-            case 6:
+            case 5:
               response = _context5.sent;
-              _context5.next = 9;
+              _context5.next = 8;
               return response.json();
 
-            case 9:
+            case 8:
               content = _context5.sent;
+              setChangesState(content.error ? changesState : {});
 
               if (!content.error) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                updatedPaymethods = businessPaymethodsState.paymethods.filter(function (paymethod) {
-                  return paymethod.paymethod_id !== paymethodId;
-                });
-                setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
-                  paymethods: updatedPaymethods
-                }));
+                handleSuccessUpdate && handleSuccessUpdate(content.result);
               }
 
               _context5.next = 16;
@@ -445,7 +453,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
             case 13:
               _context5.prev = 13;
-              _context5.t0 = _context5["catch"](1);
+              _context5.t0 = _context5["catch"](0);
               setActionState({
                 result: {
                   error: true,
@@ -459,11 +467,87 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[1, 13]]);
+      }, _callee5, null, [[0, 13]]);
+    }));
+
+    return function handleUpdateBusiness() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delete the business paymethod option from API
+   * @param {Number} paymethodId id to delete the business paymethod
+   */
+
+
+  var handleDeleteBusinessPaymethodOption = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6(paymethodId) {
+      var businessPaymethodId, requestOptions, response, content, updatedPaymethods;
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              businessPaymethodId = businessPaymethodsState.paymethods.find(function (paymethod) {
+                return paymethod.paymethod_id === paymethodId;
+              }).id;
+              _context6.prev = 1;
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context6.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods/").concat(businessPaymethodId), requestOptions);
+
+            case 6:
+              response = _context6.sent;
+              _context6.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context6.sent;
+
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
+                updatedPaymethods = businessPaymethodsState.paymethods.filter(function (paymethod) {
+                  return paymethod.paymethod_id !== paymethodId;
+                });
+                setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
+                  paymethods: updatedPaymethods
+                }));
+              }
+
+              _context6.next = 16;
+              break;
+
+            case 13:
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](1);
+              setActionState({
+                result: {
+                  error: true,
+                  result: _context6.t0.message
+                },
+                loading: false
+              });
+
+            case 16:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[1, 13]]);
     }));
 
     return function handleDeleteBusinessPaymethodOption(_x4) {
-      return _ref5.apply(this, arguments);
+      return _ref6.apply(this, arguments);
     };
   }();
   /**
@@ -485,13 +569,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
       handleCreateBusinessPaymentOption(paymethodId);
     }
   };
-
-  console.log(businessPaymethodsState);
   /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    * @param {Boolean} sandbox value if sandbox data is or not
    */
+
 
   var handleChangeInput = function handleChangeInput(e, sandbox) {
     if (sandbox) {
@@ -513,6 +596,79 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
       sandbox: !(changesState === null || changesState === void 0 ? void 0 : changesState.sandbox)
     }));
+  };
+  /**
+   * Method to connect with stripe
+   */
+
+
+  var handleStripeConnect = function handleStripeConnect() {
+    var connect = window.open("https://connect.stripe.com/oauth/authorize?response_type=code&client_id=".concat(stripeClientId, "&scope=read_write&state=").concat(token), '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
+    var interval = setInterval(function () {
+      if (!connect.closed) {
+        connect.postMessage('data', ordering.url);
+      } else {
+        clearInterval(interval);
+      }
+    }, 200);
+    var timeout = null;
+    window.addEventListener('message', function (e) {
+      if (e.origin.indexOf('.ordering.co') === -1) {
+        return;
+      }
+
+      clearInterval(interval);
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(function () {
+        connect.postMessage('close', ordering.url);
+
+        if (!e.data.error && e.data.result) {
+          var data = e.data.result;
+          var stripeData = {
+            sandbox: data.livemode,
+            data: {
+              token: data.access_token,
+              publishable: data.stripe_publishable_key,
+              user: data.stripe_user_id,
+              refresh_token: data.refresh_token
+            }
+          };
+          setStripeConnectData(stripeData);
+        } else if (e.data.error) {
+          setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+            loading: false,
+            error: e.data.error
+          }));
+        }
+      }, 1000);
+    });
+  };
+  /**
+   * Method to save the stripe connect data
+   * @param {Number} paymethodId id of payment method
+   */
+
+
+  var handleStripeSave = function handleStripeSave(paymethodId) {
+    var requestionOptions = {
+      sandbox: true,
+      data_sandbox: JSON.stringify(stripeConnectData === null || stripeConnectData === void 0 ? void 0 : stripeConnectData.data)
+    };
+
+    if (Object.keys(stripeConnectData).length) {
+      handleUpdateBusinessPaymethodOpton(paymethodId, requestionOptions);
+    }
+
+    handleUpdateBusiness();
+  };
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeStripeInput = function handleChangeStripeInput(e) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
   /**
    * Method to save the form state
@@ -538,6 +694,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     }
 
     handleUpdateBusinessPaymethodOpton(paymethodId, changes);
+    handleUpdateBusiness();
   };
 
   (0, _react.useEffect)(function () {
@@ -554,7 +711,10 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     cleanChangesState: cleanChangesState,
     handleChangeSandbox: handleChangeSandbox,
     handleChangeInput: handleChangeInput,
-    handleSaveClick: handleSaveClick
+    handleSaveClick: handleSaveClick,
+    handleStripeConnect: handleStripeConnect,
+    handleChangeStripeInput: handleChangeStripeInput,
+    handleStripeSave: handleStripeSave
   })));
 };
 

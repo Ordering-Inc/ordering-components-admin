@@ -2,21 +2,28 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useConfig } from '../../contexts/ConfigContext'
 
 export const BusinessPaymethods = (props) => {
   const {
     business,
     UIComponent,
-    defaultSandboxRequiredGateways
+    defaultSandboxRequiredGateways,
+    handleSuccessUpdate
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [configState] = useConfig()
 
   const [businessPaymethodsState, setBusinessPaymethodsState] = useState({ paymethods: [], loading: true, error: null })
   const [paymethodsList, setPaymethodsList] = useState({ paymethods: [], loading: true, error: null })
   const sandboxRequiredGateways = defaultSandboxRequiredGateways || ['paypal', 'stripe_direct', 'paypal_express', 'stripe_connect', 'stripe_redirect', 'carlos_payment', 'ivr']
   const [actionState, setActionState] = useState({ loading: false, result: { error: false } })
   const [changesState, setChangesState] = useState({})
+  const [stripeConnectData, setStripeConnectData] = useState({})
+  const stripeClientId = configState?.configs?.stripe_connect_sandbox?.value === '1'
+    ? configState?.configs?.stripe_connect_client_id_sandbox?.value
+    : configState?.configs?.stripe_connect_client_id?.value
 
   /**
    * Clean formState
@@ -122,6 +129,32 @@ export const BusinessPaymethods = (props) => {
   }
 
   /**
+   * Method to update the business paymethod option
+   */
+  const handleUpdateBusiness = async () => {
+    try {
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changesState)
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}`, requestOptions)
+      const content = await response.json()
+      setChangesState(content.error ? changesState : {})
+      if (!content.error) {
+        setActionState({ ...actionState, loading: false })
+        handleSuccessUpdate && handleSuccessUpdate(content.result)
+      }
+    } catch (err) {
+      setActionState({ result: { error: true, result: err.message }, loading: false })
+    }
+  }
+
+  /**
    * Method to delete the business paymethod option from API
    * @param {Number} paymethodId id to delete the business paymethod
    */
@@ -163,8 +196,6 @@ export const BusinessPaymethods = (props) => {
     }
   }
 
-  console.log(businessPaymethodsState)
-
   /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
@@ -200,6 +231,72 @@ export const BusinessPaymethods = (props) => {
   }
 
   /**
+   * Method to connect with stripe
+   */
+  const handleStripeConnect = () => {
+    const connect = window.open(`https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${stripeClientId}&scope=read_write&state=${token}`, '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes')
+    const interval = setInterval(function () {
+      if (!connect.closed) {
+        connect.postMessage('data', ordering.url)
+      } else {
+        clearInterval(interval)
+      }
+    }, 200)
+    let timeout = null
+    window.addEventListener('message', function (e) {
+      if (e.origin.indexOf('.ordering.co') === -1) {
+        return
+      }
+      clearInterval(interval)
+      if (timeout) clearTimeout(timeout)
+      timeout = setTimeout(function () {
+        connect.postMessage('close', ordering.url)
+        if (!e.data.error && e.data.result) {
+          const data = e.data.result
+          const stripeData = {
+            sandbox: data.livemode,
+            data: {
+              token: data.access_token,
+              publishable: data.stripe_publishable_key,
+              user: data.stripe_user_id,
+              refresh_token: data.refresh_token
+            }
+          }
+          setStripeConnectData(stripeData)
+        } else if (e.data.error) {
+          setActionState({ ...actionState, loading: false, error: e.data.error })
+        }
+      }, 1000)
+    })
+  }
+
+  /**
+   * Method to save the stripe connect data
+   * @param {Number} paymethodId id of payment method
+   */
+  const handleStripeSave = (paymethodId) => {
+    const requestionOptions = {
+      sandbox: true,
+      data_sandbox: JSON.stringify(stripeConnectData?.data)
+    }
+    if (Object.keys(stripeConnectData).length) {
+      handleUpdateBusinessPaymethodOpton(paymethodId, requestionOptions)
+    }
+    handleUpdateBusiness()
+  }
+
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeStripeInput = (e) => {
+    setChangesState({
+      ...changesState,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  /**
    * Method to save the form state
    * @param {Number} paymethodId id to save the change state
    */
@@ -212,6 +309,7 @@ export const BusinessPaymethods = (props) => {
       changes = { ...changes, data_sandbox: JSON.stringify(changes.data_sandbox) }
     }
     handleUpdateBusinessPaymethodOpton(paymethodId, changes)
+    handleUpdateBusiness()
   }
 
   useEffect(() => {
@@ -234,6 +332,9 @@ export const BusinessPaymethods = (props) => {
           handleChangeSandbox={handleChangeSandbox}
           handleChangeInput={handleChangeInput}
           handleSaveClick={handleSaveClick}
+          handleStripeConnect={handleStripeConnect}
+          handleChangeStripeInput={handleChangeStripeInput}
+          handleStripeSave={handleStripeSave}
         />
       )}
     </>
