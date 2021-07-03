@@ -90,9 +90,8 @@ export const SingleProductsCategory = (props) => {
   const deleteCategory = async () => {
     if (loading) return
     try {
-      const { content: { error, result } } = await ordering.businesses(parseInt(businessState?.business.id)).categories(parseInt(category.id)).delete();
+      const { content: { error, result } } = await ordering.businesses(parseInt(businessState?.business.id)).categories(parseInt(category.id)).delete()
       if (!error) {
-        if (category.id === categorySelected.id) setCategorySelected({ ...businessState.business.categories[0] })
         const _categories = businessState.business.categories.map(item => {
           return item
         })
@@ -103,6 +102,7 @@ export const SingleProductsCategory = (props) => {
           ...businessState,
           business: { ...businessState.business, categories: _categories }
         })
+        if (category.id === categorySelected.id) setCategorySelected({ id: null, name: 'All' })
       } else {
         setBusinessState({
           ...businessState,

@@ -19,7 +19,7 @@ export const SingleBusinessProduct = (props) => {
 
   /**
    * Set enabled property of a product
-   * @param {Boolean} isChecked 
+   * @param {Boolean} isChecked
    */
   const handleChangeProductActive = (isChecked) => {
     const params = { enabled: isChecked }
@@ -28,7 +28,7 @@ export const SingleBusinessProduct = (props) => {
 
   /**
    * Set name property of a product
-   * @param {String} value 
+   * @param {String} value
    */
   const handleUpdateClick = (value) => {
     const params = { name: value }

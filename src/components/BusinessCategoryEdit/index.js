@@ -26,12 +26,9 @@ export const BusinessCategoryEdit = (props) => {
 
   useEffect(() => {
     if (businessState?.business?.id && categoryId) {
-      const _category = businessState.business.categories.filter(item => item.id == categoryId)[0]
+      const _category = businessState.business.categories.filter(item => parseInt(item.id) === parseInt(categoryId))[0]
 
-      if (_category) setFormState({
-        ...formState,
-        changes: _category
-      })
+      if (_category) setFormState({ ...formState, changes: _category })
     }
   }, [businessState])
 

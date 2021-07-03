@@ -271,7 +271,7 @@ export const BusinessProductListing = (props) => {
       requestsState.business = source
       setRequestsState({ ...requestsState })
 
-      const { content: { result } } = await ordering.businesses(slug).asDashboard().get();
+      const { content: { result } } = await ordering.businesses(slug).asDashboard().get()
 
       if (!result?.categories || result?.categories?.length === 0) {
         setErrorQuantityProducts(true)
@@ -303,7 +303,6 @@ export const BusinessProductListing = (props) => {
 
   useEffect(() => {
     getProducts(!!searchValue)
-    console.log(categorySelected.id, 'this is first test')
   }, [categorySelected.id])
 
   useEffect(() => {
@@ -376,7 +375,7 @@ BusinessProductListing.propTypes = {
   /**
    * True, flag to make initial API call
    */
-   isInitialRender: PropTypes.bool
+  isInitialRender: PropTypes.bool
 
 }
 
