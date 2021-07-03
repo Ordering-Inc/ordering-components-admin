@@ -545,7 +545,7 @@ var BusinessProductListing = function BusinessProductListing(props) {
 };
 
 exports.BusinessProductListing = BusinessProductListing;
-BusinessAndProductList.propTypes = {
+BusinessProductListing.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -571,4 +571,4 @@ BusinessAndProductList.propTypes = {
    */
   isInitialRender: _propTypes.default.bool
 };
-BusinessAndProductList.defaultProps = {};
+BusinessProductListing.defaultProps = {};

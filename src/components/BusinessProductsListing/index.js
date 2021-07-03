@@ -356,7 +356,7 @@ export const BusinessProductListing = (props) => {
   )
 }
 
-BusinessAndProductList.propTypes = {
+BusinessProductListing.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -380,5 +380,5 @@ BusinessAndProductList.propTypes = {
 
 }
 
-BusinessAndProductList.defaultProps = {
+BusinessProductListing.defaultProps = {
 }
