@@ -69,6 +69,12 @@ Object.defineProperty(exports, "BusinessGallery", {
     return _BusinessGallery.BusinessGallery;
   }
 });
+Object.defineProperty(exports, "BusinessInformation", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessInformation.BusinessInformation;
+  }
+});
 Object.defineProperty(exports, "BusinessList", {
   enumerable: true,
   get: function get() {
@@ -87,16 +93,16 @@ Object.defineProperty(exports, "BusinessMenuOptions", {
     return _BusinessMenuOptions.BusinessMenuOptions;
   }
 });
+Object.defineProperty(exports, "BusinessMenuShare", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenuShare.BusinessMenuShare;
+  }
+});
 Object.defineProperty(exports, "BusinessMetaFields", {
   enumerable: true,
   get: function get() {
     return _BusinessMetaFields.BusinessMetaFields;
-  }
-});
-Object.defineProperty(exports, "BusinessInformation", {
-  enumerable: true,
-  get: function get() {
-    return _BusinessInformation.BusinessInformation;
   }
 });
 Object.defineProperty(exports, "BusinessPaymethods", {
@@ -848,15 +854,17 @@ var _BusinessFormDetails = require("./components/BusinessFormDetails");
 
 var _BusinessGallery = require("./components/BusinessGallery");
 
+var _BusinessInformation = require("./components/BusinessInformation");
+
 var _BusinessList = require("./components/BusinessList");
 
 var _BusinessMenu = require("./components/BusinessMenu");
 
 var _BusinessMenuOptions = require("./components/BusinessMenuOptions");
 
-var _BusinessMetaFields = require("./components/BusinessMetaFields");
+var _BusinessMenuShare = require("./components/BusinessMenuShare");
 
-var _BusinessInformation = require("./components/BusinessInformation");
+var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessPaymethods = require("./components/BusinessPaymethods");
 

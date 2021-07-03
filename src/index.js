@@ -9,11 +9,12 @@ import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
+import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
 import { BusinessMenuOptions } from './components/BusinessMenuOptions'
+import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
-import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
@@ -123,11 +124,12 @@ export {
   BusinessDetails,
   BusinessFormDetails,
   BusinessGallery,
+  BusinessInformation,
   BusinessList,
   BusinessMenu,
   BusinessMenuOptions,
+  BusinessMenuShare,
   BusinessMetaFields,
-  BusinessInformation,
   BusinessPaymethods,
   BusinessProductsCategories,
   BusinessProductsSearch,
