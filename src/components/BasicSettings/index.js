@@ -16,7 +16,7 @@ export const BasicSettings = (props) => {
   const [ordering] = useApi()
 
   useEffect(() => {
-    getCagegories();
+    getCagegories()
   }, [])
 
   /**
