@@ -5,13 +5,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CategoryDescription = void 0;
+exports.CreateBusinessCategory = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
@@ -47,45 +47,86 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CategoryDescription = function CategoryDescription(props) {
+/**
+ * Component to manage Checkout page behavior without UI component
+ */
+var CreateBusinessCategory = function CreateBusinessCategory(props) {
   var UIComponent = props.UIComponent,
-      categoryId = props.categoryId;
+      setBusinessState = props.setBusinessState,
+      businessState = props.businessState,
+      setIsAddCategory = props.setIsAddCategory;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      loading = _useSession2[0].loading;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
   var _useState = (0, _react.useState)({
-    category: null,
-    loading: !props.category,
-    error: null
+    loading: false,
+    category: {
+      enabled: false
+    },
+    result: {
+      error: false
+    }
   }),
       _useState2 = _slicedToArray(_useState, 2),
       categoryState = _useState2[0],
       setCategoryState = _useState2[1];
-
-  (0, _react.useEffect)(function () {
-    if (props.category) {
-      setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-        category: props.category
-      }));
-    } else {
-      getCategory();
-    }
-  }, [categoryId]);
   /**
-   * Method to get order from API
-   */
+  * Update credential data
+  * @param {EventTarget} e Related HTML event
+  */
 
-  var getCategory = /*#__PURE__*/function () {
+
+  var handleChangeInput = function handleChangeInput(value, isName) {
+    var currentChanges = {};
+
+    if (isName) {
+      currentChanges = {
+        name: value
+      };
+    } else {
+      currentChanges = {
+        enabled: value
+      };
+    }
+
+    setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+      category: _objectSpread(_objectSpread({}, categoryState.category), currentChanges)
+    }));
+  };
+  /**
+  * Update business photo data
+  * @param {File} file Image to change business photo
+  */
+
+
+  var handlechangeImage = function handlechangeImage(file, name) {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+      setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+        category: _objectSpread(_objectSpread({}, categoryState.category), {}, _defineProperty({}, name, reader.result))
+      }));
+    };
+
+    reader.onerror = function (error) {
+      return console.log(error);
+    };
+  };
+  /**
+  * Default fuction for business profile workflow
+  */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result;
+      var _yield$ordering$busin, content, _categories;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -100,108 +141,122 @@ var CategoryDescription = function CategoryDescription(props) {
 
             case 2:
               _context.prev = 2;
-              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              functionFetch = "".concat(ordering.root, "/config_categories/").concat(categoryId);
-              _context.next = 8;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 5;
+              return ordering.businesses(parseInt(businessState.business.id)).categories().save(categoryState.category);
 
-            case 8:
-              response = _context.sent;
-              _context.next = 11;
-              return response.json();
+            case 5:
+              _yield$ordering$busin = _context.sent;
+              content = _yield$ordering$busin.content;
 
-            case 11:
-              _yield$response$json = _context.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
-
-              if (!error) {
+              if (!content.error) {
                 setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                  loading: false,
-                  category: result
+                  category: {},
+                  result: content,
+                  loading: false
                 }));
+                _categories = businessState.business.categories.map(function (item) {
+                  return item;
+                });
+
+                _categories.push(content.result);
+
+                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+                    categories: _categories
+                  })
+                }));
+                setIsAddCategory(false);
               } else {
                 setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                  loading: true,
-                  error: result
+                  category: categoryState.category,
+                  result: content,
+                  loading: false
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 13;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 10:
+              _context.prev = 10;
               _context.t0 = _context["catch"](2);
               setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                loading: false,
-                error: _context.t0
+                result: {
+                  error: true,
+                  result: _context.t0.message
+                },
+                loading: false
               }));
 
-            case 20:
+            case 13:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 10]]);
     }));
 
-    return function getCategory() {
+    return function handleUpdateClick() {
       return _ref.apply(this, arguments);
     };
   }();
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    category: categoryState
+    categoryState: categoryState,
+    setCategoryState: setCategoryState,
+    handlechangeImage: handlechangeImage,
+    handleChangeInput: handleChangeInput,
+    handleUpdateClick: handleUpdateClick
   })));
 };
 
-exports.CategoryDescription = CategoryDescription;
-CategoryDescription.propTypes = {
+exports.CreateBusinessCategory = CreateBusinessCategory;
+CreateBusinessCategory.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array of drivers props to fetch
+   * Object for a business
    */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
+  businessState: _propTypes.default.object,
 
   /**
-   * Components types before order details
+   * Function to set a business state
+   */
+  setBusinessState: _propTypes.default.func,
+
+  /**
+   * Function to set category creation mode
+   */
+  setIsAddCategory: _propTypes.default.func,
+
+  /**
+   * Components types before Checkout
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after order details
+   * Components types after Checkout
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before order details
+   * Elements before Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after order details
+   * Elements after Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CategoryDescription.defaultProps = {
+CreateBusinessCategory.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
