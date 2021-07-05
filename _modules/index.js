@@ -51,6 +51,12 @@ Object.defineProperty(exports, "BusinessController", {
     return _BusinessController.BusinessController;
   }
 });
+Object.defineProperty(exports, "BusinessDeliveryZone", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessDeliveryZone.BusinessDeliveryZone;
+  }
+});
 Object.defineProperty(exports, "BusinessDetails", {
   enumerable: true,
   get: function get() {
@@ -69,10 +75,34 @@ Object.defineProperty(exports, "BusinessGallery", {
     return _BusinessGallery.BusinessGallery;
   }
 });
+Object.defineProperty(exports, "BusinessInformation", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessInformation.BusinessInformation;
+  }
+});
 Object.defineProperty(exports, "BusinessList", {
   enumerable: true,
   get: function get() {
     return _BusinessList.BusinessList;
+  }
+});
+Object.defineProperty(exports, "BusinessMenu", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenu.BusinessMenu;
+  }
+});
+Object.defineProperty(exports, "BusinessMenuOptions", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenuOptions.BusinessMenuOptions;
+  }
+});
+Object.defineProperty(exports, "BusinessMenuShare", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenuShare.BusinessMenuShare;
   }
 });
 Object.defineProperty(exports, "BusinessMetaFields", {
@@ -81,10 +111,10 @@ Object.defineProperty(exports, "BusinessMetaFields", {
     return _BusinessMetaFields.BusinessMetaFields;
   }
 });
-Object.defineProperty(exports, "BusinessInformation", {
+Object.defineProperty(exports, "BusinessPaymethods", {
   enumerable: true,
   get: function get() {
-    return _BusinessInformation.BusinessInformation;
+    return _BusinessPaymethods.BusinessPaymethods;
   }
 });
 Object.defineProperty(exports, "BusinessProductsCategories", {
@@ -105,6 +135,12 @@ Object.defineProperty(exports, "BusinessReviews", {
     return _BusinessReviews.BusinessReviews;
   }
 });
+Object.defineProperty(exports, "BusinessSchedule", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSchedule.BusinessSchedule;
+  }
+});
 Object.defineProperty(exports, "BusinessSortControl", {
   enumerable: true,
   get: function get() {
@@ -121,6 +157,12 @@ Object.defineProperty(exports, "BusinessTypeForm", {
   enumerable: true,
   get: function get() {
     return _BusinessTypeForm.BusinessTypeForm;
+  }
+});
+Object.defineProperty(exports, "BusinessZoneGoogleMaps", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessZoneGoogleMaps.BusinessZoneGoogleMaps;
   }
 });
 Object.defineProperty(exports, "Cart", {
@@ -747,12 +789,6 @@ Object.defineProperty(exports, "StripeElementsForm", {
     return _StripeElementsForm.StripeElementsForm;
   }
 });
-Object.defineProperty(exports, "SubCategory", {
-  enumerable: true,
-  get: function get() {
-    return _SubCategory.SubCategory;
-  }
-});
 Object.defineProperty(exports, "CardForm", {
   enumerable: true,
   get: function get() {
@@ -775,6 +811,12 @@ Object.defineProperty(exports, "ResetPassword", {
   enumerable: true,
   get: function get() {
     return _ResetPassword.ResetPassword;
+  }
+});
+Object.defineProperty(exports, "SubCategory", {
+  enumerable: true,
+  get: function get() {
+    return _SubCategory.SubCategory;
   }
 });
 Object.defineProperty(exports, "Analytics", {
@@ -824,17 +866,27 @@ var _BusinessBasicInformation = require("./components/BusinessBasicInformation")
 
 var _BusinessController = require("./components/BusinessController");
 
+var _BusinessDeliveryZone = require("./components/BusinessDeliveryZone");
+
 var _BusinessDetails = require("./components/BusinessDetails");
 
 var _BusinessFormDetails = require("./components/BusinessFormDetails");
 
 var _BusinessGallery = require("./components/BusinessGallery");
 
+var _BusinessInformation = require("./components/BusinessInformation");
+
 var _BusinessList = require("./components/BusinessList");
+
+var _BusinessMenu = require("./components/BusinessMenu");
+
+var _BusinessMenuOptions = require("./components/BusinessMenuOptions");
+
+var _BusinessMenuShare = require("./components/BusinessMenuShare");
 
 var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
-var _BusinessInformation = require("./components/BusinessInformation");
+var _BusinessPaymethods = require("./components/BusinessPaymethods");
 
 var _BusinessProductsCategories = require("./components/BusinessProductsCategories");
 
@@ -842,11 +894,15 @@ var _BusinessProductsSearch = require("./components/BusinessProductsSearch");
 
 var _BusinessReviews = require("./components/BusinessReviews");
 
+var _BusinessSchedule = require("./components/BusinessSchedule");
+
 var _BusinessSortControl = require("./components/BusinessSortControl");
 
 var _BusinessTypeFilter = require("./components/BusinessTypeFilter");
 
 var _BusinessTypeForm = require("./components/BusinessTypeForm");
+
+var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
 var _Cart = require("./components/Cart");
 
@@ -1006,8 +1062,6 @@ var _PaymentOptionStripeRedirect = require("./components/PaymentOptionStripeRedi
 
 var _StripeElementsForm = require("./components/StripeElementsForm");
 
-var _SubCategory = require("./components/SubCategory");
-
 var _CardForm = require("./components/StripeElementsForm/CardForm");
 
 var _StripeRedirectForm = require("./components/PaymentOptionStripeRedirect/StripeRedirectForm");
@@ -1015,6 +1069,8 @@ var _StripeRedirectForm = require("./components/PaymentOptionStripeRedirect/Stri
 var _FloatingButton = require("./components/FloatingButton");
 
 var _ResetPassword = require("./components/ResetPassword");
+
+var _SubCategory = require("./components/SubCategory");
 
 var _Analitycs = require("./components/Analitycs");
 
