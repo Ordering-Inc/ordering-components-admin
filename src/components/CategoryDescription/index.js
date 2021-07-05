@@ -24,46 +24,45 @@ export const CategoryDescription = (props) => {
     }
   }, [categoryId])
 
-    /**
+  /**
    * Method to get order from API
    */
-     const getCategory = async () => {
-      if (loading) return
-      try {
-        setCategoryState({ ...categoryState, loading: true })
-        const requestOptions = {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
+  const getCategory = async () => {
+    if (loading) return
+    try {
+      setCategoryState({ ...categoryState, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
-  
-        const functionFetch = `${ordering.root}/config_categories/${categoryId}`
-  
-        const response = await fetch(functionFetch, requestOptions)
-        const { error, result } = await response.json()
-        if (!error) {
-          setCategoryState({
-            ...categoryState,
-            loading: false,
-            category: result
-          })
-        } else {
-          setCategoryState({
-            ...categoryState,
-            loading: true,
-            error: result
-          })
-        }
-      } catch (err) {
+      }
+      const functionFetch = `${ordering.root}/config_categories/${categoryId}`
+
+      const response = await fetch(functionFetch, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
         setCategoryState({
           ...categoryState,
           loading: false,
-          error: err
+          category: result
+        })
+      } else {
+        setCategoryState({
+          ...categoryState,
+          loading: true,
+          error: result
         })
       }
+    } catch (err) {
+      setCategoryState({
+        ...categoryState,
+        loading: false,
+        error: err
+      })
     }
+  }
 
   return (
     <>
