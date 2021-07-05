@@ -143,7 +143,6 @@ export {
   BusinessProductListing,
   BusinessMenuOptions,
   BusinessMenuShare,
-  BusinessMetaFields,
   BusinessPaymethods,
   BusinessProductsCategories,
   BusinessProductsSearch,
