@@ -13,6 +13,7 @@ import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
+import { BusinessMenuMetaFields } from './components/BusinessMenuMetaFields'
 import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
@@ -131,6 +132,7 @@ export {
   BusinessInformation,
   BusinessList,
   BusinessMenu,
+  BusinessMenuMetaFields,
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessMetaFields,
