@@ -7,14 +7,19 @@ import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
+import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
+import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
-import { BusinessMetaFields } from './components/BusinessMetaFields'
-import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessProductListing } from './components/BusinessProductsListing'
+import { BusinessMenuMetaFields } from './components/BusinessMenuMetaFields'
+import { BusinessMenuOptions } from './components/BusinessMenuOptions'
+import { BusinessMenuShare } from './components/BusinessMenuShare'
+import { BusinessMetaFields } from './components/BusinessMetaFields'
+import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
@@ -22,6 +27,7 @@ import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
+import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { Cart } from './components/Cart'
 import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
@@ -126,14 +132,19 @@ export {
   BusinessBasicInformation,
   BusinessCategoryEdit,
   BusinessController,
+  BusinessDeliveryZone,
   BusinessDetails,
   BusinessFormDetails,
   BusinessGallery,
+  BusinessInformation,
   BusinessList,
   BusinessMenu,
   BusinessMetaFields,
-  BusinessInformation,
   BusinessProductListing,
+  BusinessMenuOptions,
+  BusinessMenuShare,
+  BusinessMetaFields,
+  BusinessPaymethods,
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
@@ -141,6 +152,7 @@ export {
   BusinessSortControl,
   BusinessTypeFilter,
   BusinessTypeForm,
+  BusinessZoneGoogleMaps,
   Cart,
   CategoryDescription,
   Checkout,
