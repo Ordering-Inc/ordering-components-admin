@@ -2,6 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { BaseComponent } from './components/BaseComponent'
+import { BasicSettings } from './components/BasicSettings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessController } from './components/BusinessController'
@@ -25,6 +26,7 @@ import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { Cart } from './components/Cart'
+import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
@@ -106,6 +108,7 @@ import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
+import { SubCategory } from './components/SubCategory'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
@@ -117,6 +120,7 @@ export {
   AddressForm,
   AddressList,
   BaseComponent,
+  BasicSettings,
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessController,
@@ -140,6 +144,7 @@ export {
   BusinessTypeForm,
   BusinessZoneGoogleMaps,
   Cart,
+  CategoryDescription,
   Checkout,
   CheckPassword,
   CityList,
@@ -208,6 +213,7 @@ export {
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,
+  SubCategory,
   CmsContent,
   FloatingButton,
   ResetPassword,
