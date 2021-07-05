@@ -5,6 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 
 export const BusinessDetails = (props) => {
   const {
+    asDashboard,
     business,
     businessId,
     propsToFetch,
@@ -18,6 +19,12 @@ export const BusinessDetails = (props) => {
   const [session] = useSession()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+
+  /**
+   * Clean formState
+   */
+  const cleanFormState = (values) => setFormState({ ...formState, ...values })
 
   /**
    * Method to get business from API
@@ -28,7 +35,9 @@ export const BusinessDetails = (props) => {
         ...businessState,
         loading: true
       })
-      const fetchEndpoint = ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
+      const fetchEndpoint = asDashboard
+        ? ordering.setAccessToken(session.token).businesses(businessId).asDashboard()
+        : ordering.setAccessToken(session.token).businesses(businessId).select(propsToFetch)
       const { content: { result } } = await fetchEndpoint.get()
       const business = Array.isArray(result) ? null : result
       setBusinessState({
@@ -59,8 +68,12 @@ export const BusinessDetails = (props) => {
         loading: false,
         error: error ? result : null
       })
+
       if (!error) {
-        handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessId)
+        setBusinessState({
+          ...businessState,
+          business: result
+        })
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -126,6 +139,143 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  /**
+   * Method to delet the business owner
+   */
+  const handleDeleteBusinessOwner = async (owners) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const _owners = businessState?.business?.owners.filter(owner => owners.includes(owner.id))
+        const _business = {
+          ...businessState?.business,
+          owners: _owners
+        }
+        setBusinessState({
+          ...businessState,
+          business: _business
+        })
+      }
+    } catch (err) {
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to delet the business owner
+   */
+  const handleAddBusinessOwner = async (owners, newOwner) => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      setActionStatus({
+        ...actionStatus,
+        loading: false,
+        error: error ? result : null
+      })
+      if (!error) {
+        const _owners = [...businessState?.business?.owners, newOwner]
+        const _business = {
+          ...businessState?.business,
+          owners: _owners
+        }
+        setBusinessState({
+          ...businessState,
+          business: _business
+        })
+      }
+    } catch (err) {
+      setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to update the business from the API
+   */
+  const handleUpdateBusinessClick = async () => {
+    try {
+      setFormState({ ...formState, loading: true })
+      const response = await ordering.businesses(businessId).save(formState.changes, {
+        accessToken: session.token
+      })
+      setFormState({
+        ...formState,
+        changes: response.content.error ? formState.changes : {},
+        result: response.content,
+        loading: false
+      })
+
+      if (!response.content.error) {
+        setBusinessState({
+          ...businessState,
+          business: {
+            ...businessState.business,
+            ...response.content.result
+          }
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: err.message
+        },
+        loading: false
+      })
+    }
+  }
+
+  /**
+   * Method to add the business fields when new busines item is added
+   */
+  const handleSuccessAddBusinessItem = (name, result) => {
+    const params = [...businessState?.business[name], result]
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        [name]: params
+      }
+    })
+  }
+  /**
+   * Method to delete the business item from business
+   */
+  const handleSuccessDeleteBusinessItem = (name, id) => {
+    const params = businessState?.business[name].filter(item => item.id !== id)
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState?.business,
+        [name]: params
+      }
+    })
+  }
+
+  /**
+   * Method to update the business
+   */
+  const handleUpdateBusinessState = (result) => {
+    const business = { ...businessState?.business }
+    Object.assign(business, result)
+    setBusinessState({
+      ...businessState,
+      business: business
+    })
+  }
+
+  useEffect(() => {
+    if (!businessState?.business) return
+    handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
+  }, [businessState?.business])
+
   useEffect(() => {
     if (business) {
       setBusinessState({
@@ -145,9 +295,18 @@ export const BusinessDetails = (props) => {
           <UIComponent
             {...props}
             businessState={businessState}
+            formState={formState}
+            setFormState={setFormState}
+            cleanFormState={cleanFormState}
             handleChangeActiveBusiness={handleChangeActiveBusiness}
             handleDuplicateBusiness={handleDuplicateBusiness}
             handleDeleteBusiness={handleDeleteBusiness}
+            handleDeleteBusinessOwner={handleDeleteBusinessOwner}
+            handleAddBusinessOwner={handleAddBusinessOwner}
+            handleUpdateBusinessClick={handleUpdateBusinessClick}
+            handleUpdateBusinessState={handleUpdateBusinessState}
+            handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
+            handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
           />
         )
       }
@@ -202,5 +361,5 @@ BusinessDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'description', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
+  propsToFetch: ['id', 'address', 'alcohol', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'metafields', 'name', 'offers', 'open', 'owners', 'pickup_time', 'reviews', 'schedule', 'slug', 'types']
 }

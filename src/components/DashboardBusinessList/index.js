@@ -5,6 +5,7 @@ import { useSession } from '../../contexts/SessionContext'
 
 export const DashboardBusinessList = (props) => {
   const {
+    asDashboard,
     UIComponent,
     paginationSettings,
     propsToFetch,
@@ -28,7 +29,7 @@ export const DashboardBusinessList = (props) => {
   const [searchValue, setSearchValue] = useState(null)
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
-  
+
   /**
    * Method to get businesses from API
    * @param {number, number} pageSize page
@@ -117,12 +118,9 @@ export const DashboardBusinessList = (props) => {
       }
     }
 
-    const functionFetch = ordering
-      .setAccessToken(session.token)
-      .businesses()
-      .asDashboard()
-      .select(propsToFetch)
-      .where(where)
+    const functionFetch = asDashboard
+      ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where)
+      : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where)
 
     return await functionFetch.get(options)
   }
@@ -139,7 +137,7 @@ export const DashboardBusinessList = (props) => {
       setBusinessList({
         loading: false,
         businesses: response.content.error ? [] : response.content.result,
-        error: response.content.error ? response.content.result: null
+        error: response.content.error ? response.content.result : null
       })
 
       if (!response.content.error) {
@@ -154,7 +152,7 @@ export const DashboardBusinessList = (props) => {
       }
     } catch (err) {
       if (err?.constructor?.name !== 'Cancel') {
-        setBusinessList({ ...businessList, loading: false, error : [err.message] })
+        setBusinessList({ ...businessList, loading: false, error: [err.message] })
       }
     }
   }
@@ -237,13 +235,40 @@ export const DashboardBusinessList = (props) => {
   }
 
   /**
+   * Method to update the business from the business list
+   * @param {Object} business business to update
+   */
+  const handleSucessUpdateBusiness = (business) => {
+    const found = businessList.businesses.find(_business => _business.id === business.id)
+    if (found) {
+      if (selectedBusinessActiveState === business?.enabled) {
+        const businesses = businessList.businesses.filter(_business => {
+          if (_business.id === business.id) {
+            Object.assign(_business, business)
+          }
+          return true
+        })
+        setBusinessList({ ...businessList, businesses: businesses })
+      } else {
+        handleSucessRemoveBusiness(business.id)
+      }
+    } else {
+      if (selectedBusinessActiveState === business?.enabled) {
+        handleSucessAddBusiness(business)
+      } else {
+        handleSucessRemoveBusiness(business.id)
+      }
+    }
+  }
+
+  /**
    * Listening session
    */
   useEffect(() => {
     if (props.businesses) {
       setBusinessList({
         ...businessList,
-        businesses
+        businesses: props.businesses
       })
     } else {
       loadBusinesses()
@@ -265,6 +290,7 @@ export const DashboardBusinessList = (props) => {
             handleChangeBusinessType={handleChangeBusinessType}
             handleSucessRemoveBusiness={handleSucessRemoveBusiness}
             handleSucessAddBusiness={handleSucessAddBusiness}
+            handleSucessUpdateBusiness={handleSucessUpdateBusiness}
           />
         )
       }
@@ -281,17 +307,17 @@ DashboardBusinessList.propTypes = {
    * Enable/Disable search option
    * Search Businesses list by a business ID
    */
-   isSearchByBusinessId: PropTypes.bool,
+  isSearchByBusinessId: PropTypes.bool,
   /**
    * Enable/Disable search option
    * Search Businesses list by a business email
    */
-   isSearchByBusinessEmail: PropTypes.bool,
+  isSearchByBusinessEmail: PropTypes.bool,
   /**
    * Enable/Disable search option
    * Search Businesses list by a business phone
    */
-   isSearchByBusinessPhone: PropTypes.bool,
+  isSearchByBusinessPhone: PropTypes.bool,
   /**
    * Array of user props to fetch
    */
@@ -301,6 +327,6 @@ DashboardBusinessList.propTypes = {
 DashboardBusinessList.defaultProps = {
   initialPageSize: 10,
   loadMorePageSize: 10,
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'city', 'enabled', 'description', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug'],
+  propsToFetch: ['id', 'address', 'alcohol', 'categories', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'menus', 'menus_shared', 'metafields', 'name', 'offers', 'open', 'owners', 'paymethods', 'pickup_time', 'reviews', 'schedule', 'slug', 'types', 'zones'],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
 }
