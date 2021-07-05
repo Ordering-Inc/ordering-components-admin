@@ -2,6 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { BaseComponent } from './components/BaseComponent'
+import { BasicSettings } from './components/BasicSettings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
@@ -22,6 +23,7 @@ import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { Cart } from './components/Cart'
+import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
@@ -103,6 +105,7 @@ import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRed
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleProductsCategory } from './components/SingleProductsCategory'
+import { SubCategory } from './components/SubCategory'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
@@ -118,6 +121,7 @@ export {
   AddressForm,
   AddressList,
   BaseComponent,
+  BasicSettings,
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessCategoryEdit,
@@ -138,6 +142,7 @@ export {
   BusinessTypeFilter,
   BusinessTypeForm,
   Cart,
+  CategoryDescription,
   Checkout,
   CheckPassword,
   CityList,
@@ -210,6 +215,7 @@ export {
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,
+  SubCategory,
   CmsContent,
   FloatingButton,
   ResetPassword,

@@ -68,7 +68,6 @@ export const BusinessDetails = (props) => {
         loading: false,
         error: error ? result : null
       })
-
       if (!error) {
         setBusinessState({
           ...businessState,
