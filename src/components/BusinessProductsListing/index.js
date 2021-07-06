@@ -291,6 +291,18 @@ export const BusinessProductListing = (props) => {
     }
   }
 
+  /**
+   * Method to update the business
+   */
+  const handleUpdateBusinessState = (result) => {
+    const business = { ...businessState?.business }
+    Object.assign(business, result)
+    setBusinessState({
+      ...businessState,
+      business: business
+    })
+  }
+
   useEffect(() => {
     if (!businessState.loading) {
       getProducts(true)
@@ -347,7 +359,7 @@ export const BusinessProductListing = (props) => {
           handleChangeSearch={handleChangeSearch}
           getNextProducts={getProducts}
           setCategorySelected={setCategorySelected}
-          setBusinessState={setBusinessState}
+          handleUpdateBusinessState={handleUpdateBusinessState}
           updateProductModal={(val) => setProductModal({ ...productModal, product: val })}
         />
       )}

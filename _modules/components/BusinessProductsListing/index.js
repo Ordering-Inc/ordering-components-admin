@@ -485,6 +485,19 @@ var BusinessProductListing = function BusinessProductListing(props) {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to update the business
+   */
+
+
+  var handleUpdateBusinessState = function handleUpdateBusinessState(result) {
+    var business = _objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business);
+
+    Object.assign(business, result);
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: business
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     if (!businessState.loading) {
@@ -534,7 +547,7 @@ var BusinessProductListing = function BusinessProductListing(props) {
     handleChangeSearch: handleChangeSearch,
     getNextProducts: getProducts,
     setCategorySelected: setCategorySelected,
-    setBusinessState: setBusinessState,
+    handleUpdateBusinessState: handleUpdateBusinessState,
     updateProductModal: function updateProductModal(val) {
       return setProductModal(_objectSpread(_objectSpread({}, productModal), {}, {
         product: val
