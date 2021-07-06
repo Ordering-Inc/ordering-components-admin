@@ -105,6 +105,12 @@ Object.defineProperty(exports, "BusinessProductListing", {
     return _BusinessProductsListing.BusinessProductListing;
   }
 });
+Object.defineProperty(exports, "BusinessMenuMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenuMetaFields.BusinessMenuMetaFields;
+  }
+});
 Object.defineProperty(exports, "BusinessMenuOptions", {
   enumerable: true,
   get: function get() {
@@ -433,6 +439,12 @@ Object.defineProperty(exports, "ProductComponent", {
   enumerable: true,
   get: function get() {
     return _ProductComponent.ProductComponent;
+  }
+});
+Object.defineProperty(exports, "ProductDetatils", {
+  enumerable: true,
+  get: function get() {
+    return _ProductDetatils.ProductDetatils;
   }
 });
 Object.defineProperty(exports, "ProductForm", {
@@ -1027,6 +1039,8 @@ var _PaymentOptions = require("./components/PaymentOptions");
 var _Popup = require("./components/Popup");
 
 var _ProductComponent = require("./components/ProductComponent");
+
+var _ProductDetatils = require("./components/ProductDetatils");
 
 var _ProductForm = require("./components/ProductForm");
 

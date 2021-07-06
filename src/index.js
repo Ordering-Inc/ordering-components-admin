@@ -69,6 +69,7 @@ import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
+import { ProductDetatils } from './components/ProductDetatils'
 import { ProductForm } from './components/ProductForm'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
@@ -139,6 +140,7 @@ export {
   BusinessInformation,
   BusinessList,
   BusinessMenu,
+  BusinessMenuMetaFields,
   BusinessMetaFields,
   BusinessProductListing,
   BusinessMenuOptions,
@@ -195,6 +197,7 @@ export {
   PaymentOptions,
   Popup,
   ProductComponent,
+  ProductDetatils,
   ProductForm,
   ProductShare,
   ProductImages,
