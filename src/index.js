@@ -71,6 +71,7 @@ import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
 import { ProductForm } from './components/ProductForm'
+import { ProductProperties } from './components/ProductProperties'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
 import { ProductIngredient } from './components/ProductIngredient'
@@ -199,6 +200,7 @@ export {
   ProductComponent,
   ProductDetatils,
   ProductForm,
+  ProductProperties,
   ProductShare,
   ProductImages,
   ProductIngredient,

@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ProductDetatils = void 0;
+exports.ProductProperties = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -25,15 +25,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -48,9 +48,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage product details edit form behavior without UI component
+ * Component to manage product properties behavior without UI component
  */
-var ProductDetatils = function ProductDetatils(props) {
+var ProductProperties = function ProductProperties(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
@@ -64,11 +64,7 @@ var ProductDetatils = function ProductDetatils(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
 
-  var _useState = (0, _react.useState)({
-    loading: false,
-    product: null,
-    error: null
-  }),
+  var _useState = (0, _react.useState)(product),
       _useState2 = _slicedToArray(_useState, 2),
       productState = _useState2[0],
       setProductState = _useState2[1];
@@ -84,21 +80,13 @@ var ProductDetatils = function ProductDetatils(props) {
       formState = _useState4[0],
       setFormState = _useState4[1];
   /**
-   * Clean formState
-   */
-
-
-  var cleanFormState = function cleanFormState(values) {
-    return setFormState(_objectSpread(_objectSpread({}, formState), values));
-  };
-  /**
    * Method to update the product details from API
    */
 
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var _productState$product, _productState$product2, changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, categories, updatedBusiness;
+      var changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, categories, updatedBusiness;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -109,12 +97,13 @@ var ProductDetatils = function ProductDetatils(props) {
                 loading: true
               }));
               changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
-              _context.next = 5;
-              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : (_productState$product = productState.product) === null || _productState$product === void 0 ? void 0 : _productState$product.category_id).products(productState === null || productState === void 0 ? void 0 : (_productState$product2 = productState.product) === null || _productState$product2 === void 0 ? void 0 : _productState$product2.id).save(changes, {
+              console.log(changes, 'changes');
+              _context.next = 6;
+              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : productState.category_id).products(productState === null || productState === void 0 ? void 0 : productState.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 5:
+            case 6:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
@@ -126,9 +115,7 @@ var ProductDetatils = function ProductDetatils(props) {
               }));
 
               if (!error) {
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  product: _objectSpread(_objectSpread({}, productState.product), result)
-                }));
+                setProductState(_objectSpread(_objectSpread({}, productState), result));
 
                 if (handleUpdateBusinessState) {
                   categories = business.categories.map(function (item) {
@@ -155,11 +142,11 @@ var ProductDetatils = function ProductDetatils(props) {
                 }
               }
 
-              _context.next = 16;
+              _context.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -169,12 +156,12 @@ var ProductDetatils = function ProductDetatils(props) {
                 loading: false
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function handleUpdateClick(_x) {
@@ -182,100 +169,62 @@ var ProductDetatils = function ProductDetatils(props) {
     };
   }();
   /**
-   * Method to change the product enabled state
+   * Method to change the product peroperty
    */
 
 
-  var handleChangeProductActiveState = function handleChangeProductActiveState() {
-    var _productState$product3;
-
-    var params = {
-      enabled: !(productState === null || productState === void 0 ? void 0 : (_productState$product3 = productState.product) === null || _productState$product3 === void 0 ? void 0 : _productState$product3.enabled)
-    };
-    handleUpdateClick(params);
-  };
-  /**
-   * Update credential data
-   * @param {EventTarget} e Related HTML event
-   */
-
-
-  var handleChangeInput = function handleChangeInput(e) {
+  var handleClickProperty = function handleClickProperty(key, value) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value))
     }));
-  };
-  /**
-   * Update business photo data
-   * @param {File} file Image to change business photo
-   */
-
-
-  var handlechangeImage = function handlechangeImage(file) {
-    var reader = new window.FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = function () {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          images: reader.result
-        })
-      }));
-    };
-
-    reader.onerror = function (error) {
-      return console.log(error);
-    };
   };
 
   (0, _react.useEffect)(function () {
-    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-      product: product
-    }));
+    if (Object.keys(formState.changes).length > 0) {
+      handleUpdateClick();
+    }
+  }, [formState.changes]);
+  (0, _react.useEffect)(function () {
+    setProductState(product);
   }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
-    formState: formState,
-    cleanFormState: cleanFormState,
-    handleChangeProductActiveState: handleChangeProductActiveState,
-    handleChangeInput: handleChangeInput,
-    handlechangeImage: handlechangeImage,
-    handleUpdateClick: handleUpdateClick
+    handleClickProperty: handleClickProperty
   })));
 };
 
-exports.ProductDetatils = ProductDetatils;
-ProductDetatils.propTypes = {
+exports.ProductProperties = ProductProperties;
+ProductProperties.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before product details form
+   * Components types before product properties
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after product details form
+   * Components types after product properties
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before product details form
+   * Elements before product properties
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after product details form
+   * Elements after product properties
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ProductDetatils.defaultProps = {
+ProductProperties.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

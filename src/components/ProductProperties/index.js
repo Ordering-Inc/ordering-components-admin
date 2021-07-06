@@ -4,25 +4,19 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
 /**
- * Component to manage product details edit form behavior without UI component
+ * Component to manage product properties behavior without UI component
  */
-export const ProductDetatils = (props) => {
+export const ProductProperties = (props) => {
   const {
     business,
     UIComponent,
     product,
     handleUpdateBusinessState
   } = props
-
   const [ordering] = useApi()
   const [session] = useSession()
-  const [productState, setProductState] = useState({ loading: false, product: null, error: null })
+  const [productState, setProductState] = useState(product)
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-
-  /**
-   * Clean formState
-   */
-  const cleanFormState = (values) => setFormState({ ...formState, ...values })
 
   /**
    * Method to update the product details from API
@@ -31,7 +25,8 @@ export const ProductDetatils = (props) => {
     try {
       setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
-      const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.product?.category_id).products(productState?.product?.id).save(changes, {
+      console.log(changes, 'changes')
+      const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.category_id).products(productState?.id).save(changes, {
         accessToken: session.token
       })
       setFormState({
@@ -42,13 +37,7 @@ export const ProductDetatils = (props) => {
       })
 
       if (!error) {
-        setProductState({
-          ...productState,
-          product: {
-            ...productState.product,
-            ...result
-          }
-        })
+        setProductState({ ...productState, ...result })
         if (handleUpdateBusinessState) {
           const categories = business.categories.map(item => {
             if (item.id === parseInt(product?.category_id)) {
@@ -82,48 +71,26 @@ export const ProductDetatils = (props) => {
   }
 
   /**
-   * Method to change the product enabled state
+   * Method to change the product peroperty
    */
-  const handleChangeProductActiveState = () => {
-    const params = { enabled: !productState?.product?.enabled }
-    handleUpdateClick(params)
-  }
-
-  /**
-   * Update credential data
-   * @param {EventTarget} e Related HTML event
-   */
-  const handleChangeInput = (e) => {
+  const handleClickProperty = (key, value) => {
     setFormState({
       ...formState,
       changes: {
         ...formState.changes,
-        [e.target.name]: e.target.value
+        [key]: value
       }
     })
   }
 
-  /**
-   * Update business photo data
-   * @param {File} file Image to change business photo
-   */
-  const handlechangeImage = (file) => {
-    const reader = new window.FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      setFormState({
-        ...formState,
-        changes: {
-          ...formState.changes,
-          images: reader.result
-        }
-      })
+  useEffect(() => {
+    if (Object.keys(formState.changes).length > 0) {
+      handleUpdateClick()
     }
-    reader.onerror = error => console.log(error)
-  }
+  }, [formState.changes])
 
   useEffect(() => {
-    setProductState({ ...productState, product: product })
+    setProductState(product)
   }, [product])
 
   return (
@@ -132,46 +99,41 @@ export const ProductDetatils = (props) => {
         <UIComponent
           {...props}
           productState={productState}
-          formState={formState}
-          cleanFormState={cleanFormState}
-          handleChangeProductActiveState={handleChangeProductActiveState}
-          handleChangeInput={handleChangeInput}
-          handlechangeImage={handlechangeImage}
-          handleUpdateClick={handleUpdateClick}
+          handleClickProperty={handleClickProperty}
         />
       )}
     </>
   )
 }
 
-ProductDetatils.propTypes = {
+ProductProperties.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Components types before product details form
+   * Components types before product properties
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Components types after product details form
+   * Components types after product properties
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Elements before product details form
+   * Elements before product properties
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
-   * Elements after product details form
+   * Elements after product properties
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-ProductDetatils.defaultProps = {
+ProductProperties.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
