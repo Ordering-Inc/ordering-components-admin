@@ -97,13 +97,12 @@ var ProductProperties = function ProductProperties(props) {
                 loading: true
               }));
               changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
-              console.log(changes, 'changes');
-              _context.next = 6;
+              _context.next = 5;
               return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : productState.category_id).products(productState === null || productState === void 0 ? void 0 : productState.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 6:
+            case 5:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
@@ -142,11 +141,11 @@ var ProductProperties = function ProductProperties(props) {
                 }
               }
 
-              _context.next = 17;
+              _context.next = 16;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -156,12 +155,12 @@ var ProductProperties = function ProductProperties(props) {
                 loading: false
               }));
 
-            case 17:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
     return function handleUpdateClick(_x) {

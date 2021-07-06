@@ -25,7 +25,6 @@ export const ProductProperties = (props) => {
     try {
       setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
-      console.log(changes, 'changes')
       const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.category_id).products(productState?.id).save(changes, {
         accessToken: session.token
       })
