@@ -71,6 +71,7 @@ import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
 import { ProductForm } from './components/ProductForm'
+import { ProductMetaFields } from './components/ProductMetaFields'
 import { ProductProperties } from './components/ProductProperties'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
@@ -200,6 +201,7 @@ export {
   ProductComponent,
   ProductDetatils,
   ProductForm,
+  ProductMetaFields,
   ProductProperties,
   ProductShare,
   ProductImages,

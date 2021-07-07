@@ -453,6 +453,12 @@ Object.defineProperty(exports, "ProductForm", {
     return _ProductForm.ProductForm;
   }
 });
+Object.defineProperty(exports, "ProductMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _ProductMetaFields.ProductMetaFields;
+  }
+});
 Object.defineProperty(exports, "ProductProperties", {
   enumerable: true,
   get: function get() {
@@ -1049,6 +1055,8 @@ var _ProductComponent = require("./components/ProductComponent");
 var _ProductDetatils = require("./components/ProductDetatils");
 
 var _ProductForm = require("./components/ProductForm");
+
+var _ProductMetaFields = require("./components/ProductMetaFields");
 
 var _ProductProperties = require("./components/ProductProperties");
 
