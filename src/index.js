@@ -70,6 +70,7 @@ import { PaymentOptions } from './components/PaymentOptions'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
+import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
 import { ProductMetaFields } from './components/ProductMetaFields'
 import { ProductProperties } from './components/ProductProperties'
@@ -200,6 +201,7 @@ export {
   Popup,
   ProductComponent,
   ProductDetatils,
+  ProductExtras,
   ProductForm,
   ProductMetaFields,
   ProductProperties,

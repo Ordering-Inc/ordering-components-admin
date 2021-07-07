@@ -447,6 +447,12 @@ Object.defineProperty(exports, "ProductDetatils", {
     return _ProductDetatils.ProductDetatils;
   }
 });
+Object.defineProperty(exports, "ProductExtras", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtras.ProductExtras;
+  }
+});
 Object.defineProperty(exports, "ProductForm", {
   enumerable: true,
   get: function get() {
@@ -1053,6 +1059,8 @@ var _Popup = require("./components/Popup");
 var _ProductComponent = require("./components/ProductComponent");
 
 var _ProductDetatils = require("./components/ProductDetatils");
+
+var _ProductExtras = require("./components/ProductExtras");
 
 var _ProductForm = require("./components/ProductForm");
 
