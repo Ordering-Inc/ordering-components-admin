@@ -49,6 +49,7 @@ export const UsersList = (props) => {
           : (nextPage ? paginationProps.currentPage + 1 : paginationProps.currentPage - 1),
         page_size: paginationProps.pageSize
       }
+
       if (!isBusinessOwners) {
         parameters = { ...paginationParams }
       }
