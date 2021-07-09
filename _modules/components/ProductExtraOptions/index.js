@@ -111,6 +111,14 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       addChangesState = _useState10[0],
       setAddChangesState = _useState10[1];
   /**
+   * Clean formState
+   */
+
+
+  var cleanFormState = function cleanFormState(values) {
+    return setFormState(_objectSpread(_objectSpread({}, formState), values));
+  };
+  /**
    * Method to change the option input
    * @param {EventTarget} e Related HTML event
    * @param {Number} optionId
@@ -481,6 +489,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     editErrors: editErrors,
     formState: formState,
+    cleanFormState: cleanFormState,
     extraState: extraState,
     editOptionId: editOptionId,
     addChangesState: addChangesState,

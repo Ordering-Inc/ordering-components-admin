@@ -27,6 +27,11 @@ export const ProductExtraOptions = (props) => {
   })
 
   /**
+   * Clean formState
+   */
+  const cleanFormState = (values) => setFormState({ ...formState, ...values })
+
+  /**
    * Method to change the option input
    * @param {EventTarget} e Related HTML event
    * @param {Number} optionId
@@ -243,6 +248,7 @@ export const ProductExtraOptions = (props) => {
           {...props}
           editErrors={editErrors}
           formState={formState}
+          cleanFormState={cleanFormState}
           extraState={extraState}
           editOptionId={editOptionId}
           addChangesState={addChangesState}
