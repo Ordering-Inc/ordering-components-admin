@@ -71,7 +71,7 @@ export const ProductExtraOptions = (props) => {
    * Update business photo data
    * @param {File} file Image to change business photo
    */
-  const handlechangeImage = (file, optionId) => {
+  const handleChangeImage = (file, optionId) => {
     setEditOptionId(optionId)
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
@@ -246,7 +246,7 @@ export const ProductExtraOptions = (props) => {
           extraState={extraState}
           addChangesState={addChangesState}
           cleanEditErrors={() => setEditErrors({})}
-          handlechangeImage={handlechangeImage}
+          handleChangeImage={handleChangeImage}
           handleChangeInput={handleChangeInput}
           handleChangeOptionEnable={handleChangeOptionEnable}
           handleAddOption={handleAddOption}

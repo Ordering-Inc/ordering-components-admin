@@ -152,7 +152,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
    */
 
 
-  var handlechangeImage = function handlechangeImage(file, optionId) {
+  var handleChangeImage = function handleChangeImage(file, optionId) {
     setEditOptionId(optionId);
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
@@ -486,7 +486,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     cleanEditErrors: function cleanEditErrors() {
       return setEditErrors({});
     },
-    handlechangeImage: handlechangeImage,
+    handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
     handleChangeOptionEnable: handleChangeOptionEnable,
     handleAddOption: handleAddOption,
