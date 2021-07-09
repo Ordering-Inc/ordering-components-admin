@@ -244,6 +244,7 @@ export const ProductExtraOptions = (props) => {
           editErrors={editErrors}
           formState={formState}
           extraState={extraState}
+          editOptionId={editOptionId}
           addChangesState={addChangesState}
           cleanEditErrors={() => setEditErrors({})}
           handleChangeImage={handleChangeImage}

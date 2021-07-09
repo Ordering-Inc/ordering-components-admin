@@ -482,6 +482,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     editErrors: editErrors,
     formState: formState,
     extraState: extraState,
+    editOptionId: editOptionId,
     addChangesState: addChangesState,
     cleanEditErrors: function cleanEditErrors() {
       return setEditErrors({});
