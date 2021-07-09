@@ -83,13 +83,11 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
 
   var _useState3 = (0, _react.useState)({
     changes: {},
-    result: {
-      error: false
-    }
+    result: {}
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      formState = _useState4[0],
-      setFormState = _useState4[1];
+      changesState = _useState4[0],
+      setChangesState = _useState4[1];
 
   var _useState5 = (0, _react.useState)(null),
       _useState6 = _slicedToArray(_useState5, 2),
@@ -111,12 +109,12 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       addChangesState = _useState10[0],
       setAddChangesState = _useState10[1];
   /**
-   * Clean formState
+   * Clean changesState
    */
 
 
-  var cleanFormState = function cleanFormState(values) {
-    return setFormState(_objectSpread(_objectSpread({}, formState), values));
+  var cleanChangesState = function cleanChangesState(values) {
+    return setChangesState(_objectSpread({}, values));
   };
   /**
    * Method to change the option input
@@ -126,10 +124,18 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
 
 
   var handleChangeInput = function handleChangeInput(e, optionId) {
-    setEditOptionId(optionId);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
-    }));
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: _objectSpread(_objectSpread({}, changesState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+      });
+    } else {
+      setEditOptionId(optionId);
+      setChangesState({
+        result: {},
+        changes: _defineProperty({}, e.target.name, e.target.value)
+      });
+    }
   };
   /**
    * Method to change the option enabled state
@@ -138,12 +144,22 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
 
 
   var handleChangeOptionEnable = function handleChangeOptionEnable(enabled, optionId) {
-    setEditOptionId(optionId);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        enabled: enabled
-      })
-    }));
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: _objectSpread(_objectSpread({}, changesState.changes), {}, {
+          enabled: enabled
+        })
+      });
+    } else {
+      setEditOptionId(optionId);
+      setChangesState({
+        result: {},
+        changes: {
+          enabled: enabled
+        }
+      });
+    }
   };
   /**
    * Method to change the option input
@@ -161,17 +177,30 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
 
 
   var handleChangeImage = function handleChangeImage(file, optionId) {
-    setEditOptionId(optionId);
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
-    reader.onload = function () {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          image: reader.result
-        })
-      }));
-    };
+    if (optionId === editOptionId) {
+      reader.onload = function () {
+        setChangesState({
+          result: {},
+          changes: _objectSpread(_objectSpread({}, changesState.changes), {}, {
+            image: reader.result
+          })
+        });
+      };
+    } else {
+      setEditOptionId(optionId);
+
+      reader.onload = function () {
+        setChangesState({
+          result: {},
+          changes: {
+            image: reader.result
+          }
+        });
+      };
+    }
 
     reader.onerror = function (error) {
       return console.log(error);
@@ -233,7 +262,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     }
   };
   /**
-   * Method to save the new ingredient from API
+   * Method to update the option from API
    */
 
 
@@ -254,7 +283,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState.changes)
+                body: JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.changes)
               };
               _context.next = 5;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(editOptionId), requestOptions);
@@ -268,10 +297,10 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
               content = _context.sent;
 
               if (!content.error) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: content.error ? formState.changes : {},
+                setChangesState({
+                  changes: content.error ? changesState.changes : {},
                   result: content.result
-                }));
+                });
                 options = extraState.extra.options.filter(function (option) {
                   if (option.id === content.result.id) {
                     Object.assign(option, content.result);
@@ -462,34 +491,35 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
   }();
 
   (0, _react.useEffect)(function () {
-    var _formState$changes, _formState$changes2, _formState$changes3;
+    var _changesState$changes, _changesState$changes2, _changesState$changes3;
 
-    if (!Object.keys(formState.changes).length) return;
+    if (!Object.keys(changesState.changes).length) return;
 
-    if (((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.name) === '' || ((_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.min) === '' || ((_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.max) === '') {
-      var _formState$changes4, _formState$changes5, _formState$changes6;
+    if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.min) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes3 = changesState.changes) === null || _changesState$changes3 === void 0 ? void 0 : _changesState$changes3.max) === '') {
+      var _changesState$changes4, _changesState$changes5;
 
       setEditErrors({
-        name: ((_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.name) === '',
-        min: ((_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.min) === '',
-        max: ((_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.max) === ''
+        name: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.name) === '',
+        min: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes5 = changesState.changes) === null || _changesState$changes5 === void 0 ? void 0 : _changesState$changes5.min) === '',
+        max: (changesState === null || changesState === void 0 ? void 0 : changesState.changes.max) === ''
       });
     } else {
       handleUpdateOption();
     }
-  }, [formState]);
+  }, [changesState]);
   (0, _react.useEffect)(function () {
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {}
-    }));
+    setChangesState({
+      changes: {},
+      result: {}
+    });
     setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
       extra: extra
     }));
   }, [extra]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     editErrors: editErrors,
-    formState: formState,
-    cleanFormState: cleanFormState,
+    changesState: changesState,
+    cleanChangesState: cleanChangesState,
     extraState: extraState,
     editOptionId: editOptionId,
     addChangesState: addChangesState,

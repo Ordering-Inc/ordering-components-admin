@@ -16,7 +16,7 @@ export const ProductExtraOptions = (props) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [extraState, setExtraState] = useState({ extra: extra, loading: false, error: null })
-  const [formState, setFormState] = useState({ changes: {}, result: { error: false } })
+  const [changesState, setChangesState] = useState({ changes: {}, result: {} })
   const [editOptionId, setEditOptionId] = useState(null)
   const [editErrors, setEditErrors] = useState({})
   const [addChangesState, setAddChangesState] = useState({
@@ -27,9 +27,9 @@ export const ProductExtraOptions = (props) => {
   })
 
   /**
-   * Clean formState
+   * Clean changesState
    */
-  const cleanFormState = (values) => setFormState({ ...formState, ...values })
+  const cleanChangesState = (values) => setChangesState({ ...values })
 
   /**
    * Method to change the option input
@@ -37,28 +37,46 @@ export const ProductExtraOptions = (props) => {
    * @param {Number} optionId
    */
   const handleChangeInput = (e, optionId) => {
-    setEditOptionId(optionId)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        [e.target.name]: e.target.value
-      }
-    })
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: {
+          ...changesState.changes,
+          [e.target.name]: e.target.value
+        }
+      })
+    } else {
+      setEditOptionId(optionId)
+      setChangesState({
+        result: {},
+        changes: {
+          [e.target.name]: e.target.value
+        }
+      })
+    }
   }
   /**
    * Method to change the option enabled state
    * @param {Boolean} enabled
    */
   const handleChangeOptionEnable = (enabled, optionId) => {
-    setEditOptionId(optionId)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        enabled: enabled
-      }
-    })
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: {
+          ...changesState.changes,
+          enabled: enabled
+        }
+      })
+    } else {
+      setEditOptionId(optionId)
+      setChangesState({
+        result: {},
+        changes: {
+          enabled: enabled
+        }
+      })
+    }
   }
 
   /**
@@ -77,17 +95,28 @@ export const ProductExtraOptions = (props) => {
    * @param {File} file Image to change business photo
    */
   const handleChangeImage = (file, optionId) => {
-    setEditOptionId(optionId)
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
-    reader.onload = () => {
-      setFormState({
-        ...formState,
-        changes: {
-          ...formState.changes,
-          image: reader.result
-        }
-      })
+    if (optionId === editOptionId) {
+      reader.onload = () => {
+        setChangesState({
+          result: {},
+          changes: {
+            ...changesState.changes,
+            image: reader.result
+          }
+        })
+      }
+    } else {
+      setEditOptionId(optionId)
+      reader.onload = () => {
+        setChangesState({
+          result: {},
+          changes: {
+            image: reader.result
+          }
+        })
+      }
     }
     reader.onerror = error => console.log(error)
   }
@@ -128,7 +157,7 @@ export const ProductExtraOptions = (props) => {
   }
 
   /**
-   * Method to save the new ingredient from API
+   * Method to update the option from API
    */
   const handleUpdateOption = async () => {
     try {
@@ -139,14 +168,13 @@ export const ProductExtraOptions = (props) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState.changes)
+        body: JSON.stringify(changesState?.changes)
       }
       const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${editOptionId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setFormState({
-          ...formState,
-          changes: content.error ? formState.changes : {},
+        setChangesState({
+          changes: content.error ? changesState.changes : {},
           result: content.result
         })
         const options = extraState.extra.options.filter(option => {
@@ -224,20 +252,20 @@ export const ProductExtraOptions = (props) => {
   }
 
   useEffect(() => {
-    if (!Object.keys(formState.changes).length) return
-    if (formState.changes?.name === '' || formState.changes?.min === '' || formState.changes?.max === '') {
+    if (!Object.keys(changesState.changes).length) return
+    if (changesState?.changes?.name === '' || changesState?.changes?.min === '' || changesState?.changes?.max === '') {
       setEditErrors({
-        name: formState.changes?.name === '',
-        min: formState.changes?.min === '',
-        max: formState.changes?.max === ''
+        name: changesState?.changes?.name === '',
+        min: changesState?.changes?.min === '',
+        max: changesState?.changes.max === ''
       })
     } else {
       handleUpdateOption()
     }
-  }, [formState])
+  }, [changesState])
 
   useEffect(() => {
-    setFormState({ ...formState, changes: {} })
+    setChangesState({ changes: {}, result: {} })
     setExtraState({ ...extraState, extra: extra })
   }, [extra])
 
@@ -247,8 +275,8 @@ export const ProductExtraOptions = (props) => {
         <UIComponent
           {...props}
           editErrors={editErrors}
-          formState={formState}
-          cleanFormState={cleanFormState}
+          changesState={changesState}
+          cleanChangesState={cleanChangesState}
           extraState={extraState}
           editOptionId={editOptionId}
           addChangesState={addChangesState}
