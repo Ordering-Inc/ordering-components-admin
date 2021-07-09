@@ -2,7 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { BaseComponent } from './components/BaseComponent'
-import { BasicSettings } from './components/BasicSettings'
+import { Settings } from './components/Settings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
@@ -128,7 +128,7 @@ export {
   AddressForm,
   AddressList,
   BaseComponent,
-  BasicSettings,
+  Settings,
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessCategoryEdit,
