@@ -14,19 +14,18 @@ import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
-import { BusinessProductListing } from './components/BusinessProductsListing'
+import { BusinessProductsListing } from './components/BusinessProductsListing'
 import { BusinessMenuMetaFields } from './components/BusinessMenuMetaFields'
 import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
-import { BusinessInformation } from './components/BusinessInformation'
-import { BusinessProductListing } from './components/BusinessProductsListing'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
+import { BusinessSpreadSheet } from'./components/BusinessSpreadSheet'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
@@ -142,7 +141,7 @@ export {
   BusinessList,
   BusinessMenu,
   BusinessMetaFields,
-  BusinessProductListing,
+  BusinessProductsListing,
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessPaymethods,
@@ -151,6 +150,7 @@ export {
   BusinessReviews,
   BusinessSchedule,
   BusinessSortControl,
+  BusinessSpreadSheet,
   BusinessTypeFilter,
   BusinessTypeForm,
   BusinessZoneGoogleMaps,

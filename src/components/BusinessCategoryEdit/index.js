@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -10,22 +11,23 @@ export const BusinessCategoryEdit = (props) => {
   const {
     UIComponent,
     businessState,
-    setBusinessState,
+    handleUpdateBusinessState,
     category,
     categoryId
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: false }, result: { error: false } })
+  const [, t] = useLanguage()
+  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   useEffect(() => {
-    if (category && (category.id === null || category.id === 'featured')) return
+    if (!category) return
     setFormState({ ...formState, changes: category })
   }, [category])
 
   useEffect(() => {
-    if (businessState?.business?.id && categoryId) {
+    if (businessState?.business?.id && !category && categoryId) {
       const _category = businessState.business.categories.filter(item => parseInt(item.id) === parseInt(categoryId))[0]
 
       if (_category) setFormState({ ...formState, changes: _category })
@@ -81,27 +83,40 @@ export const BusinessCategoryEdit = (props) => {
   * Default fuction for business profile workflow
   */
   const handleUpdateClick = async () => {
-    const id = category.id || categoryId
+    const id = category?.id || categoryId
     if (loading) return
     try {
+      setFormState({
+        ...formState,
+        loading: true
+      })
       const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(formState.changes)
       if (!content.error) {
         setFormState({
           ...formState,
           changes: content.result,
-          result: content,
+          result: {
+            error: false,
+            result: t('CATEGORY_UPDATE', 'Category Updated')
+          },
           loading: false
         })
-        const _categories = businessState.business.categories.map(item => {
-          if (item.id === parseInt(id)) {
-            return { ...item, ...content.result }
-          }
-          return item
-        })
-        setBusinessState({
-          ...businessState,
-          business: { ...businessState.business, categories: _categories }
-        })
+        if (handleUpdateBusinessState) {
+          const _categories = businessState.business.categories.map(item => {
+            if (item.id === parseInt(id)) {
+              return {
+                ...item,
+                name: content?.result?.name,
+                enabled: content?.result?.enabled,
+                image: content?.result?.image
+              }
+            }
+            return item
+          })
+          console.log(_categories)
+          const _business = { ...businessState.business, categories: _categories }
+          handleUpdateBusinessState(_business)
+        }
       } else {
         setFormState({
           ...formState,
@@ -151,7 +166,7 @@ BusinessCategoryEdit.propTypes = {
   /**
    * Function to set a business state
    */
-  setBusinessState: PropTypes.func,
+  handleUpdateBusinessState: PropTypes.func,
   /**
    * Function to set product creation mode
    */
