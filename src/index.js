@@ -72,6 +72,7 @@ import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
 import { ProductExtraMetaFields } from './components/ProductExtraMetaFields'
 import { ProductExtraOptionDetails } from './components/ProductExtraOptionDetails'
+import { ProductExtraOptionMetaFields } from './components/ProductExtraOptionMetaFields'
 import { ProductExtraOptions } from './components/ProductExtraOptions'
 import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
@@ -207,6 +208,7 @@ export {
   ProductExtraMetaFields,
   ProductExtraOptions,
   ProductExtraOptionDetails,
+  ProductExtraOptionMetaFields,
   ProductExtras,
   ProductForm,
   ProductMetaFields,
