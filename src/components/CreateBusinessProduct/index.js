@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -9,15 +10,16 @@ import { useApi } from '../../contexts/ApiContext'
 export const CreateBusinessProduct = (props) => {
   const {
     UIComponent,
-    businessState,
-    setBusinessState,
+    business,
+    handleUpdateBusinessState,
     setIsAddProduct,
     categorySelected
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: false }, result: { error: false } })
+  const [, t] = useLanguage()
+  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   /**
   * Update credential data
@@ -72,38 +74,44 @@ export const CreateBusinessProduct = (props) => {
     try {
       let categoryId
       if (categorySelected.id === null && categorySelected.id === 'featured') {
-        categoryId = parseInt(businessState.business.categories[0])
+        categoryId = parseInt(business?.categories[0])
       } else {
         categoryId = parseInt(categorySelected.id)
       }
-      const { content } = await ordering.businesses(parseInt(businessState?.business.id)).categories(categoryId).products().save(formState.changes)
+      setFormState({
+        ...formState,
+        loading: true
+      })
+      const { content } = await ordering.businesses(parseInt(business?.id)).categories(categoryId).products().save(formState.changes)
       if (!content.error) {
         setFormState({
           ...formState,
           changes: {},
-          result: content,
+          result: {
+            error: false,
+            result: t('PRODUCT_ADD', 'Product added')
+          },
           loading: false
         })
-        const _categories = businessState.business.categories.map(item => {
-          if (item.id === categoryId) {
-            let _products = []
-            if (item.products && item.products.length > 0) {
-              _products = item.products.map(prod => {
-                return prod
-              })
+        if (handleUpdateBusinessState) {
+          const _categories = business?.categories.map(item => {
+            if (item.id === categoryId) {
+              let _products = []
+              if (item.products && item.products.length > 0) {
+                _products = item.products.map(prod => {
+                  return prod
+                })
+              }
+              _products.push(content.result)
+              return {
+                ...item,
+                products: _products
+              }
             }
-            _products.push(content.result)
-            return {
-              ...item,
-              products: _products
-            }
-          }
-          return item
-        })
-        setBusinessState({
-          ...businessState,
-          business: { ...businessState.business, categories: _categories }
-        })
+            return item
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
         setIsAddProduct(false)
       } else {
         setFormState({
@@ -150,11 +158,11 @@ CreateBusinessProduct.propTypes = {
   /**
    * Object for a business
    */
-  businessState: PropTypes.object,
+  business: PropTypes.object,
   /**
    * Function to set a business state
    */
-  setBusinessState: PropTypes.func,
+  handleUpdateBusinessState: PropTypes.func,
   /**
    * Function to set product creation mode
    */
