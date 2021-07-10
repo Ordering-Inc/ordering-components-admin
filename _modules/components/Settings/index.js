@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BasicSettings = void 0;
+exports.Settings = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -50,8 +50,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * Component to manage Checkout page behavior without UI component
  */
-var BasicSettings = function BasicSettings(props) {
-  var UIComponent = props.UIComponent;
+var Settings = function Settings(props) {
+  var UIComponent = props.UIComponent,
+      settingsType = props.settingsType;
 
   var _useState = (0, _react.useState)({
     categories: [],
@@ -81,7 +82,7 @@ var BasicSettings = function BasicSettings(props) {
 
   var getCagegories = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result, categories;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -121,9 +122,19 @@ var BasicSettings = function BasicSettings(props) {
               result = _yield$response$json.result;
 
               if (!error) {
+                if (settingsType === 'basic') {
+                  categories = result.filter(function (item) {
+                    return item.parent_category_id === 1 || item.key === 'key_basic';
+                  });
+                } else if (settingsType === 'operation') {
+                  categories = result.filter(function (item) {
+                    return item.parent_category_id === 2 || item.key === 'key_operation';
+                  });
+                }
+
                 setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                   loading: false,
-                  categories: result
+                  categories: categories
                 }));
               } else {
                 setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
@@ -161,16 +172,12 @@ var BasicSettings = function BasicSettings(props) {
   })));
 };
 
-exports.BasicSettings = BasicSettings;
-BasicSettings.propTypes = {
+exports.Settings = Settings;
+Settings.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
-  // /**
-  //  * handler values from other components
-  //  */
-  // handlerValues: PropTypes.func,
 
   /**
    * Components types before Checkout
@@ -196,7 +203,7 @@ BasicSettings.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BasicSettings.defaultProps = {
+Settings.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

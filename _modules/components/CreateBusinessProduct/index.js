@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -52,8 +54,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var CreateBusinessProduct = function CreateBusinessProduct(props) {
   var UIComponent = props.UIComponent,
-      businessState = props.businessState,
-      setBusinessState = props.setBusinessState,
+      business = props.business,
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
       setIsAddProduct = props.setIsAddProduct,
       categorySelected = props.categorySelected;
 
@@ -65,10 +67,14 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
     loading: false,
     changes: {
-      enabled: false
+      enabled: true
     },
     result: {
       error: false
@@ -150,48 +156,56 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
               _context.prev = 2;
 
               if (categorySelected.id === null && categorySelected.id === 'featured') {
-                categoryId = parseInt(businessState.business.categories[0]);
+                categoryId = parseInt(business === null || business === void 0 ? void 0 : business.categories[0]);
               } else {
                 categoryId = parseInt(categorySelected.id);
               }
 
-              _context.next = 6;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : businessState.business.id)).categories(categoryId).products().save(formState.changes);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context.next = 7;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(categoryId).products().save(formState.changes);
 
-            case 6:
+            case 7:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
               if (!content.error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: {},
-                  result: content,
+                  result: {
+                    error: false,
+                    result: t('PRODUCT_ADD', 'Product added')
+                  },
                   loading: false
                 }));
-                _categories = businessState.business.categories.map(function (item) {
-                  if (item.id === categoryId) {
-                    var _products = [];
 
-                    if (item.products && item.products.length > 0) {
-                      _products = item.products.map(function (prod) {
-                        return prod;
+                if (handleUpdateBusinessState) {
+                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
+                    if (item.id === categoryId) {
+                      var _products = [];
+
+                      if (item.products && item.products.length > 0) {
+                        _products = item.products.map(function (prod) {
+                          return prod;
+                        });
+                      }
+
+                      _products.push(content.result);
+
+                      return _objectSpread(_objectSpread({}, item), {}, {
+                        products: _products
                       });
                     }
 
-                    _products.push(content.result);
-
-                    return _objectSpread(_objectSpread({}, item), {}, {
-                      products: _products
-                    });
-                  }
-
-                  return item;
-                });
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+                    return item;
+                  });
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
-                  })
-                }));
+                  }));
+                }
+
                 setIsAddProduct(false);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -201,11 +215,11 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
                 }));
               }
 
-              _context.next = 14;
+              _context.next = 15;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -215,12 +229,12 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
                 loading: false
               }));
 
-            case 14:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 11]]);
+      }, _callee, null, [[2, 12]]);
     }));
 
     return function handleUpdateClick() {
@@ -248,12 +262,12 @@ CreateBusinessProduct.propTypes = {
   /**
    * Object for a business
    */
-  businessState: _propTypes.default.object,
+  business: _propTypes.default.object,
 
   /**
    * Function to set a business state
    */
-  setBusinessState: _propTypes.default.func,
+  handleUpdateBusinessState: _propTypes.default.func,
 
   /**
    * Function to set product creation mode

@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -52,8 +54,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var SingleProductsCategory = function SingleProductsCategory(props) {
   var UIComponent = props.UIComponent,
-      setBusinessState = props.setBusinessState,
-      businessState = props.businessState,
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      business = props.business,
       category = props.category,
       categorySelected = props.categorySelected,
       setCategorySelected = props.setCategorySelected;
@@ -66,14 +68,23 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
-    category: {},
+    changes: {},
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      createCategory = _useState2[0],
-      setCreateCategory = _useState2[1];
+      categoryFormState = _useState2[0],
+      setCategoryFormState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isEditMode = _useState4[0],
+      setIsEditMode = _useState4[1];
 
   var handelChangeCategoryActive = function handelChangeCategoryActive(isChecked) {
     var params = {
@@ -82,31 +93,50 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
     editCategory(params);
   };
 
-  var handleUpdateClick = function handleUpdateClick(value) {
+  var handleUpdateClick = function handleUpdateClick() {
+    var _categoryFormState$ch, _categoryFormState$ch2;
+
     var params = {
-      name: value
+      name: categoryFormState === null || categoryFormState === void 0 ? void 0 : (_categoryFormState$ch = categoryFormState.changes) === null || _categoryFormState$ch === void 0 ? void 0 : _categoryFormState$ch.name,
+      image: categoryFormState === null || categoryFormState === void 0 ? void 0 : (_categoryFormState$ch2 = categoryFormState.changes) === null || _categoryFormState$ch2 === void 0 ? void 0 : _categoryFormState$ch2.image
     };
     editCategory(params);
   };
   /**
-  * Update business photo data
-  * @param {File} file Image to change business photo
+  * Update category photo data
+  * @param {File} file Image to change category photo
   */
 
 
-  var handlechangeImage = function handlechangeImage(file, name) {
+  var handlechangeImage = function handlechangeImage(file) {
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
     reader.onload = function () {
-      setCreateCategory(_objectSpread(_objectSpread({}, createCategory), {}, {
-        category: _objectSpread(_objectSpread({}, createCategory.category), {}, _defineProperty({}, name, reader.result))
+      setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+        changes: _objectSpread(_objectSpread({}, categoryFormState.changes), {}, {
+          image: reader.result
+        })
       }));
     };
 
     reader.onerror = function (error) {
       return console.log(error);
     };
+
+    setIsEditMode(true);
+  };
+  /**
+   * Set properties of a category
+   * @param {EventTarget} evt Related Html element
+   */
+
+
+  var handleInputChange = function handleInputChange(evt) {
+    setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+      changes: _objectSpread(_objectSpread({}, categoryFormState.changes), {}, _defineProperty({}, evt.target.name, evt.target.value))
+    }));
+    setIsEditMode(true);
   };
   /**
    * Method to edit a category
@@ -130,50 +160,70 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
             case 2:
               _context.prev = 2;
-              _context.next = 5;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : businessState.business.id)).categories(parseInt(category.id)).save(params);
+              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                loading: true
+              }));
+              _context.next = 6;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).save(params);
 
-            case 5:
+            case 6:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
               result = _yield$ordering$busin2.result;
 
               if (!error) {
-                _categories = businessState.business.categories.map(function (item) {
-                  if (item.id === category.id) {
-                    return _objectSpread(_objectSpread({}, item), params);
+                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                  loading: false,
+                  result: {
+                    error: false,
+                    result: t('CATEGORY_UPDATED', 'Category updated')
                   }
-
-                  return item;
-                });
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
-                    categories: _categories
-                  })
                 }));
+                setIsEditMode(false);
+
+                if (handleUpdateBusinessState) {
+                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
+                    if (item.id === category.id) {
+                      return _objectSpread(_objectSpread({}, item), params);
+                    }
+
+                    return item;
+                  });
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+                    categories: _categories
+                  }));
+                }
               } else {
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  error: result
+                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](2);
-              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                error: _context.t0
+              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                loading: false,
+                result: {
+                  error: true,
+                  result: _context.t0
+                }
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 12]]);
+      }, _callee, null, [[2, 13]]);
     }));
 
     return function editCategory(_x) {
@@ -202,55 +252,71 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
             case 2:
               _context2.prev = 2;
-              _context2.next = 5;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : businessState.business.id)).categories(parseInt(category.id)).delete();
+              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                loading: true
+              }));
+              _context2.next = 6;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).delete();
 
-            case 5:
+            case 6:
               _yield$ordering$busin3 = _context2.sent;
               _yield$ordering$busin4 = _yield$ordering$busin3.content;
               error = _yield$ordering$busin4.error;
               result = _yield$ordering$busin4.result;
 
               if (!error) {
-                _categories = businessState.business.categories.map(function (item) {
-                  return item;
-                });
-                filterItem = businessState.business.categories.filter(function (cat) {
-                  return cat.id === category.id;
-                })[0];
-                index = businessState.business.categories.indexOf(filterItem);
-                if (index > -1) _categories.splice(index, 1);
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
-                    categories: _categories
-                  })
+                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                  loading: false,
+                  result: {
+                    error: false,
+                    result: t('CATEGORY_DELETE', 'Category deleted')
+                  }
                 }));
-                if (category.id === categorySelected.id) setCategorySelected({
-                  id: null,
-                  name: 'All'
-                });
+
+                if (handleUpdateBusinessState) {
+                  _categories = business.categories.map(function (item) {
+                    return item;
+                  });
+                  filterItem = business.categories.filter(function (cat) {
+                    return cat.id === category.id;
+                  })[0];
+                  index = business.categories.indexOf(filterItem);
+                  if (index > -1) _categories.splice(index, 1);
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+                    categories: _categories
+                  }));
+                  if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
+                }
               } else {
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  error: result
+                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
                 }));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](2);
-              setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                error: _context2.t0
+              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                loading: false,
+                result: {
+                  error: true,
+                  result: _context2.t0
+                }
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 12]]);
+      }, _callee2, null, [[2, 13]]);
     }));
 
     return function deleteCategory() {
@@ -258,13 +324,21 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    if (category) {
+      setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+        changes: _objectSpread({}, category)
+      }));
+    }
+  }, [category]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     handelChangeCategoryActive: handelChangeCategoryActive,
-    createCategory: createCategory,
-    setCreateCategory: setCreateCategory,
+    categoryFormState: categoryFormState,
     handlechangeImage: handlechangeImage,
     handleUpdateClick: handleUpdateClick,
-    deleteCategory: deleteCategory
+    deleteCategory: deleteCategory,
+    handleInputChange: handleInputChange,
+    isEditMode: isEditMode
   })));
 };
 
@@ -278,12 +352,12 @@ SingleProductsCategory.propTypes = {
   /**
    * Object for a business
    */
-  businessState: _propTypes.default.object,
+  business: _propTypes.default.object,
 
   /**
    * Function to set a business state
    */
-  setBusinessState: _propTypes.default.func,
+  handleUpdateBusinessState: _propTypes.default.func,
 
   /**
    * Object for a product

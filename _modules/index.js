@@ -27,10 +27,10 @@ Object.defineProperty(exports, "BaseComponent", {
     return _BaseComponent.BaseComponent;
   }
 });
-Object.defineProperty(exports, "BasicSettings", {
+Object.defineProperty(exports, "Settings", {
   enumerable: true,
   get: function get() {
-    return _BasicSettings.BasicSettings;
+    return _Settings.Settings;
   }
 });
 Object.defineProperty(exports, "BusinessAndProductList", {
@@ -99,10 +99,10 @@ Object.defineProperty(exports, "BusinessMenu", {
     return _BusinessMenu.BusinessMenu;
   }
 });
-Object.defineProperty(exports, "BusinessProductListing", {
+Object.defineProperty(exports, "BusinessProductsListing", {
   enumerable: true,
   get: function get() {
-    return _BusinessProductsListing.BusinessProductListing;
+    return _BusinessProductsListing.BusinessProductsListing;
   }
 });
 Object.defineProperty(exports, "BusinessMenuOptions", {
@@ -157,6 +157,12 @@ Object.defineProperty(exports, "BusinessSortControl", {
   enumerable: true,
   get: function get() {
     return _BusinessSortControl.BusinessSortControl;
+  }
+});
+Object.defineProperty(exports, "BusinessSpreadSheet", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSpreadSheet.BusinessSpreadSheet;
   }
 });
 Object.defineProperty(exports, "BusinessTypeFilter", {
@@ -894,7 +900,7 @@ var _AddressList = require("./components/AddressList");
 
 var _BaseComponent = require("./components/BaseComponent");
 
-var _BasicSettings = require("./components/BasicSettings");
+var _Settings = require("./components/Settings");
 
 var _BusinessAndProductList = require("./components/BusinessAndProductList");
 
@@ -939,6 +945,8 @@ var _BusinessReviews = require("./components/BusinessReviews");
 var _BusinessSchedule = require("./components/BusinessSchedule");
 
 var _BusinessSortControl = require("./components/BusinessSortControl");
+
+var _BusinessSpreadSheet = require("./components/BusinessSpreadSheet");
 
 var _BusinessTypeFilter = require("./components/BusinessTypeFilter");
 

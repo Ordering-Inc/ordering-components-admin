@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -52,9 +54,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var CreateBusinessCategory = function CreateBusinessCategory(props) {
   var UIComponent = props.UIComponent,
-      setBusinessState = props.setBusinessState,
-      businessState = props.businessState,
-      setIsAddCategory = props.setIsAddCategory;
+      setIsAddCategory = props.setIsAddCategory,
+      business = props.business,
+      handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -64,10 +66,14 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
     loading: false,
     category: {
-      enabled: false
+      enabled: true
     },
     result: {
       error: false
@@ -141,30 +147,38 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
 
             case 2:
               _context.prev = 2;
-              _context.next = 5;
-              return ordering.businesses(parseInt(businessState.business.id)).categories().save(categoryState.category);
+              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+                loading: true
+              }));
+              _context.next = 6;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories().save(categoryState.category);
 
-            case 5:
+            case 6:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
               if (!content.error) {
                 setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
                   category: {},
-                  result: content,
+                  result: {
+                    error: false,
+                    result: t('CATEGORY_ADD', 'Category added')
+                  },
                   loading: false
                 }));
-                _categories = businessState.business.categories.map(function (item) {
-                  return item;
-                });
 
-                _categories.push(content.result);
+                if (handleUpdateBusinessState) {
+                  _categories = business.categories.map(function (item) {
+                    return item;
+                  });
 
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+                  _categories.push(content.result);
+
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
-                  })
-                }));
+                  }));
+                }
+
                 setIsAddCategory(false);
               } else {
                 setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
@@ -174,11 +188,11 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
                 }));
               }
 
-              _context.next = 13;
+              _context.next = 14;
               break;
 
-            case 10:
-              _context.prev = 10;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](2);
               setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
                 result: {
@@ -188,12 +202,12 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
                 loading: false
               }));
 
-            case 13:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 10]]);
+      }, _callee, null, [[2, 11]]);
     }));
 
     return function handleUpdateClick() {
@@ -220,12 +234,12 @@ CreateBusinessCategory.propTypes = {
   /**
    * Object for a business
    */
-  businessState: _propTypes.default.object,
+  business: _propTypes.default.object,
 
   /**
    * Function to set a business state
    */
-  setBusinessState: _propTypes.default.func,
+  handleUpdateBusinessState: _propTypes.default.func,
 
   /**
    * Function to set category creation mode
