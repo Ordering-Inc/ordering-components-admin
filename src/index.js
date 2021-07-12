@@ -25,7 +25,7 @@ import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
-import { BusinessSpreadSheet } from'./components/BusinessSpreadSheet'
+import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
@@ -70,7 +70,15 @@ import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
+import { ProductDetatils } from './components/ProductDetatils'
+import { ProductExtraMetaFields } from './components/ProductExtraMetaFields'
+import { ProductExtraOptionDetails } from './components/ProductExtraOptionDetails'
+import { ProductExtraOptionMetaFields } from './components/ProductExtraOptionMetaFields'
+import { ProductExtraOptions } from './components/ProductExtraOptions'
+import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
+import { ProductMetaFields } from './components/ProductMetaFields'
+import { ProductProperties } from './components/ProductProperties'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
 import { ProductIngredient } from './components/ProductIngredient'
@@ -140,6 +148,7 @@ export {
   BusinessInformation,
   BusinessList,
   BusinessMenu,
+  BusinessMenuMetaFields,
   BusinessMetaFields,
   BusinessProductsListing,
   BusinessMenuOptions,
@@ -197,7 +206,15 @@ export {
   PaymentOptions,
   Popup,
   ProductComponent,
+  ProductDetatils,
+  ProductExtraMetaFields,
+  ProductExtraOptions,
+  ProductExtraOptionDetails,
+  ProductExtraOptionMetaFields,
+  ProductExtras,
   ProductForm,
+  ProductMetaFields,
+  ProductProperties,
   ProductShare,
   ProductImages,
   ProductIngredient,
