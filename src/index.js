@@ -2,7 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { BaseComponent } from './components/BaseComponent'
-import { BasicSettings } from './components/BasicSettings'
+import { Settings } from './components/Settings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
@@ -14,7 +14,7 @@ import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
-import { BusinessProductListing } from './components/BusinessProductsListing'
+import { BusinessProductsListing } from './components/BusinessProductsListing'
 import { BusinessMenuMetaFields } from './components/BusinessMenuMetaFields'
 import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMenuShare } from './components/BusinessMenuShare'
@@ -25,6 +25,7 @@ import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessReviews } from './components/BusinessReviews'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
+import { BusinessSpreadSheet } from'./components/BusinessSpreadSheet'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
@@ -135,7 +136,7 @@ export {
   AddressForm,
   AddressList,
   BaseComponent,
-  BasicSettings,
+  Settings,
   BusinessAndProductList,
   BusinessBasicInformation,
   BusinessCategoryEdit,
@@ -149,7 +150,7 @@ export {
   BusinessMenu,
   BusinessMenuMetaFields,
   BusinessMetaFields,
-  BusinessProductListing,
+  BusinessProductsListing,
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessPaymethods,
@@ -158,6 +159,7 @@ export {
   BusinessReviews,
   BusinessSchedule,
   BusinessSortControl,
+  BusinessSpreadSheet,
   BusinessTypeFilter,
   BusinessTypeForm,
   BusinessZoneGoogleMaps,
