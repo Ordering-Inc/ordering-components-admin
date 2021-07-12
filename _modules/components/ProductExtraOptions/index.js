@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ProductIngredient = void 0;
+exports.ProductExtraOptions = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -56,12 +56,12 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage product ingredient behavior without UI component
+ * Component to manage product extras behavior without UI component
  */
-var ProductIngredient = function ProductIngredient(props) {
-  var business = props.business,
-      product = props.product,
-      UIComponent = props.UIComponent,
+var ProductExtraOptions = function ProductExtraOptions(props) {
+  var UIComponent = props.UIComponent,
+      business = props.business,
+      extra = props.extra,
       handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -73,67 +73,208 @@ var ProductIngredient = function ProductIngredient(props) {
       token = _useSession2[0].token;
 
   var _useState = (0, _react.useState)({
-    product: product,
+    extra: extra,
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      productState = _useState2[0],
-      setProductState = _useState2[1];
+      extraState = _useState2[0],
+      setExtraState = _useState2[1];
 
-  var _useState3 = (0, _react.useState)({}),
+  var _useState3 = (0, _react.useState)({
+    changes: {},
+    result: {}
+  }),
       _useState4 = _slicedToArray(_useState3, 2),
       changesState = _useState4[0],
       setChangesState = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(false),
+  var _useState5 = (0, _react.useState)(null),
       _useState6 = _slicedToArray(_useState5, 2),
-      isAddMode = _useState6[0],
-      setIsAddMode = _useState6[1];
+      editOptionId = _useState6[0],
+      setEditOptionId = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(null),
+  var _useState7 = (0, _react.useState)({}),
       _useState8 = _slicedToArray(_useState7, 2),
-      editIngredientId = _useState8[0],
-      setEditIngredientId = _useState8[1];
+      editErrors = _useState8[0],
+      setEditErrors = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({
+    conditioned: false,
+    enabled: true,
+    min: 1,
+    max: 1
+  }),
+      _useState10 = _slicedToArray(_useState9, 2),
+      addChangesState = _useState10[0],
+      setAddChangesState = _useState10[1];
   /**
-   * Method to change the ingredient name
+   * Clean changesState
+   */
+
+
+  var cleanChangesState = function cleanChangesState(values) {
+    return setChangesState(_objectSpread({}, values));
+  };
+  /**
+   * Method to change the option input
+   * @param {EventTarget} e Related HTML event
+   * @param {Number} optionId
+   */
+
+
+  var handleChangeInput = function handleChangeInput(e, optionId) {
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: _objectSpread(_objectSpread({}, changesState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+      });
+    } else {
+      setEditOptionId(optionId);
+      setChangesState({
+        result: {},
+        changes: _defineProperty({}, e.target.name, e.target.value)
+      });
+    }
+  };
+  /**
+   * Method to change the option enabled state
+   * @param {Boolean} enabled
+   */
+
+
+  var handleChangeOptionEnable = function handleChangeOptionEnable(enabled, optionId) {
+    if (optionId === editOptionId) {
+      setChangesState({
+        result: {},
+        changes: _objectSpread(_objectSpread({}, changesState.changes), {}, {
+          enabled: enabled
+        })
+      });
+    } else {
+      setEditOptionId(optionId);
+      setChangesState({
+        result: {},
+        changes: {
+          enabled: enabled
+        }
+      });
+    }
+  };
+  /**
+   * Method to change the option input
    * @param {EventTarget} e Related HTML event
    */
 
 
-  var handleChangeInput = function handleChangeInput(e, ingredientId) {
-    setEditIngredientId(ingredientId);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, e.target.name, e.target.value)));
+  var handleChangeAddOption = function handleChangeAddOption(e) {
+    setAddChangesState(_objectSpread(_objectSpread({}, addChangesState), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
   /**
-   * Method to save the new ingredient from API
+   * Update business photo data
+   * @param {File} file Image to change business photo
    */
 
 
-  var handleAddIngredient = /*#__PURE__*/function () {
+  var handleChangeImage = function handleChangeImage(file, optionId) {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(file);
+
+    if (optionId === editOptionId) {
+      reader.onload = function () {
+        setChangesState({
+          result: {},
+          changes: _objectSpread(_objectSpread({}, changesState.changes), {}, {
+            image: reader.result
+          })
+        });
+      };
+    } else {
+      setEditOptionId(optionId);
+
+      reader.onload = function () {
+        setChangesState({
+          result: {},
+          changes: {
+            image: reader.result
+          }
+        });
+      };
+    }
+
+    reader.onerror = function (error) {
+      return console.log(error);
+    };
+  };
+  /**
+   * Method to change the add option enabled state
+   * @param {Boolean} enabled
+   */
+
+
+  var handleChangeAddOptionEnable = function handleChangeAddOptionEnable(enabled) {
+    setAddChangesState(_objectSpread(_objectSpread({}, addChangesState), {}, {
+      enabled: enabled
+    }));
+  };
+
+  var handleSuccessUpdateBusiness = function handleSuccessUpdateBusiness(updatedExtra) {
+    if (handleUpdateBusinessState) {
+      var updatedExtras = business.extras.filter(function (extra) {
+        if (extra.id === updatedExtra.id) {
+          Object.assign(extra, updatedExtra);
+        }
+
+        return true;
+      });
+
+      var businessState = _objectSpread(_objectSpread({}, business), {}, {
+        extras: updatedExtras
+      });
+
+      var categories = businessState.categories.map(function (item) {
+        var _products = item.products.map(function (prod) {
+          var _extras = prod.extras.filter(function (extra) {
+            if (extra.id === updatedExtra.id) {
+              Object.assign(extra, updatedExtra);
+            }
+
+            return true;
+          });
+
+          return _objectSpread(_objectSpread({}, prod), {}, {
+            extras: _extras
+          });
+        });
+
+        var _item = _objectSpread(_objectSpread({}, item), {}, {
+          products: _products
+        });
+
+        return _item;
+      });
+
+      var updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
+        categories: categories
+      });
+
+      handleUpdateBusinessState(updatedBusiness);
+    }
+  };
+  /**
+   * Method to update the option from API
+   */
+
+
+  var handleUpdateOption = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var changes, requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+      var requestOptions, response, content, options, updatedExtra;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(Object.keys(changesState).length === 0)) {
-                _context.next = 3;
-                break;
-              }
-
-              setIsAddMode(false);
-              return _context.abrupt("return");
-
-            case 3:
-              _context.prev = 3;
-              changes = {
-                business_id: business === null || business === void 0 ? void 0 : business.id,
-                category_id: product === null || product === void 0 ? void 0 : product.category_id,
-                product_id: product === null || product === void 0 ? void 0 : product.id
-              };
-              changes = _objectSpread(_objectSpread({}, changes), changesState);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              _context.prev = 0;
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -142,99 +283,78 @@ var ProductIngredient = function ProductIngredient(props) {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.changes)
               };
-              _context.next = 10;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients"), requestOptions);
+              _context.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(editOptionId), requestOptions);
 
-            case 10:
+            case 5:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 8;
               return response.json();
 
-            case 13:
+            case 8:
               content = _context.sent;
 
               if (!content.error) {
-                setChangesState({});
-                setIsAddMode(false);
-                ingredients = [].concat(_toConsumableArray(productState === null || productState === void 0 ? void 0 : productState.product.ingredients), [content.result]);
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
-                  ingredients: ingredients
+                setChangesState({
+                  changes: content.error ? changesState.changes : {},
+                  result: content.result
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                options = extraState.extra.options.filter(function (option) {
+                  if (option.id === content.result.id) {
+                    Object.assign(option, content.result);
+                  }
+
+                  return true;
+                });
+                updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
+                  options: options
+                });
+                setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                   loading: false,
-                  product: updatedProduct
+                  extra: updatedExtra
                 }));
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
+                handleSuccessUpdateBusiness(updatedExtra);
               }
 
-              _context.next = 20;
+              _context.next = 15;
               break;
 
-            case 17:
-              _context.prev = 17;
-              _context.t0 = _context["catch"](3);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](0);
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context.t0.message
               }));
 
-            case 20:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 17]]);
+      }, _callee, null, [[0, 12]]);
     }));
 
-    return function handleAddIngredient() {
+    return function handleUpdateOption() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to save the new ingredient from API
+   * Method to save the new product extra option from API
    */
 
 
-  var handleUpdateIngredient = /*#__PURE__*/function () {
+  var handleAddOption = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var changes, requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+      var requestOptions, response, content, options, updatedExtra;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              changes = {
-                business_id: business === null || business === void 0 ? void 0 : business.id,
-                category_id: product === null || product === void 0 ? void 0 : product.category_id,
-                product_id: product === null || product === void 0 ? void 0 : product.id
-              };
-              changes = _objectSpread(_objectSpread({}, changes), changesState);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -243,100 +363,76 @@ var ProductIngredient = function ProductIngredient(props) {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(addChangesState)
               };
-              _context2.next = 7;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(editIngredientId), requestOptions);
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options"), requestOptions);
 
-            case 7:
+            case 5:
               response = _context2.sent;
-              _context2.next = 10;
+              _context2.next = 8;
               return response.json();
 
-            case 10:
+            case 8:
               content = _context2.sent;
 
               if (!content.error) {
-                setChangesState({});
-                ingredients = productState === null || productState === void 0 ? void 0 : productState.product.ingredients.filter(function (ingredient) {
-                  if (ingredient.id === editIngredientId) {
-                    Object.assign(ingredient, content.result);
-                  }
-
-                  return true;
+                setAddChangesState({
+                  conditioned: false,
+                  enabled: true,
+                  min: 1,
+                  max: 1
                 });
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
-                  ingredients: ingredients
+                options = [].concat(_toConsumableArray(extraState.extra.options), [content.result]);
+                updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
+                  options: options
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                   loading: false,
-                  product: updatedProduct
+                  extra: updatedExtra
                 }));
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
+                handleSuccessUpdateBusiness(updatedExtra);
               }
 
-              _context2.next = 17;
+              _context2.next = 15;
               break;
 
-            case 14:
-              _context2.prev = 14;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context2.t0.message
               }));
 
-            case 17:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 14]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function handleUpdateIngredient() {
+    return function handleAddOption() {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to delete the product ingredient
-   * @param {Number} ingredientId id to delete the ingredient
+   * Method to delete the extra
+   * @param {Number} optionId
    */
 
 
-  var handleDeleteIngredient = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(ingredientId) {
-      var requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+  var handleDeteteOption = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(optionId) {
+      var requestOptions, response, content, options, updatedExtra;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                loading: false
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+                loading: true
               }));
               requestOptions = {
                 method: 'DELETE',
@@ -346,7 +442,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 }
               };
               _context3.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(ingredientId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(optionId), requestOptions);
 
             case 5:
               response = _context3.sent;
@@ -357,40 +453,17 @@ var ProductIngredient = function ProductIngredient(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                ingredients = productState === null || productState === void 0 ? void 0 : productState.product.ingredients.filter(function (ingredient) {
-                  return ingredient.id !== ingredientId;
+                options = extraState.extra.options.filter(function (option) {
+                  return option.id !== optionId;
                 });
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
-                  ingredients: ingredients
+                updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
+                  options: options
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                   loading: false,
-                  product: updatedProduct
+                  extra: updatedExtra
                 }));
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
+                handleSuccessUpdateBusiness(updatedExtra);
               }
 
               _context3.next = 15;
@@ -399,7 +472,7 @@ var ProductIngredient = function ProductIngredient(props) {
             case 12:
               _context3.prev = 12;
               _context3.t0 = _context3["catch"](0);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context3.t0.message
               }));
@@ -412,72 +485,89 @@ var ProductIngredient = function ProductIngredient(props) {
       }, _callee3, null, [[0, 12]]);
     }));
 
-    return function handleDeleteIngredient(_x) {
+    return function handleDeteteOption(_x) {
       return _ref3.apply(this, arguments);
     };
   }();
-  /**
-   * Method to open the ingredient add form
-   */
-
-
-  var handleOpenAddForm = function handleOpenAddForm() {
-    setIsAddMode(true);
-  };
 
   (0, _react.useEffect)(function () {
-    if (Object.keys(changesState).length > 0 && !isAddMode && editIngredientId) {
-      handleUpdateIngredient();
+    var _changesState$changes, _changesState$changes2, _changesState$changes3;
+
+    if (!Object.keys(changesState.changes).length) return;
+
+    if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.min) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes3 = changesState.changes) === null || _changesState$changes3 === void 0 ? void 0 : _changesState$changes3.max) === '') {
+      var _changesState$changes4, _changesState$changes5;
+
+      setEditErrors({
+        name: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.name) === '',
+        min: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes5 = changesState.changes) === null || _changesState$changes5 === void 0 ? void 0 : _changesState$changes5.min) === '',
+        max: (changesState === null || changesState === void 0 ? void 0 : changesState.changes.max) === ''
+      });
+    } else {
+      handleUpdateOption();
     }
-  }, [changesState, isAddMode, editIngredientId]);
+  }, [changesState]);
   (0, _react.useEffect)(function () {
-    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-      product: product
+    setChangesState({
+      changes: {},
+      result: {}
+    });
+    setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+      extra: extra
     }));
-  }, [product]);
+  }, [extra]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    productState: productState,
+    editErrors: editErrors,
     changesState: changesState,
-    isAddMode: isAddMode,
+    cleanChangesState: cleanChangesState,
+    extraState: extraState,
+    editOptionId: editOptionId,
+    addChangesState: addChangesState,
+    cleanEditErrors: function cleanEditErrors() {
+      return setEditErrors({});
+    },
+    handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
-    handleOpenAddForm: handleOpenAddForm,
-    handleDeleteIngredient: handleDeleteIngredient,
-    handleAddIngredient: handleAddIngredient
+    handleChangeOptionEnable: handleChangeOptionEnable,
+    handleAddOption: handleAddOption,
+    handleChangeAddOption: handleChangeAddOption,
+    handleChangeAddOptionEnable: handleChangeAddOptionEnable,
+    handleDeteteOption: handleDeteteOption
   })));
 };
 
-exports.ProductIngredient = ProductIngredient;
-ProductIngredient.propTypes = {
+exports.ProductExtraOptions = ProductExtraOptions;
+ProductExtraOptions.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before product ingredient
+   * Components types before product extra options
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after product ingredient
+   * Components types after product extra options
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before product ingredient
+   * Elements before product extra options
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after product ingredient
+   * Elements after product extra options
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ProductIngredient.defaultProps = {
+ProductExtraOptions.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
