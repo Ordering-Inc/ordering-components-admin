@@ -30,7 +30,6 @@ import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { Cart } from './components/Cart'
-import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
@@ -164,7 +163,6 @@ export {
   BusinessTypeForm,
   BusinessZoneGoogleMaps,
   Cart,
-  CategoryDescription,
   Checkout,
   CheckPassword,
   CityList,
