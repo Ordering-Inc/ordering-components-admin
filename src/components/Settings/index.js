@@ -4,7 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage Settings page behavior without UI component
  */
 export const Settings = (props) => {
   const {
@@ -35,21 +35,19 @@ export const Settings = (props) => {
         }
       }
 
-      const functionFetch = `${ordering.root}/config_categories`
+      const filterConditons = []
+      if (settingsType === 'basic') filterConditons.push({ attribute: 'parent_category_id', value: 1 })
+      else filterConditons.push({ attribute: 'parent_category_id', value: 2 })
+
+      const functionFetch = `${ordering.root}/config_categories?orderBy=rank&where=${JSON.stringify(filterConditons)}`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        let categories
-        if (settingsType === 'basic') {
-          categories = result.filter(item => (item.parent_category_id === 1) || (item.key === 'key_basic'))
-        } else if (settingsType === 'operation') {
-          categories = result.filter(item => (item.parent_category_id === 2) || (item.key === 'key_operation'))
-        }
         setCategoryList({
           ...categoryList,
           loading: false,
-          categories: categories
+          categories: result
         })
       } else {
         setCategoryList({
@@ -84,6 +82,10 @@ Settings.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
+  /**
+   * String to idenity setting group
+   */
+  settingsType: PropTypes.string,
   /**
    * Components types before Checkout
    * Array of type components, the parent props will pass to these components

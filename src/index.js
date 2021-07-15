@@ -119,7 +119,7 @@ import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRed
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleProductsCategory } from './components/SingleProductsCategory'
-import { SubCategory } from './components/SubCategory'
+import { SettingsList } from './components/SettingsList'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
@@ -243,7 +243,7 @@ export {
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,
-  SubCategory,
+  SettingsList,
   CmsContent,
   FloatingButton,
   ResetPassword,
