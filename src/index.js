@@ -30,7 +30,6 @@ import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { Cart } from './components/Cart'
-import { CategoryDescription } from './components/CategoryDescription'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
@@ -120,7 +119,7 @@ import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRed
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleProductsCategory } from './components/SingleProductsCategory'
-import { SubCategory } from './components/SubCategory'
+import { SettingsList } from './components/SettingsList'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
@@ -164,7 +163,6 @@ export {
   BusinessTypeForm,
   BusinessZoneGoogleMaps,
   Cart,
-  CategoryDescription,
   Checkout,
   CheckPassword,
   CityList,
@@ -245,7 +243,7 @@ export {
   StripeElementsForm,
   CardForm,
   StripeRedirectForm,
-  SubCategory,
+  SettingsList,
   CmsContent,
   FloatingButton,
   ResetPassword,
