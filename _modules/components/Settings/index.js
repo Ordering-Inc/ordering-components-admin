@@ -48,7 +48,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage Settings page behavior without UI component
  */
 var Settings = function Settings(props) {
   var UIComponent = props.UIComponent,
@@ -82,7 +82,7 @@ var Settings = function Settings(props) {
 
   var getCagegories = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result, categories;
+      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -107,34 +107,32 @@ var Settings = function Settings(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = "".concat(ordering.root, "/config_categories");
-              _context.next = 8;
+              filterConditons = [];
+              if (settingsType === 'basic') filterConditons.push({
+                attribute: 'parent_category_id',
+                value: 1
+              });else filterConditons.push({
+                attribute: 'parent_category_id',
+                value: 2
+              });
+              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=rank&where=").concat(JSON.stringify(filterConditons));
+              _context.next = 10;
               return fetch(functionFetch, requestOptions);
 
-            case 8:
+            case 10:
               response = _context.sent;
-              _context.next = 11;
+              _context.next = 13;
               return response.json();
 
-            case 11:
+            case 13:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
               if (!error) {
-                if (settingsType === 'basic') {
-                  categories = result.filter(function (item) {
-                    return item.parent_category_id === 1 || item.key === 'key_basic';
-                  });
-                } else if (settingsType === 'operation') {
-                  categories = result.filter(function (item) {
-                    return item.parent_category_id === 2 || item.key === 'key_operation';
-                  });
-                }
-
                 setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                   loading: false,
-                  categories: categories
+                  categories: result
                 }));
               } else {
                 setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
@@ -143,23 +141,23 @@ var Settings = function Settings(props) {
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 22;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](2);
               setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 20:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 19]]);
     }));
 
     return function getCagegories() {
@@ -178,6 +176,11 @@ Settings.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
+
+  /**
+   * String to idenity setting group
+   */
+  settingsType: _propTypes.default.string,
 
   /**
    * Components types before Checkout

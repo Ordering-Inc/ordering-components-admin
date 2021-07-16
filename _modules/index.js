@@ -195,12 +195,6 @@ Object.defineProperty(exports, "Cart", {
     return _Cart.Cart;
   }
 });
-Object.defineProperty(exports, "CategoryDescription", {
-  enumerable: true,
-  get: function get() {
-    return _CategoryDescription.CategoryDescription;
-  }
-});
 Object.defineProperty(exports, "Checkout", {
   enumerable: true,
   get: function get() {
@@ -885,10 +879,10 @@ Object.defineProperty(exports, "SingleProductsCategory", {
     return _SingleProductsCategory.SingleProductsCategory;
   }
 });
-Object.defineProperty(exports, "SubCategory", {
+Object.defineProperty(exports, "SettingsList", {
   enumerable: true,
   get: function get() {
-    return _SubCategory.SubCategory;
+    return _SettingsList.SettingsList;
   }
 });
 Object.defineProperty(exports, "CardForm", {
@@ -1009,8 +1003,6 @@ var _BusinessTypeForm = require("./components/BusinessTypeForm");
 var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
 var _Cart = require("./components/Cart");
-
-var _CategoryDescription = require("./components/CategoryDescription");
 
 var _Checkout = require("./components/Checkout");
 
@@ -1190,7 +1182,7 @@ var _SingleBusinessProduct = require("./components/SingleBusinessProduct");
 
 var _SingleProductsCategory = require("./components/SingleProductsCategory");
 
-var _SubCategory = require("./components/SubCategory");
+var _SettingsList = require("./components/SettingsList");
 
 var _CardForm = require("./components/StripeElementsForm/CardForm");
 
