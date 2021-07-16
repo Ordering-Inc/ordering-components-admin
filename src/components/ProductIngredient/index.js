@@ -1,47 +1,244 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
+import { useSession } from '../../contexts/SessionContext'
+import { useApi } from '../../contexts/ApiContext'
 
 /**
- * Component to render product ingredient
+ * Component to manage product ingredient behavior without UI component
  */
 export const ProductIngredient = (props) => {
   const {
+    business,
+    product,
     UIComponent,
-    ingredient,
-    onChange
+    handleUpdateBusinessState
   } = props
+  const [ordering] = useApi()
+  const [{ token }] = useSession()
+  const [productState, setProductState] = useState({ product: product, loading: false, error: null })
+  const [changesState, setChangesState] = useState({})
+  const [isAddMode, setIsAddMode] = useState(false)
+  const [editIngredientId, setEditIngredientId] = useState(null)
 
   /**
-   * Set current state
+   * Method to change the ingredient name
+   * @param {EventTarget} e Related HTML event
    */
-  const state = { id: ingredient.id, name: ingredient.name, selected: props.state.selected }
-
-  /**
-   * Run onChange function with new state
-   * @param {object} newState State with changes
-   */
-  const changeState = (newState) => {
-    onChange && onChange(newState, ingredient)
+  const handleChangeInput = (e, ingredientId) => {
+    setEditIngredientId(ingredientId)
+    setChangesState({
+      ...changesState,
+      [e.target.name]: e.target.value
+    })
   }
 
   /**
-   * Select/unselect the suboption
+   * Method to save the new ingredient from API
    */
-  const toggleSelect = () => {
-    changeState({ selected: !state.selected })
+  const handleAddIngredient = async () => {
+    if (Object.keys(changesState).length === 0) {
+      setIsAddMode(false)
+      return
+    }
+    try {
+      let changes = {
+        business_id: business?.id,
+        category_id: product?.category_id,
+        product_id: product?.id
+      }
+
+      changes = { ...changes, ...changesState }
+      setProductState({ ...productState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setChangesState({})
+        setIsAddMode(false)
+        const ingredients = [...productState?.product.ingredients, content.result]
+        const updatedProduct = { ...productState.product, ingredients: ingredients }
+        setProductState({
+          ...productState,
+          loading: false,
+          product: updatedProduct
+        })
+        if (handleUpdateBusinessState) {
+          const categories = business.categories.map(item => {
+            if (item.id === parseInt(product?.category_id)) {
+              const _products = item.products.map(prod => {
+                if (prod.id === product?.id) {
+                  Object.assign(prod, updatedProduct)
+                }
+                return prod
+              })
+              return {
+                ...item,
+                products: _products
+              }
+            }
+            return item
+          })
+          const updatedBusiness = { ...business, categories: categories }
+          handleUpdateBusinessState(updatedBusiness)
+        }
+      }
+    } catch (err) {
+      setProductState({ ...productState, loading: false, error: err.message })
+    }
   }
+
+  /**
+   * Method to save the new ingredient from API
+   */
+  const handleUpdateIngredient = async () => {
+    try {
+      let changes = {
+        business_id: business?.id,
+        category_id: product?.category_id,
+        product_id: product?.id
+      }
+
+      changes = { ...changes, ...changesState }
+      setProductState({ ...productState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${editIngredientId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setChangesState({})
+        const ingredients = productState?.product.ingredients.filter(ingredient => {
+          if (ingredient.id === editIngredientId) {
+            Object.assign(ingredient, content.result)
+          }
+          return true
+        })
+        const updatedProduct = { ...productState.product, ingredients: ingredients }
+        setProductState({
+          ...productState,
+          loading: false,
+          product: updatedProduct
+        })
+        if (handleUpdateBusinessState) {
+          const categories = business.categories.map(item => {
+            if (item.id === parseInt(product?.category_id)) {
+              const _products = item.products.map(prod => {
+                if (prod.id === product?.id) {
+                  Object.assign(prod, updatedProduct)
+                }
+                return prod
+              })
+              return {
+                ...item,
+                products: _products
+              }
+            }
+            return item
+          })
+          const updatedBusiness = { ...business, categories: categories }
+          handleUpdateBusinessState(updatedBusiness)
+        }
+      }
+    } catch (err) {
+      setProductState({ ...productState, loading: false, error: err.message })
+    }
+  }
+
+  /**
+   * Method to delete the product ingredient
+   * @param {Number} ingredientId id to delete the ingredient
+   */
+  const handleDeleteIngredient = async (ingredientId) => {
+    try {
+      setProductState({ ...productState, loading: false })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${ingredientId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        const ingredients = productState?.product.ingredients.filter(ingredient => ingredient.id !== ingredientId)
+        const updatedProduct = { ...productState.product, ingredients: ingredients }
+        setProductState({
+          ...productState,
+          loading: false,
+          product: updatedProduct
+        })
+        if (handleUpdateBusinessState) {
+          const categories = business.categories.map(item => {
+            if (item.id === parseInt(product?.category_id)) {
+              const _products = item.products.map(prod => {
+                if (prod.id === product?.id) {
+                  Object.assign(prod, updatedProduct)
+                }
+                return prod
+              })
+              return {
+                ...item,
+                products: _products
+              }
+            }
+            return item
+          })
+          const updatedBusiness = { ...business, categories: categories }
+          handleUpdateBusinessState(updatedBusiness)
+        }
+      }
+    } catch (err) {
+      setProductState({ ...productState, loading: false, error: err.message })
+    }
+  }
+
+  /**
+   * Method to open the ingredient add form
+   */
+  const handleOpenAddForm = () => {
+    setIsAddMode(true)
+  }
+
+  useEffect(() => {
+    if (Object.keys(changesState).length > 0 && !isAddMode && editIngredientId) {
+      handleUpdateIngredient()
+    }
+  }, [changesState, isAddMode, editIngredientId])
+
+  useEffect(() => {
+    setProductState({
+      ...productState,
+      product: product
+    })
+  }, [product])
 
   return (
     <>
-      {
-        UIComponent && (
-          <UIComponent
-            {...props}
-            state={state}
-            toggleSelect={toggleSelect}
-          />
-        )
-      }
+      {UIComponent && (
+        <UIComponent
+          {...props}
+          productState={productState}
+          changesState={changesState}
+          isAddMode={isAddMode}
+          handleChangeInput={handleChangeInput}
+          handleOpenAddForm={handleOpenAddForm}
+          handleDeleteIngredient={handleDeleteIngredient}
+          handleAddIngredient={handleAddIngredient}
+        />
+      )}
     </>
   )
 }
@@ -52,21 +249,30 @@ ProductIngredient.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Ingredient object to render UI
+   * Components types before product ingredient
+   * Array of type components, the parent props will pass to these components
    */
-  ingredient: PropTypes.object.isRequired,
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Current state
+   * Components types after product ingredient
+   * Array of type components, the parent props will pass to these components
    */
-  state: PropTypes.shape({
-    selected: PropTypes.bool
-  }).isRequired,
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Function to get ingredient changes
+   * Elements before product ingredient
+   * Array of HTML/Components elements, these components will not get the parent props
    */
-  onChange: PropTypes.func
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
+  /**
+   * Elements after product ingredient
+   * Array of HTML/Components elements, these components will not get the parent props
+   */
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
 ProductIngredient.defaultProps = {
-  state: {}
+  beforeComponents: [],
+  afterComponents: [],
+  beforeElements: [],
+  afterElements: []
 }

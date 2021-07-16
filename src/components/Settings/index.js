@@ -1,36 +1,32 @@
 import React, { useEffect, useState } from 'react'
-import PropTypes, { string } from 'prop-types'
+import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
-export const CategoryDescription = (props) => {
+/**
+ * Component to manage Settings page behavior without UI component
+ */
+export const Settings = (props) => {
   const {
     UIComponent,
-    categoryId
+    settingsType
   } = props
 
+  const [categoryList, setCategoryList] = useState({ categories: [], loading: false, error: null })
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
-  const [categoryState, setCategoryState] = useState({ category: null, loading: !props.category, error: null })
 
   useEffect(() => {
-    if (props.category) {
-      setCategoryState({
-        ...categoryState,
-        category: props.category
-      })
-    } else {
-      getCategory()
-    }
-  }, [categoryId])
+    getCagegories()
+  }, [])
 
   /**
-   * Method to get order from API
+   * Method to get Configration List
    */
-  const getCategory = async () => {
+  const getCagegories = async () => {
     if (loading) return
     try {
-      setCategoryState({ ...categoryState, loading: true })
+      setCategoryList({ ...categoryList, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -38,26 +34,31 @@ export const CategoryDescription = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = `${ordering.root}/config_categories/${categoryId}`
+
+      const filterConditons = []
+      if (settingsType === 'basic') filterConditons.push({ attribute: 'parent_category_id', value: 1 })
+      else filterConditons.push({ attribute: 'parent_category_id', value: 2 })
+
+      const functionFetch = `${ordering.root}/config_categories?orderBy=rank&where=${JSON.stringify(filterConditons)}`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setCategoryState({
-          ...categoryState,
+        setCategoryList({
+          ...categoryList,
           loading: false,
-          category: result
+          categories: result
         })
       } else {
-        setCategoryState({
-          ...categoryState,
+        setCategoryList({
+          ...categoryList,
           loading: true,
           error: result
         })
       }
     } catch (err) {
-      setCategoryState({
-        ...categoryState,
+      setCategoryList({
+        ...categoryList,
         loading: false,
         error: err
       })
@@ -69,45 +70,45 @@ export const CategoryDescription = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          category={categoryState}
+          categoryList={categoryList}
         />
       )}
     </>
   )
 }
 
-CategoryDescription.propTypes = {
+Settings.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Array of drivers props to fetch
+   * String to idenity setting group
    */
-  propsToFetch: PropTypes.arrayOf(string),
+  settingsType: PropTypes.string,
   /**
-   * Components types before order details
+   * Components types before Checkout
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Components types after order details
+   * Components types after Checkout
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Elements before order details
+   * Elements before Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
-   * Elements after order details
+   * Elements after Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-CategoryDescription.defaultProps = {
+Settings.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -9,8 +10,8 @@ import { useApi } from '../../contexts/ApiContext'
 export const SingleProductsCategory = (props) => {
   const {
     UIComponent,
-    setBusinessState,
-    businessState,
+    handleUpdateBusinessState,
+    business,
     category,
     categorySelected,
     setCategorySelected
@@ -18,35 +19,53 @@ export const SingleProductsCategory = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, t] = useLanguage()
 
-  const [createCategory, setCreateCategory] = useState({ category: {}, loading: false, error: null })
+  const [categoryFormState, setCategoryFormState] = useState({ changes: {}, loading: false, error: null })
+  const [isEditMode, setIsEditMode] = useState(false)
 
   const handelChangeCategoryActive = (isChecked) => {
     const params = { enabled: isChecked }
     editCategory(params)
   }
 
-  const handleUpdateClick = (value) => {
-    const params = { name: value }
+  const handleUpdateClick = () => {
+    const params = {
+      name: categoryFormState?.changes?.name,
+      image: categoryFormState?.changes?.image
+    }
     editCategory(params)
   }
   /**
- * Update business photo data
- * @param {File} file Image to change business photo
+ * Update category photo data
+ * @param {File} file Image to change category photo
  */
-  const handlechangeImage = (file, name) => {
+  const handlechangeImage = (file) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setCreateCategory({
-        ...createCategory,
-        category: {
-          ...createCategory.category,
-          [name]: reader.result
+      setCategoryFormState({
+        ...categoryFormState,
+        changes: {
+          ...categoryFormState.changes,
+          image: reader.result
         }
       })
     }
     reader.onerror = error => console.log(error)
+    setIsEditMode(true)
+  }
+
+  /**
+   * Set properties of a category
+   * @param {EventTarget} evt Related Html element
+   */
+  const handleInputChange = (evt) => {
+    setCategoryFormState({
+      ...categoryFormState,
+      changes: { ...categoryFormState.changes, [evt.target.name]: evt.target.value }
+    })
+    setIsEditMode(true)
   }
 
   /**
@@ -55,31 +74,51 @@ export const SingleProductsCategory = (props) => {
   const editCategory = async (params) => {
     if (loading) return
     try {
-      const { content: { error, result } } = await ordering.businesses(parseInt(businessState?.business.id)).categories(parseInt(category.id)).save(params)
+      setCategoryFormState({
+        ...categoryFormState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).save(params)
       if (!error) {
-        const _categories = businessState.business.categories.map(item => {
-          if (item.id === category.id) {
-            return {
-              ...item,
-              ...params
-            }
+        setCategoryFormState({
+          ...categoryFormState,
+          loading: false,
+          result: {
+            error: false,
+            result: t('CATEGORY_UPDATED', 'Category updated')
           }
-          return item
         })
-        setBusinessState({
-          ...businessState,
-          business: { ...businessState.business, categories: _categories }
-        })
+        setIsEditMode(false)
+        if (handleUpdateBusinessState) {
+          const _categories = business?.categories.map(item => {
+            if (item.id === category.id) {
+              return {
+                ...item,
+                ...params
+              }
+            }
+            return item
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
       } else {
-        setBusinessState({
-          ...businessState,
-          error: result
+        setCategoryFormState({
+          ...categoryFormState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
         })
       }
     } catch (err) {
-      setBusinessState({
-        ...businessState,
-        error: err
+      setCategoryFormState({
+        ...categoryFormState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
       })
     }
   }
@@ -90,32 +129,60 @@ export const SingleProductsCategory = (props) => {
   const deleteCategory = async () => {
     if (loading) return
     try {
-      const { content: { error, result } } = await ordering.businesses(parseInt(businessState?.business.id)).categories(parseInt(category.id)).delete()
+      setCategoryFormState({
+        ...categoryFormState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).delete()
       if (!error) {
-        const _categories = businessState.business.categories.map(item => {
-          return item
+        setCategoryFormState({
+          ...categoryFormState,
+          loading: false,
+          result: {
+            error: false,
+            result: t('CATEGORY_DELETE', 'Category deleted')
+          }
         })
-        const filterItem = businessState.business.categories.filter(cat => cat.id === category.id)[0]
-        const index = businessState.business.categories.indexOf(filterItem)
-        if (index > -1) _categories.splice(index, 1)
-        setBusinessState({
-          ...businessState,
-          business: { ...businessState.business, categories: _categories }
-        })
-        if (category.id === categorySelected.id) setCategorySelected({ id: null, name: 'All' })
+        if (handleUpdateBusinessState) {
+          const _categories = business.categories.map(item => {
+            return item
+          })
+          const filterItem = business.categories.filter(cat => cat.id === category.id)[0]
+          const index = business.categories.indexOf(filterItem)
+          if (index > -1) _categories.splice(index, 1)
+          handleUpdateBusinessState({ ...business, categories: _categories })
+          if (category.id === categorySelected.id) setCategorySelected(_categories[0])
+        }
       } else {
-        setBusinessState({
-          ...businessState,
-          error: result
+        setCategoryFormState({
+          ...categoryFormState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
         })
       }
     } catch (err) {
-      setBusinessState({
-        ...businessState,
-        error: err
+      setCategoryFormState({
+        ...categoryFormState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
       })
     }
   }
+
+  useEffect(() => {
+    if (category) {
+      setCategoryFormState({
+        ...categoryFormState,
+        changes: { ...category }
+      })
+    }
+  }, [category])
 
   return (
     <>
@@ -123,11 +190,12 @@ export const SingleProductsCategory = (props) => {
         <UIComponent
           {...props}
           handelChangeCategoryActive={handelChangeCategoryActive}
-          createCategory={createCategory}
-          setCreateCategory={setCreateCategory}
+          categoryFormState={categoryFormState}
           handlechangeImage={handlechangeImage}
           handleUpdateClick={handleUpdateClick}
           deleteCategory={deleteCategory}
+          handleInputChange={handleInputChange}
+          isEditMode={isEditMode}
         />
       )}
     </>
@@ -142,11 +210,11 @@ SingleProductsCategory.propTypes = {
   /**
    * Object for a business
    */
-  businessState: PropTypes.object,
+  business: PropTypes.object,
   /**
    * Function to set a business state
    */
-  setBusinessState: PropTypes.func,
+  handleUpdateBusinessState: PropTypes.func,
   /**
    * Object for a product
    */
