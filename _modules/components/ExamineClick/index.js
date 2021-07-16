@@ -16,6 +16,7 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 var ExamineClick = function ExamineClick(_ref) {
   var onFiles = _ref.onFiles,
       childRef = _ref.childRef,
+      childId = _ref.childId,
       children = _ref.children,
       className = _ref.className,
       style = _ref.style,
@@ -24,9 +25,8 @@ var ExamineClick = function ExamineClick(_ref) {
   var inputRef = (0, _react.useRef)(null);
 
   var handleClick = function handleClick(e) {
-    if (!childRef) {
-      inputRef.current.click();
-    }
+    if (childRef || childId) return;
+    inputRef.current.click();
   };
 
   var handleChange = function handleChange(e) {
@@ -42,6 +42,7 @@ var ExamineClick = function ExamineClick(_ref) {
     className: className
   }, /*#__PURE__*/_react.default.createElement("input", {
     type: "file",
+    id: childId,
     style: {
       display: 'none'
     },

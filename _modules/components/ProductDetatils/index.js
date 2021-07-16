@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CreateBusinessProduct = void 0;
+exports.ProductDetatils = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -16,8 +16,6 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -50,70 +48,167 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage product details edit form behavior without UI component
  */
-var CreateBusinessProduct = function CreateBusinessProduct(props) {
-  var UIComponent = props.UIComponent,
-      business = props.business,
-      handleUpdateBusinessState = props.handleUpdateBusinessState,
-      setIsAddProduct = props.setIsAddProduct,
-      categorySelected = props.categorySelected;
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      loading = _useSession2[0].loading;
+var ProductDetatils = function ProductDetatils(props) {
+  var business = props.business,
+      UIComponent = props.UIComponent,
+      product = props.product,
+      handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      session = _useSession2[0];
 
   var _useState = (0, _react.useState)({
     loading: false,
-    changes: {
-      enabled: true
-    },
+    product: null,
+    error: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      productState = _useState2[0],
+      setProductState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    changes: {},
     result: {
       error: false
     }
   }),
-      _useState2 = _slicedToArray(_useState, 2),
-      formState = _useState2[0],
-      setFormState = _useState2[1];
+      _useState4 = _slicedToArray(_useState3, 2),
+      formState = _useState4[0],
+      setFormState = _useState4[1];
   /**
-  * Update credential data
-  * @param {EventTarget} e Related HTML event
-  */
+   * Clean formState
+   */
+
+
+  var cleanFormState = function cleanFormState(values) {
+    return setFormState(_objectSpread(_objectSpread({}, formState), values));
+  };
+  /**
+   * Method to update the product details from API
+   */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
+      var _productState$product, _productState$product2, changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, categories, updatedBusiness;
+
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
+              _context.next = 5;
+              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : (_productState$product = productState.product) === null || _productState$product === void 0 ? void 0 : _productState$product.category_id).products(productState === null || productState === void 0 ? void 0 : (_productState$product2 = productState.product) === null || _productState$product2 === void 0 ? void 0 : _productState$product2.id).save(changes, {
+                accessToken: session.token
+              });
+
+            case 5:
+              _yield$ordering$busin = _context.sent;
+              _yield$ordering$busin2 = _yield$ordering$busin.content;
+              error = _yield$ordering$busin2.error;
+              result = _yield$ordering$busin2.result;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                changes: error ? formState.changes : {},
+                result: result,
+                loading: false
+              }));
+
+              if (!error) {
+                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                  product: _objectSpread(_objectSpread({}, productState.product), result)
+                }));
+
+                if (handleUpdateBusinessState) {
+                  categories = business.categories.map(function (item) {
+                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
+                      var _products = item.products.map(function (prod) {
+                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
+                          Object.assign(prod, result);
+                        }
+
+                        return prod;
+                      });
+
+                      return _objectSpread(_objectSpread({}, item), {}, {
+                        products: _products
+                      });
+                    }
+
+                    return item;
+                  });
+                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
+                    categories: categories
+                  });
+                  handleUpdateBusinessState(updatedBusiness);
+                }
+              }
+
+              _context.next = 16;
+              break;
+
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context.t0.message
+                },
+                loading: false
+              }));
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 13]]);
+    }));
+
+    return function handleUpdateClick(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to change the product enabled state
+   */
+
+
+  var handleChangeProductActiveState = function handleChangeProductActiveState() {
+    var _productState$product3;
+
+    var params = {
+      enabled: !(productState === null || productState === void 0 ? void 0 : (_productState$product3 = productState.product) === null || _productState$product3 === void 0 ? void 0 : _productState$product3.enabled)
+    };
+    handleUpdateClick(params);
+  };
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
 
 
   var handleChangeInput = function handleChangeInput(e) {
-    var currentChanges = _defineProperty({}, e.target.name, e.target.value);
-
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
     }));
   };
   /**
-  * Update credential data
-  * @param {Boolean} isChecked checkbox status
-  */
-
-
-  var handleChangeCheckBox = function handleChangeCheckBox(isChecked) {
-    var currentChanges = {
-      enabled: isChecked
-    };
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
-  /**
-  * Update business photo data
-  * @param {File} file Image to change business photo
-  */
+   * Update business photo data
+   * @param {File} file Image to change business photo
+   */
 
 
   var handlechangeImage = function handlechangeImage(file) {
@@ -132,173 +227,55 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
       return console.log(error);
     };
   };
-  /**
-  * Function to create Business product
-  */
 
-
-  var handleUpdateClick = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var categoryId, _yield$ordering$busin, content, _categories;
-
-      return _regenerator.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
-              _context.prev = 2;
-
-              if (categorySelected.id === null && categorySelected.id === 'featured') {
-                categoryId = parseInt(business === null || business === void 0 ? void 0 : business.categories[0]);
-              } else {
-                categoryId = parseInt(categorySelected.id);
-              }
-
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
-              _context.next = 7;
-              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(categoryId).products().save(formState.changes);
-
-            case 7:
-              _yield$ordering$busin = _context.sent;
-              content = _yield$ordering$busin.content;
-
-              if (!content.error) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: {},
-                  result: {
-                    error: false,
-                    result: t('PRODUCT_ADD', 'Product added')
-                  },
-                  loading: false
-                }));
-
-                if (handleUpdateBusinessState) {
-                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
-                    if (item.id === categoryId) {
-                      var _products = [];
-
-                      if (item.products && item.products.length > 0) {
-                        _products = item.products.map(function (prod) {
-                          return prod;
-                        });
-                      }
-
-                      _products.push(content.result);
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
-                    categories: _categories
-                  }));
-                }
-
-                setIsAddProduct(false);
-              } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: formState.changes,
-                  result: content,
-                  loading: false
-                }));
-              }
-
-              _context.next = 15;
-              break;
-
-            case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](2);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context.t0.message
-                },
-                loading: false
-              }));
-
-            case 15:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, null, [[2, 12]]);
+  (0, _react.useEffect)(function () {
+    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+      product: product
     }));
-
-    return function handleUpdateClick() {
-      return _ref.apply(this, arguments);
-    };
-  }();
-
+  }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    productState: productState,
     formState: formState,
-    setFormState: setFormState,
-    handlechangeImage: handlechangeImage,
+    cleanFormState: cleanFormState,
+    handleChangeProductActiveState: handleChangeProductActiveState,
     handleChangeInput: handleChangeInput,
-    handleUpdateClick: handleUpdateClick,
-    handleChangeCheckBox: handleChangeCheckBox
+    handlechangeImage: handlechangeImage,
+    handleUpdateClick: handleUpdateClick
   })));
 };
 
-exports.CreateBusinessProduct = CreateBusinessProduct;
-CreateBusinessProduct.propTypes = {
+exports.ProductDetatils = ProductDetatils;
+ProductDetatils.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Object for a business
-   */
-  business: _propTypes.default.object,
-
-  /**
-   * Function to set a business state
-   */
-  handleUpdateBusinessState: _propTypes.default.func,
-
-  /**
-   * Function to set product creation mode
-   */
-  setIsAddProduct: _propTypes.default.func,
-
-  /**
-   * Components types before Checkout
+   * Components types before product details form
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after product details form
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before product details form
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after product details form
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CreateBusinessProduct.defaultProps = {
+ProductDetatils.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

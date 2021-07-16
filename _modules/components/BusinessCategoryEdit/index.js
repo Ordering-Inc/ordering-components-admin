@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -53,7 +55,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   var UIComponent = props.UIComponent,
       businessState = props.businessState,
-      setBusinessState = props.setBusinessState,
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
       category = props.category,
       categoryId = props.categoryId;
 
@@ -65,10 +67,14 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
     loading: false,
     changes: {
-      enabled: false
+      enabled: true
     },
     result: {
       error: false
@@ -79,7 +85,7 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
       setFormState = _useState2[1];
 
   (0, _react.useEffect)(function () {
-    if (category && (category.id === null || category.id === 'featured')) return;
+    if (!category) return;
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: category
     }));
@@ -87,7 +93,7 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   (0, _react.useEffect)(function () {
     var _businessState$busine;
 
-    if ((businessState === null || businessState === void 0 ? void 0 : (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.id) && categoryId) {
+    if ((businessState === null || businessState === void 0 ? void 0 : (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.id) && !category && categoryId) {
       var _category = businessState.business.categories.filter(function (item) {
         return parseInt(item.id) === parseInt(categoryId);
       })[0];
@@ -151,13 +157,13 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var id, _yield$ordering$busin, content, _categories;
+      var id, _yield$ordering$busin, content, _categories, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              id = category.id || categoryId;
+              id = (category === null || category === void 0 ? void 0 : category.id) || categoryId;
 
               if (!loading) {
                 _context.next = 3;
@@ -168,31 +174,46 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
             case 3:
               _context.prev = 3;
-              _context.next = 6;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context.next = 7;
               return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(formState.changes);
 
-            case 6:
+            case 7:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
               if (!content.error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: content.result,
-                  result: content,
+                  result: {
+                    error: false,
+                    result: t('CATEGORY_UPDATE', 'Category Updated')
+                  },
                   loading: false
                 }));
-                _categories = businessState.business.categories.map(function (item) {
-                  if (item.id === parseInt(id)) {
-                    return _objectSpread(_objectSpread({}, item), content.result);
-                  }
 
-                  return item;
-                });
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+                if (handleUpdateBusinessState) {
+                  _categories = businessState.business.categories.map(function (item) {
+                    if (item.id === parseInt(id)) {
+                      var _content$result, _content$result2, _content$result3;
+
+                      return _objectSpread(_objectSpread({}, item), {}, {
+                        name: content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name,
+                        enabled: content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled,
+                        image: content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image
+                      });
+                    }
+
+                    return item;
+                  });
+                  console.log(_categories);
+                  _business = _objectSpread(_objectSpread({}, businessState.business), {}, {
                     categories: _categories
-                  })
-                }));
+                  });
+                  handleUpdateBusinessState(_business);
+                }
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -201,11 +222,11 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 }));
               }
 
-              _context.next = 14;
+              _context.next = 15;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](3);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -215,12 +236,12 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 loading: false
               }));
 
-            case 14:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 11]]);
+      }, _callee, null, [[3, 12]]);
     }));
 
     return function handleUpdateClick() {
@@ -253,7 +274,7 @@ BusinessCategoryEdit.propTypes = {
   /**
    * Function to set a business state
    */
-  setBusinessState: _propTypes.default.func,
+  handleUpdateBusinessState: _propTypes.default.func,
 
   /**
    * Function to set product creation mode

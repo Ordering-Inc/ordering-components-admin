@@ -27,10 +27,10 @@ Object.defineProperty(exports, "BaseComponent", {
     return _BaseComponent.BaseComponent;
   }
 });
-Object.defineProperty(exports, "BasicSettings", {
+Object.defineProperty(exports, "Settings", {
   enumerable: true,
   get: function get() {
-    return _BasicSettings.BasicSettings;
+    return _Settings.Settings;
   }
 });
 Object.defineProperty(exports, "BusinessAndProductList", {
@@ -99,10 +99,16 @@ Object.defineProperty(exports, "BusinessMenu", {
     return _BusinessMenu.BusinessMenu;
   }
 });
-Object.defineProperty(exports, "BusinessProductListing", {
+Object.defineProperty(exports, "BusinessProductsListing", {
   enumerable: true,
   get: function get() {
-    return _BusinessProductsListing.BusinessProductListing;
+    return _BusinessProductsListing.BusinessProductsListing;
+  }
+});
+Object.defineProperty(exports, "BusinessMenuMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessMenuMetaFields.BusinessMenuMetaFields;
   }
 });
 Object.defineProperty(exports, "BusinessMenuOptions", {
@@ -159,6 +165,12 @@ Object.defineProperty(exports, "BusinessSortControl", {
     return _BusinessSortControl.BusinessSortControl;
   }
 });
+Object.defineProperty(exports, "BusinessSpreadSheet", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSpreadSheet.BusinessSpreadSheet;
+  }
+});
 Object.defineProperty(exports, "BusinessTypeFilter", {
   enumerable: true,
   get: function get() {
@@ -181,12 +193,6 @@ Object.defineProperty(exports, "Cart", {
   enumerable: true,
   get: function get() {
     return _Cart.Cart;
-  }
-});
-Object.defineProperty(exports, "CategoryDescription", {
-  enumerable: true,
-  get: function get() {
-    return _CategoryDescription.CategoryDescription;
   }
 });
 Object.defineProperty(exports, "Checkout", {
@@ -435,10 +441,58 @@ Object.defineProperty(exports, "ProductComponent", {
     return _ProductComponent.ProductComponent;
   }
 });
+Object.defineProperty(exports, "ProductDetatils", {
+  enumerable: true,
+  get: function get() {
+    return _ProductDetatils.ProductDetatils;
+  }
+});
+Object.defineProperty(exports, "ProductExtraMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtraMetaFields.ProductExtraMetaFields;
+  }
+});
+Object.defineProperty(exports, "ProductExtraOptionDetails", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtraOptionDetails.ProductExtraOptionDetails;
+  }
+});
+Object.defineProperty(exports, "ProductExtraOptionMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtraOptionMetaFields.ProductExtraOptionMetaFields;
+  }
+});
+Object.defineProperty(exports, "ProductExtraOptions", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtraOptions.ProductExtraOptions;
+  }
+});
+Object.defineProperty(exports, "ProductExtras", {
+  enumerable: true,
+  get: function get() {
+    return _ProductExtras.ProductExtras;
+  }
+});
 Object.defineProperty(exports, "ProductForm", {
   enumerable: true,
   get: function get() {
     return _ProductForm.ProductForm;
+  }
+});
+Object.defineProperty(exports, "ProductMetaFields", {
+  enumerable: true,
+  get: function get() {
+    return _ProductMetaFields.ProductMetaFields;
+  }
+});
+Object.defineProperty(exports, "ProductProperties", {
+  enumerable: true,
+  get: function get() {
+    return _ProductProperties.ProductProperties;
   }
 });
 Object.defineProperty(exports, "ProductShare", {
@@ -825,10 +879,10 @@ Object.defineProperty(exports, "SingleProductsCategory", {
     return _SingleProductsCategory.SingleProductsCategory;
   }
 });
-Object.defineProperty(exports, "SubCategory", {
+Object.defineProperty(exports, "SettingsList", {
   enumerable: true,
   get: function get() {
-    return _SubCategory.SubCategory;
+    return _SettingsList.SettingsList;
   }
 });
 Object.defineProperty(exports, "CardForm", {
@@ -894,7 +948,7 @@ var _AddressList = require("./components/AddressList");
 
 var _BaseComponent = require("./components/BaseComponent");
 
-var _BasicSettings = require("./components/BasicSettings");
+var _Settings = require("./components/Settings");
 
 var _BusinessAndProductList = require("./components/BusinessAndProductList");
 
@@ -940,6 +994,8 @@ var _BusinessSchedule = require("./components/BusinessSchedule");
 
 var _BusinessSortControl = require("./components/BusinessSortControl");
 
+var _BusinessSpreadSheet = require("./components/BusinessSpreadSheet");
+
 var _BusinessTypeFilter = require("./components/BusinessTypeFilter");
 
 var _BusinessTypeForm = require("./components/BusinessTypeForm");
@@ -947,8 +1003,6 @@ var _BusinessTypeForm = require("./components/BusinessTypeForm");
 var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
 var _Cart = require("./components/Cart");
-
-var _CategoryDescription = require("./components/CategoryDescription");
 
 var _Checkout = require("./components/Checkout");
 
@@ -1028,7 +1082,23 @@ var _Popup = require("./components/Popup");
 
 var _ProductComponent = require("./components/ProductComponent");
 
+var _ProductDetatils = require("./components/ProductDetatils");
+
+var _ProductExtraMetaFields = require("./components/ProductExtraMetaFields");
+
+var _ProductExtraOptionDetails = require("./components/ProductExtraOptionDetails");
+
+var _ProductExtraOptionMetaFields = require("./components/ProductExtraOptionMetaFields");
+
+var _ProductExtraOptions = require("./components/ProductExtraOptions");
+
+var _ProductExtras = require("./components/ProductExtras");
+
 var _ProductForm = require("./components/ProductForm");
+
+var _ProductMetaFields = require("./components/ProductMetaFields");
+
+var _ProductProperties = require("./components/ProductProperties");
 
 var _ProductShare = require("./components/ProductShare");
 
@@ -1112,7 +1182,7 @@ var _SingleBusinessProduct = require("./components/SingleBusinessProduct");
 
 var _SingleProductsCategory = require("./components/SingleProductsCategory");
 
-var _SubCategory = require("./components/SubCategory");
+var _SettingsList = require("./components/SettingsList");
 
 var _CardForm = require("./components/StripeElementsForm/CardForm");
 
