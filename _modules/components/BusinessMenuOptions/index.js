@@ -637,7 +637,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
                 result: {
-                  error: false,
+                  error: content.error,
                   result: content.result
                 },
                 loading: false
@@ -661,15 +661,6 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 _business.menus.push(_menu);
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
-              } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: {},
-                  result: {
-                    error: true,
-                    result: content.result
-                  },
-                  loading: false
-                }));
               }
 
               _context2.next = 18;
