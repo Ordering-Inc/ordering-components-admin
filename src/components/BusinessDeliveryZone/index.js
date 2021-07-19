@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useSession, useApi } from 'ordering-components-admin'
 
 export const BusinessDeliveryZone = (props) => {
   const {
