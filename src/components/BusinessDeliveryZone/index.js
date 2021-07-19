@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useSession, useApi } from 'ordering-components-admin'
 
 export const BusinessDeliveryZone = (props) => {
   const {
@@ -17,7 +18,7 @@ export const BusinessDeliveryZone = (props) => {
   const [zoneId, setZoneId] = useState(null)
   const [errors, setErrors] = useState({})
   const [isEdit, setIsEdit] = useState(false)
-  const [openAddDeliveryZone, setOpenAddDeliveryZone] = useState(false)
+  const [isAddMode, setIsAddMode] = useState(false)
   const [isAddValid, setIsAddValid] = useState(false)
 
   /**
@@ -265,11 +266,11 @@ export const BusinessDeliveryZone = (props) => {
         price: formState.changes?.price === ''
       })
     } else {
-      if (!openAddDeliveryZone) {
+      if (!isAddMode) {
         handleUpdateBusinessDeliveryZone()
       }
     }
-  }, [formState.changes, isEdit])
+  }, [formState.changes, isAddMode])
 
   useEffect(() => {
     if (business?.zones) {
@@ -294,8 +295,8 @@ export const BusinessDeliveryZone = (props) => {
             handleChangeZoneData={handleChangeZoneData}
             isEdit={isEdit}
             setIsEdit={setIsEdit}
-            openAddDeliveryZone={openAddDeliveryZone}
-            setOpenAddDeliveryZone={setOpenAddDeliveryZone}
+            isAddMode={isAddMode}
+            setIsAddMode={setIsAddMode}
             isAddValid={isAddValid}
             setIsAddValid={setIsAddValid}
             handleUpdateBusinessDeliveryZone={handleUpdateBusinessDeliveryZone}
