@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useOrder } from '../../contexts/OrderContext'
 import { useValidationFields } from '../../contexts/ValidationsFieldsContext'
 import { useCustomer } from '../../contexts/CustomerContext'
 
@@ -12,17 +11,15 @@ export const AddressForm = (props) => {
     addressId,
     address,
     useValidationFileds,
-    onSaveAddress,
-    isSelectedAfterAdd
+    onSaveAddress
   } = props
 
   const [ordering] = useApi()
   const [validationFields] = useValidationFields()
   const [addressState, setAddressState] = useState({ loading: false, error: null, address: address || {} })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
-  const [{ auth, user, token }] = useSession()
+  const [{ user, token }] = useSession()
   const requestsState = {}
-  const [, { changeAddress }] = useOrder()
   const userId = props.userId || user?.id
   const accessToken = props.accessToken || token
   const [, { setUserCustomer }] = useCustomer()
@@ -106,11 +103,6 @@ export const AddressForm = (props) => {
    * Update if address id exist or create if not
    */
   const saveAddress = async (values, userCustomerSetup) => {
-    if (!auth) {
-      changeAddress({ ...values, ...formState.changes })
-      onSaveAddress && onSaveAddress(formState.changes)
-      return
-    }
     if (userCustomerSetup) {
       setUserCustomer(userCustomerSetup, true)
     }
@@ -132,12 +124,6 @@ export const AddressForm = (props) => {
           address: content.result
         })
         onSaveAddress && onSaveAddress(content.result)
-        if (isSelectedAfterAdd) {
-          changeAddress(content.result.id, {
-            address: isEdit ? null : content.result,
-            isEdit
-          })
-        }
       }
     } catch (err) {
       setFormState({
