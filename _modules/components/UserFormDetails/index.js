@@ -65,7 +65,8 @@ var UserFormDetails = function UserFormDetails(props) {
       user = props.user,
       useValidationFields = props.useValidationFields,
       handleButtonUpdateClick = props.handleButtonUpdateClick,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      handleSuccessAdd = props.handleSuccessAdd;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -109,6 +110,8 @@ var UserFormDetails = function UserFormDetails(props) {
   var requestsState = {};
   var accessToken = useDefualtSessionManager ? session.token : props.accessToken;
   (0, _react.useEffect)(function () {
+    if (!user) return;
+
     if ((userId || useSessionUser && refreshSessionUser) && !session.loading && !props.userData) {
       setUserState(_objectSpread(_objectSpread({}, userState), {}, {
         loading: true
@@ -240,10 +243,6 @@ var UserFormDetails = function UserFormDetails(props) {
                 if (handleSuccessUpdate) {
                   handleSuccessUpdate(response.content.result);
                 }
-
-                if (!image) {
-                  setIsEdit(!isEdit);
-                }
               }
 
               _context.next = 23;
@@ -270,6 +269,71 @@ var UserFormDetails = function UserFormDetails(props) {
 
     return function handleUpdateClick(_x, _x2, _x3) {
       return _ref.apply(this, arguments);
+    };
+  }();
+
+  var handleAddClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var response;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context2.next = 4;
+              return ordering.users().save(formState.changes, {
+                accessToken: accessToken
+              });
+
+            case 4:
+              response = _context2.sent;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                changes: response.content.error ? formState.changes : {},
+                result: response.content,
+                loading: false
+              }));
+
+              if (!response.content.error) {
+                setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+                  result: _objectSpread(_objectSpread({}, userState.result), response.content)
+                }));
+
+                if (handleSuccessAdd) {
+                  handleSuccessAdd(response.content.result);
+                }
+
+                if (props.onClose) {
+                  props.onClose();
+                }
+              }
+
+              _context2.next = 12;
+              break;
+
+            case 9:
+              _context2.prev = 9;
+              _context2.t0 = _context2["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context2.t0.message
+                },
+                loading: false
+              }));
+
+            case 12:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 9]]);
+    }));
+
+    return function handleAddClick() {
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -363,6 +427,7 @@ var UserFormDetails = function UserFormDetails(props) {
     isRequiredField: isRequiredField,
     handleChangeInput: handleChangeInput,
     handleButtonUpdateClick: handleUpdateClick,
+    handleButtonAddClick: handleAddClick,
     handlechangeImage: handlechangeImage,
     toggleIsEdit: function toggleIsEdit() {
       return setIsEdit(!isEdit);
@@ -379,62 +444,9 @@ UserFormDetails.propTypes = {
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Use session user to details
-   */
-  useSessionUser: function useSessionUser(props, propName) {
-    if (props[propName] !== undefined && typeof props[propName] !== 'boolean') {
-      return new Error("Invalid prop `".concat(propName, "` of type `").concat(_typeof(props[propName]), "` supplied to `UserFormDetails`, expected `boolean`."));
-    }
-
-    if (props.user === undefined && props.userId === undefined && !props[propName]) {
-      return new Error("Invalid prop `".concat(propName, "` must be true when `user` and `userId` is not present."));
-    }
-
-    if (props[propName] && (props.user !== undefined || props.userId !== undefined)) {
-      return new Error("Invalid prop `".concat(propName, "` must be without `userId` and `user`."));
-    }
-  },
-
-  /**
    * Refresh session user data from Ordering API
    */
   refreshSessionUser: _propTypes.default.bool,
-
-  /**
-   * User ID
-   * If you provide the user id the component get user form Ordering API
-   */
-  userId: function userId(props, propName) {
-    if (props[propName] !== undefined && typeof props[propName] !== 'number') {
-      return new Error("Invalid prop `".concat(propName, "` of type `").concat(_typeof(props[propName]), "` supplied to `UserFormDetails`, expected `number`."));
-    }
-
-    if (props.user === undefined && !props.useSessionUser && !props[propName]) {
-      return new Error("Invalid prop `".concat(propName, "` must be true when `user` and `useSessionUser` is not present."));
-    }
-
-    if (props[propName] && (props.useSessionUser || props.user !== undefined)) {
-      return new Error("Invalid prop `".concat(propName, "` must be without `useSessionUser` and `user`."));
-    }
-  },
-
-  /**
-   * User object
-   * If you provide user object the component not get user form Ordering API
-   */
-  user: function user(props, propName) {
-    if (props[propName] !== undefined && _typeof(props[propName]) !== 'object') {
-      return new Error("Invalid prop `".concat(propName, "` of type `").concat(_typeof(props[propName]), "` supplied to `UserFormDetails`, expected `object`."));
-    }
-
-    if (props.userId === undefined && !props.useSessionUser && !props[propName]) {
-      return new Error("Invalid prop `".concat(propName, "` must be true when `useSessionUser` and `userId` is not present."));
-    }
-
-    if (props[propName] && (props.useSessionUser || props.userId !== undefined)) {
-      return new Error("Invalid prop `".concat(propName, "` must be without `useSessionUser` and `userId`."));
-    }
-  },
 
   /**
    * Function to change default user details behavior
