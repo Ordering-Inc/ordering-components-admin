@@ -595,7 +595,7 @@ var UsersList = function UsersList(props) {
                 }
 
                 setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
-                  total: paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total
+                  total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) - 1
                 }));
               }
 

@@ -349,7 +349,7 @@ export const UsersList = (props) => {
         }
         setPaginationDetail({
           ...paginationDetail,
-          total: paginationDetail?.total
+          total: paginationDetail?.total - 1
         })
       }
       setActionStatus({
