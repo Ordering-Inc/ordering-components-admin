@@ -133,9 +133,6 @@ export const UserFormDetails = (props) => {
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
         }
-        if (!image) {
-          setIsEdit(!isEdit)
-        }
       }
     } catch (err) {
       setFormState({

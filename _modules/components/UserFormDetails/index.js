@@ -243,10 +243,6 @@ var UserFormDetails = function UserFormDetails(props) {
                 if (handleSuccessUpdate) {
                   handleSuccessUpdate(response.content.result);
                 }
-
-                if (!image) {
-                  setIsEdit(!isEdit);
-                }
               }
 
               _context.next = 23;
