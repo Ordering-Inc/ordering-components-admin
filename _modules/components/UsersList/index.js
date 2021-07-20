@@ -593,6 +593,10 @@ var UsersList = function UsersList(props) {
 
                   setSelectedUsers(_selectedUsers);
                 }
+
+                setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+                  total: paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total
+                }));
               }
 
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
@@ -677,6 +681,20 @@ var UsersList = function UsersList(props) {
     }));
   };
   /**
+   * Method to add user
+   * @param {Object} newUser new user to add
+   */
+
+
+  var handleSuccessAddUser = function handleSuccessAddUser(newUser) {
+    setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+      users: [].concat(_toConsumableArray(usersList.users), [newUser])
+    }));
+    setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+      total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
+    }));
+  };
+  /**
    * Method to update addresses of selected user
    * @param {number, Array} useId and addresses updated addresses
    */
@@ -732,6 +750,7 @@ var UsersList = function UsersList(props) {
     deleteUsersActionState: deleteUsersActionState,
     handleDeleteSeveralUsers: handleDeleteSeveralUsers,
     handleSuccessUpdate: handleSuccessUpdate,
+    handleSuccessAddUser: handleSuccessAddUser,
     handleSuccessAddressesUpdate: handleSuccessAddressesUpdate
   })));
 };

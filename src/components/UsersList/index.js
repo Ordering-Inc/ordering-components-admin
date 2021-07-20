@@ -347,6 +347,10 @@ export const UsersList = (props) => {
           }
           setSelectedUsers(_selectedUsers)
         }
+        setPaginationDetail({
+          ...paginationDetail,
+          total: paginationDetail?.total
+        })
       }
       setActionStatus({
         ...actionStatus,
@@ -398,6 +402,24 @@ export const UsersList = (props) => {
       users: users
     })
   }
+  /**
+   * Method to add user
+   * @param {Object} newUser new user to add
+   */
+  const handleSuccessAddUser = (newUser) => {
+    setUsersList({
+      ...usersList,
+      users: [
+        ...usersList.users,
+        newUser
+      ]
+    })
+    setPaginationDetail({
+      ...paginationDetail,
+      total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
+    })
+  }
+
   /**
    * Method to update addresses of selected user
    * @param {number, Array} useId and addresses updated addresses
@@ -459,6 +481,7 @@ export const UsersList = (props) => {
             deleteUsersActionState={deleteUsersActionState}
             handleDeleteSeveralUsers={handleDeleteSeveralUsers}
             handleSuccessUpdate={handleSuccessUpdate}
+            handleSuccessAddUser={handleSuccessAddUser}
             handleSuccessAddressesUpdate={handleSuccessAddressesUpdate}
           />
         )
