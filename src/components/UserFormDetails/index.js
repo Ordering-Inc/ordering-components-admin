@@ -17,7 +17,8 @@ export const UserFormDetails = (props) => {
     user,
     useValidationFields,
     handleButtonUpdateClick,
-    handleSuccessUpdate
+    handleSuccessUpdate,
+    handleSuccessAdd
   } = props
 
   const [ordering] = useApi()
@@ -31,6 +32,7 @@ export const UserFormDetails = (props) => {
   const accessToken = useDefualtSessionManager ? session.token : props.accessToken
 
   useEffect(() => {
+    if (!user) return
     if ((userId || (useSessionUser && refreshSessionUser)) && !session.loading && !props.userData) {
       setUserState({ ...userState, loading: true })
       const source = {}
@@ -131,8 +133,45 @@ export const UserFormDetails = (props) => {
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
         }
-        if (!image) {
-          setIsEdit(!isEdit)
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: err.message
+        },
+        loading: false
+      })
+    }
+  }
+
+  const handleAddClick = async () => {
+    try {
+      setFormState({ ...formState, loading: true })
+      const response = await ordering.users().save(formState.changes, {
+        accessToken: accessToken
+      })
+      setFormState({
+        ...formState,
+        changes: response.content.error ? formState.changes : {},
+        result: response.content,
+        loading: false
+      })
+
+      if (!response.content.error) {
+        setUserState({
+          ...userState,
+          result: {
+            ...userState.result,
+            ...response.content
+          }
+        })
+        if (handleSuccessAdd) {
+          handleSuccessAdd(response.content.result)
+        }
+        if (props.onClose) {
+          props.onClose()
         }
       }
     } catch (err) {
@@ -243,6 +282,7 @@ export const UserFormDetails = (props) => {
           isRequiredField={isRequiredField}
           handleChangeInput={handleChangeInput}
           handleButtonUpdateClick={handleUpdateClick}
+          handleButtonAddClick={handleAddClick}
           handlechangeImage={handlechangeImage}
           toggleIsEdit={() => setIsEdit(!isEdit)}
           handleChangeUserType={handleChangeUserType}
@@ -258,53 +298,9 @@ UserFormDetails.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Use session user to details
-   */
-  useSessionUser: (props, propName) => {
-    if (props[propName] !== undefined && typeof props[propName] !== 'boolean') {
-      return new Error(`Invalid prop \`${propName}\` of type \`${typeof props[propName]}\` supplied to \`UserFormDetails\`, expected \`boolean\`.`)
-    }
-    if (props.user === undefined && props.userId === undefined && !props[propName]) {
-      return new Error(`Invalid prop \`${propName}\` must be true when \`user\` and \`userId\` is not present.`)
-    }
-    if (props[propName] && (props.user !== undefined || props.userId !== undefined)) {
-      return new Error(`Invalid prop \`${propName}\` must be without \`userId\` and \`user\`.`)
-    }
-  },
-  /**
    * Refresh session user data from Ordering API
    */
   refreshSessionUser: PropTypes.bool,
-  /**
-   * User ID
-   * If you provide the user id the component get user form Ordering API
-   */
-  userId: (props, propName) => {
-    if (props[propName] !== undefined && typeof props[propName] !== 'number') {
-      return new Error(`Invalid prop \`${propName}\` of type \`${typeof props[propName]}\` supplied to \`UserFormDetails\`, expected \`number\`.`)
-    }
-    if (props.user === undefined && !props.useSessionUser && !props[propName]) {
-      return new Error(`Invalid prop \`${propName}\` must be true when \`user\` and \`useSessionUser\` is not present.`)
-    }
-    if (props[propName] && (props.useSessionUser || props.user !== undefined)) {
-      return new Error(`Invalid prop \`${propName}\` must be without \`useSessionUser\` and \`user\`.`)
-    }
-  },
-  /**
-   * User object
-   * If you provide user object the component not get user form Ordering API
-   */
-  user: (props, propName) => {
-    if (props[propName] !== undefined && typeof props[propName] !== 'object') {
-      return new Error(`Invalid prop \`${propName}\` of type \`${typeof props[propName]}\` supplied to \`UserFormDetails\`, expected \`object\`.`)
-    }
-    if (props.userId === undefined && !props.useSessionUser && !props[propName]) {
-      return new Error(`Invalid prop \`${propName}\` must be true when \`useSessionUser\` and \`userId\` is not present.`)
-    }
-    if (props[propName] && (props.useSessionUser || props.userId !== undefined)) {
-      return new Error(`Invalid prop \`${propName}\` must be without \`useSessionUser\` and \`userId\`.`)
-    }
-  },
   /**
    * Function to change default user details behavior
    * @param {Object} user Current user data

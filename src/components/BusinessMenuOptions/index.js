@@ -437,7 +437,7 @@ export const BusinessMenuOptions = (props) => {
         ...formState,
         changes: content.error ? formState.changes : {},
         result: {
-          error: false,
+          error: content.error,
           result: content.result
         },
         loading: false
@@ -451,16 +451,6 @@ export const BusinessMenuOptions = (props) => {
         _menu = { ..._menu, products: products }
         _business.menus.push(_menu)
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
-      } else {
-        setFormState({
-          ...formState,
-          changes: {},
-          result: {
-            error: true,
-            result: content.result
-          },
-          loading: false
-        })
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
