@@ -34,11 +34,11 @@ export const SettingsList = (props) => {
       changeValue = str.join('|')
     } else {
       // type = 4
-      const array = [...value]
-      const position = array.indexOf(evt.target.name)
-      if (position === -1 && evt.target.checked) array.push(evt.target.name)
+      const array = [...JSON.parse(value)]
+      const position = array.indexOf(parseInt(evt.target.name))
+      if (position === -1 && evt.target.checked) array.push(parseInt(evt.target.name))
       if (!evt.target.checked && position >= 0) array.splice(position, 1)
-      changeValue = [...array]
+      changeValue = JSON.stringify(array)
     }
     saveChanges(changeValue, configId)
   }
@@ -61,6 +61,7 @@ export const SettingsList = (props) => {
       const item = configs.find(config => config.id === id)
       _configs.push({ ...item, value: changeValue })
     }
+
     const defaultConfigs = configs.map(config => {
       if (config.id === id) {
         return { ...config, value: changeValue }
