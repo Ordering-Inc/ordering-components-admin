@@ -17,8 +17,6 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _LanguageContext = require("../../contexts/LanguageContext");
-
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -69,10 +67,6 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       loading = _useSession2[0].loading;
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -197,7 +191,7 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                   loading: false,
                   result: {
                     error: false,
-                    result: t('PRODUCT_ADD', 'Product updated')
+                    result: result
                   }
                 }));
 
@@ -300,7 +294,7 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                   loading: false,
                   result: {
                     error: false,
-                    result: t('PRODUCT_DELETE', 'Product deleted')
+                    result: result
                   }
                 }));
 

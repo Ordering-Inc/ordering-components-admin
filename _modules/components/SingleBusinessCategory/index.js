@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SingleProductsCategory = void 0;
+exports.SingleBusinessCategory = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -16,8 +16,6 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -52,7 +50,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * Component to manage Checkout page behavior without UI component
  */
-var SingleProductsCategory = function SingleProductsCategory(props) {
+var SingleBusinessCategory = function SingleBusinessCategory(props) {
   var UIComponent = props.UIComponent,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
       business = props.business,
@@ -68,18 +66,17 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
   var _useState = (0, _react.useState)({
     changes: {},
     loading: false,
-    error: null
+    result: {
+      error: false
+    },
+    status: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      categoryFormState = _useState2[0],
-      setCategoryFormState = _useState2[1];
+      formState = _useState2[0],
+      setFormState = _useState2[1];
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
@@ -94,11 +91,11 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
   };
 
   var handleUpdateClick = function handleUpdateClick() {
-    var _categoryFormState$ch, _categoryFormState$ch2;
+    var _formState$changes, _formState$changes2;
 
     var params = {
-      name: categoryFormState === null || categoryFormState === void 0 ? void 0 : (_categoryFormState$ch = categoryFormState.changes) === null || _categoryFormState$ch === void 0 ? void 0 : _categoryFormState$ch.name,
-      image: categoryFormState === null || categoryFormState === void 0 ? void 0 : (_categoryFormState$ch2 = categoryFormState.changes) === null || _categoryFormState$ch2 === void 0 ? void 0 : _categoryFormState$ch2.image
+      name: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.name,
+      image: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.image
     };
     editCategory(params);
   };
@@ -113,8 +110,8 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
     reader.readAsDataURL(file);
 
     reader.onload = function () {
-      setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
-        changes: _objectSpread(_objectSpread({}, categoryFormState.changes), {}, {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
           image: reader.result
         })
       }));
@@ -133,8 +130,8 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
 
   var handleInputChange = function handleInputChange(evt) {
-    setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
-      changes: _objectSpread(_objectSpread({}, categoryFormState.changes), {}, _defineProperty({}, evt.target.name, evt.target.value))
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, evt.target.name, evt.target.value))
     }));
     setIsEditMode(true);
   };
@@ -160,7 +157,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
             case 2:
               _context.prev = 2;
-              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               _context.next = 6;
@@ -173,12 +170,13 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
               result = _yield$ordering$busin2.result;
 
               if (!error) {
-                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
                     error: false,
-                    result: t('CATEGORY_UPDATED', 'Category updated')
-                  }
+                    result: result
+                  },
+                  status: 'update'
                 }));
                 setIsEditMode(false);
 
@@ -195,7 +193,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
                   }));
                 }
               } else {
-                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
                     error: true,
@@ -210,7 +208,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
             case 13:
               _context.prev = 13;
               _context.t0 = _context["catch"](2);
-              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 result: {
                   error: true,
@@ -252,7 +250,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
             case 2:
               _context2.prev = 2;
-              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               _context2.next = 6;
@@ -265,12 +263,13 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
               result = _yield$ordering$busin4.result;
 
               if (!error) {
-                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
                     error: false,
-                    result: t('CATEGORY_DELETE', 'Category deleted')
-                  }
+                    result: result
+                  },
+                  status: 'delete'
                 }));
 
                 if (handleUpdateBusinessState) {
@@ -288,7 +287,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
                   if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
                 }
               } else {
-                setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
                     error: true,
@@ -303,7 +302,7 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
             case 13:
               _context2.prev = 13;
               _context2.t0 = _context2["catch"](2);
-              setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 result: {
                   error: true,
@@ -326,14 +325,14 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
 
   (0, _react.useEffect)(function () {
     if (category) {
-      setCategoryFormState(_objectSpread(_objectSpread({}, categoryFormState), {}, {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: _objectSpread({}, category)
       }));
     }
   }, [category]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     handelChangeCategoryActive: handelChangeCategoryActive,
-    categoryFormState: categoryFormState,
+    categoryFormState: formState,
     handlechangeImage: handlechangeImage,
     handleUpdateClick: handleUpdateClick,
     deleteCategory: deleteCategory,
@@ -342,8 +341,8 @@ var SingleProductsCategory = function SingleProductsCategory(props) {
   })));
 };
 
-exports.SingleProductsCategory = SingleProductsCategory;
-SingleProductsCategory.propTypes = {
+exports.SingleBusinessCategory = SingleBusinessCategory;
+SingleBusinessCategory.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -388,7 +387,7 @@ SingleProductsCategory.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-SingleProductsCategory.defaultProps = {
+SingleBusinessCategory.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CreateBusinessProduct = void 0;
+exports.BusinessProductCreator = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -16,8 +16,6 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -50,14 +48,15 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage CreateBusinessProduct behavior without UI component
  */
-var CreateBusinessProduct = function CreateBusinessProduct(props) {
+var BusinessProductCreator = function BusinessProductCreator(props) {
   var UIComponent = props.UIComponent,
       business = props.business,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
       setIsAddProduct = props.setIsAddProduct,
-      categorySelected = props.categorySelected;
+      categorySelected = props.categorySelected,
+      handleParentProductAdd = props.handleParentProductAdd;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -66,10 +65,6 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -176,7 +171,7 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
                   changes: {},
                   result: {
                     error: false,
-                    result: t('PRODUCT_ADD', 'Product added')
+                    result: content.result
                   },
                   loading: false
                 }));
@@ -207,6 +202,7 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
                 }
 
                 setIsAddProduct(false);
+                handleParentProductAdd && handleParentProductAdd(false);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -252,8 +248,8 @@ var CreateBusinessProduct = function CreateBusinessProduct(props) {
   })));
 };
 
-exports.CreateBusinessProduct = CreateBusinessProduct;
-CreateBusinessProduct.propTypes = {
+exports.BusinessProductCreator = BusinessProductCreator;
+BusinessProductCreator.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -298,7 +294,7 @@ CreateBusinessProduct.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CreateBusinessProduct.defaultProps = {
+BusinessProductCreator.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

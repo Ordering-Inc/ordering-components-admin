@@ -17,8 +17,6 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _LanguageContext = require("../../contexts/LanguageContext");
-
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -26,6 +24,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -50,14 +56,15 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage BusinessCategoryEdit behavior without UI component
  */
 var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   var UIComponent = props.UIComponent,
       businessState = props.businessState,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
       category = props.category,
-      categoryId = props.categoryId;
+      categoryId = props.categoryId,
+      onClose = props.onClose;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -66,10 +73,6 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -163,24 +166,29 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!category) {
+                _context.next = 18;
+                break;
+              }
+
               id = (category === null || category === void 0 ? void 0 : category.id) || categoryId;
 
               if (!loading) {
-                _context.next = 3;
+                _context.next = 4;
                 break;
               }
 
               return _context.abrupt("return");
 
-            case 3:
-              _context.prev = 3;
+            case 4:
+              _context.prev = 4;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 7;
+              _context.next = 8;
               return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(formState.changes);
 
-            case 7:
+            case 8:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
@@ -189,7 +197,7 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                   changes: content.result,
                   result: {
                     error: false,
-                    result: t('CATEGORY_UPDATE', 'Category Updated')
+                    result: content.result
                   },
                   loading: false
                 }));
@@ -208,7 +216,6 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
                     return item;
                   });
-                  console.log(_categories);
                   _business = _objectSpread(_objectSpread({}, businessState.business), {}, {
                     categories: _categories
                   });
@@ -222,12 +229,12 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](3);
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](4);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
@@ -236,16 +243,106 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
+              _context.next = 19;
+              break;
+
+            case 18:
+              createBusinessCategory();
+
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 12]]);
+      }, _callee, null, [[4, 13]]);
     }));
 
     return function handleUpdateClick() {
       return _ref.apply(this, arguments);
+    };
+  }();
+
+  var createBusinessCategory = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var _businessState$busine2, _yield$ordering$busin2, content, _categories;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (!loading) {
+                _context2.next = 2;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 2:
+              _context2.prev = 2;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context2.next = 6;
+              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.id)).categories().save(formState.changes);
+
+            case 6:
+              _yield$ordering$busin2 = _context2.sent;
+              content = _yield$ordering$busin2.content;
+
+              if (!content.error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  category: {},
+                  result: {
+                    error: false,
+                    result: content.result
+                  },
+                  loading: false
+                }));
+
+                if (handleUpdateBusinessState) {
+                  _categories = _toConsumableArray(businessState.business.categories);
+
+                  _categories.push(content.result);
+
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, businessState.business), {}, {
+                    categories: _categories
+                  }));
+                }
+
+                onClose();
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: formState.changes,
+                  result: content,
+                  loading: false
+                }));
+              }
+
+              _context2.next = 14;
+              break;
+
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context2.t0.message
+                },
+                loading: false
+              }));
+
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[2, 11]]);
+    }));
+
+    return function createBusinessCategory() {
+      return _ref2.apply(this, arguments);
     };
   }();
 

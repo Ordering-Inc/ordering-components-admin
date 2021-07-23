@@ -342,7 +342,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                   loading: false,
                   result: {
                     error: false,
-                    result: isPost ? t('PRODUCT_ADD', 'Product added') : t('PRODUCT_ADD', 'Product updated')
+                    result: isPost ? t('PRODUCT_ADD', 'Product added') : t('PRODUCT_UPDATE', 'Product updated')
                   }
                 }));
                 getProductsByCategoryId();

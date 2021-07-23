@@ -189,6 +189,18 @@ Object.defineProperty(exports, "BusinessZoneGoogleMaps", {
     return _BusinessZoneGoogleMaps.BusinessZoneGoogleMaps;
   }
 });
+Object.defineProperty(exports, "BusinessProductCreator", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessProductCreator.BusinessProductCreator;
+  }
+});
+Object.defineProperty(exports, "BusinessCategoryCreator", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessCategoryCreator.BusinessCategoryCreator;
+  }
+});
 Object.defineProperty(exports, "Cart", {
   enumerable: true,
   get: function get() {
@@ -217,18 +229,6 @@ Object.defineProperty(exports, "CouponControl", {
   enumerable: true,
   get: function get() {
     return _CouponControl.CouponControl;
-  }
-});
-Object.defineProperty(exports, "CreateBusinessCategory", {
-  enumerable: true,
-  get: function get() {
-    return _CreateBusinessCategory.CreateBusinessCategory;
-  }
-});
-Object.defineProperty(exports, "CreateBusinessProduct", {
-  enumerable: true,
-  get: function get() {
-    return _CreateBusinessProduct.CreateBusinessProduct;
   }
 });
 Object.defineProperty(exports, "DashboardBusinessList", {
@@ -897,10 +897,10 @@ Object.defineProperty(exports, "SingleBusinessProduct", {
     return _SingleBusinessProduct.SingleBusinessProduct;
   }
 });
-Object.defineProperty(exports, "SingleProductsCategory", {
+Object.defineProperty(exports, "SingleBusinessCategory", {
   enumerable: true,
   get: function get() {
-    return _SingleProductsCategory.SingleProductsCategory;
+    return _SingleBusinessCategory.SingleBusinessCategory;
   }
 });
 Object.defineProperty(exports, "SettingsList", {
@@ -1026,6 +1026,10 @@ var _BusinessTypeForm = require("./components/BusinessTypeForm");
 
 var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
+var _BusinessProductCreator = require("./components/BusinessProductCreator");
+
+var _BusinessCategoryCreator = require("./components/BusinessCategoryCreator");
+
 var _Cart = require("./components/Cart");
 
 var _Checkout = require("./components/Checkout");
@@ -1035,10 +1039,6 @@ var _CheckPassword = require("./components/CheckPassword");
 var _CityList = require("./components/CityList");
 
 var _CouponControl = require("./components/CouponControl");
-
-var _CreateBusinessCategory = require("./components/CreateBusinessCategory");
-
-var _CreateBusinessProduct = require("./components/CreateBusinessProduct");
 
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
@@ -1206,7 +1206,7 @@ var _StripeElementsForm = require("./components/StripeElementsForm");
 
 var _SingleBusinessProduct = require("./components/SingleBusinessProduct");
 
-var _SingleProductsCategory = require("./components/SingleProductsCategory");
+var _SingleBusinessCategory = require("./components/SingleBusinessCategory");
 
 var _SettingsList = require("./components/SettingsList");
 

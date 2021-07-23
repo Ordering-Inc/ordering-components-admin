@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CreateBusinessCategory = void 0;
+exports.BusinessCategoryCreator = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -16,8 +16,6 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -50,9 +48,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage BusinessCategoryCreator behavior without UI component
  */
-var CreateBusinessCategory = function CreateBusinessCategory(props) {
+var BusinessCategoryCreator = function BusinessCategoryCreator(props) {
   var UIComponent = props.UIComponent,
       setIsAddCategory = props.setIsAddCategory,
       business = props.business,
@@ -65,10 +63,6 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -162,7 +156,7 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
                   category: {},
                   result: {
                     error: false,
-                    result: t('CATEGORY_ADD', 'Category added')
+                    result: content.result
                   },
                   loading: false
                 }));
@@ -224,8 +218,8 @@ var CreateBusinessCategory = function CreateBusinessCategory(props) {
   })));
 };
 
-exports.CreateBusinessCategory = CreateBusinessCategory;
-CreateBusinessCategory.propTypes = {
+exports.BusinessCategoryCreator = BusinessCategoryCreator;
+BusinessCategoryCreator.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -270,7 +264,7 @@ CreateBusinessCategory.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CreateBusinessCategory.defaultProps = {
+BusinessCategoryCreator.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

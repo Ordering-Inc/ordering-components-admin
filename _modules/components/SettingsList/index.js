@@ -105,13 +105,13 @@ var SettingsList = function SettingsList(props) {
       changeValue = str.join('|');
     } else {
       // type = 4
-      var array = _toConsumableArray(value);
+      var array = _toConsumableArray(JSON.parse(value));
 
-      var _position = array.indexOf(evt.target.name);
+      var _position = array.indexOf(parseInt(evt.target.name));
 
-      if (_position === -1 && evt.target.checked) array.push(evt.target.name);
+      if (_position === -1 && evt.target.checked) array.push(parseInt(evt.target.name));
       if (!evt.target.checked && _position >= 0) array.splice(_position, 1);
-      changeValue = _toConsumableArray(array);
+      changeValue = JSON.stringify(array);
     }
 
     saveChanges(changeValue, configId);
