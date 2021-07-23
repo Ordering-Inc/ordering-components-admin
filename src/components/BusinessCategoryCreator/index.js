@@ -2,48 +2,42 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage BusinessCategoryCreator behavior without UI component
  */
-export const CreateBusinessProduct = (props) => {
+export const BusinessCategoryCreator = (props) => {
   const {
     UIComponent,
+    setIsAddCategory,
     business,
-    handleUpdateBusinessState,
-    setIsAddProduct,
-    categorySelected
+    handleUpdateBusinessState
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [, t] = useLanguage()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
+
+  const [categoryState, setCategoryState] = useState({ loading: false, category: { enabled: true }, result: { error: false } })
 
   /**
-  * Update credential data
-  * @param {EventTarget} e Related HTML event
-  */
-  const handleChangeInput = (e) => {
-    const currentChanges = { [e.target.name]: e.target.value }
+ * Update credential data
+ * @param {EventTarget} e Related HTML event
+ */
+  const handleChangeInput = (value, isName) => {
+    let currentChanges = {}
+    if (isName) {
+      currentChanges = {
+        name: value
+      }
+    } else {
+      currentChanges = {
+        enabled: value
+      }
+    }
 
-    setFormState({
-      ...formState,
-      changes: { ...formState.changes, ...currentChanges }
-    })
-  }
-
-  /**
-* Update credential data
-* @param {Boolean} isChecked checkbox status
-*/
-  const handleChangeCheckBox = (isChecked) => {
-    const currentChanges = { enabled: isChecked }
-
-    setFormState({
-      ...formState,
-      changes: { ...formState.changes, ...currentChanges }
+    setCategoryState({
+      ...categoryState,
+      category: { ...categoryState.category, ...currentChanges }
     })
   }
 
@@ -51,15 +45,15 @@ export const CreateBusinessProduct = (props) => {
  * Update business photo data
  * @param {File} file Image to change business photo
  */
-  const handlechangeImage = (file) => {
+  const handlechangeImage = (file, name) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setFormState({
-        ...formState,
-        changes: {
-          ...formState.changes,
-          images: reader.result
+      setCategoryState({
+        ...categoryState,
+        category: {
+          ...categoryState.category,
+          [name]: reader.result
         }
       })
     }
@@ -67,63 +61,45 @@ export const CreateBusinessProduct = (props) => {
   }
 
   /**
-  * Function to create Business product
+  * Default fuction for business profile workflow
   */
   const handleUpdateClick = async () => {
     if (loading) return
     try {
-      let categoryId
-      if (categorySelected.id === null && categorySelected.id === 'featured') {
-        categoryId = parseInt(business?.categories[0])
-      } else {
-        categoryId = parseInt(categorySelected.id)
-      }
-      setFormState({
-        ...formState,
+      setCategoryState({
+        ...categoryState,
         loading: true
       })
-      const { content } = await ordering.businesses(parseInt(business?.id)).categories(categoryId).products().save(formState.changes)
+      const { content } = await ordering.businesses(parseInt(business?.id)).categories().save(categoryState.category)
       if (!content.error) {
-        setFormState({
-          ...formState,
-          changes: {},
+        setCategoryState({
+          ...categoryState,
+          category: {},
           result: {
             error: false,
-            result: t('PRODUCT_ADD', 'Product added')
+            result: content.result
           },
           loading: false
         })
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === categoryId) {
-              let _products = []
-              if (item.products && item.products.length > 0) {
-                _products = item.products.map(prod => {
-                  return prod
-                })
-              }
-              _products.push(content.result)
-              return {
-                ...item,
-                products: _products
-              }
-            }
+          const _categories = business.categories.map(item => {
             return item
           })
+          _categories.push(content.result)
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
-        setIsAddProduct(false)
+        setIsAddCategory(false)
       } else {
-        setFormState({
-          ...formState,
-          changes: formState.changes,
+        setCategoryState({
+          ...categoryState,
+          category: categoryState.category,
           result: content,
           loading: false
         })
       }
     } catch (err) {
-      setFormState({
-        ...formState,
+      setCategoryState({
+        ...categoryState,
         result: {
           error: true,
           result: err.message
@@ -138,19 +114,18 @@ export const CreateBusinessProduct = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          formState={formState}
-          setFormState={setFormState}
+          categoryState={categoryState}
+          setCategoryState={setCategoryState}
           handlechangeImage={handlechangeImage}
           handleChangeInput={handleChangeInput}
           handleUpdateClick={handleUpdateClick}
-          handleChangeCheckBox={handleChangeCheckBox}
         />
       )}
     </>
   )
 }
 
-CreateBusinessProduct.propTypes = {
+BusinessCategoryCreator.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -164,9 +139,9 @@ CreateBusinessProduct.propTypes = {
    */
   handleUpdateBusinessState: PropTypes.func,
   /**
-   * Function to set product creation mode
+   * Function to set category creation mode
    */
-  setIsAddProduct: PropTypes.func,
+  setIsAddCategory: PropTypes.func,
   /**
    * Components types before Checkout
    * Array of type components, the parent props will pass to these components
@@ -189,7 +164,7 @@ CreateBusinessProduct.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-CreateBusinessProduct.defaultProps = {
+BusinessCategoryCreator.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

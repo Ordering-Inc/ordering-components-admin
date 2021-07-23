@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
  */
-export const SingleProductsCategory = (props) => {
+export const SingleBusinessCategory = (props) => {
   const {
     UIComponent,
     handleUpdateBusinessState,
@@ -19,9 +18,8 @@ export const SingleProductsCategory = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [, t] = useLanguage()
 
-  const [categoryFormState, setCategoryFormState] = useState({ changes: {}, loading: false, error: null })
+  const [formState, setFormState] = useState({ changes: {}, loading: false, result: { error: false }, status: null })
   const [isEditMode, setIsEditMode] = useState(false)
 
   const handelChangeCategoryActive = (isChecked) => {
@@ -31,8 +29,8 @@ export const SingleProductsCategory = (props) => {
 
   const handleUpdateClick = () => {
     const params = {
-      name: categoryFormState?.changes?.name,
-      image: categoryFormState?.changes?.image
+      name: formState?.changes?.name,
+      image: formState?.changes?.image
     }
     editCategory(params)
   }
@@ -44,10 +42,10 @@ export const SingleProductsCategory = (props) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         changes: {
-          ...categoryFormState.changes,
+          ...formState.changes,
           image: reader.result
         }
       })
@@ -61,9 +59,9 @@ export const SingleProductsCategory = (props) => {
    * @param {EventTarget} evt Related Html element
    */
   const handleInputChange = (evt) => {
-    setCategoryFormState({
-      ...categoryFormState,
-      changes: { ...categoryFormState.changes, [evt.target.name]: evt.target.value }
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, [evt.target.name]: evt.target.value }
     })
     setIsEditMode(true)
   }
@@ -74,19 +72,20 @@ export const SingleProductsCategory = (props) => {
   const editCategory = async (params) => {
     if (loading) return
     try {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         loading: true
       })
       const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).save(params)
       if (!error) {
-        setCategoryFormState({
-          ...categoryFormState,
+        setFormState({
+          ...formState,
           loading: false,
           result: {
             error: false,
-            result: t('CATEGORY_UPDATED', 'Category updated')
-          }
+            result: result
+          },
+          status: 'update'
         })
         setIsEditMode(false)
         if (handleUpdateBusinessState) {
@@ -102,8 +101,8 @@ export const SingleProductsCategory = (props) => {
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
       } else {
-        setCategoryFormState({
-          ...categoryFormState,
+        setFormState({
+          ...formState,
           loading: false,
           result: {
             error: true,
@@ -112,8 +111,8 @@ export const SingleProductsCategory = (props) => {
         })
       }
     } catch (err) {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         loading: false,
         result: {
           error: true,
@@ -129,19 +128,20 @@ export const SingleProductsCategory = (props) => {
   const deleteCategory = async () => {
     if (loading) return
     try {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         loading: true
       })
       const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).delete()
       if (!error) {
-        setCategoryFormState({
-          ...categoryFormState,
+        setFormState({
+          ...formState,
           loading: false,
           result: {
             error: false,
-            result: t('CATEGORY_DELETE', 'Category deleted')
-          }
+            result: result
+          },
+          status: 'delete'
         })
         if (handleUpdateBusinessState) {
           const _categories = business.categories.map(item => {
@@ -154,8 +154,8 @@ export const SingleProductsCategory = (props) => {
           if (category.id === categorySelected.id) setCategorySelected(_categories[0])
         }
       } else {
-        setCategoryFormState({
-          ...categoryFormState,
+        setFormState({
+          ...formState,
           loading: false,
           result: {
             error: true,
@@ -164,8 +164,8 @@ export const SingleProductsCategory = (props) => {
         })
       }
     } catch (err) {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         loading: false,
         result: {
           error: true,
@@ -177,8 +177,8 @@ export const SingleProductsCategory = (props) => {
 
   useEffect(() => {
     if (category) {
-      setCategoryFormState({
-        ...categoryFormState,
+      setFormState({
+        ...formState,
         changes: { ...category }
       })
     }
@@ -190,7 +190,7 @@ export const SingleProductsCategory = (props) => {
         <UIComponent
           {...props}
           handelChangeCategoryActive={handelChangeCategoryActive}
-          categoryFormState={categoryFormState}
+          categoryFormState={formState}
           handlechangeImage={handlechangeImage}
           handleUpdateClick={handleUpdateClick}
           deleteCategory={deleteCategory}
@@ -202,7 +202,7 @@ export const SingleProductsCategory = (props) => {
   )
 }
 
-SingleProductsCategory.propTypes = {
+SingleBusinessCategory.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -241,7 +241,7 @@ SingleProductsCategory.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-SingleProductsCategory.defaultProps = {
+SingleBusinessCategory.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

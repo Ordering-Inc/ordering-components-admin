@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -16,7 +15,6 @@ export const SingleBusinessProduct = (props) => {
   } = props
 
   const [{ loading }] = useSession()
-  const [, t] = useLanguage()
   const [ordering] = useApi()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [isEditMode, setIsEditMode] = useState(false)
@@ -93,7 +91,7 @@ export const SingleBusinessProduct = (props) => {
           loading: false,
           result: {
             error: false,
-            result: t('PRODUCT_ADD', 'Product updated')
+            result: result
           }
         })
         if (handleUpdateBusinessState) {
@@ -157,7 +155,7 @@ export const SingleBusinessProduct = (props) => {
           loading: false,
           result: {
             error: false,
-            result: t('PRODUCT_DELETE', 'Product deleted')
+            result: result
           }
         })
         if (handleUpdateBusinessState) {
