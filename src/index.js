@@ -111,6 +111,7 @@ import { UtilsContext, UtilsProviders, useUtils } from './contexts/UtilsContext'
 import { OrderingContext, OrderingProvider } from './contexts/OrderingContext'
 import { CustomerContext, CustomerProvider, useCustomer } from './contexts/CustomerContext'
 import { ValidationFieldsContext, ValidationFieldsProvider, useValidationFields } from './contexts/ValidationsFieldsContext'
+import { ToastContext, ToastProvider, useToast, ToastType } from './contexts/ToastContext'
 import { PaymentOptionCash } from './components/PaymentOptionCash'
 import { PaymentOptionPaypal } from './components/PaymentOptionPaypal'
 import { PaymentOptionStripe } from './components/PaymentOptionStripe'
@@ -287,5 +288,9 @@ export {
   useValidationFields,
   CustomerContext,
   CustomerProvider,
-  useCustomer
+  useCustomer,
+  ToastContext,
+  ToastProvider,
+  useToast,
+  ToastType
 }
