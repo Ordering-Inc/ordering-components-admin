@@ -29,13 +29,13 @@ import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
+import { BusinessProductCreator } from './components/BusinessProductCreator'
+import { BusinessCategoryCreator } from './components/BusinessCategoryCreator'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
-import { CreateBusinessCategory } from './components/CreateBusinessCategory'
-import { CreateBusinessProduct } from './components/CreateBusinessProduct'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
@@ -118,7 +118,7 @@ import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirec
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
-import { SingleProductsCategory } from './components/SingleProductsCategory'
+import { SingleBusinessCategory } from './components/SingleBusinessCategory'
 import { SettingsList } from './components/SettingsList'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
@@ -162,12 +162,12 @@ export {
   BusinessTypeFilter,
   BusinessTypeForm,
   BusinessZoneGoogleMaps,
+  BusinessCategoryCreator,
+  BusinessProductCreator,
   Cart,
   Checkout,
   CheckPassword,
   CityList,
-  CreateBusinessCategory,
-  CreateBusinessProduct,
   CouponControl,
   DashboardBusinessList,
   DashboardOrdersList,
@@ -226,7 +226,7 @@ export {
   SingleOrderCard,
   SingleProductCard,
   SingleBusinessProduct,
-  SingleProductsCategory,
+  SingleBusinessCategory,
   UserFormDetails,
   UsersExportCSV,
   UpsellingPage,

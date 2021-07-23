@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
-import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage BusinessCategoryEdit behavior without UI component
  */
 export const BusinessCategoryEdit = (props) => {
   const {
@@ -13,12 +12,12 @@ export const BusinessCategoryEdit = (props) => {
     businessState,
     handleUpdateBusinessState,
     category,
-    categoryId
+    categoryId,
+    onClose
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [, t] = useLanguage()
   const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   useEffect(() => {
@@ -83,40 +82,87 @@ export const BusinessCategoryEdit = (props) => {
   * Default fuction for business profile workflow
   */
   const handleUpdateClick = async () => {
-    const id = category?.id || categoryId
+    if (category) {
+      const id = category?.id || categoryId
+      if (loading) return
+      try {
+        setFormState({
+          ...formState,
+          loading: true
+        })
+        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(formState.changes)
+        if (!content.error) {
+          setFormState({
+            ...formState,
+            changes: content.result,
+            result: {
+              error: false,
+              result: content.result
+            },
+            loading: false
+          })
+          if (handleUpdateBusinessState) {
+            const _categories = businessState.business.categories.map(item => {
+              if (item.id === parseInt(id)) {
+                return {
+                  ...item,
+                  name: content?.result?.name,
+                  enabled: content?.result?.enabled,
+                  image: content?.result?.image
+                }
+              }
+              return item
+            })
+            const _business = { ...businessState.business, categories: _categories }
+            handleUpdateBusinessState(_business)
+          }
+        } else {
+          setFormState({
+            ...formState,
+            changes: formState.changes,
+            result: content,
+            loading: false
+          })
+        }
+      } catch (err) {
+        setFormState({
+          ...formState,
+          result: {
+            error: true,
+            result: err.message
+          },
+          loading: false
+        })
+      }
+    } else {
+      createBusinessCategory()
+    }
+  }
+
+  const createBusinessCategory = async () => {
     if (loading) return
     try {
       setFormState({
         ...formState,
         loading: true
       })
-      const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(formState.changes)
+      const { content } = await ordering.businesses(parseInt(businessState?.business?.id)).categories().save(formState.changes)
       if (!content.error) {
         setFormState({
           ...formState,
-          changes: content.result,
+          category: {},
           result: {
             error: false,
-            result: t('CATEGORY_UPDATE', 'Category Updated')
+            result: content.result
           },
           loading: false
         })
         if (handleUpdateBusinessState) {
-          const _categories = businessState.business.categories.map(item => {
-            if (item.id === parseInt(id)) {
-              return {
-                ...item,
-                name: content?.result?.name,
-                enabled: content?.result?.enabled,
-                image: content?.result?.image
-              }
-            }
-            return item
-          })
-          console.log(_categories)
-          const _business = { ...businessState.business, categories: _categories }
-          handleUpdateBusinessState(_business)
+          const _categories = [...businessState.business.categories]
+          _categories.push(content.result)
+          handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
+        onClose()
       } else {
         setFormState({
           ...formState,
