@@ -4,20 +4,21 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
 /**
- * Component to manage Checkout page behavior without UI component
+ * Component to manage CreateBusinessProduct behavior without UI component
  */
-export const CreateBusinessProduct = (props) => {
+export const BusinessProductCreator = (props) => {
   const {
     UIComponent,
-    businessState,
-    setBusinessState,
+    business,
+    handleUpdateBusinessState,
     setIsAddProduct,
-    categorySelected
+    categorySelected,
+    handleParentProductAdd
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: false }, result: { error: false } })
+  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   /**
   * Update credential data
@@ -72,39 +73,46 @@ export const CreateBusinessProduct = (props) => {
     try {
       let categoryId
       if (categorySelected.id === null && categorySelected.id === 'featured') {
-        categoryId = parseInt(businessState.business.categories[0])
+        categoryId = parseInt(business?.categories[0])
       } else {
         categoryId = parseInt(categorySelected.id)
       }
-      const { content } = await ordering.businesses(parseInt(businessState?.business.id)).categories(categoryId).products().save(formState.changes)
+      setFormState({
+        ...formState,
+        loading: true
+      })
+      const { content } = await ordering.businesses(parseInt(business?.id)).categories(categoryId).products().save(formState.changes)
       if (!content.error) {
         setFormState({
           ...formState,
           changes: {},
-          result: content,
+          result: {
+            error: false,
+            result: content.result
+          },
           loading: false
         })
-        const _categories = businessState.business.categories.map(item => {
-          if (item.id === categoryId) {
-            let _products = []
-            if (item.products && item.products.length > 0) {
-              _products = item.products.map(prod => {
-                return prod
-              })
+        if (handleUpdateBusinessState) {
+          const _categories = business?.categories.map(item => {
+            if (item.id === categoryId) {
+              let _products = []
+              if (item.products && item.products.length > 0) {
+                _products = item.products.map(prod => {
+                  return prod
+                })
+              }
+              _products.push(content.result)
+              return {
+                ...item,
+                products: _products
+              }
             }
-            _products.push(content.result)
-            return {
-              ...item,
-              products: _products
-            }
-          }
-          return item
-        })
-        setBusinessState({
-          ...businessState,
-          business: { ...businessState.business, categories: _categories }
-        })
+            return item
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
         setIsAddProduct(false)
+        handleParentProductAdd && handleParentProductAdd(false)
       } else {
         setFormState({
           ...formState,
@@ -142,7 +150,7 @@ export const CreateBusinessProduct = (props) => {
   )
 }
 
-CreateBusinessProduct.propTypes = {
+BusinessProductCreator.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -150,11 +158,11 @@ CreateBusinessProduct.propTypes = {
   /**
    * Object for a business
    */
-  businessState: PropTypes.object,
+  business: PropTypes.object,
   /**
    * Function to set a business state
    */
-  setBusinessState: PropTypes.func,
+  handleUpdateBusinessState: PropTypes.func,
   /**
    * Function to set product creation mode
    */
@@ -181,7 +189,7 @@ CreateBusinessProduct.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-CreateBusinessProduct.defaultProps = {
+BusinessProductCreator.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

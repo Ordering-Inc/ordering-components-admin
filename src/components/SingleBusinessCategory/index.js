@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -6,43 +6,37 @@ import { useApi } from '../../contexts/ApiContext'
 /**
  * Component to manage Checkout page behavior without UI component
  */
-export const SingleBusinessProduct = (props) => {
+export const SingleBusinessCategory = (props) => {
   const {
     UIComponent,
-    business,
     handleUpdateBusinessState,
-    product
+    business,
+    category,
+    categorySelected,
+    setCategorySelected
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
-  const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+
+  const [formState, setFormState] = useState({ changes: {}, loading: false, result: { error: false }, status: null })
   const [isEditMode, setIsEditMode] = useState(false)
 
-  /**
-   * Set enabled property of a product
-   * @param {Boolean} isChecked
-   */
-  const handleChangeProductActive = (isChecked) => {
+  const handelChangeCategoryActive = (isChecked) => {
     const params = { enabled: isChecked }
-    editProduct(params)
+    editCategory(params)
   }
 
-  /**
-   * Set properties of a product
-   * @param {EventTarget} evt Related Html element
-   */
-  const handleChangeInput = (evt) => {
-    setFormState({
-      ...formState,
-      changes: { ...formState.changes, [evt.target.name]: evt.target.value }
-    })
-    setIsEditMode(true)
+  const handleUpdateClick = () => {
+    const params = {
+      name: formState?.changes?.name,
+      image: formState?.changes?.image
+    }
+    editCategory(params)
   }
-
   /**
- * Update business photo data
- * @param {File} file Image to change business photo
+ * Update category photo data
+ * @param {File} file Image to change category photo
  */
   const handlechangeImage = (file) => {
     const reader = new window.FileReader()
@@ -52,7 +46,7 @@ export const SingleBusinessProduct = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          images: reader.result
+          image: reader.result
         }
       })
     }
@@ -61,30 +55,28 @@ export const SingleBusinessProduct = (props) => {
   }
 
   /**
-   * Set name property of a product
-   * @param {String} value
+   * Set properties of a category
+   * @param {EventTarget} evt Related Html element
    */
-  const handleUpdateClick = () => {
-    const prarms = {
-      images: formState?.changes?.images,
-      name: formState?.changes?.name,
-      description: formState?.changes?.description,
-      price: formState?.changes?.price
-    }
-    editProduct(prarms)
+  const handleInputChange = (evt) => {
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, [evt.target.name]: evt.target.value }
+    })
+    setIsEditMode(true)
   }
 
   /**
-   * Method to edit a product
+   * Method to edit a category
    */
-  const editProduct = async (params) => {
+  const editCategory = async (params) => {
     if (loading) return
     try {
       setFormState({
         ...formState,
         loading: true
       })
-      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(product?.id).save(params)
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).save(params)
       if (!error) {
         setFormState({
           ...formState,
@@ -92,30 +84,22 @@ export const SingleBusinessProduct = (props) => {
           result: {
             error: false,
             result: result
-          }
+          },
+          status: 'update'
         })
+        setIsEditMode(false)
         if (handleUpdateBusinessState) {
           const _categories = business?.categories.map(item => {
-            if (item.id === product?.category_id) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product.id) {
-                  return {
-                    ...prod,
-                    ...params
-                  }
-                }
-                return prod
-              })
+            if (item.id === category.id) {
               return {
                 ...item,
-                products: _products
+                ...params
               }
             }
             return item
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
-        setIsEditMode(false)
       } else {
         setFormState({
           ...formState,
@@ -139,16 +123,16 @@ export const SingleBusinessProduct = (props) => {
   }
 
   /**
- * Method to edit a product
+ * Method to edit a category
  */
-  const deleteProduct = async () => {
+  const deleteCategory = async () => {
     if (loading) return
     try {
       setFormState({
         ...formState,
         loading: true
       })
-      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(product?.id).delete()
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(category.id)).delete()
       if (!error) {
         setFormState({
           ...formState,
@@ -156,23 +140,18 @@ export const SingleBusinessProduct = (props) => {
           result: {
             error: false,
             result: result
-          }
+          },
+          status: 'delete'
         })
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === product?.category_id) {
-              const _products = [...item.products]
-              const filterItem = item.products.filter(prod => prod.id === product.id)[0]
-              const index = item.products.indexOf(filterItem)
-              if (index > -1) _products.splice(index, 1)
-              return {
-                ...item,
-                products: _products
-              }
-            }
+          const _categories = business.categories.map(item => {
             return item
           })
+          const filterItem = business.categories.filter(cat => cat.id === category.id)[0]
+          const index = business.categories.indexOf(filterItem)
+          if (index > -1) _categories.splice(index, 1)
           handleUpdateBusinessState({ ...business, categories: _categories })
+          if (category.id === categorySelected.id) setCategorySelected(_categories[0])
         }
       } else {
         setFormState({
@@ -197,25 +176,25 @@ export const SingleBusinessProduct = (props) => {
   }
 
   useEffect(() => {
-    if (product) {
+    if (category) {
       setFormState({
         ...formState,
-        changes: { ...product }
+        changes: { ...category }
       })
     }
-  }, [product])
+  }, [category])
 
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
-          handleChangeProductActive={handleChangeProductActive}
-          handleUpdateClick={handleUpdateClick}
-          deleteProduct={deleteProduct}
-          productFormState={formState}
-          handleChangeInput={handleChangeInput}
+          handelChangeCategoryActive={handelChangeCategoryActive}
+          categoryFormState={formState}
           handlechangeImage={handlechangeImage}
+          handleUpdateClick={handleUpdateClick}
+          deleteCategory={deleteCategory}
+          handleInputChange={handleInputChange}
           isEditMode={isEditMode}
         />
       )}
@@ -223,7 +202,7 @@ export const SingleBusinessProduct = (props) => {
   )
 }
 
-SingleBusinessProduct.propTypes = {
+SingleBusinessCategory.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -239,7 +218,7 @@ SingleBusinessProduct.propTypes = {
   /**
    * Object for a product
    */
-  product: PropTypes.object,
+  category: PropTypes.object,
   /**
    * Components types before Checkout
    * Array of type components, the parent props will pass to these components
@@ -262,7 +241,7 @@ SingleBusinessProduct.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-SingleBusinessProduct.defaultProps = {
+SingleBusinessCategory.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
