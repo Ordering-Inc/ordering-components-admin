@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessCategoryEdit = void 0;
+exports.SingleBusinessCategory = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -24,14 +24,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -56,15 +48,15 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage BusinessCategoryEdit behavior without UI component
+ * Component to manage Checkout page behavior without UI component
  */
-var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
+var SingleBusinessCategory = function SingleBusinessCategory(props) {
   var UIComponent = props.UIComponent,
-      businessState = props.businessState,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
+      business = props.business,
       category = props.category,
-      categoryId = props.categoryId,
-      onClose = props.onClose;
+      categorySelected = props.categorySelected,
+      setCategorySelected = props.setCategorySelected;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -75,65 +67,41 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
       ordering = _useApi2[0];
 
   var _useState = (0, _react.useState)({
+    changes: {},
     loading: false,
-    changes: {
-      enabled: true
-    },
     result: {
       error: false
-    }
+    },
+    status: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
       setFormState = _useState2[1];
 
-  (0, _react.useEffect)(function () {
-    if (!category) return;
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: category
-    }));
-  }, [category]);
-  (0, _react.useEffect)(function () {
-    var _businessState$busine;
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isEditMode = _useState4[0],
+      setIsEditMode = _useState4[1];
 
-    if ((businessState === null || businessState === void 0 ? void 0 : (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.id) && !category && categoryId) {
-      var _category = businessState.business.categories.filter(function (item) {
-        return parseInt(item.id) === parseInt(categoryId);
-      })[0];
-      if (_category) setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _category
-      }));
-    }
-  }, [businessState]);
-  /**
-  * Update credential data
-  * @param {EventTarget} e Related HTML event
-  */
-
-  var handleChangeInput = function handleChangeInput(e) {
-    var currentChanges = _defineProperty({}, e.target.name, e.target.value);
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
-  /**
-  * Update credential data
-  * @param {Boolean} isChecked checkbox status
-  */
-
-
-  var handleChangeCheckBox = function handleChangeCheckBox(isChecked) {
-    var currentChanges = {
+  var handelChangeCategoryActive = function handelChangeCategoryActive(isChecked) {
+    var params = {
       enabled: isChecked
     };
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
+    editCategory(params);
+  };
+
+  var handleUpdateClick = function handleUpdateClick() {
+    var _formState$changes, _formState$changes2;
+
+    var params = {
+      name: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.name,
+      image: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.image
+    };
+    editCategory(params);
   };
   /**
-  * Update business photo data
-  * @param {File} file Image to change business photo
+  * Update category photo data
+  * @param {File} file Image to change category photo
   */
 
 
@@ -152,80 +120,85 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
     reader.onerror = function (error) {
       return console.log(error);
     };
+
+    setIsEditMode(true);
   };
   /**
-  * Default fuction for business profile workflow
-  */
+   * Set properties of a category
+   * @param {EventTarget} evt Related Html element
+   */
 
 
-  var handleUpdateClick = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var id, _yield$ordering$busin, content, _categories, _business;
+  var handleInputChange = function handleInputChange(evt) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, evt.target.name, evt.target.value))
+    }));
+    setIsEditMode(true);
+  };
+  /**
+   * Method to edit a category
+   */
+
+
+  var editCategory = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
+      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _categories;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!category) {
-                _context.next = 18;
-                break;
-              }
-
-              id = (category === null || category === void 0 ? void 0 : category.id) || categoryId;
-
               if (!loading) {
-                _context.next = 4;
+                _context.next = 2;
                 break;
               }
 
               return _context.abrupt("return");
 
-            case 4:
-              _context.prev = 4;
+            case 2:
+              _context.prev = 2;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 8;
-              return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(formState.changes);
+              _context.next = 6;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).save(params);
 
-            case 8:
+            case 6:
               _yield$ordering$busin = _context.sent;
-              content = _yield$ordering$busin.content;
+              _yield$ordering$busin2 = _yield$ordering$busin.content;
+              error = _yield$ordering$busin2.error;
+              result = _yield$ordering$busin2.result;
 
-              if (!content.error) {
+              if (!error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: content.result,
+                  loading: false,
                   result: {
                     error: false,
-                    result: content.result
+                    result: result
                   },
-                  loading: false
+                  status: 'update'
                 }));
+                setIsEditMode(false);
 
                 if (handleUpdateBusinessState) {
-                  _categories = businessState.business.categories.map(function (item) {
-                    if (item.id === parseInt(id)) {
-                      var _content$result, _content$result2, _content$result3;
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        name: content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name,
-                        enabled: content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled,
-                        image: content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image
-                      });
+                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
+                    if (item.id === category.id) {
+                      return _objectSpread(_objectSpread({}, item), params);
                     }
 
                     return item;
                   });
-                  _business = _objectSpread(_objectSpread({}, businessState.business), {}, {
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
-                  });
-                  handleUpdateBusinessState(_business);
+                  }));
                 }
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: formState.changes,
-                  result: content,
-                  loading: false
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
                 }));
               }
 
@@ -234,38 +207,35 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
             case 13:
               _context.prev = 13;
-              _context.t0 = _context["catch"](4);
+              _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
                 result: {
                   error: true,
-                  result: _context.t0.message
-                },
-                loading: false
+                  result: _context.t0
+                }
               }));
 
             case 16:
-              _context.next = 19;
-              break;
-
-            case 18:
-              createBusinessCategory();
-
-            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[4, 13]]);
+      }, _callee, null, [[2, 13]]);
     }));
 
-    return function handleUpdateClick() {
+    return function editCategory(_x) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+  * Method to edit a category
+  */
 
-  var createBusinessCategory = /*#__PURE__*/function () {
+
+  var deleteCategory = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _businessState$busine2, _yield$ordering$busin2, content, _categories;
+      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories, filterItem, index;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -284,80 +254,95 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 loading: true
               }));
               _context2.next = 6;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.id)).categories().save(formState.changes);
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).delete();
 
             case 6:
-              _yield$ordering$busin2 = _context2.sent;
-              content = _yield$ordering$busin2.content;
+              _yield$ordering$busin3 = _context2.sent;
+              _yield$ordering$busin4 = _yield$ordering$busin3.content;
+              error = _yield$ordering$busin4.error;
+              result = _yield$ordering$busin4.result;
 
-              if (!content.error) {
+              if (!error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  category: {},
+                  loading: false,
                   result: {
                     error: false,
-                    result: content.result
+                    result: result
                   },
-                  loading: false
+                  status: 'delete'
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = _toConsumableArray(businessState.business.categories);
-
-                  _categories.push(content.result);
-
-                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, businessState.business), {}, {
+                  _categories = business.categories.map(function (item) {
+                    return item;
+                  });
+                  filterItem = business.categories.filter(function (cat) {
+                    return cat.id === category.id;
+                  })[0];
+                  index = business.categories.indexOf(filterItem);
+                  if (index > -1) _categories.splice(index, 1);
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
                   }));
+                  if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
                 }
-
-                onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: formState.changes,
-                  result: content,
-                  loading: false
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
                 }));
               }
 
-              _context2.next = 14;
+              _context2.next = 16;
               break;
 
-            case 11:
-              _context2.prev = 11;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
                 result: {
                   error: true,
-                  result: _context2.t0.message
-                },
-                loading: false
+                  result: _context2.t0
+                }
               }));
 
-            case 14:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 11]]);
+      }, _callee2, null, [[2, 13]]);
     }));
 
-    return function createBusinessCategory() {
+    return function deleteCategory() {
       return _ref2.apply(this, arguments);
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    if (category) {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: _objectSpread({}, category)
+      }));
+    }
+  }, [category]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    formState: formState,
-    setFormState: setFormState,
+    handelChangeCategoryActive: handelChangeCategoryActive,
+    categoryFormState: formState,
     handlechangeImage: handlechangeImage,
-    handleChangeInput: handleChangeInput,
     handleUpdateClick: handleUpdateClick,
-    handleChangeCheckBox: handleChangeCheckBox
+    deleteCategory: deleteCategory,
+    handleInputChange: handleInputChange,
+    isEditMode: isEditMode
   })));
 };
 
-exports.BusinessCategoryEdit = BusinessCategoryEdit;
-BusinessCategoryEdit.propTypes = {
+exports.SingleBusinessCategory = SingleBusinessCategory;
+SingleBusinessCategory.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -366,7 +351,7 @@ BusinessCategoryEdit.propTypes = {
   /**
    * Object for a business
    */
-  businessState: _propTypes.default.object,
+  business: _propTypes.default.object,
 
   /**
    * Function to set a business state
@@ -374,9 +359,9 @@ BusinessCategoryEdit.propTypes = {
   handleUpdateBusinessState: _propTypes.default.func,
 
   /**
-   * Function to set product creation mode
+   * Object for a product
    */
-  setIsAddProduct: _propTypes.default.func,
+  category: _propTypes.default.object,
 
   /**
    * Components types before Checkout
@@ -402,7 +387,7 @@ BusinessCategoryEdit.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessCategoryEdit.defaultProps = {
+SingleBusinessCategory.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

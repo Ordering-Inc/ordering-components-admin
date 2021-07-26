@@ -105,8 +105,8 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
   var _useState11 = (0, _react.useState)(false),
       _useState12 = _slicedToArray(_useState11, 2),
-      openAddDeliveryZone = _useState12[0],
-      setOpenAddDeliveryZone = _useState12[1];
+      isAddMode = _useState12[0],
+      setIsAddMode = _useState12[1];
 
   var _useState13 = (0, _react.useState)(false),
       _useState14 = _slicedToArray(_useState13, 2),
@@ -536,11 +536,11 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
         price: ((_formState$changes7 = formState.changes) === null || _formState$changes7 === void 0 ? void 0 : _formState$changes7.price) === ''
       });
     } else {
-      if (!openAddDeliveryZone) {
+      if (!isAddMode) {
         handleUpdateBusinessDeliveryZone();
       }
     }
-  }, [formState.changes, isEdit]);
+  }, [formState.changes, isAddMode]);
   (0, _react.useEffect)(function () {
     if (business === null || business === void 0 ? void 0 : business.zones) {
       setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
@@ -563,8 +563,8 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
     handleChangeZoneData: handleChangeZoneData,
     isEdit: isEdit,
     setIsEdit: setIsEdit,
-    openAddDeliveryZone: openAddDeliveryZone,
-    setOpenAddDeliveryZone: setOpenAddDeliveryZone,
+    isAddMode: isAddMode,
+    setIsAddMode: setIsAddMode,
     isAddValid: isAddValid,
     setIsAddValid: setIsAddValid,
     handleUpdateBusinessDeliveryZone: handleUpdateBusinessDeliveryZone,

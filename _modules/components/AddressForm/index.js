@@ -17,8 +17,6 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _OrderContext = require("../../contexts/OrderContext");
-
 var _ValidationsFieldsContext = require("../../contexts/ValidationsFieldsContext");
 
 var _CustomerContext = require("../../contexts/CustomerContext");
@@ -58,8 +56,7 @@ var AddressForm = function AddressForm(props) {
       addressId = props.addressId,
       address = props.address,
       useValidationFileds = props.useValidationFileds,
-      onSaveAddress = props.onSaveAddress,
-      isSelectedAfterAdd = props.isSelectedAfterAdd;
+      onSaveAddress = props.onSaveAddress;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -90,16 +87,10 @@ var AddressForm = function AddressForm(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       _useSession2$ = _useSession2[0],
-      auth = _useSession2$.auth,
       user = _useSession2$.user,
       token = _useSession2$.token;
 
   var requestsState = {};
-
-  var _useOrder = (0, _OrderContext.useOrder)(),
-      _useOrder2 = _slicedToArray(_useOrder, 2),
-      changeAddress = _useOrder2[1].changeAddress;
-
   var userId = props.userId || (user === null || user === void 0 ? void 0 : user.id);
   var accessToken = props.accessToken || token;
 
@@ -229,16 +220,6 @@ var AddressForm = function AddressForm(props) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (auth) {
-                _context2.next = 4;
-                break;
-              }
-
-              changeAddress(_objectSpread(_objectSpread({}, values), formState.changes));
-              onSaveAddress && onSaveAddress(formState.changes);
-              return _context2.abrupt("return");
-
-            case 4:
               if (userCustomerSetup) {
                 setUserCustomer(userCustomerSetup, true);
               }
@@ -246,13 +227,13 @@ var AddressForm = function AddressForm(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context2.prev = 6;
-              _context2.next = 9;
+              _context2.prev = 2;
+              _context2.next = 5;
               return ordering.users(userId).addresses((_addressState$address = addressState.address) === null || _addressState$address === void 0 ? void 0 : _addressState$address.id).save(_objectSpread(_objectSpread({}, values), formState.changes), {
                 accessToken: accessToken
               });
 
-            case 9:
+            case 5:
               _yield$ordering$users2 = _context2.sent;
               content = _yield$ordering$users2.content;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -266,33 +247,26 @@ var AddressForm = function AddressForm(props) {
                   address: content.result
                 }));
                 onSaveAddress && onSaveAddress(content.result);
-
-                if (isSelectedAfterAdd) {
-                  changeAddress(content.result.id, {
-                    address: isEdit ? null : content.result,
-                    isEdit: isEdit
-                  });
-                }
               }
 
-              _context2.next = 18;
+              _context2.next = 14;
               break;
 
-            case 15:
-              _context2.prev = 15;
-              _context2.t0 = _context2["catch"](6);
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context2.t0.message],
                 address: {}
               }));
 
-            case 18:
+            case 14:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[6, 15]]);
+      }, _callee2, null, [[2, 11]]);
     }));
 
     return function saveAddress(_x3, _x4) {

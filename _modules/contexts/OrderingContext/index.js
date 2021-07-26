@@ -27,6 +27,8 @@ var _EventContext = require("../EventContext");
 
 var _UtilsContext = require("../UtilsContext");
 
+var _ToastContext = require("../ToastContext");
+
 var _webStrategy = require("../../webStrategy");
 
 var _ValidationsFieldsContext = require("../ValidationsFieldsContext");
@@ -59,14 +61,14 @@ var OrderingProvider = function OrderingProvider(_ref) {
     strategy: webStrategy
   }, /*#__PURE__*/_react.default.createElement(_SessionContext.SessionProvider, {
     strategy: webStrategy
-  }, /*#__PURE__*/_react.default.createElement(_ConfigContext.ConfigProvider, null, /*#__PURE__*/_react.default.createElement(_UtilsContext.UtilsProviders, null, /*#__PURE__*/_react.default.createElement(_ValidationsFieldsContext.ValidationFieldsProvider, null, /*#__PURE__*/_react.default.createElement(_WebsocketContext.WebsocketProvider, {
+  }, /*#__PURE__*/_react.default.createElement(_ConfigContext.ConfigProvider, null, /*#__PURE__*/_react.default.createElement(_UtilsContext.UtilsProviders, null, /*#__PURE__*/_react.default.createElement(_ToastContext.ToastProvider, null, /*#__PURE__*/_react.default.createElement(_ValidationsFieldsContext.ValidationFieldsProvider, null, /*#__PURE__*/_react.default.createElement(_WebsocketContext.WebsocketProvider, {
     settings: Object.assign(settings.socket, {
       project: settings.project
     })
   }, /*#__PURE__*/_react.default.createElement(_OrderContext.OrderProvider, {
     strategy: webStrategy,
     Alert: Alert
-  }, /*#__PURE__*/_react.default.createElement(_BusinessContext.BusinessProvider, null, children)))))))))));
+  }, /*#__PURE__*/_react.default.createElement(_BusinessContext.BusinessProvider, null, children))))))))))));
 };
 
 exports.OrderingProvider = OrderingProvider;

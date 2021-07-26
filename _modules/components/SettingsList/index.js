@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CategoryDescription = void 0;
+exports.SettingsList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -35,6 +35,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -47,45 +55,138 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CategoryDescription = function CategoryDescription(props) {
+/**
+ * Component to manage Settings List page behavior without UI component
+ */
+var SettingsList = function SettingsList(props) {
   var UIComponent = props.UIComponent,
-      categoryId = props.categoryId;
+      category = props.category;
+
+  var _useState = (0, _react.useState)({
+    changes: null,
+    loading: false,
+    result: {
+      error: null
+    },
+    API: false
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      formState = _useState2[0],
+      setFormState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(null),
+      _useState4 = _slicedToArray(_useState3, 2),
+      configs = _useState4[0],
+      setConfigs = _useState4[1];
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      loading = _useSession2[0].loading;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useState = (0, _react.useState)({
-    category: null,
-    loading: !props.category,
-    error: null
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      categoryState = _useState2[0],
-      setCategoryState = _useState2[1];
-
-  (0, _react.useEffect)(function () {
-    if (props.category) {
-      setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-        category: props.category
-      }));
-    } else {
-      getCategory();
-    }
-  }, [categoryId]);
-  /**
-   * Method to get order from API
+  /** Method to change checkbox status
+   * @param {EventTarget} evt
+   * @param {Boolean} index
    */
 
-  var getCategory = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result;
+
+  var handleCheckBoxChange = function handleCheckBoxChange(evt, index, value) {
+    var configId = parseInt(evt.target.getAttribute('data-id'));
+    var changeValue;
+
+    if (index) {
+      // type = 3
+      var str = value === '' ? [] : value.split('|');
+      var position = str.indexOf(evt.target.name);
+      if (position === -1 && evt.target.checked) str.push(evt.target.name);
+      if (!evt.target.checked && position >= 0) str.splice(position, 1);
+      changeValue = str.join('|');
+    } else {
+      // type = 4
+      var array = _toConsumableArray(JSON.parse(value));
+
+      var _position = array.indexOf(parseInt(evt.target.name));
+
+      if (_position === -1 && evt.target.checked) array.push(parseInt(evt.target.name));
+      if (!evt.target.checked && _position >= 0) array.splice(_position, 1);
+      changeValue = JSON.stringify(array);
+    }
+
+    saveChanges(changeValue, configId);
+  };
+  /**
+   * Method to save changes from settings items
+   */
+
+
+  var saveChanges = function saveChanges(changeValue, id) {
+    var _formState$changes;
+
+    var _configs = [];
+    var found = formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.find(function (item) {
+      return item.id === id;
+    });
+
+    if (found) {
+      _configs = formState === null || formState === void 0 ? void 0 : formState.changes.map(function (config) {
+        if (config.id === id) {
+          return _objectSpread(_objectSpread({}, config), {}, {
+            value: changeValue
+          });
+        }
+
+        return config;
+      });
+    } else {
+      if (formState === null || formState === void 0 ? void 0 : formState.changes) _configs = _toConsumableArray(formState === null || formState === void 0 ? void 0 : formState.changes);
+      var item = configs.find(function (config) {
+        return config.id === id;
+      });
+
+      _configs.push(_objectSpread(_objectSpread({}, item), {}, {
+        value: changeValue
+      }));
+    }
+
+    var defaultConfigs = configs.map(function (config) {
+      if (config.id === id) {
+        return _objectSpread(_objectSpread({}, config), {}, {
+          value: changeValue
+        });
+      }
+
+      return config;
+    });
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _configs
+    }));
+    setConfigs(defaultConfigs);
+  };
+  /**
+   * Method to update settings items
+   */
+
+
+  var handleClickUpdate = function handleClickUpdate() {
+    var _formState$changes2;
+
+    if (!(formState === null || formState === void 0 ? void 0 : formState.changes) || (formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.length) === 0) return;
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      API: true
+    }));
+  };
+  /**
+   * Method to update settings items
+   * @param {Number} id config id to update a config
+   * @param {Object} params key and value to change
+   */
+
+
+  var saveConfig = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id, params) {
+      var _yield$ordering$confi, _yield$ordering$confi2, error, result, changes;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -100,77 +201,117 @@ var CategoryDescription = function CategoryDescription(props) {
 
             case 2:
               _context.prev = 2;
-              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                loading: true
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true,
+                API: false
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              functionFetch = "".concat(ordering.root, "/config_categories/").concat(categoryId);
-              _context.next = 8;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 6;
+              return ordering.configs(id).save(params);
 
-            case 8:
-              response = _context.sent;
-              _context.next = 11;
-              return response.json();
-
-            case 11:
-              _yield$response$json = _context.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
+            case 6:
+              _yield$ordering$confi = _context.sent;
+              _yield$ordering$confi2 = _yield$ordering$confi.content;
+              error = _yield$ordering$confi2.error;
+              result = _yield$ordering$confi2.result;
 
               if (!error) {
-                setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+                changes = formState === null || formState === void 0 ? void 0 : formState.changes.filter(function (item) {
+                  return item.id !== result.id;
+                });
+                changes.length > 0 ? setFormState({
                   loading: false,
-                  category: result
-                }));
+                  changes: changes,
+                  result: {
+                    error: false,
+                    result: result
+                  },
+                  API: true
+                }) : setFormState({
+                  loading: false,
+                  changes: null,
+                  result: {
+                    error: false,
+                    result: 'ok'
+                  },
+                  API: false
+                });
               } else {
-                setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                  loading: true,
-                  error: result
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: false,
+                    result: result
+                  },
+                  API: false
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 16;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](2);
-              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
-                error: _context.t0
+                result: {
+                  error: true,
+                  result: _context.t0
+                },
+                API: false
               }));
 
-            case 20:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 13]]);
     }));
 
-    return function getCategory() {
+    return function saveConfig(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    if ((category === null || category === void 0 ? void 0 : category.configs.length) > 0) {
+      var _configs = _toConsumableArray(category === null || category === void 0 ? void 0 : category.configs);
+
+      setConfigs(_configs);
+    }
+  }, [category === null || category === void 0 ? void 0 : category.configs]);
+  (0, _react.useEffect)(function () {
+    var _formState$changes3;
+
+    if ((formState === null || formState === void 0 ? void 0 : formState.API) && (formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.length) > 0) {
+      var params = {
+        key: formState === null || formState === void 0 ? void 0 : formState.changes[0].key,
+        value: formState === null || formState === void 0 ? void 0 : formState.changes[0].value
+      };
+      saveConfig(formState === null || formState === void 0 ? void 0 : formState.changes[0].id, params);
+    }
+  }, [formState === null || formState === void 0 ? void 0 : formState.API]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    category: categoryState
+    settingsState: formState,
+    configs: configs,
+    handleInputChange: saveChanges,
+    handleCheckBoxChange: handleCheckBoxChange,
+    handleClickUpdate: handleClickUpdate
   })));
 };
 
-exports.CategoryDescription = CategoryDescription;
-CategoryDescription.propTypes = {
+exports.SettingsList = SettingsList;
+SettingsList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
+
+  /**
+  * Category of configs
+  */
+  category: _propTypes.default.object,
 
   /**
    * Array of drivers props to fetch
@@ -201,7 +342,7 @@ CategoryDescription.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CategoryDescription.defaultProps = {
+SettingsList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

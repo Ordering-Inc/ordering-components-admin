@@ -5,13 +5,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SubCategory = void 0;
+exports.Settings = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
@@ -47,38 +47,42 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var SubCategory = function SubCategory(props) {
-  var categoryId = props.categoryId,
-      configId = props.configId,
-      UIComponent = props.UIComponent;
+/**
+ * Component to manage Settings page behavior without UI component
+ */
+var Settings = function Settings(props) {
+  var UIComponent = props.UIComponent,
+      settingsType = props.settingsType;
 
   var _useState = (0, _react.useState)({
-    subCategory: null,
+    categories: [],
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      subCategoryState = _useState2[0],
-      setSubCategoryState = _useState2[1];
+      categoryList = _useState2[0],
+      setCategoryList = _useState2[1];
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      loading = _useSession2[0].loading;
+      _useSession2$ = _useSession2[0],
+      token = _useSession2$.token,
+      loading = _useSession2$.loading;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
   (0, _react.useEffect)(function () {
-    if (configId) getSubCategory(configId);else if (categoryId) getSubCategory(categoryId);
-  }, [categoryId, configId]);
+    getCagegories();
+  }, []);
   /**
-   * Method to get Sub Category List
+   * Method to get Configration List
    */
 
-  var getSubCategory = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id) {
-      var _yield$ordering$confi, _yield$ordering$confi2, error, result;
+  var getCagegories = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -93,173 +97,116 @@ var SubCategory = function SubCategory(props) {
 
             case 2:
               _context.prev = 2;
-              setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
+              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                 loading: true
               }));
-              _context.next = 6;
-              return ordering.configs(id).get();
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              filterConditons = [];
+              if (settingsType === 'basic') filterConditons.push({
+                attribute: 'parent_category_id',
+                value: 1
+              });else filterConditons.push({
+                attribute: 'parent_category_id',
+                value: 2
+              });
+              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=rank&where=").concat(JSON.stringify(filterConditons));
+              _context.next = 10;
+              return fetch(functionFetch, requestOptions);
 
-            case 6:
-              _yield$ordering$confi = _context.sent;
-              _yield$ordering$confi2 = _yield$ordering$confi.content;
-              error = _yield$ordering$confi2.error;
-              result = _yield$ordering$confi2.result;
+            case 10:
+              response = _context.sent;
+              _context.next = 13;
+              return response.json();
+
+            case 13:
+              _yield$response$json = _context.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
 
               if (!error) {
-                setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
+                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                   loading: false,
-                  subCategory: result
+                  categories: result
                 }));
               } else {
-                setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
-                  loading: false,
+                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                  loading: true,
                   error: result
                 }));
               }
 
-              _context.next = 16;
+              _context.next = 22;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](2);
-              setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
+              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 16:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 13]]);
+      }, _callee, null, [[2, 19]]);
     }));
 
-    return function getSubCategory(_x) {
+    return function getCagegories() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  var saveConfiguartion = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(changes) {
-      var id, _yield$ordering$confi3, _yield$ordering$confi4, error, result;
-
-      return _regenerator.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              if (!loading) {
-                _context2.next = 2;
-                break;
-              }
-
-              return _context2.abrupt("return");
-
-            case 2:
-              id = configId || categoryId;
-              _context2.prev = 3;
-              setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
-                loading: true
-              }));
-              _context2.next = 7;
-              return ordering.configs(id).save(changes);
-
-            case 7:
-              _yield$ordering$confi3 = _context2.sent;
-              _yield$ordering$confi4 = _yield$ordering$confi3.content;
-              error = _yield$ordering$confi4.error;
-              result = _yield$ordering$confi4.result;
-
-              if (!error) {
-                setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
-                  loading: false,
-                  subCategory: result
-                }));
-              } else {
-                setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
-                  loading: false,
-                  error: result
-                }));
-              }
-
-              _context2.next = 17;
-              break;
-
-            case 14:
-              _context2.prev = 14;
-              _context2.t0 = _context2["catch"](3);
-              setSubCategoryState(_objectSpread(_objectSpread({}, subCategoryState), {}, {
-                loading: false,
-                error: _context2.t0
-              }));
-
-            case 17:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[3, 14]]);
-    }));
-
-    return function saveConfiguartion(_x2) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    subCategoryState: subCategoryState,
-    saveConfiguartion: saveConfiguartion
+    categoryList: categoryList
   })));
 };
 
-exports.SubCategory = SubCategory;
-SubCategory.propTypes = {
+exports.Settings = Settings;
+Settings.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Category_Id, this must be contains an category id for get data from API
+   * String to idenity setting group
    */
-  categoryId: _propTypes.default.number,
+  settingsType: _propTypes.default.string,
 
   /**
-   * Config_id, this must be contains an config id for get data from API
-   */
-  configId: _propTypes.default.number,
-
-  /**
-   * Array of drivers props to fetch
-   */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
-
-  /**
-   * Components types before order details
+   * Components types before Checkout
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after order details
+   * Components types after Checkout
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before order details
+   * Elements before Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after order details
+   * Elements after Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-SubCategory.defaultProps = {
+Settings.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
