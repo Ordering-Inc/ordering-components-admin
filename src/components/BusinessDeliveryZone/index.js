@@ -265,11 +265,11 @@ export const BusinessDeliveryZone = (props) => {
         price: formState.changes?.price === ''
       })
     } else {
-      if (!isAddMode) {
+      if (!(isAddMode || isEdit)) {
         handleUpdateBusinessDeliveryZone()
       }
     }
-  }, [formState.changes, isAddMode])
+  }, [formState.changes, isAddMode, isEdit])
 
   useEffect(() => {
     if (business?.zones) {
