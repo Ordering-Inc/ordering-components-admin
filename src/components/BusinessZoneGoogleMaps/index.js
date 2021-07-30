@@ -76,7 +76,7 @@ export const BusinessZoneGoogleMaps = (props) => {
     drawingManager.setMap(null)
     if (type === 1) {
       setCircleZone(event.overlay)
-      infoWindow.open(googleMap)
+      infoWindow && infoWindow.open(googleMap)
     } else {
       setPolygonZone(event.overlay)
     }
@@ -137,7 +137,7 @@ export const BusinessZoneGoogleMaps = (props) => {
       if (circleZone) {
         circleZone.setMap(null)
         setCircleZone(null)
-        infoWindow.close()
+        infoWindow && infoWindow.close()
       }
       if (polygonZone) {
         polygonZone.setMap(null)
