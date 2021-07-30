@@ -158,7 +158,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
 
     if (type === 1) {
       setCircleZone(event.overlay);
-      infoWindow.open(googleMap);
+      infoWindow && infoWindow.open(googleMap);
     } else {
       setPolygonZone(event.overlay);
     }
@@ -231,7 +231,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       if (circleZone) {
         circleZone.setMap(null);
         setCircleZone(null);
-        infoWindow.close();
+        infoWindow && infoWindow.close();
       }
 
       if (polygonZone) {

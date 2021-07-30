@@ -536,11 +536,11 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
         price: ((_formState$changes7 = formState.changes) === null || _formState$changes7 === void 0 ? void 0 : _formState$changes7.price) === ''
       });
     } else {
-      if (!isAddMode) {
+      if (!(isAddMode || isEdit)) {
         handleUpdateBusinessDeliveryZone();
       }
     }
-  }, [formState.changes, isAddMode]);
+  }, [formState.changes, isAddMode, isEdit]);
   (0, _react.useEffect)(function () {
     if (business === null || business === void 0 ? void 0 : business.zones) {
       setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
