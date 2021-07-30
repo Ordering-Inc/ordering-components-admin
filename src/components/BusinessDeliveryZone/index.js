@@ -120,6 +120,7 @@ export const BusinessDeliveryZone = (props) => {
       })
       if (!content.error) {
         props.onClose && props.onClose()
+        setIsAddMode(false)
         setIsAddValid(false)
         const zones = [
           ...businessDeliveryZonesState.zones,
