@@ -407,7 +407,7 @@ export const DashboardOrdersList = (props) => {
    * Listening deleted order
    */
   useEffect(() => {
-    if (deletedOrderId === null) return
+    if (!deletedOrderId) return
     const orders = orderList.orders.filter(_order => {
       return _order.id !== deletedOrderId
     })
@@ -450,7 +450,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders])
 
   useEffect(() => {
     if (orderList.loading) return
