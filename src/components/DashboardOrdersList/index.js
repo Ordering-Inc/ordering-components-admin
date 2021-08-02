@@ -12,6 +12,7 @@ export const DashboardOrdersList = (props) => {
     initialPageSize,
     driverId,
     customerId,
+    businessId,
     loadMorePageSize,
     orderIds,
     deletedOrderId,
@@ -149,6 +150,15 @@ export const DashboardOrdersList = (props) => {
         {
           attribute: 'customer_id',
           value: customerId
+        }
+      )
+    }
+
+    if (businessId) {
+      conditions.push(
+        {
+          attribute: 'business_id',
+          value: businessId
         }
       )
     }
@@ -407,7 +417,7 @@ export const DashboardOrdersList = (props) => {
    * Listening deleted order
    */
   useEffect(() => {
-    if (deletedOrderId === null) return
+    if (!deletedOrderId) return
     const orders = orderList.orders.filter(_order => {
       return _order.id !== deletedOrderId
     })
@@ -450,7 +460,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders])
 
   useEffect(() => {
     if (orderList.loading) return
