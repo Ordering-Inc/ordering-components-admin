@@ -12,6 +12,7 @@ export const DashboardOrdersList = (props) => {
     initialPageSize,
     driverId,
     customerId,
+    businessId,
     loadMorePageSize,
     orderIds,
     deletedOrderId,
@@ -149,6 +150,15 @@ export const DashboardOrdersList = (props) => {
         {
           attribute: 'customer_id',
           value: customerId
+        }
+      )
+    }
+
+    if (businessId) {
+      conditions.push(
+        {
+          attribute: 'business_id',
+          value: businessId
         }
       )
     }
