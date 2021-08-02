@@ -699,7 +699,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
