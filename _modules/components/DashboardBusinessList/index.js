@@ -390,6 +390,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       return business.id !== businessId;
     });
     setPagination(_objectSpread(_objectSpread({}, pagination), {}, {
+      to: (pagination === null || pagination === void 0 ? void 0 : pagination.to) - 1,
       total: (pagination === null || pagination === void 0 ? void 0 : pagination.total) - 1
     }));
     setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
@@ -405,6 +406,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
   var handleSucessAddBusiness = function handleSucessAddBusiness(business) {
     var businesses = [].concat(_toConsumableArray(businessList.businesses), [business]);
     setPagination(_objectSpread(_objectSpread({}, pagination), {}, {
+      to: (pagination === null || pagination === void 0 ? void 0 : pagination.to) + 1,
       total: (pagination === null || pagination === void 0 ? void 0 : pagination.total) + 1
     }));
     setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
