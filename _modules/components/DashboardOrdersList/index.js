@@ -67,6 +67,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       initialPageSize = props.initialPageSize,
       driverId = props.driverId,
       customerId = props.customerId,
+      businessId = props.businessId,
       loadMorePageSize = props.loadMorePageSize,
       orderIds = props.orderIds,
       deletedOrderId = props.deletedOrderId,
@@ -298,6 +299,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 });
               }
 
+              if (businessId) {
+                conditions.push({
+                  attribute: 'business_id',
+                  value: businessId
+                });
+              }
+
               if (searchValue) {
                 searchConditions = [];
 
@@ -429,13 +437,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().where(where);
               }
 
-              _context2.next = 17;
+              _context2.next = 18;
               return functionFetch.get(options);
 
-            case 17:
+            case 18:
               return _context2.abrupt("return", _context2.sent);
 
-            case 18:
+            case 19:
             case "end":
               return _context2.stop();
           }
@@ -643,7 +651,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
    */
 
   (0, _react.useEffect)(function () {
-    if (deletedOrderId === null) return;
+    if (!deletedOrderId) return;
     var orders = orderList.orders.filter(function (_order) {
       return _order.id !== deletedOrderId;
     });
@@ -691,7 +699,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
