@@ -104,6 +104,7 @@ export const BusinessSchedule = (props) => {
         }
       }
     }
+    _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
     setSchedule(_schedule)
     setFormState({
       ...formState,
@@ -187,6 +188,10 @@ export const BusinessSchedule = (props) => {
       const { content: { error, result } } = await ordering.businesses(business.id).save(changes, {
         accessToken: session.token
       })
+      setOpenAddScheduleInex(null)
+      if (!error) {
+        handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
+      }
       setFormState({
         ...formState,
         changes: error ? formState.changes : {},
@@ -196,11 +201,6 @@ export const BusinessSchedule = (props) => {
         },
         loading: false
       })
-
-      setOpenAddScheduleInex(null)
-      if (!error) {
-        handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
-      }
     } catch (err) {
       setFormState({
         ...formState,
@@ -214,35 +214,66 @@ export const BusinessSchedule = (props) => {
   }
 
   /**
+   * check conflict between two schedule times
+   */
+  const isConflictTime = (lapses, copyLapses) => {
+    for (let i = 0; i < lapses.length; i++) {
+      for (let j = 0; j < copyLapses.length; j++) {
+        const openTime = convertMinutes(copyLapses[j].open)
+        const closeTime = convertMinutes(copyLapses[j].close)
+        if ((convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime) || ((convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime))) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
   const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
     let _selectedCopyDays = [...selectedCopyDays]
-    if (!_selectedCopyDays.includes(index)) {
-      _selectedCopyDays.push(index)
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
-    }
-    setSelectedCopyDays(_selectedCopyDays)
-
     const _schedule = [...schedule]
 
-    if (_selectedCopyDays.length) {
-      for (const copyDay of _selectedCopyDays) {
-        for (const laps of _schedule[copyDay].lapses) {
-          _schedule[daysOfWeekIndex].lapses.push(laps)
-        }
+    if (!_selectedCopyDays.includes(index)) {
+      const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
+      if (conflict) {
+        setIsConflict(true)
+        return
       }
-      setSchedule(_schedule)
-      setFormState({
-        ...formState,
-        changes: {
-          schedule: _schedule
+      _selectedCopyDays.push(index)
+
+      for (const laps of _schedule[index].lapses) {
+        _schedule[daysOfWeekIndex].lapses.push(laps)
+      }
+
+      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
+    } else {
+      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
+
+      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
+        for (const deleteLaps of _schedule[index].lapses) {
+          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
+            return false
+          }
         }
+        return true
       })
+      _schedule[daysOfWeekIndex].lapses = newLapses
     }
+
+    setSelectedCopyDays(_selectedCopyDays)
+
+    setSchedule(_schedule)
+    setFormState({
+      ...formState,
+      changes: {
+        schedule: _schedule
+      }
+    })
   }
 
   /**
