@@ -187,6 +187,10 @@ export const BusinessSchedule = (props) => {
       const { content: { error, result } } = await ordering.businesses(business.id).save(changes, {
         accessToken: session.token
       })
+      setOpenAddScheduleInex(null)
+      if (!error) {
+        handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
+      }
       setFormState({
         ...formState,
         changes: error ? formState.changes : {},
@@ -196,11 +200,6 @@ export const BusinessSchedule = (props) => {
         },
         loading: false
       })
-
-      setOpenAddScheduleInex(null)
-      if (!error) {
-        handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
-      }
     } catch (err) {
       setFormState({
         ...formState,
@@ -214,20 +213,43 @@ export const BusinessSchedule = (props) => {
   }
 
   /**
+   * check conflict between two schedule times
+   */
+  const isConflictTime = (lapses, copyLapses) => {
+    for (let i = 0; i < lapses.length; i++) {
+      for (let j = 0; j < copyLapses.length; j++) {
+        const openTime = convertMinutes(copyLapses[j].open)
+        const closeTime = convertMinutes(copyLapses[j].close)
+        if ((convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime) || ((convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime))) {
+          return true
+        }
+      }
+    }
+    return false
+  }
+
+  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
   const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
     let _selectedCopyDays = [...selectedCopyDays]
+    const _schedule = [...schedule]
+
+    const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
+    if (conflict) {
+      setIsConflict(true)
+      return
+    }
+
     if (!_selectedCopyDays.includes(index)) {
       _selectedCopyDays.push(index)
     } else {
       _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
     }
-    setSelectedCopyDays(_selectedCopyDays)
 
-    const _schedule = [...schedule]
+    setSelectedCopyDays(_selectedCopyDays)
 
     if (_selectedCopyDays.length) {
       for (const copyDay of _selectedCopyDays) {

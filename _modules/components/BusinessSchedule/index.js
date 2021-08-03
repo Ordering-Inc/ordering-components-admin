@@ -315,6 +315,12 @@ var BusinessSchedule = function BusinessSchedule(props) {
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
               result = _yield$ordering$busin2.result;
+              setOpenAddScheduleInex(null);
+
+              if (!error) {
+                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
+              }
+
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: error ? formState.changes : {},
                 result: {
@@ -323,12 +329,6 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 },
                 loading: false
               }));
-              setOpenAddScheduleInex(null);
-
-              if (!error) {
-                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
-              }
-
               _context.next = 17;
               break;
 
@@ -356,6 +356,25 @@ var BusinessSchedule = function BusinessSchedule(props) {
     };
   }();
   /**
+   * check conflict between two schedule times
+   */
+
+
+  var isConflictTime = function isConflictTime(lapses, copyLapses) {
+    for (var i = 0; i < lapses.length; i++) {
+      for (var j = 0; j < copyLapses.length; j++) {
+        var openTime = convertMinutes(copyLapses[j].open);
+        var closeTime = convertMinutes(copyLapses[j].close);
+
+        if (convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime || convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
@@ -364,6 +383,15 @@ var BusinessSchedule = function BusinessSchedule(props) {
 
   var handleSelectCopyTimes = function handleSelectCopyTimes(index, daysOfWeekIndex) {
     var _selectedCopyDays = _toConsumableArray(selectedCopyDays);
+
+    var _schedule = _toConsumableArray(schedule);
+
+    var conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses);
+
+    if (conflict) {
+      setIsConflict(true);
+      return;
+    }
 
     if (!_selectedCopyDays.includes(index)) {
       _selectedCopyDays.push(index);
@@ -374,8 +402,6 @@ var BusinessSchedule = function BusinessSchedule(props) {
     }
 
     setSelectedCopyDays(_selectedCopyDays);
-
-    var _schedule = _toConsumableArray(schedule);
 
     if (_selectedCopyDays.length) {
       var _iterator = _createForOfIteratorHelper(_selectedCopyDays),
