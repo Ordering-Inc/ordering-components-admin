@@ -104,6 +104,7 @@ export const BusinessSchedule = (props) => {
         }
       }
     }
+    _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
     setSchedule(_schedule)
     setFormState({
       ...formState,
@@ -237,34 +238,42 @@ export const BusinessSchedule = (props) => {
     let _selectedCopyDays = [...selectedCopyDays]
     const _schedule = [...schedule]
 
-    const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
-    if (conflict) {
-      setIsConflict(true)
-      return
-    }
-
     if (!_selectedCopyDays.includes(index)) {
+      const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
+      if (conflict) {
+        setIsConflict(true)
+        return
+      }
       _selectedCopyDays.push(index)
+
+      for (const laps of _schedule[index].lapses) {
+        _schedule[daysOfWeekIndex].lapses.push(laps)
+      }
+
+      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
     } else {
       _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
+
+      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
+        for (const deleteLaps of _schedule[index].lapses) {
+          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
+            return false
+          }
+        }
+        return true
+      })
+      _schedule[daysOfWeekIndex].lapses = newLapses
     }
 
     setSelectedCopyDays(_selectedCopyDays)
 
-    if (_selectedCopyDays.length) {
-      for (const copyDay of _selectedCopyDays) {
-        for (const laps of _schedule[copyDay].lapses) {
-          _schedule[daysOfWeekIndex].lapses.push(laps)
-        }
+    setSchedule(_schedule)
+    setFormState({
+      ...formState,
+      changes: {
+        schedule: _schedule
       }
-      setSchedule(_schedule)
-      setFormState({
-        ...formState,
-        changes: {
-          schedule: _schedule
-        }
-      })
-    }
+    })
   }
 
   /**
