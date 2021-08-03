@@ -209,6 +209,10 @@ var BusinessSchedule = function BusinessSchedule(props) {
       }
     }
 
+    _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
+      return convertMinutes(a.open) - convertMinutes(b.open);
+    });
+
     setSchedule(_schedule);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {
@@ -315,6 +319,12 @@ var BusinessSchedule = function BusinessSchedule(props) {
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
               result = _yield$ordering$busin2.result;
+              setOpenAddScheduleInex(null);
+
+              if (!error) {
+                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
+              }
+
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: error ? formState.changes : {},
                 result: {
@@ -323,12 +333,6 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 },
                 loading: false
               }));
-              setOpenAddScheduleInex(null);
-
-              if (!error) {
-                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
-              }
-
               _context.next = 17;
               break;
 
@@ -356,6 +360,25 @@ var BusinessSchedule = function BusinessSchedule(props) {
     };
   }();
   /**
+   * check conflict between two schedule times
+   */
+
+
+  var isConflictTime = function isConflictTime(lapses, copyLapses) {
+    for (var i = 0; i < lapses.length; i++) {
+      for (var j = 0; j < copyLapses.length; j++) {
+        var openTime = convertMinutes(copyLapses[j].open);
+        var closeTime = convertMinutes(copyLapses[j].close);
+
+        if (convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime || convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
@@ -365,40 +388,26 @@ var BusinessSchedule = function BusinessSchedule(props) {
   var handleSelectCopyTimes = function handleSelectCopyTimes(index, daysOfWeekIndex) {
     var _selectedCopyDays = _toConsumableArray(selectedCopyDays);
 
-    if (!_selectedCopyDays.includes(index)) {
-      _selectedCopyDays.push(index);
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(function (el) {
-        return el !== index;
-      });
-    }
-
-    setSelectedCopyDays(_selectedCopyDays);
-
     var _schedule = _toConsumableArray(schedule);
 
-    if (_selectedCopyDays.length) {
-      var _iterator = _createForOfIteratorHelper(_selectedCopyDays),
+    if (!_selectedCopyDays.includes(index)) {
+      var conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses);
+
+      if (conflict) {
+        setIsConflict(true);
+        return;
+      }
+
+      _selectedCopyDays.push(index);
+
+      var _iterator = _createForOfIteratorHelper(_schedule[index].lapses),
           _step;
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var copyDay = _step.value;
+          var laps = _step.value;
 
-          var _iterator2 = _createForOfIteratorHelper(_schedule[copyDay].lapses),
-              _step2;
-
-          try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var laps = _step2.value;
-
-              _schedule[daysOfWeekIndex].lapses.push(laps);
-            }
-          } catch (err) {
-            _iterator2.e(err);
-          } finally {
-            _iterator2.f();
-          }
+          _schedule[daysOfWeekIndex].lapses.push(laps);
         }
       } catch (err) {
         _iterator.e(err);
@@ -406,13 +415,45 @@ var BusinessSchedule = function BusinessSchedule(props) {
         _iterator.f();
       }
 
-      setSchedule(_schedule);
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          schedule: _schedule
+      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
+        return convertMinutes(a.open) - convertMinutes(b.open);
+      });
+    } else {
+      _selectedCopyDays = _selectedCopyDays.filter(function (el) {
+        return el !== index;
+      });
+
+      var newLapses = _schedule[daysOfWeekIndex].lapses.filter(function (laps) {
+        var _iterator2 = _createForOfIteratorHelper(_schedule[index].lapses),
+            _step2;
+
+        try {
+          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+            var deleteLaps = _step2.value;
+
+            if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
+              return false;
+            }
+          }
+        } catch (err) {
+          _iterator2.e(err);
+        } finally {
+          _iterator2.f();
         }
-      }));
+
+        return true;
+      });
+
+      _schedule[daysOfWeekIndex].lapses = newLapses;
     }
+
+    setSelectedCopyDays(_selectedCopyDays);
+    setSchedule(_schedule);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: {
+        schedule: _schedule
+      }
+    }));
   };
   /**
    * Update schedule time
