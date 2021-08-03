@@ -216,6 +216,7 @@ export const DashboardBusinessList = (props) => {
     const businesses = businessList.businesses.filter(business => business.id !== businessId)
     setPagination({
       ...pagination,
+      to: pagination?.to - 1,
       total: pagination?.total - 1
     })
     setBusinessList({ ...businessList, businesses })
@@ -229,6 +230,7 @@ export const DashboardBusinessList = (props) => {
     const businesses = [...businessList.businesses, business]
     setPagination({
       ...pagination,
+      to: pagination?.to + 1,
       total: pagination?.total + 1
     })
     setBusinessList({ ...businessList, businesses })
