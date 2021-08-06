@@ -624,6 +624,66 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       return _ref4.apply(this, arguments);
     };
   }();
+
+  var getPageOrders = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(pageSize, page) {
+      var response;
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
+                loading: true
+              }));
+              _context5.prev = 1;
+              _context5.next = 4;
+              return getOrders(pageSize, page);
+
+            case 4:
+              response = _context5.sent;
+              setOrderList({
+                loading: false,
+                orders: response.content.error ? orderList.orders : response.content.result,
+                error: response.content.error ? response.content.result : null
+              });
+
+              if (!response.content.error) {
+                setPagination({
+                  currentPage: response.content.pagination.current_page,
+                  pageSize: response.content.pagination.page_size,
+                  totalPages: response.content.pagination.total_pages,
+                  total: response.content.pagination.total,
+                  from: response.content.pagination.from,
+                  to: response.content.pagination.to
+                });
+              }
+
+              _context5.next = 12;
+              break;
+
+            case 9:
+              _context5.prev = 9;
+              _context5.t0 = _context5["catch"](1);
+
+              if (_context5.t0.constructor.name !== 'Cancel') {
+                setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
+                  loading: false,
+                  error: [_context5.t0.message]
+                }));
+              }
+
+            case 12:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[1, 9]]);
+    }));
+
+    return function getPageOrders(_x4, _x5) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
   /**
    * Listening order id to update for unread_count parameter
    */
@@ -830,6 +890,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     orderList: orderList,
     pagination: pagination,
     loadMoreOrders: loadMoreOrders,
+    getPageOrders: getPageOrders,
     handleUpdateOrderStatus: handleUpdateOrderStatus
   })));
 };
