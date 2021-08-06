@@ -357,6 +357,70 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     };
   }();
   /**
+   * Method to get businesses for page and pageSize
+   */
+
+
+  var getPageBusinesses = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(pageSize, page) {
+      var response;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                loading: true
+              }));
+              _context4.prev = 1;
+              _context4.next = 4;
+              return getBusinesses(pageSize, page);
+
+            case 4:
+              response = _context4.sent;
+              setBusinessList({
+                loading: false,
+                businesses: response.content.error ? businessList.businesses : response.content.result,
+                error: response.content.error ? response.content.result : null
+              });
+
+              if (!response.content.error) {
+                setPagination({
+                  currentPage: response.content.pagination.current_page,
+                  pageSize: response.content.pagination.page_size,
+                  totalPages: response.content.pagination.total_pages,
+                  total: response.content.pagination.total,
+                  from: response.content.pagination.from,
+                  to: response.content.pagination.to
+                });
+              }
+
+              _context4.next = 12;
+              break;
+
+            case 9:
+              _context4.prev = 9;
+              _context4.t0 = _context4["catch"](1);
+
+              if (_context4.t0.constructor.name !== 'Cancel') {
+                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                  loading: false,
+                  error: [_context4.t0.message]
+                }));
+              }
+
+            case 12:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[1, 9]]);
+    }));
+
+    return function getPageBusinesses(_x3, _x4) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  /**
    * Method to change user active state for filter
    */
 
@@ -467,6 +531,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     onSearch: setSearchValue,
     selectedBusinessActiveState: selectedBusinessActiveState,
     loadMoreBusinesses: loadMoreBusinesses,
+    getPageBusinesses: getPageBusinesses,
     handleChangeBusinessActiveState: handleChangeBusinessActiveState,
     handleChangeBusinessType: handleChangeBusinessType,
     handleSucessRemoveBusiness: handleSucessRemoveBusiness,

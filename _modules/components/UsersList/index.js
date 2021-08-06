@@ -150,7 +150,7 @@ var UsersList = function UsersList(props) {
 
 
   var getUsers = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch, nextPage) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page, pageSize) {
       var parameters, paginationParams, where, conditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
 
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -163,8 +163,8 @@ var UsersList = function UsersList(props) {
               }));
               parameters = {};
               paginationParams = {
-                page: newFetch ? 1 : nextPage ? paginationProps.currentPage + 1 : paginationProps.currentPage - 1,
-                page_size: paginationProps.pageSize
+                page: page,
+                page_size: pageSize || paginationProps.pageSize
               };
 
               if (!isBusinessOwners) {
@@ -344,6 +344,8 @@ var UsersList = function UsersList(props) {
                 currentPage: pagination.current_page,
                 totalPages: pagination.total_pages,
                 totalItems: pagination.total,
+                from: pagination.from,
+                to: pagination.to,
                 nextPageItems: nextPageItems
               }));
               setPaginationDetail(_objectSpread({}, pagination));
@@ -723,10 +725,10 @@ var UsersList = function UsersList(props) {
   }, [selectedUsers, deleteUsersActionState]);
   (0, _react.useEffect)(function () {
     if (usersList.loading) return;
-    getUsers(true, false);
+    getUsers(1, null);
   }, [userTypesSelected, selectedUserActiveState, searchValue]);
   (0, _react.useEffect)(function () {
-    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false);
+    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null);
   }, [filterValues]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     actionStatus: actionStatus,
