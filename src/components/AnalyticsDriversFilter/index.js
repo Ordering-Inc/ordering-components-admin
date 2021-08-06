@@ -124,7 +124,6 @@ export const AnalyticsDriversFilter = (props) => {
    * @param {number} groupId
    */
   const isIncluded = (userId, groupId) => {
-    console.log(typeof userId, typeof groupId)
     let ischecked = false
     for (const user of usersList?.users) {
       for (const group of user.drivergroups) {
