@@ -38,16 +38,14 @@ export const UsersList = (props) => {
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
    */
-  const getUsers = async (newFetch, nextPage) => {
+  const getUsers = async (page, pageSize) => {
     try {
       setUsersList({ ...usersList, loading: true })
       let parameters = {}
 
       const paginationParams = {
-        page: newFetch
-          ? 1
-          : (nextPage ? paginationProps.currentPage + 1 : paginationProps.currentPage - 1),
-        page_size: paginationProps.pageSize
+        page: page,
+        page_size: pageSize || paginationProps.pageSize
       }
 
       if (!isBusinessOwners) {
@@ -232,6 +230,8 @@ export const UsersList = (props) => {
         currentPage: pagination.current_page,
         totalPages: pagination.total_pages,
         totalItems: pagination.total,
+        from: pagination.from,
+        to: pagination.to,
         nextPageItems
       })
       setPaginationDetail({ ...pagination })
@@ -447,11 +447,11 @@ export const UsersList = (props) => {
 
   useEffect(() => {
     if (usersList.loading) return
-    getUsers(true, false)
+    getUsers(1, null)
   }, [userTypesSelected, selectedUserActiveState, searchValue])
 
   useEffect(() => {
-    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(true, false)
+    if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null)
   }, [filterValues])
 
   return (
