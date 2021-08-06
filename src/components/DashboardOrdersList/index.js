@@ -12,6 +12,7 @@ export const DashboardOrdersList = (props) => {
     initialPageSize,
     driverId,
     customerId,
+    businessId,
     loadMorePageSize,
     orderIds,
     deletedOrderId,
@@ -149,6 +150,15 @@ export const DashboardOrdersList = (props) => {
         {
           attribute: 'customer_id',
           value: customerId
+        }
+      )
+    }
+
+    if (businessId) {
+      conditions.push(
+        {
+          attribute: 'business_id',
+          value: businessId
         }
       )
     }
@@ -387,6 +397,31 @@ export const DashboardOrdersList = (props) => {
       }
     }
   }
+  const getPageOrders = async (pageSize, page) => {
+    setOrderList({ ...orderList, loading: true })
+    try {
+      const response = await getOrders(pageSize, page)
+      setOrderList({
+        loading: false,
+        orders: response.content.error ? orderList.orders : response.content.result,
+        error: response.content.error ? response.content.result : null
+      })
+      if (!response.content.error) {
+        setPagination({
+          currentPage: response.content.pagination.current_page,
+          pageSize: response.content.pagination.page_size,
+          totalPages: response.content.pagination.total_pages,
+          total: response.content.pagination.total,
+          from: response.content.pagination.from,
+          to: response.content.pagination.to
+        })
+      }
+    } catch (err) {
+      if (err.constructor.name !== 'Cancel') {
+        setOrderList({ ...orderList, loading: false, error: [err.message] })
+      }
+    }
+  }
   /**
    * Listening order id to update for unread_count parameter
    */
@@ -407,7 +442,7 @@ export const DashboardOrdersList = (props) => {
    * Listening deleted order
    */
   useEffect(() => {
-    if (deletedOrderId === null) return
+    if (!deletedOrderId) return
     const orders = orderList.orders.filter(_order => {
       return _order.id !== deletedOrderId
     })
@@ -450,7 +485,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, orders, orderStatus])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders])
 
   useEffect(() => {
     if (orderList.loading) return
@@ -565,6 +600,7 @@ export const DashboardOrdersList = (props) => {
           orderList={orderList}
           pagination={pagination}
           loadMoreOrders={loadMoreOrders}
+          getPageOrders={getPageOrders}
           handleUpdateOrderStatus={handleUpdateOrderStatus}
         />
       )}

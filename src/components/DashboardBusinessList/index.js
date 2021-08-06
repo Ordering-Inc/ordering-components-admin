@@ -119,7 +119,7 @@ export const DashboardBusinessList = (props) => {
     }
 
     const functionFetch = asDashboard
-      ? ordering.setAccessToken(session.token).businesses().asDashboard().where(where)
+      ? ordering.setAccessToken(session.token).businesses().select(propsToFetch).asDashboard().where(where)
       : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where)
 
     return await functionFetch.get(options)
@@ -187,6 +187,35 @@ export const DashboardBusinessList = (props) => {
   }
 
   /**
+   * Method to get businesses for page and pageSize
+   */
+  const getPageBusinesses = async (pageSize, page) => {
+    setBusinessList({ ...businessList, loading: true })
+    try {
+      const response = await getBusinesses(pageSize, page)
+      setBusinessList({
+        loading: false,
+        businesses: response.content.error ? businessList.businesses : response.content.result,
+        error: response.content.error ? response.content.result : null
+      })
+      if (!response.content.error) {
+        setPagination({
+          currentPage: response.content.pagination.current_page,
+          pageSize: response.content.pagination.page_size,
+          totalPages: response.content.pagination.total_pages,
+          total: response.content.pagination.total,
+          from: response.content.pagination.from,
+          to: response.content.pagination.to
+        })
+      }
+    } catch (err) {
+      if (err.constructor.name !== 'Cancel') {
+        setBusinessList({ ...businessList, loading: false, error: [err.message] })
+      }
+    }
+  }
+
+  /**
    * Method to change user active state for filter
    */
   const handleChangeBusinessActiveState = () => {
@@ -216,6 +245,7 @@ export const DashboardBusinessList = (props) => {
     const businesses = businessList.businesses.filter(business => business.id !== businessId)
     setPagination({
       ...pagination,
+      to: pagination?.to - 1,
       total: pagination?.total - 1
     })
     setBusinessList({ ...businessList, businesses })
@@ -229,6 +259,7 @@ export const DashboardBusinessList = (props) => {
     const businesses = [...businessList.businesses, business]
     setPagination({
       ...pagination,
+      to: pagination?.to + 1,
       total: pagination?.total + 1
     })
     setBusinessList({ ...businessList, businesses })
@@ -286,6 +317,7 @@ export const DashboardBusinessList = (props) => {
             onSearch={setSearchValue}
             selectedBusinessActiveState={selectedBusinessActiveState}
             loadMoreBusinesses={loadMoreBusinesses}
+            getPageBusinesses={getPageBusinesses}
             handleChangeBusinessActiveState={handleChangeBusinessActiveState}
             handleChangeBusinessType={handleChangeBusinessType}
             handleSucessRemoveBusiness={handleSucessRemoveBusiness}
@@ -327,6 +359,6 @@ DashboardBusinessList.propTypes = {
 DashboardBusinessList.defaultProps = {
   initialPageSize: 10,
   loadMorePageSize: 10,
-  propsToFetch: ['id', 'address', 'alcohol', 'categories', 'city', 'city_id', 'description', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'gallery', 'groceries', 'header', 'laundry', 'logo', 'location', 'menus', 'menus_shared', 'metafields', 'name', 'offers', 'open', 'owners', 'paymethods', 'pickup_time', 'reviews', 'schedule', 'slug', 'types', 'zones'],
+  propsToFetch: ['id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'food', 'groceries', 'header', 'laundry', 'logo', 'name', 'pickup_time', 'slug'],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
 }
