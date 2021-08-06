@@ -1,9 +1,13 @@
 import { AddressDetails } from './components/AddressDetails'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
+import { AnalyticsBusinessFilter } from './components/AnalyticsBusinessFilter'
+import { AnalyticsDriversFilter } from './components/AnalyticsDriversFilter'
+import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
 import { BaseComponent } from './components/BaseComponent'
 import { Settings } from './components/Settings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
+import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
@@ -41,6 +45,7 @@ import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
+import { DriverAnalytics } from './components/DriverAnalytics'
 import { ExamineClick } from './components/ExamineClick'
 import { ExportCSV } from './components/ExportCSV'
 import { FacebookLoginButton } from './components/FacebookLoginButton'
@@ -135,9 +140,13 @@ export {
   AddressDetails,
   AddressForm,
   AddressList,
+  AnalyticsBusinessFilter,
+  AnalyticsDriversFilter,
+  AnalyticsStatusSubFilter,
   BaseComponent,
   Settings,
   BusinessAndProductList,
+  BusinessAnalytics,
   BusinessBasicInformation,
   BusinessCategoryEdit,
   BusinessController,
@@ -175,6 +184,7 @@ export {
   DragAndDrop,
   DriverTips,
   DriversList,
+  DriverAnalytics,
   ExamineClick,
   ExportCSV,
   FacebookLoginButton,

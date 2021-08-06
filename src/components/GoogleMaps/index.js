@@ -16,7 +16,10 @@ export const GoogleMaps = (props) => {
     handleChangeAddressMap,
     maxLimitLocation,
     businessMap,
-    onBusinessClick
+    onBusinessClick,
+    isHeatMap,
+    isHeat,
+    markerIcon
   } = props
 
   const [{ optimizeImage }] = useUtils()
@@ -42,6 +45,9 @@ export const GoogleMaps = (props) => {
       if (i === 1 || businessMap) {
         formatUrl = optimizeImage(locations[i]?.icon, 'r_max')
       }
+      if (isHeatMap && markerIcon) {
+        formatUrl = markerIcon
+      }
       const marker = new window.google.maps.Marker({
         position: new window.google.maps.LatLng(locations[i]?.lat, locations[i]?.lng),
         map,
@@ -49,7 +55,10 @@ export const GoogleMaps = (props) => {
         icon: locations[i]?.icon ? {
           url: formatUrl || locations[i].icon,
           scaledSize: new window.google.maps.Size(45, 45)
-        } : null
+        } : (isHeatMap ? {
+          url: formatUrl,
+          scaledSize: new window.google.maps.Size(40, 40)
+        } : null)
       })
       if (businessMap) {
         const isNear = validateResult(googleMap, marker, marker.getPosition())
@@ -147,6 +156,17 @@ export const GoogleMaps = (props) => {
   }
 
   useEffect(() => {
+    if (googleReady && googleMap && googleMapMarker && isHeatMap && markerCluster) {
+      heatMap.setMap(heatMap.getMap() ? null : googleMap)
+      if (heatMap.getMap()) {
+        markerCluster.clearMarkers()
+      } else {
+        markerCluster.addMarkers(markers)
+      }
+    }
+  }, [isHeat])
+
+  useEffect(() => {
     if (googleReady) {
       const map = new window.google.maps.Map(divRef.current, {
         zoom: location.zoom ?? mapControls.defaultZoom,
@@ -177,7 +197,8 @@ export const GoogleMaps = (props) => {
         generateMarkers(map)
         marker = new window.google.maps.Marker({
           position: new window.google.maps.LatLng(center?.lat, center?.lng),
-          map
+          map,
+          opacity: isHeatMap ? 0 : 1
         })
         setGoogleMapMarker(marker)
       } else {
@@ -212,6 +233,23 @@ export const GoogleMaps = (props) => {
             googleMapMarker.setPosition(googleMap.getCenter())
             validateResult(googleMap, googleMapMarker, googleMap.getCenter())
           })
+        }
+
+        if (isHeatMap) {
+          const _heatMap = new window.google.maps.visualization.HeatmapLayer({
+            data: locations.map(location => {
+              return new window.google.maps.LatLng(location.lat, location.lng)
+            }),
+            map: null,
+            radius: 17
+          })
+          setHeatMap(_heatMap)
+          // Add a marker clusterer to manage the markers.
+          const _markerCluster = new window.MarkerClusterer(googleMap, markers, {
+            imagePath:
+              'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+          })
+          setMarkerCluster(_markerCluster)
         }
 
         return () => {
