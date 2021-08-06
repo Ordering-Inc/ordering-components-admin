@@ -29,6 +29,8 @@ export const GoogleMaps = (props) => {
   const [googleMapMarker, setGoogleMapMarker] = useState(null)
   const [markers, setMarkers] = useState([])
   const [boundMap, setBoundMap] = useState(null)
+  const [heatMap, setHeatMap] = useState(null)
+  const [markerCluster, setMarkerCluster] = useState(null)
 
   const location = fixedLocation || props.location
   const center = { lat: location?.lat, lng: location?.lng }

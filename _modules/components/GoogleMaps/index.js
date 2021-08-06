@@ -96,6 +96,16 @@ var GoogleMaps = function GoogleMaps(props) {
       boundMap = _useState8[0],
       setBoundMap = _useState8[1];
 
+  var _useState9 = (0, _react.useState)(null),
+      _useState10 = _slicedToArray(_useState9, 2),
+      heatMap = _useState10[0],
+      setHeatMap = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(null),
+      _useState12 = _slicedToArray(_useState11, 2),
+      markerCluster = _useState12[0],
+      setMarkerCluster = _useState12[1];
+
   var location = fixedLocation || props.location;
   var center = {
     lat: location === null || location === void 0 ? void 0 : location.lat,
