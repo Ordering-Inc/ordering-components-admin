@@ -51,6 +51,15 @@ var WrapperGoogleMaps = function WrapperGoogleMaps(Child) {
 
       var checker = null;
 
+      if (!window.document.getElementById('google-maps-cluster')) {
+        var js1 = window.document.createElement('script');
+        js1.id = 'google-maps-cluster';
+        js1.async = true;
+        js1.defer = true;
+        js1.src = 'https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js';
+        window.document.body.appendChild(js1);
+      }
+
       if (window.document.getElementById('google-maps-sdk')) {
         if (typeof google !== 'undefined') {
           setGoogleReady(true);
@@ -74,7 +83,7 @@ var WrapperGoogleMaps = function WrapperGoogleMaps(Child) {
       js.id = 'google-maps-sdk';
       js.async = true;
       js.defer = true;
-      js.src = "https://maps.googleapis.com/maps/api/js?key=".concat(apiKey, "&libraries=places,geometry&callback=googleAsyncInit");
+      js.src = "https://maps.googleapis.com/maps/api/js?key=".concat(apiKey, "&libraries=places,geometry,visualization&callback=googleAsyncInit");
       window.document.body.appendChild(js);
       return function () {
         if (checker) {
