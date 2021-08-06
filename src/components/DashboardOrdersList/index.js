@@ -397,6 +397,31 @@ export const DashboardOrdersList = (props) => {
       }
     }
   }
+  const getPageOrders = async (pageSize, page) => {
+    setOrderList({ ...orderList, loading: true })
+    try {
+      const response = await getOrders(pageSize, page)
+      setOrderList({
+        loading: false,
+        orders: response.content.error ? orderList.orders : response.content.result,
+        error: response.content.error ? response.content.result : null
+      })
+      if (!response.content.error) {
+        setPagination({
+          currentPage: response.content.pagination.current_page,
+          pageSize: response.content.pagination.page_size,
+          totalPages: response.content.pagination.total_pages,
+          total: response.content.pagination.total,
+          from: response.content.pagination.from,
+          to: response.content.pagination.to
+        })
+      }
+    } catch (err) {
+      if (err.constructor.name !== 'Cancel') {
+        setOrderList({ ...orderList, loading: false, error: [err.message] })
+      }
+    }
+  }
   /**
    * Listening order id to update for unread_count parameter
    */
@@ -575,6 +600,7 @@ export const DashboardOrdersList = (props) => {
           orderList={orderList}
           pagination={pagination}
           loadMoreOrders={loadMoreOrders}
+          getPageOrders={getPageOrders}
           handleUpdateOrderStatus={handleUpdateOrderStatus}
         />
       )}
