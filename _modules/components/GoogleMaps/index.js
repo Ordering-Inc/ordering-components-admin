@@ -61,7 +61,12 @@ var GoogleMaps = function GoogleMaps(props) {
       handleChangeAddressMap = props.handleChangeAddressMap,
       maxLimitLocation = props.maxLimitLocation,
       businessMap = props.businessMap,
-      onBusinessClick = props.onBusinessClick;
+      onBusinessClick = props.onBusinessClick,
+      isHeatMap = props.isHeatMap,
+      isHeat = props.isHeat,
+      markerIcon = props.markerIcon,
+      isFitCenter = props.isFitCenter,
+      handleChangeCenter = props.handleChangeCenter;
 
   var _useUtils = (0, _UtilsContext.useUtils)(),
       _useUtils2 = _slicedToArray(_useUtils, 1),
@@ -93,6 +98,16 @@ var GoogleMaps = function GoogleMaps(props) {
       boundMap = _useState8[0],
       setBoundMap = _useState8[1];
 
+  var _useState9 = (0, _react.useState)(null),
+      _useState10 = _slicedToArray(_useState9, 2),
+      heatMap = _useState10[0],
+      setHeatMap = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(null),
+      _useState12 = _slicedToArray(_useState11, 2),
+      markerCluster = _useState12[0],
+      setMarkerCluster = _useState12[1];
+
   var location = fixedLocation || props.location;
   var center = {
     lat: location === null || location === void 0 ? void 0 : location.lat,
@@ -118,6 +133,10 @@ var GoogleMaps = function GoogleMaps(props) {
         formatUrl = optimizeImage((_locations$i = locations[i]) === null || _locations$i === void 0 ? void 0 : _locations$i.icon, 'r_max');
       }
 
+      if (isHeatMap && markerIcon) {
+        formatUrl = markerIcon;
+      }
+
       var marker = new window.google.maps.Marker({
         position: new window.google.maps.LatLng((_locations$i2 = locations[i]) === null || _locations$i2 === void 0 ? void 0 : _locations$i2.lat, (_locations$i3 = locations[i]) === null || _locations$i3 === void 0 ? void 0 : _locations$i3.lng),
         map: map,
@@ -125,6 +144,9 @@ var GoogleMaps = function GoogleMaps(props) {
         icon: ((_locations$i5 = locations[i]) === null || _locations$i5 === void 0 ? void 0 : _locations$i5.icon) ? {
           url: formatUrl || locations[i].icon,
           scaledSize: new window.google.maps.Size(45, 45)
+        } : isHeatMap ? {
+          url: formatUrl,
+          scaledSize: new window.google.maps.Size(40, 40)
         } : null
       });
 
@@ -261,6 +283,30 @@ var GoogleMaps = function GoogleMaps(props) {
   };
 
   (0, _react.useEffect)(function () {
+    if (googleReady && googleMap && googleMapMarker && isHeatMap && markerCluster) {
+      heatMap.setMap(heatMap.getMap() ? null : googleMap);
+
+      if (heatMap.getMap()) {
+        markerCluster.clearMarkers();
+      } else {
+        markerCluster.addMarkers(markers);
+      }
+    }
+  }, [isHeat]);
+  (0, _react.useEffect)(function () {
+    if (googleReady && googleMap && googleMapMarker && isFitCenter) {
+      googleMap.addListener('center_changed', function () {
+        var timeOUt = setTimeout(function () {
+          googleMapMarker.setPosition(googleMap.getCenter());
+          handleChangeCenter && handleChangeCenter(googleMap.getCenter());
+        }, 200);
+        return function () {
+          return clearTimeout(timeOUt);
+        };
+      });
+    }
+  }, [googleMapMarker]);
+  (0, _react.useEffect)(function () {
     if (googleReady) {
       var _location$zoom;
 
@@ -292,7 +338,8 @@ var GoogleMaps = function GoogleMaps(props) {
         generateMarkers(map);
         marker = new window.google.maps.Marker({
           position: new window.google.maps.LatLng(center === null || center === void 0 ? void 0 : center.lat, center === null || center === void 0 ? void 0 : center.lng),
-          map: map
+          map: map,
+          opacity: isHeatMap ? 0 : 1
         });
         setGoogleMapMarker(marker);
       } else {
@@ -324,6 +371,24 @@ var GoogleMaps = function GoogleMaps(props) {
             googleMapMarker.setPosition(googleMap.getCenter());
             validateResult(googleMap, googleMapMarker, googleMap.getCenter());
           });
+        }
+
+        if (isHeatMap) {
+          var _heatMap = new window.google.maps.visualization.HeatmapLayer({
+            data: locations.map(function (location) {
+              return new window.google.maps.LatLng(location.lat, location.lng);
+            }),
+            map: null,
+            radius: 17
+          });
+
+          setHeatMap(_heatMap); // Add a marker clusterer to manage the markers.
+
+          var _markerCluster = new window.MarkerClusterer(googleMap, markers, {
+            imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+          });
+
+          setMarkerCluster(_markerCluster);
         }
 
         return function () {

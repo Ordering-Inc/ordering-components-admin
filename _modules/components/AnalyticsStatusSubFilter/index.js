@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Settings = void 0;
+exports.AnalyticsStatusSubFilter = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -25,15 +25,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -47,26 +47,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to manage Settings page behavior without UI component
- */
-var Settings = function Settings(props) {
-  var UIComponent = props.UIComponent,
-      settingsType = props.settingsType;
-
-  var _useState = (0, _react.useState)({
-    categories: [],
-    loading: false,
-    error: null
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      categoryList = _useState2[0],
-      setCategoryList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isUpdateConfig = _useState4[0],
-      setIsUpdateConfig = _useState4[1];
+var AnalyticsStatusSubFilter = function AnalyticsStatusSubFilter(props) {
+  var UIComponent = props.UIComponent;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -77,25 +59,23 @@ var Settings = function Settings(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useState = (0, _react.useState)({
+    loading: false,
+    ids: [],
+    error: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      appIdList = _useState2[0],
+      setAppIdList = _useState2[1];
   /**
-   * Method to update the category
+   * Method to get App_id List
    */
 
 
-  var handleUpdateCategoryList = function handleUpdateCategoryList(categories) {
-    setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-      categories: categories
-    }));
-    setIsUpdateConfig(true);
-  };
-  /**
-   * Method to get Configration List
-   */
-
-
-  var getCagegories = /*#__PURE__*/function () {
+  var getAppIds = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -110,7 +90,7 @@ var Settings = function Settings(props) {
 
             case 2:
               _context.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              setAppIdList(_objectSpread(_objectSpread({}, appIdList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -120,112 +100,96 @@ var Settings = function Settings(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              filterConditons = [];
-              if (settingsType === 'basic') filterConditons.push({
-                attribute: 'parent_category_id',
-                value: 1
-              });else filterConditons.push({
-                attribute: 'parent_category_id',
-                value: 2
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=rank&where=").concat(JSON.stringify(filterConditons));
-              _context.next = 10;
+              functionFetch = "".concat(ordering.root, "/reports/app_ids");
+              _context.next = 8;
               return fetch(functionFetch, requestOptions);
 
-            case 10:
+            case 8:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 11;
               return response.json();
 
-            case 13:
+            case 11:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
               if (!error) {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                setAppIdList(_objectSpread(_objectSpread({}, appIdList), {}, {
                   loading: false,
-                  categories: result
+                  ids: result
                 }));
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                setAppIdList(_objectSpread(_objectSpread({}, appIdList), {}, {
                   loading: true,
                   error: result
                 }));
               }
 
-              _context.next = 22;
+              _context.next = 20;
               break;
 
-            case 19:
-              _context.prev = 19;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              setAppIdList(_objectSpread(_objectSpread({}, appIdList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 22:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[2, 17]]);
     }));
 
-    return function getCagegories() {
+    return function getAppIds() {
       return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getCagegories();
+    getAppIds();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    isUpdateConfig: isUpdateConfig,
-    handChangeConfig: setIsUpdateConfig,
-    categoryList: categoryList,
-    handleUpdateCategoryList: handleUpdateCategoryList
+    appIdList: appIdList
   })));
 };
 
-exports.Settings = Settings;
-Settings.propTypes = {
+exports.AnalyticsStatusSubFilter = AnalyticsStatusSubFilter;
+AnalyticsStatusSubFilter.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * String to idenity setting group
-   */
-  settingsType: _propTypes.default.string,
-
-  /**
-   * Components types before Checkout
+   * Components types before Business Controller
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after Business Controller
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before Business Controller
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after Business Controller
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Settings.defaultProps = {
+AnalyticsStatusSubFilter.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
