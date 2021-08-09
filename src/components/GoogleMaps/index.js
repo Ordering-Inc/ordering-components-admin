@@ -19,7 +19,9 @@ export const GoogleMaps = (props) => {
     onBusinessClick,
     isHeatMap,
     isHeat,
-    markerIcon
+    markerIcon,
+    isFitCenter,
+    handleChangeCenter
   } = props
 
   const [{ optimizeImage }] = useUtils()
@@ -167,6 +169,18 @@ export const GoogleMaps = (props) => {
       }
     }
   }, [isHeat])
+
+  useEffect(() => {
+    if (googleReady && googleMap && googleMapMarker && isFitCenter) {
+      googleMap.addListener('center_changed', () => {
+        const timeOUt = setTimeout(() => {
+          googleMapMarker.setPosition(googleMap.getCenter())
+          handleChangeCenter && handleChangeCenter(googleMap.getCenter())
+        }, 200)
+        return () => clearTimeout(timeOUt)
+      })
+    }
+  }, [googleMapMarker])
 
   useEffect(() => {
     if (googleReady) {
