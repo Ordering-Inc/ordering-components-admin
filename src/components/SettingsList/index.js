@@ -9,10 +9,12 @@ import { useApi } from '../../contexts/ApiContext'
 export const SettingsList = (props) => {
   const {
     UIComponent,
-    category
+    category,
+    handleUpdateCategoryList,
+    categoryList
   } = props
 
-  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false })
+  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
   const [configs, setConfigs] = useState(null)
   const [{ loading }] = useSession()
   const [ordering] = useApi()
@@ -102,7 +104,16 @@ export const SettingsList = (props) => {
       const { content: { error, result } } = await ordering.configs(id).save(params)
       if (!error) {
         const changes = formState?.changes.filter(item => item.id !== result.id)
-        changes.length > 0 ? (
+        const _configs = formState?.finalResult.map(config => {
+          if (config.id === result.id) {
+            return {
+              ...config,
+              value: result?.value
+            }
+          }
+          return config
+        })
+        if (changes.length > 0) {
           setFormState({
             loading: false,
             changes: changes,
@@ -110,9 +121,10 @@ export const SettingsList = (props) => {
               error: false,
               result: result
             },
-            API: true
+            API: true,
+            finalResult: _configs
           })
-        ) : (
+        } else {
           setFormState({
             loading: false,
             changes: null,
@@ -120,9 +132,23 @@ export const SettingsList = (props) => {
               error: false,
               result: 'ok'
             },
-            API: false
+            API: false,
+            finalResult: _configs
           })
-        )
+
+          if (handleUpdateCategoryList) {
+            const _categories = categoryList?.categories.map(item => {
+              if (item.id === category.id) {
+                return {
+                  ...item,
+                  configs: _configs
+                }
+              }
+              return item
+            })
+            handleUpdateCategoryList(_categories)
+          }
+        }
       } else {
         setFormState({
           ...formState,
@@ -151,6 +177,10 @@ export const SettingsList = (props) => {
     if (category?.configs.length > 0) {
       const _configs = [...category?.configs]
       setConfigs(_configs)
+      setFormState({
+        ...formState,
+        finalResult: _configs
+      })
     }
   }, [category?.configs])
 
@@ -186,6 +216,14 @@ SettingsList.propTypes = {
   * Category of configs
   */
   category: PropTypes.object,
+  /**
+  * Object for a category
+  */
+  categoryList: PropTypes.object,
+  /**
+  * Function to set a category list
+  */
+  handleUpdateCategoryList: PropTypes.func,
   /**
    * Array of drivers props to fetch
    */

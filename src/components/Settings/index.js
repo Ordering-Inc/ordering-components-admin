@@ -13,12 +13,17 @@ export const Settings = (props) => {
   } = props
 
   const [categoryList, setCategoryList] = useState({ categories: [], loading: false, error: null })
+  const [isUpdateConfig, setIsUpdateConfig] = useState(false)
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  useEffect(() => {
-    getCagegories()
-  }, [])
+  /**
+   * Method to update the category
+   */
+  const handleUpdateCategoryList = (categories) => {
+    setCategoryList({ ...categoryList, categories: categories })
+    setIsUpdateConfig(true)
+  }
 
   /**
    * Method to get Configration List
@@ -65,12 +70,19 @@ export const Settings = (props) => {
     }
   }
 
+  useEffect(() => {
+    getCagegories()
+  }, [])
+
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
+          isUpdateConfig={isUpdateConfig}
+          handChangeConfig={setIsUpdateConfig}
           categoryList={categoryList}
+          handleUpdateCategoryList={handleUpdateCategoryList}
         />
       )}
     </>
