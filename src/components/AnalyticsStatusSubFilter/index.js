@@ -1,37 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
-/**
- * Component to manage Settings page behavior without UI component
- */
-export const Settings = (props) => {
-  const {
-    UIComponent,
-    settingsType
-  } = props
 
-  const [categoryList, setCategoryList] = useState({ categories: [], loading: false, error: null })
-  const [isUpdateConfig, setIsUpdateConfig] = useState(false)
+export const AnalyticsStatusSubFilter = (props) => {
+  const {
+    UIComponent
+  } = props
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  /**
-   * Method to update the category
-   */
-  const handleUpdateCategoryList = (categories) => {
-    setCategoryList({ ...categoryList, categories: categories })
-    setIsUpdateConfig(true)
-  }
+  const [appIdList, setAppIdList] = useState({ loading: false, ids: [], error: null })
 
   /**
-   * Method to get Configration List
+   * Method to get App_id List
    */
-  const getCagegories = async () => {
+  const getAppIds = async () => {
     if (loading) return
     try {
-      setCategoryList({ ...categoryList, loading: true })
+      setAppIdList({ ...appIdList, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -40,30 +28,26 @@ export const Settings = (props) => {
         }
       }
 
-      const filterConditons = []
-      if (settingsType === 'basic') filterConditons.push({ attribute: 'parent_category_id', value: 1 })
-      else filterConditons.push({ attribute: 'parent_category_id', value: 2 })
-
-      const functionFetch = `${ordering.root}/config_categories?orderBy=rank&where=${JSON.stringify(filterConditons)}`
+      const functionFetch = `${ordering.root}/reports/app_ids`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setCategoryList({
-          ...categoryList,
+        setAppIdList({
+          ...appIdList,
           loading: false,
-          categories: result
+          ids: result
         })
       } else {
-        setCategoryList({
-          ...categoryList,
+        setAppIdList({
+          ...appIdList,
           loading: true,
           error: result
         })
       }
     } catch (err) {
-      setCategoryList({
-        ...categoryList,
+      setAppIdList({
+        ...appIdList,
         loading: false,
         error: err
       })
@@ -71,7 +55,7 @@ export const Settings = (props) => {
   }
 
   useEffect(() => {
-    getCagegories()
+    getAppIds()
   }, [])
 
   return (
@@ -79,48 +63,41 @@ export const Settings = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          isUpdateConfig={isUpdateConfig}
-          handChangeConfig={setIsUpdateConfig}
-          categoryList={categoryList}
-          handleUpdateCategoryList={handleUpdateCategoryList}
+          appIdList={appIdList}
         />
       )}
     </>
   )
 }
 
-Settings.propTypes = {
+AnalyticsStatusSubFilter.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
   /**
-   * String to idenity setting group
-   */
-  settingsType: PropTypes.string,
-  /**
-   * Components types before Checkout
+   * Components types before Business Controller
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Components types after Checkout
+   * Components types after Business Controller
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Elements before Checkout
+   * Elements before Business Controller
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
-   * Elements after Checkout
+   * Elements after Business Controller
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-Settings.defaultProps = {
+AnalyticsStatusSubFilter.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
