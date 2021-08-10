@@ -725,6 +725,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
    */
 
   (0, _react.useEffect)(function () {
+    if (session === null || session === void 0 ? void 0 : session.loading) return;
+
     if (orders) {
       setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
         orders: orders
@@ -759,7 +761,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
