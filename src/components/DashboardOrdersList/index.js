@@ -456,6 +456,7 @@ export const DashboardOrdersList = (props) => {
    * Listening sesssion and filter values change
    */
   useEffect(() => {
+    if (session?.loading) return
     if (orders) {
       setOrderList({
         ...orderList,
@@ -485,7 +486,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus])
 
   useEffect(() => {
     if (orderList.loading) return
