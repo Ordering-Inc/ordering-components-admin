@@ -64,7 +64,9 @@ var GoogleMaps = function GoogleMaps(props) {
       onBusinessClick = props.onBusinessClick,
       isHeatMap = props.isHeatMap,
       isHeat = props.isHeat,
-      markerIcon = props.markerIcon;
+      markerIcon = props.markerIcon,
+      isFitCenter = props.isFitCenter,
+      handleChangeCenter = props.handleChangeCenter;
 
   var _useUtils = (0, _UtilsContext.useUtils)(),
       _useUtils2 = _slicedToArray(_useUtils, 1),
@@ -291,6 +293,19 @@ var GoogleMaps = function GoogleMaps(props) {
       }
     }
   }, [isHeat]);
+  (0, _react.useEffect)(function () {
+    if (googleReady && googleMap && googleMapMarker && isFitCenter) {
+      googleMap.addListener('center_changed', function () {
+        var timeOUt = setTimeout(function () {
+          googleMapMarker.setPosition(googleMap.getCenter());
+          handleChangeCenter && handleChangeCenter(googleMap.getCenter());
+        }, 200);
+        return function () {
+          return clearTimeout(timeOUt);
+        };
+      });
+    }
+  }, [googleMapMarker]);
   (0, _react.useEffect)(function () {
     if (googleReady) {
       var _location$zoom;

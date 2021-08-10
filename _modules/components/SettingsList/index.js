@@ -60,7 +60,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var SettingsList = function SettingsList(props) {
   var UIComponent = props.UIComponent,
-      category = props.category;
+      category = props.category,
+      handleUpdateCategoryList = props.handleUpdateCategoryList,
+      categoryList = props.categoryList;
 
   var _useState = (0, _react.useState)({
     changes: null,
@@ -68,7 +70,8 @@ var SettingsList = function SettingsList(props) {
     result: {
       error: null
     },
-    API: false
+    API: false,
+    finalResult: []
   }),
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
@@ -186,7 +189,7 @@ var SettingsList = function SettingsList(props) {
 
   var saveConfig = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id, params) {
-      var _yield$ordering$confi, _yield$ordering$confi2, error, result, changes;
+      var _yield$ordering$confi, _yield$ordering$confi2, error, result, changes, _configs, _categories;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -218,23 +221,52 @@ var SettingsList = function SettingsList(props) {
                 changes = formState === null || formState === void 0 ? void 0 : formState.changes.filter(function (item) {
                   return item.id !== result.id;
                 });
-                changes.length > 0 ? setFormState({
-                  loading: false,
-                  changes: changes,
-                  result: {
-                    error: false,
-                    result: result
-                  },
-                  API: true
-                }) : setFormState({
-                  loading: false,
-                  changes: null,
-                  result: {
-                    error: false,
-                    result: 'ok'
-                  },
-                  API: false
+                _configs = formState === null || formState === void 0 ? void 0 : formState.finalResult.map(function (config) {
+                  if (config.id === result.id) {
+                    return _objectSpread(_objectSpread({}, config), {}, {
+                      value: result === null || result === void 0 ? void 0 : result.value
+                    });
+                  }
+
+                  return config;
                 });
+
+                if (changes.length > 0) {
+                  setFormState({
+                    loading: false,
+                    changes: changes,
+                    result: {
+                      error: false,
+                      result: result
+                    },
+                    API: true,
+                    finalResult: _configs
+                  });
+                } else {
+                  setFormState({
+                    loading: false,
+                    changes: null,
+                    result: {
+                      error: false,
+                      result: 'ok'
+                    },
+                    API: false,
+                    finalResult: _configs
+                  });
+
+                  if (handleUpdateCategoryList) {
+                    _categories = categoryList === null || categoryList === void 0 ? void 0 : categoryList.categories.map(function (item) {
+                      if (item.id === category.id) {
+                        return _objectSpread(_objectSpread({}, item), {}, {
+                          configs: _configs
+                        });
+                      }
+
+                      return item;
+                    });
+                    handleUpdateCategoryList(_categories);
+                  }
+                }
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -279,6 +311,9 @@ var SettingsList = function SettingsList(props) {
       var _configs = _toConsumableArray(category === null || category === void 0 ? void 0 : category.configs);
 
       setConfigs(_configs);
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        finalResult: _configs
+      }));
     }
   }, [category === null || category === void 0 ? void 0 : category.configs]);
   (0, _react.useEffect)(function () {
@@ -312,6 +347,16 @@ SettingsList.propTypes = {
   * Category of configs
   */
   category: _propTypes.default.object,
+
+  /**
+  * Object for a category
+  */
+  categoryList: _propTypes.default.object,
+
+  /**
+  * Function to set a category list
+  */
+  handleUpdateCategoryList: _propTypes.default.func,
 
   /**
    * Array of drivers props to fetch
