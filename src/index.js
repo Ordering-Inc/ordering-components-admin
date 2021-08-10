@@ -26,6 +26,8 @@ import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
+import { BusinessPromotionForm } from './components/BusinessPromotionForm'
+import { BusinessPromotionList } from './components/BusinessPromotionList'
 import { BusinessReviews } from './components/BusinessReviews'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
@@ -160,6 +162,8 @@ export {
   BusinessMenuMetaFields,
   BusinessMetaFields,
   BusinessProductsListing,
+  BusinessPromotionForm,
+  BusinessPromotionList,
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessPaymethods,
