@@ -56,6 +56,7 @@ import { ForgotPasswordForm } from './components/ForgotPasswordForm'
 import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
+import { Home } from './components/Home'
 import { LanguageSelector } from './components/LanguageSelector'
 import { LoginForm } from './components/LoginForm'
 import { LogisticInformation } from './components/LogisticInformation'
@@ -200,6 +201,7 @@ export {
   GoogleMapsMap,
   GpsButton,
   GoogleGpsButton,
+  Home,
   LanguageSelector,
   LoginForm,
   LogisticInformation,
