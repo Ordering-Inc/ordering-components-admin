@@ -345,6 +345,12 @@ Object.defineProperty(exports, "GoogleGpsButton", {
     return _GpsButton.GoogleGpsButton;
   }
 });
+Object.defineProperty(exports, "Home", {
+  enumerable: true,
+  get: function get() {
+    return _Home.Home;
+  }
+});
 Object.defineProperty(exports, "LanguageSelector", {
   enumerable: true,
   get: function get() {
@@ -1103,6 +1109,8 @@ var _GoogleAutocompleteInput = require("./components/GoogleAutocompleteInput");
 var _GoogleMaps = require("./components/GoogleMaps");
 
 var _GpsButton = require("./components/GpsButton");
+
+var _Home = require("./components/Home");
 
 var _LanguageSelector = require("./components/LanguageSelector");
 
