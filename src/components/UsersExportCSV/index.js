@@ -46,7 +46,7 @@ export const UsersExportCSV = (props) => {
         const url = window.URL.createObjectURL(blob)
         const a = document.createElement('a')
         a.href = url
-        a.download = `orders_${fileSuffix}.csv`
+        a.download = `users_${fileSuffix}.csv`
         a.click()
       })
       setActionStatus({ ...actionStatus, loading: false })
