@@ -238,8 +238,6 @@ export const BusinessSchedule = (props) => {
     const _schedule = [...schedule]
 
     if (!_selectedCopyDays.includes(index)) {
-      // const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
-
       let conflict = false
       for (let i = 0; i < _schedule[index].lapses.length; i++) {
         if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
