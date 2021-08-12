@@ -23,6 +23,7 @@ export const ProductExtraOptionDetails = (props) => {
   const [conditionalOptionId, setConditionalOptionId] = useState(null)
   const [extraState, setExtraState] = useState(extra)
   const [conditionalSubOptionId, setConditionalSubOptionId] = useState(null)
+  const [isAddMode, setIsAddMode] = useState(false)
 
   /**
    * Method to change the option input
@@ -30,6 +31,8 @@ export const ProductExtraOptionDetails = (props) => {
    * @param {Number} id sub option id
    */
   const handleChangeInput = (e, id) => {
+    if (id === null) setIsAddMode(true)
+    else setIsAddMode(false)
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -55,6 +58,8 @@ export const ProductExtraOptionDetails = (props) => {
    * @param {Number} id sub option id
    */
   const handleChangeSubOptionEnable = (enabled, id) => {
+    if (id === null) setIsAddMode(true)
+    else setIsAddMode(false)
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -79,6 +84,8 @@ export const ProductExtraOptionDetails = (props) => {
    * @param {File} file Image to change business photo
    */
   const handleChangeSubOptionImage = (file, id) => {
+    if (id === null) setIsAddMode(true)
+    else setIsAddMode(false)
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     if (id === editSubOptionId) {
@@ -219,6 +226,62 @@ export const ProductExtraOptionDetails = (props) => {
   }
 
   /**
+   * Method to add new option from API
+   */
+  const handleAddOption = async () => {
+    try {
+      const _changes = { ...changesState.changes }
+      let changes = {}
+      for (const key in _changes) {
+        if (_changes[key] !== '') {
+          changes = { ...changes, [key]: _changes[key] }
+        }
+      }
+      if (!changes?.name || !changes?.price) {
+        setEditErrors({
+          name: !changes?.name,
+          price: !changes?.price
+        })
+        return
+      }
+      if (Object.keys(changes).length === 0) return
+      changes.enabled = true
+      setOptionState({ ...optionState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}/suboptions`, requestOptions)
+      const content = await response.json()
+      setChangesState({
+        changes: content.error ? changesState : {},
+        result: content?.result
+      })
+      if (!content.error) {
+        const subOptions = [...optionState.option.suboptions]
+        subOptions.push(content.result)
+        const updatedOption = { ...optionState.option, suboptions: subOptions }
+        setOptionState({ ...optionState, option: updatedOption, loading: false })
+        const options = extra.options.filter(option => {
+          if (option.id === updatedOption.id) {
+            Object.assign(option, updatedOption)
+          }
+          return true
+        })
+        const updatedExtra = { ...extra, options: options }
+        setExtraState(updatedExtra)
+        handleSuccessUpdateBusiness(updatedExtra)
+      }
+    } catch (err) {
+      setOptionState({ ...optionState, loading: false, error: err.message })
+    }
+  }
+
+  /**
    * Method to delete the extra
    * @param {Number} subOptionId
    */
@@ -339,9 +402,11 @@ export const ProductExtraOptionDetails = (props) => {
         price: changesState?.changes?.price === ''
       })
     } else {
-      handleUpdateSubOption()
+      if (!isAddMode) {
+        handleUpdateSubOption()
+      }
     }
-  }, [changesState])
+  }, [changesState, isAddMode])
 
   useEffect(() => {
     setOptionState({ ...optionState, option: option })
@@ -370,6 +435,7 @@ export const ProductExtraOptionDetails = (props) => {
           conditionalSubOptionId={conditionalSubOptionId}
           handleChangeConditionalOption={handleChangeConditionalOption}
           handleChangeConditionalSubOption={handleChangeConditionalSubOption}
+          handleAddOption={handleAddOption}
         />
       )}
     </>

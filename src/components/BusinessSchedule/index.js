@@ -27,16 +27,23 @@ export const BusinessSchedule = (props) => {
   const cleanSelectedCopyDays = () => setSelectedCopyDays([])
 
   /**
-   * Method to check valid schedule time
+   * Method to check contain conflict
    */
-  const isConflictScheduleTime = (lapses, index, value) => {
+  const isCheckConflict = (lapses, newSchedule, index) => {
+    const openNew = newSchedule.open.hour * 60 + newSchedule.open.minute
+    const closeNew = newSchedule.close.hour * 60 + newSchedule.close.minute
     for (let i = 0; i < lapses.length; i++) {
       if (i !== index) {
-        if (convertMinutes(lapses[i].open) <= value && convertMinutes(lapses[i].close) >= value) {
-          return true
-        }
+        const openOld = lapses[i].open.hour * 60 + lapses[i].open.minute
+        const closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute
+
+        if (openNew < openOld && closeNew > closeOld) return true
+        if (openNew < openOld && closeNew > openOld) return true
+        if (openNew > openOld && closeNew < closeOld) return true
+        if (openNew < closeOld && closeNew > closeOld) return true
       }
     }
+
     return false
   }
 
@@ -55,12 +62,17 @@ export const BusinessSchedule = (props) => {
   const handleChangeTime = (daysOfWeekIndex, isOpen, isHour, index, value) => {
     const _schedule = [...schedule]
     let conflict
+    const selectedLaps = _schedule[daysOfWeekIndex].lapses[index]
+
     if (isOpen) {
       if (isHour) {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          index,
-          convertMinutes({ hour: parseInt(value), minute: _schedule[daysOfWeekIndex].lapses[index].open.minute })
+          {
+            open: { hour: parseInt(value), minute: selectedLaps.open.minute },
+            close: selectedLaps.close
+          },
+          index
         )
         if (conflict) {
           setIsConflict(true)
@@ -68,10 +80,13 @@ export const BusinessSchedule = (props) => {
           _schedule[daysOfWeekIndex].lapses[index].open.hour = parseInt(value)
         }
       } else {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          index,
-          convertMinutes({ hour: _schedule[daysOfWeekIndex].lapses[index].open.hour, minute: parent(value) })
+          {
+            open: { hour: selectedLaps.open.hour, minute: parseInt(value) },
+            close: selectedLaps.close
+          },
+          index
         )
         if (conflict) {
           setIsConflict(true)
@@ -81,10 +96,13 @@ export const BusinessSchedule = (props) => {
       }
     } else {
       if (isHour) {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          index,
-          convertMinutes({ hour: parseInt(value), minute: _schedule[daysOfWeekIndex].lapses[index].close.minute })
+          {
+            open: selectedLaps.open,
+            close: { hour: parseInt(value), minute: selectedLaps.close.minute }
+          },
+          index
         )
         if (conflict) {
           setIsConflict(true)
@@ -92,10 +110,13 @@ export const BusinessSchedule = (props) => {
           _schedule[daysOfWeekIndex].lapses[index].close.hour = parseInt(value)
         }
       } else {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          index,
-          convertMinutes({ hour: _schedule[daysOfWeekIndex].lapses[index].close.hour, minute: parent(value) })
+          {
+            open: selectedLaps.open,
+            close: { hour: selectedLaps.close.hour, minute: parseInt(value) }
+          },
+          index
         )
         if (conflict) {
           setIsConflict(true)
@@ -104,14 +125,17 @@ export const BusinessSchedule = (props) => {
         }
       }
     }
-    _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-    setSchedule(_schedule)
-    setFormState({
-      ...formState,
-      changes: {
-        schedule: _schedule
-      }
-    })
+
+    if (!conflict) {
+      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
+      setSchedule(_schedule)
+      setFormState({
+        ...formState,
+        changes: {
+          schedule: _schedule
+        }
+      })
+    }
   }
 
   /**
@@ -120,17 +144,8 @@ export const BusinessSchedule = (props) => {
    */
   const handleAddScheduleTime = (daysOfWeekIndex) => {
     const _schedule = [...schedule]
-    const openConflict = isConflictScheduleTime(
-      _schedule[daysOfWeekIndex].lapses,
-      null,
-      convertMinutes({ hour: addScheduleTime.open.hour, minute: addScheduleTime.open.minute })
-    )
-    const closeConflict = isConflictScheduleTime(
-      _schedule[daysOfWeekIndex].lapses,
-      null,
-      convertMinutes({ hour: addScheduleTime.close.hour, minute: addScheduleTime.close.minute })
-    )
-    if (openConflict || closeConflict) {
+    const conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, addScheduleTime, null)
+    if (conflict) {
       setIsConflict(true)
     } else {
       _schedule[daysOfWeekIndex].lapses.push(addScheduleTime)
@@ -214,22 +229,6 @@ export const BusinessSchedule = (props) => {
   }
 
   /**
-   * check conflict between two schedule times
-   */
-  const isConflictTime = (lapses, copyLapses) => {
-    for (let i = 0; i < lapses.length; i++) {
-      for (let j = 0; j < copyLapses.length; j++) {
-        const openTime = convertMinutes(copyLapses[j].open)
-        const closeTime = convertMinutes(copyLapses[j].close)
-        if ((convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime) || ((convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime))) {
-          return true
-        }
-      }
-    }
-    return false
-  }
-
-  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
@@ -239,7 +238,12 @@ export const BusinessSchedule = (props) => {
     const _schedule = [...schedule]
 
     if (!_selectedCopyDays.includes(index)) {
-      const conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses)
+      let conflict = false
+      for (let i = 0; i < _schedule[index].lapses.length; i++) {
+        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
+          conflict = true
+        }
+      }
       if (conflict) {
         setIsConflict(true)
         return
@@ -286,12 +290,16 @@ export const BusinessSchedule = (props) => {
   const handleChangeAddScheduleTime = (daysOfWeekIndex, isOpen, isHour, value) => {
     const _schedule = [...schedule]
     let conflict
+
     if (isOpen) {
       if (isHour) {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          null,
-          convertMinutes({ hour: parseInt(value), minute: addScheduleTime.open.minute })
+          {
+            open: { hour: parseInt(value), minute: addScheduleTime.open.minute },
+            close: addScheduleTime.close
+          },
+          null
         )
         if (conflict) {
           setIsConflict(true)
@@ -305,10 +313,13 @@ export const BusinessSchedule = (props) => {
           })
         }
       } else {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          null,
-          convertMinutes({ hour: addScheduleTime.open.hour, minute: parseInt(value) })
+          {
+            open: { hour: addScheduleTime.open.hour, minute: parseInt(value) },
+            close: addScheduleTime.close
+          },
+          null
         )
         if (conflict) {
           setIsConflict(true)
@@ -324,10 +335,13 @@ export const BusinessSchedule = (props) => {
       }
     } else {
       if (isHour) {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          null,
-          convertMinutes({ hour: parseInt(value), minute: addScheduleTime.close.minute })
+          {
+            open: addScheduleTime.open,
+            close: { hour: parseInt(value), minute: addScheduleTime.close.minute }
+          },
+          null
         )
         if (conflict) {
           setIsConflict(true)
@@ -341,10 +355,13 @@ export const BusinessSchedule = (props) => {
           })
         }
       } else {
-        conflict = isConflictScheduleTime(
+        conflict = isCheckConflict(
           _schedule[daysOfWeekIndex].lapses,
-          null,
-          convertMinutes({ hour: addScheduleTime.close.hour, minute: parseInt(value) })
+          {
+            open: addScheduleTime.open,
+            close: { hour: addScheduleTime.close.hour, minute: parseInt(value) }
+          },
+          null
         )
         if (conflict) {
           setIsConflict(true)
