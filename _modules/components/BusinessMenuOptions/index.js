@@ -274,16 +274,22 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     }));
   };
   /**
-   * Method to check valid schedule time
+   * Method to check contain conflict
    */
 
 
-  var isConflictScheduleTime = function isConflictScheduleTime(lapses, index, value) {
+  var isCheckConflict = function isCheckConflict(lapses, newSchedule, index) {
+    var openNew = newSchedule.open.hour * 60 + newSchedule.open.minute;
+    var closeNew = newSchedule.close.hour * 60 + newSchedule.close.minute;
+
     for (var i = 0; i < lapses.length; i++) {
       if (i !== index) {
-        if (convertMinutes(lapses[i].open) <= value && convertMinutes(lapses[i].close) >= value) {
-          return true;
-        }
+        var openOld = lapses[i].open.hour * 60 + lapses[i].open.minute;
+        var closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute;
+        if (openNew < openOld && closeNew > closeOld) return true;
+        if (openNew < openOld && closeNew > openOld) return true;
+        if (openNew > openOld && closeNew < closeOld) return true;
+        if (openNew < closeOld && closeNew > closeOld) return true;
       }
     }
 
@@ -309,13 +315,17 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     var _schedule = _toConsumableArray(schedule);
 
     var conflict;
+    var selectedLaps = _schedule[daysOfWeekIndex].lapses[index];
 
     if (isOpen) {
       if (isHour) {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
-          hour: parseInt(value),
-          minute: _schedule[daysOfWeekIndex].lapses[index].open.minute
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: {
+            hour: parseInt(value),
+            minute: selectedLaps.open.minute
+          },
+          close: selectedLaps.close
+        }, index);
 
         if (conflict) {
           setIsConflict(true);
@@ -323,10 +333,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           _schedule[daysOfWeekIndex].lapses[index].open.hour = parseInt(value);
         }
       } else {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
-          hour: _schedule[daysOfWeekIndex].lapses[index].open.hour,
-          minute: parent(value)
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: {
+            hour: selectedLaps.open.hour,
+            minute: parseInt(value)
+          },
+          close: selectedLaps.close
+        }, index);
 
         if (conflict) {
           setIsConflict(true);
@@ -336,10 +349,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       }
     } else {
       if (isHour) {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
-          hour: parseInt(value),
-          minute: _schedule[daysOfWeekIndex].lapses[index].close.minute
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: selectedLaps.open,
+          close: {
+            hour: parseInt(value),
+            minute: selectedLaps.close.minute
+          }
+        }, index);
 
         if (conflict) {
           setIsConflict(true);
@@ -347,10 +363,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           _schedule[daysOfWeekIndex].lapses[index].close.hour = parseInt(value);
         }
       } else {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, index, convertMinutes({
-          hour: _schedule[daysOfWeekIndex].lapses[index].close.hour,
-          minute: parent(value)
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: selectedLaps.open,
+          close: {
+            hour: selectedLaps.close.hour,
+            minute: parseInt(value)
+          }
+        }, index);
 
         if (conflict) {
           setIsConflict(true);
@@ -360,12 +379,18 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       }
     }
 
-    setSchedule(_schedule);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        schedule: JSON.stringify(_schedule)
-      }
-    }));
+    if (!conflict) {
+      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
+        return convertMinutes(a.open) - convertMinutes(b.open);
+      });
+
+      setSchedule(_schedule);
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          schedule: JSON.stringify(_schedule)
+        }
+      }));
+    }
   };
   /**
    * Method to delete the schedule time
@@ -402,10 +427,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
     if (isOpen) {
       if (isHour) {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-          hour: parseInt(value),
-          minute: addScheduleTime.open.minute
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: {
+            hour: parseInt(value),
+            minute: addScheduleTime.open.minute
+          },
+          close: addScheduleTime.close
+        }, null);
 
         if (conflict) {
           setIsConflict(true);
@@ -417,10 +445,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           }));
         }
       } else {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-          hour: addScheduleTime.open.hour,
-          minute: parseInt(value)
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: {
+            hour: addScheduleTime.open.hour,
+            minute: parseInt(value)
+          },
+          close: addScheduleTime.close
+        }, null);
 
         if (conflict) {
           setIsConflict(true);
@@ -434,10 +465,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       }
     } else {
       if (isHour) {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-          hour: parseInt(value),
-          minute: addScheduleTime.close.minute
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: addScheduleTime.open,
+          close: {
+            hour: parseInt(value),
+            minute: addScheduleTime.close.minute
+          }
+        }, null);
 
         if (conflict) {
           setIsConflict(true);
@@ -449,10 +483,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           }));
         }
       } else {
-        conflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-          hour: addScheduleTime.close.hour,
-          minute: parseInt(value)
-        }));
+        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
+          open: addScheduleTime.open,
+          close: {
+            hour: addScheduleTime.close.hour,
+            minute: parseInt(value)
+          }
+        }, null);
 
         if (conflict) {
           setIsConflict(true);
@@ -475,16 +512,9 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
   var handleAddScheduleTime = function handleAddScheduleTime(daysOfWeekIndex) {
     var _schedule = _toConsumableArray(schedule);
 
-    var openConflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-      hour: addScheduleTime.open.hour,
-      minute: addScheduleTime.open.minute
-    }));
-    var closeConflict = isConflictScheduleTime(_schedule[daysOfWeekIndex].lapses, null, convertMinutes({
-      hour: addScheduleTime.close.hour,
-      minute: addScheduleTime.close.minute
-    }));
+    var conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, addScheduleTime, null);
 
-    if (openConflict || closeConflict) {
+    if (conflict) {
       setIsConflict(true);
     } else {
       _schedule[daysOfWeekIndex].lapses.push(addScheduleTime);
@@ -690,25 +720,6 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     };
   }();
   /**
-   * check conflict between two schedule times
-   */
-
-
-  var isConflictTime = function isConflictTime(lapses, copyLapses) {
-    for (var i = 0; i < lapses.length; i++) {
-      for (var j = 0; j < copyLapses.length; j++) {
-        var openTime = convertMinutes(copyLapses[j].open);
-        var closeTime = convertMinutes(copyLapses[j].close);
-
-        if (convertMinutes(lapses[i].open) <= openTime && convertMinutes(lapses[i].close) >= openTime || convertMinutes(lapses[i].open) <= closeTime && convertMinutes(lapses[i].close) >= closeTime) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  };
-  /**
    * Method to copy times
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
@@ -721,7 +732,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     var _schedule = _toConsumableArray(schedule);
 
     if (!_selectedCopyDays.includes(index)) {
-      var conflict = isConflictTime(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses);
+      var conflict = false;
+
+      for (var i = 0; i < _schedule[index].lapses.length; i++) {
+        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
+          conflict = true;
+        }
+      }
 
       if (conflict) {
         setIsConflict(true);

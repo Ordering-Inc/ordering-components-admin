@@ -129,7 +129,7 @@ var UsersExportCSV = function UsersExportCSV(props) {
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
                 a.href = url;
-                a.download = "orders_".concat(fileSuffix, ".csv");
+                a.download = "users_".concat(fileSuffix, ".csv");
                 a.click();
               });
 
