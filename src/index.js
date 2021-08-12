@@ -9,6 +9,8 @@ import { Settings } from './components/Settings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
+import { BusinessBrands } from './components/BusinessBrands'
+import { BusinessBrandForm } from './components/BusinessBrandForm'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
@@ -152,6 +154,8 @@ export {
   BusinessAndProductList,
   BusinessAnalytics,
   BusinessBasicInformation,
+  BusinessBrands,
+  BusinessBrandForm,
   BusinessCategoryEdit,
   BusinessController,
   BusinessDeliveryZone,
