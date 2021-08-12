@@ -25,6 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -124,6 +132,11 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       _useState20 = _slicedToArray(_useState19, 2),
       conditionalSubOptionId = _useState20[0],
       setConditionalSubOptionId = _useState20[1];
+
+  var _useState21 = (0, _react.useState)(false),
+      _useState22 = _slicedToArray(_useState21, 2),
+      isAddMode = _useState22[0],
+      setIsAddMode = _useState22[1];
   /**
    * Method to change the option input
    * @param {EventTarget} e Related HTML event
@@ -132,6 +145,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeInput = function handleChangeInput(e, id) {
+    if (id === null) setIsAddMode(true);else setIsAddMode(false);
+
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -153,6 +168,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeSubOptionEnable = function handleChangeSubOptionEnable(enabled, id) {
+    if (id === null) setIsAddMode(true);else setIsAddMode(false);
+
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -177,6 +194,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeSubOptionImage = function handleChangeSubOptionImage(file, id) {
+    if (id === null) setIsAddMode(true);else setIsAddMode(false);
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
@@ -453,19 +471,136 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     };
   }();
   /**
+   * Method to add new option from API
+   */
+
+
+  var handleAddOption = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var _changes3, _changes4, _changes, changes, key, _changes5, _changes6, requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _changes = _objectSpread({}, changesState.changes);
+              changes = {};
+
+              for (key in _changes) {
+                if (_changes[key] !== '') {
+                  changes = _objectSpread(_objectSpread({}, changes), {}, _defineProperty({}, key, _changes[key]));
+                }
+              }
+
+              if (!(!((_changes3 = changes) === null || _changes3 === void 0 ? void 0 : _changes3.name) || !((_changes4 = changes) === null || _changes4 === void 0 ? void 0 : _changes4.price))) {
+                _context2.next = 7;
+                break;
+              }
+
+              setEditErrors({
+                name: !((_changes5 = changes) === null || _changes5 === void 0 ? void 0 : _changes5.name),
+                price: !((_changes6 = changes) === null || _changes6 === void 0 ? void 0 : _changes6.price)
+              });
+              return _context2.abrupt("return");
+
+            case 7:
+              if (!(Object.keys(changes).length === 0)) {
+                _context2.next = 9;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 9:
+              changes.enabled = true;
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context2.next = 14;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions"), requestOptions);
+
+            case 14:
+              response = _context2.sent;
+              _context2.next = 17;
+              return response.json();
+
+            case 17:
+              content = _context2.sent;
+              setChangesState({
+                changes: content.error ? changesState : {},
+                result: content === null || content === void 0 ? void 0 : content.result
+              });
+
+              if (!content.error) {
+                subOptions = _toConsumableArray(optionState.option.suboptions);
+                subOptions.push(content.result);
+                updatedOption = _objectSpread(_objectSpread({}, optionState.option), {}, {
+                  suboptions: subOptions
+                });
+                setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                  option: updatedOption,
+                  loading: false
+                }));
+                options = extra.options.filter(function (option) {
+                  if (option.id === updatedOption.id) {
+                    Object.assign(option, updatedOption);
+                  }
+
+                  return true;
+                });
+                updatedExtra = _objectSpread(_objectSpread({}, extra), {}, {
+                  options: options
+                });
+                setExtraState(updatedExtra);
+                handleSuccessUpdateBusiness(updatedExtra);
+              }
+
+              _context2.next = 25;
+              break;
+
+            case 22:
+              _context2.prev = 22;
+              _context2.t0 = _context2["catch"](0);
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: false,
+                error: _context2.t0.message
+              }));
+
+            case 25:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 22]]);
+    }));
+
+    return function handleAddOption() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
    * Method to delete the extra
    * @param {Number} subOptionId
    */
 
 
   var handleDeteteSubOption = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(subOptionId) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(subOptionId) {
       var requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
-      return _regenerator.default.wrap(function _callee2$(_context2) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: true
               }));
@@ -476,16 +611,16 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context2.next = 5;
+              _context3.next = 5;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions/").concat(subOptionId), requestOptions);
 
             case 5:
-              response = _context2.sent;
-              _context2.next = 8;
+              response = _context3.sent;
+              _context3.next = 8;
               return response.json();
 
             case 8:
-              content = _context2.sent;
+              content = _context3.sent;
 
               if (!content.error) {
                 subOptions = optionState.option.suboptions.filter(function (subOption) {
@@ -512,27 +647,27 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 handleSuccessUpdateBusiness(updatedExtra);
               }
 
-              _context2.next = 15;
+              _context3.next = 15;
               break;
 
             case 12:
-              _context2.prev = 12;
-              _context2.t0 = _context2["catch"](0);
+              _context3.prev = 12;
+              _context3.t0 = _context3["catch"](0);
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: false,
-                error: _context2.t0.message
+                error: _context3.t0.message
               }));
 
             case 15:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee3, null, [[0, 12]]);
     }));
 
     return function handleDeteteSubOption(_x) {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -543,11 +678,11 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleOptionSetting = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(name, checked) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(name, checked) {
       var change;
-      return _regenerator.default.wrap(function _callee3$(_context3) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
               change = _defineProperty({}, name, checked);
               setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
@@ -557,14 +692,14 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
             case 3:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3);
+      }, _callee4);
     }));
 
     return function handleOptionSetting(_x2, _x3) {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
   /**
@@ -574,13 +709,13 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleUpdateOption = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(change) {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(change) {
       var requestOptions, response, content, options, updatedExtra;
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.prev = 0;
+              _context5.prev = 0;
               setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
                 loading: true
               }));
@@ -592,16 +727,16 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 },
                 body: JSON.stringify(change)
               };
-              _context4.next = 5;
+              _context5.next = 5;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id), requestOptions);
 
             case 5:
-              response = _context4.sent;
-              _context4.next = 8;
+              response = _context5.sent;
+              _context5.next = 8;
               return response.json();
 
             case 8:
-              content = _context4.sent;
+              content = _context5.sent;
 
               if (!content.error) {
                 setSettingChangeState({
@@ -625,27 +760,27 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 handleSuccessUpdateBusiness(updatedExtra);
               }
 
-              _context4.next = 15;
+              _context5.next = 15;
               break;
 
             case 12:
-              _context4.prev = 12;
-              _context4.t0 = _context4["catch"](0);
+              _context5.prev = 12;
+              _context5.t0 = _context5["catch"](0);
               setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
                 loading: false,
-                error: _context4.t0.message
+                error: _context5.t0.message
               }));
 
             case 15:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, null, [[0, 12]]);
+      }, _callee5, null, [[0, 12]]);
     }));
 
     return function handleUpdateOption(_x4) {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   /**
@@ -693,9 +828,11 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
         price: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.price) === ''
       });
     } else {
-      handleUpdateSubOption();
+      if (!isAddMode) {
+        handleUpdateSubOption();
+      }
     }
-  }, [changesState]);
+  }, [changesState, isAddMode]);
   (0, _react.useEffect)(function () {
     setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
       option: option
@@ -719,7 +856,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     conditionalOptionId: conditionalOptionId,
     conditionalSubOptionId: conditionalSubOptionId,
     handleChangeConditionalOption: handleChangeConditionalOption,
-    handleChangeConditionalSubOption: handleChangeConditionalSubOption
+    handleChangeConditionalSubOption: handleChangeConditionalSubOption,
+    handleAddOption: handleAddOption
   })));
 };
 
