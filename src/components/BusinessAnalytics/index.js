@@ -58,7 +58,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setOrdersList({
           ...ordersList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -98,7 +98,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setSalesList({
           ...salesList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -138,7 +138,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setTopProductList({
           ...topProductList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -178,7 +178,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setTopCategoryList({
           ...topCategoryList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -218,7 +218,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setOrderStatusList({
           ...orderStatusList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -258,7 +258,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setRegisterUsersList({
           ...registerUsersList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -298,7 +298,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setCustomerSatisfactionList({
           ...customerSatisfactionList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -338,7 +338,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setOrdersAcceptSpendList({
           ...ordersAcceptSpendList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -378,7 +378,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setArrivedPickUpSpendList({
           ...arrivedPickUpSpendList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
@@ -418,7 +418,7 @@ export const BusinessAnalytics = (props) => {
       } else {
         setOrderLocationList({
           ...orderLocationList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
