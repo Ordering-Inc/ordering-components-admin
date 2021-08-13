@@ -221,7 +221,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setOrdersList(_objectSpread(_objectSpread({}, ordersList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -302,7 +302,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setSalesList(_objectSpread(_objectSpread({}, salesList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -383,7 +383,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setTopProductList(_objectSpread(_objectSpread({}, topProductList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -464,7 +464,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setTopCategoryList(_objectSpread(_objectSpread({}, topCategoryList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -545,7 +545,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -626,7 +626,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setRegisterUsersList(_objectSpread(_objectSpread({}, registerUsersList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -707,7 +707,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -788,7 +788,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -869,7 +869,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -950,7 +950,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
                 }));
               } else {
                 setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
