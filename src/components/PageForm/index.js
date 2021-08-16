@@ -10,7 +10,8 @@ export const PageForm = (props) => {
     UIComponent,
     pageId,
     pageList,
-    handleSuccessUpdate
+    handleSuccessUpdate,
+    handleCancel
   } = props
 
   const [ordering] = useApi()
@@ -23,7 +24,10 @@ export const PageForm = (props) => {
   const [insertImageState, setInsertImageState] = useState({ loading: false, change: {}, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
+  const [bodyContent, setBodyContent] = useState('<p><br></p>')
   const [selectedImageUrl, setSelectedImageUrl] = useState(null)
+  const [isAddMode, setIsAddMode] = useState(null)
+
   /**
    * Method to get the pages from API
    */
@@ -94,7 +98,7 @@ export const PageForm = (props) => {
         showToast(ToastType.Success, t('GALLERY_IMAGE_ADDED', 'Business gallery image added'))
         setSelectedImageUrl(content?.result?.source)
       } else {
-        setInsertImageState({ ...insertImageState, loading: false, error: content.reulst })
+        setInsertImageState({ ...insertImageState, loading: false, error: content.result })
       }
     } catch (err) {
       setInsertImageState({ ...insertImageState, loading: false, error: [err.message] })
@@ -123,7 +127,7 @@ export const PageForm = (props) => {
         setImageListState({ ...imageListState, images: _images })
         showToast(ToastType.Success, t('FILE_DELETED', 'File deleted'))
       } else {
-        setActionState({ loading: false, error: content.reulst })
+        setActionState({ loading: false, error: content.result })
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
@@ -143,6 +147,8 @@ export const PageForm = (props) => {
         }
       }
       if (Object.keys(changes).length === 0) return
+      changes.body = bodyContent
+
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
@@ -169,7 +175,49 @@ export const PageForm = (props) => {
         setFormState({ ...formState, changes: {}, loading: false, error: null })
         showToast(ToastType.Success, t('PAGE_SAVED', 'Page Saved'))
       } else {
-        setFormState({ loading: false, error: content.reulst })
+        setFormState({ loading: false, error: content.result })
+      }
+    } catch (err) {
+      setFormState({ ...formState, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to add new page from API
+   */
+  const handleAddPage = async () => {
+    try {
+      const _changes = { ...formState.changes }
+      let changes = {}
+      for (const key in _changes) {
+        if (_changes[key] !== '') {
+          changes = { ...changes, [key]: _changes[key] }
+        }
+      }
+      if (Object.keys(changes).length === 0) return
+      changes.body = bodyContent
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const response = await fetch(`${ordering.root}/pages`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        if (handleSuccessUpdate) {
+          const updatedPages = [...pageList, content.result]
+          handleSuccessUpdate(updatedPages)
+        }
+        handleCancel && handleCancel()
+        setFormState({ ...formState, changes: {}, loading: false, error: null })
+        showToast(ToastType.Success, t('PAGE_ADDED', 'Page Added'))
+      } else {
+        setFormState({ ...formState, loading: false, error: content.result })
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, error: [err.message] })
@@ -192,6 +240,7 @@ export const PageForm = (props) => {
   }
 
   const handleChangeFormState = (field, value) => {
+    console.log(formState)
     setFormState({
       ...formState,
       changes: {
@@ -207,9 +256,12 @@ export const PageForm = (props) => {
   }, [insertImageState.change])
 
   useEffect(() => {
+    getImages()
     if (pageId) {
       getPage()
-      getImages()
+      setIsAddMode(false)
+    } else {
+      setIsAddMode(true)
     }
   }, [pageId])
 
@@ -218,16 +270,19 @@ export const PageForm = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
+          isAddMode={isAddMode}
           pageState={pageState}
           imageListState={imageListState}
           insertImageState={insertImageState}
           formState={formState}
+          setBodyContent={setBodyContent}
           selectedImageUrl={selectedImageUrl}
           setSelectedImageUrl={setSelectedImageUrl}
           handleInsertImage={handleInsertImage}
           handleDeleteImage={handleDeleteImage}
           handleChangeFormState={handleChangeFormState}
           handleSavePage={handleSavePage}
+          handleAddPage={handleAddPage}
         />
       )}
     </>
