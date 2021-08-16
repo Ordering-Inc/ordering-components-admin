@@ -240,7 +240,6 @@ export const PageForm = (props) => {
   }
 
   const handleChangeFormState = (field, value) => {
-    console.log(formState)
     setFormState({
       ...formState,
       changes: {
