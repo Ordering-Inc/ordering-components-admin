@@ -483,6 +483,18 @@ Object.defineProperty(exports, "PaymentOptions", {
     return _PaymentOptions.PaymentOptions;
   }
 });
+Object.defineProperty(exports, "PagesList", {
+  enumerable: true,
+  get: function get() {
+    return _PagesList.PagesList;
+  }
+});
+Object.defineProperty(exports, "PageForm", {
+  enumerable: true,
+  get: function get() {
+    return _PageForm.PageForm;
+  }
+});
 Object.defineProperty(exports, "Popup", {
   enumerable: true,
   get: function get() {
@@ -1173,6 +1185,10 @@ var _OrdersOverview = require("./components/OrdersOverview");
 var _OrderTypeControl = require("./components/OrderTypeControl");
 
 var _PaymentOptions = require("./components/PaymentOptions");
+
+var _PagesList = require("./components/PagesList");
+
+var _PageForm = require("./components/PageForm");
 
 var _Popup = require("./components/Popup");
 
