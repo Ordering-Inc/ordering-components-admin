@@ -93,6 +93,14 @@ var PagesList = function PagesList(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       changeState = _useState6[0],
       setChangeState = _useState6[1];
+
+  var _useState7 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      actionState = _useState8[0],
+      setActionState = _useState8[1];
   /**
    * Method to get the pages from API
    */
@@ -206,7 +214,7 @@ var PagesList = function PagesList(props) {
             case 11:
               response = _context2.sent;
               _context2.next = 14;
-              return response.json(changeState.changes);
+              return response.json();
 
             case 14:
               content = _context2.sent;
@@ -262,6 +270,75 @@ var PagesList = function PagesList(props) {
     };
   }();
   /**
+   * Method to delete the page from API
+   */
+
+
+  var handleDeletePage = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(pageId) {
+      var requestOptions, response, content, updatedPages;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/pages/").concat(pageId), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
+                updatedPages = pagesListState.pages.filter(function (page) {
+                  return page.id !== pageId;
+                });
+                handleUpdatePageList(updatedPages);
+                showToast(_ToastContext.ToastType.Success, t('PAGE_DELETED', 'Page Deleted'));
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleDeletePage(_x) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  /**
    * Method to control the change state
    * @param {number} id page id
    * @param {string} field name to change
@@ -304,7 +381,8 @@ var PagesList = function PagesList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     pagesListState: pagesListState,
     handleChangeState: handleChangeState,
-    handleUpdatePageList: handleUpdatePageList
+    handleUpdatePageList: handleUpdatePageList,
+    handleDeletePage: handleDeletePage
   })));
 };
 

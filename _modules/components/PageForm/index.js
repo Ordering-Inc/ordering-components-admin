@@ -63,7 +63,8 @@ var PageForm = function PageForm(props) {
   var UIComponent = props.UIComponent,
       pageId = props.pageId,
       pageList = props.pageList,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      handleCancel = props.handleCancel;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -125,10 +126,20 @@ var PageForm = function PageForm(props) {
       formState = _useState10[0],
       setFormState = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(null),
+  var _useState11 = (0, _react.useState)('<p><br></p>'),
       _useState12 = _slicedToArray(_useState11, 2),
-      selectedImageUrl = _useState12[0],
-      setSelectedImageUrl = _useState12[1];
+      bodyContent = _useState12[0],
+      setBodyContent = _useState12[1];
+
+  var _useState13 = (0, _react.useState)(null),
+      _useState14 = _slicedToArray(_useState13, 2),
+      selectedImageUrl = _useState14[0],
+      setSelectedImageUrl = _useState14[1];
+
+  var _useState15 = (0, _react.useState)(null),
+      _useState16 = _slicedToArray(_useState15, 2),
+      isAddMode = _useState16[0],
+      setIsAddMode = _useState16[1];
   /**
    * Method to get the pages from API
    */
@@ -309,7 +320,7 @@ var PageForm = function PageForm(props) {
               } else {
                 setInsertImageState(_objectSpread(_objectSpread({}, insertImageState), {}, {
                   loading: false,
-                  error: content.reulst
+                  error: content.result
                 }));
               }
 
@@ -387,7 +398,7 @@ var PageForm = function PageForm(props) {
               } else {
                 setActionState({
                   loading: false,
-                  error: content.reulst
+                  error: content.result
                 });
               }
 
@@ -445,6 +456,7 @@ var PageForm = function PageForm(props) {
               return _context5.abrupt("return");
 
             case 6:
+              changes.body = bodyContent;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
@@ -457,15 +469,15 @@ var PageForm = function PageForm(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context5.next = 11;
+              _context5.next = 12;
               return fetch("".concat(ordering.root, "/pages/").concat(pageId), requestOptions);
 
-            case 11:
+            case 12:
               response = _context5.sent;
-              _context5.next = 14;
+              _context5.next = 15;
               return response.json();
 
-            case 14:
+            case 15:
               content = _context5.sent;
 
               if (!content.error) {
@@ -492,31 +504,129 @@ var PageForm = function PageForm(props) {
               } else {
                 setFormState({
                   loading: false,
-                  error: content.reulst
+                  error: content.result
                 });
               }
 
-              _context5.next = 21;
+              _context5.next = 22;
               break;
 
-            case 18:
-              _context5.prev = 18;
+            case 19:
+              _context5.prev = 19;
               _context5.t0 = _context5["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context5.t0.message]
               }));
 
-            case 21:
+            case 22:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[0, 18]]);
+      }, _callee5, null, [[0, 19]]);
     }));
 
     return function handleSavePage() {
       return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to add new page from API
+   */
+
+
+  var handleAddPage = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
+      var _changes, changes, key, requestOptions, response, content, updatedPages;
+
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              _changes = _objectSpread({}, formState.changes);
+              changes = {};
+
+              for (key in _changes) {
+                if (_changes[key] !== '') {
+                  changes = _objectSpread(_objectSpread({}, changes), {}, _defineProperty({}, key, _changes[key]));
+                }
+              }
+
+              if (!(Object.keys(changes).length === 0)) {
+                _context6.next = 6;
+                break;
+              }
+
+              return _context6.abrupt("return");
+
+            case 6:
+              changes.body = bodyContent;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context6.next = 12;
+              return fetch("".concat(ordering.root, "/pages"), requestOptions);
+
+            case 12:
+              response = _context6.sent;
+              _context6.next = 15;
+              return response.json();
+
+            case 15:
+              content = _context6.sent;
+
+              if (!content.error) {
+                if (handleSuccessUpdate) {
+                  updatedPages = [].concat(_toConsumableArray(pageList), [content.result]);
+                  handleSuccessUpdate(updatedPages);
+                }
+
+                handleCancel && handleCancel();
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: {},
+                  loading: false,
+                  error: null
+                }));
+                showToast(_ToastContext.ToastType.Success, t('PAGE_ADDED', 'Page Added'));
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context6.next = 22;
+              break;
+
+            case 19:
+              _context6.prev = 19;
+              _context6.t0 = _context6["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                error: [_context6.t0.message]
+              }));
+
+            case 22:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[0, 19]]);
+    }));
+
+    return function handleAddPage() {
+      return _ref6.apply(this, arguments);
     };
   }();
 
@@ -539,6 +649,7 @@ var PageForm = function PageForm(props) {
   };
 
   var handleChangeFormState = function handleChangeFormState(field, value) {
+    console.log(formState);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, field, value))
     }));
@@ -549,22 +660,29 @@ var PageForm = function PageForm(props) {
     handleAddImage();
   }, [insertImageState.change]);
   (0, _react.useEffect)(function () {
+    getImages();
+
     if (pageId) {
       getPage();
-      getImages();
+      setIsAddMode(false);
+    } else {
+      setIsAddMode(true);
     }
   }, [pageId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    isAddMode: isAddMode,
     pageState: pageState,
     imageListState: imageListState,
     insertImageState: insertImageState,
     formState: formState,
+    setBodyContent: setBodyContent,
     selectedImageUrl: selectedImageUrl,
     setSelectedImageUrl: setSelectedImageUrl,
     handleInsertImage: handleInsertImage,
     handleDeleteImage: handleDeleteImage,
     handleChangeFormState: handleChangeFormState,
-    handleSavePage: handleSavePage
+    handleSavePage: handleSavePage,
+    handleAddPage: handleAddPage
   })));
 };
 
