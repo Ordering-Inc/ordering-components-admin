@@ -76,6 +76,8 @@ import { OrdersManage } from './components/OrdersManage'
 import { OrdersOverview } from './components/OrdersOverview'
 import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
+import { PagesList } from './components/PagesList'
+import { PageForm } from './components/PageForm'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
@@ -221,6 +223,8 @@ export {
   OrderTypeControl,
   Messages,
   PaymentOptions,
+  PagesList,
+  PageForm,
   Popup,
   ProductComponent,
   ProductDetatils,
