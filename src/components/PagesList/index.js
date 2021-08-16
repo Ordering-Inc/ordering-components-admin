@@ -19,6 +19,7 @@ export const PagesList = (props) => {
   const [pagesListState, setPagesListState] = useState({ pages: [], loading: false, error: null })
   const [editPageId, setEditPageId] = useState(null)
   const [changeState, setChangeState] = useState({ changes: {}, loading: false, error: null })
+  const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
    * Method to get the pages from API
@@ -68,7 +69,7 @@ export const PagesList = (props) => {
         body: JSON.stringify(changeState?.changes)
       }
       const response = await fetch(`${ordering.root}/pages/${editPageId}`, requestOptions)
-      const content = await response.json(changeState.changes)
+      const content = await response.json()
       if (!content.error) {
         const updatedPages = pagesListState.pages.filter(page => {
           if (page.id === editPageId) {
@@ -89,6 +90,33 @@ export const PagesList = (props) => {
       }
     } catch (err) {
       setChangeState({ ...changeState, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to delete the page from API
+   */
+  const handleDeletePage = async (pageId) => {
+    try {
+      setActionState({ ...actionState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/pages/${pageId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setActionState({ ...actionState, loading: false })
+        const updatedPages = pagesListState.pages.filter(page => page.id !== pageId)
+        handleUpdatePageList(updatedPages)
+        showToast(ToastType.Success, t('PAGE_DELETED', 'Page Deleted'))
+      }
+    } catch (err) {
+      setActionState({ loading: false, error: [err.message] })
     }
   }
 
@@ -142,6 +170,7 @@ export const PagesList = (props) => {
           pagesListState={pagesListState}
           handleChangeState={handleChangeState}
           handleUpdatePageList={handleUpdatePageList}
+          handleDeletePage={handleDeletePage}
         />
       )}
     </>
