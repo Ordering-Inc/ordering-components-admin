@@ -649,7 +649,6 @@ var PageForm = function PageForm(props) {
   };
 
   var handleChangeFormState = function handleChangeFormState(field, value) {
-    console.log(formState);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, field, value))
     }));
