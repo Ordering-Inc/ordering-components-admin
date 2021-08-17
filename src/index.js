@@ -78,6 +78,7 @@ import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
 import { PagesList } from './components/PagesList'
 import { PageForm } from './components/PageForm'
+import { PluginList } from './components/PluginList'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
@@ -225,6 +226,7 @@ export {
   PaymentOptions,
   PagesList,
   PageForm,
+  PluginList,
   Popup,
   ProductComponent,
   ProductDetatils,
