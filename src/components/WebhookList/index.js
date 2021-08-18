@@ -5,7 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
-export const PluginList = (props) => {
+export const WebhookList = (props) => {
   const {
     UIComponent
   } = props
@@ -14,17 +14,19 @@ export const PluginList = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
-  const [pluginListState, setPluginListState] = useState({ plugins: [], loading: false, error: null })
+  const [webhookListState, setWebhookListState] = useState({ webhooks: [], loading: false, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
-  const [newUrl, setNewUrl] = useState(null)
   const [actionState, setActionState] = useState({ loading: false, error: null })
+  const [changesState, setChangesState] = useState({
+    delay: '0'
+  })
 
   /**
    * Method to get the plugins from API
    */
-  const getPlugins = async () => {
+  const getWebhooks = async () => {
     try {
-      setPluginListState({ ...pluginListState, loading: true })
+      setWebhookListState({ ...webhookListState, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -32,20 +34,20 @@ export const PluginList = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/plugins`, requestOptions)
+      const response = await fetch(`${ordering.root}/webhooks`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setPluginListState({ ...pluginListState, plugins: content.result, loading: false })
+        setWebhookListState({ ...webhookListState, webhooks: content.result, loading: false })
       }
     } catch (err) {
-      setPluginListState({ ...pluginListState, loading: false, error: [err.message] })
+      setWebhookListState({ ...webhookListState, loading: false, error: [err.message] })
     }
   }
 
   /**
    * Method to add new plugin from API
    */
-  const handleAddNewPlugin = async () => {
+  const handleAddNewWebhook = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
@@ -55,17 +57,17 @@ export const PluginList = (props) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ url: newUrl })
+        body: JSON.stringify(changesState)
       }
-      const response = await fetch(`${ordering.root}/plugins`, requestOptions)
+      const response = await fetch(`${ordering.root}/webhooks`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const plugins = [...pluginListState.plugins, content.result]
-        setPluginListState({ ...pluginListState, plugins: plugins })
-        showToast(ToastType.Success, t('PLUGIN_SAVED', 'Plugin saved'))
+        const webhooks = [...webhookListState.webhooks, content.result]
+        setWebhookListState({ ...webhookListState, webhooks: webhooks })
+        showToast(ToastType.Success, t('WEBHOOK_ADDED', 'Webhook added'))
         setIsAddMode(false)
-        setNewUrl(null)
+        setChangesState({ delay: '0' })
       } else {
         setActionState({ loading: false, error: content.result })
       }
@@ -75,10 +77,22 @@ export const PluginList = (props) => {
   }
 
   /**
-   * Method to delete the plugin from API
-   * @param {Number} pluginId plugin id to delete
+   * Method to change state for adding new webhook
+   * @param {String} key filed
+   * @param {String} val value
    */
-  const handleDeletePlugin = async (pluginId) => {
+  const handleChangeAddState = (key, val) => {
+    setChangesState({
+      ...changesState,
+      [key]: val
+    })
+  }
+
+  /**
+   * Method to delete the webhook from API
+   * @param {Number} webhookId webhook id to delete
+   */
+  const handleDeleteWebhook = async (webhookId) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
@@ -89,50 +103,15 @@ export const PluginList = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/plugins/${pluginId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/webhooks/${webhookId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const plugins = pluginListState.plugins.filter(plugin => plugin.id !== pluginId)
-        setPluginListState({ ...pluginListState, plugins: plugins })
-        showToast(ToastType.Success, t('PLUGIN_REMOVED', 'Plugin removed'))
-      } else {
-        setActionState({ loading: false, error: content.result })
-      }
-    } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
-    }
-  }
-
-  /**
-   * Method to update the plugin from API
-   * @param {Number} pluginId plugin id to update
-   * @param {Object} body body to update
-   */
-  const handleUpdatePlugin = async (pluginId, body) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(body)
-      }
-      const response = await fetch(`${ordering.root}/plugins/${pluginId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setActionState({ ...actionState, loading: false })
-        const plugins = pluginListState.plugins.filter(plugin => {
-          if (plugin.id === pluginId) {
-            Object.assign(plugin, content.result)
-          }
-          return true
-        })
-        setPluginListState({ ...pluginListState, plugins: plugins })
-        showToast(ToastType.Success, t('PLUGIN_SAVED', 'Plugin saved'))
+        const webhooks = webhookListState.webhooks.filter(webhook => webhook.id !== webhookId)
+        setWebhookListState({ ...webhookListState, webhooks: webhooks })
+        showToast(ToastType.Success, t('WEBHOOK_REMOVED', 'Webhook removed'))
+        setIsAddMode(false)
+        setChangesState({ delay: '0' })
       } else {
         setActionState({ loading: false, error: content.result })
       }
@@ -142,7 +121,7 @@ export const PluginList = (props) => {
   }
 
   useEffect(() => {
-    getPlugins()
+    getWebhooks()
   }, [])
 
   return (
@@ -150,48 +129,48 @@ export const PluginList = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          pluginListState={pluginListState}
+          webhookListState={webhookListState}
           isAddMode={isAddMode}
           setIsAddMode={setIsAddMode}
-          setNewUrl={setNewUrl}
+          handleAddNewWebhook={handleAddNewWebhook}
+          changesState={changesState}
           actionState={actionState}
-          handleAddNewPlugin={handleAddNewPlugin}
-          handleDeletePlugin={handleDeletePlugin}
-          handleUpdatePlugin={handleUpdatePlugin}
+          handleChangeAddState={handleChangeAddState}
+          handleDeleteWebhook={handleDeleteWebhook}
         />
       )}
     </>
   )
 }
 
-PluginList.propTypes = {
+WebhookList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Components types before plugin list
+   * Components types before webhook list
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Components types after plugin list
+   * Components types after webhook list
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Elements before plugin list
+   * Elements before webhook list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
-   * Elements after plugin list
+   * Elements after webhook list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-PluginList.defaultProps = {
+WebhookList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

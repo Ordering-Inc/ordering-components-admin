@@ -142,6 +142,7 @@ import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
+import { WebhookList } from './components/WebhookList'
 
 export {
   AddressDetails,
@@ -277,6 +278,8 @@ export {
   UserTypeFilter,
   UserDetails,
   UserMetaFields,
+  WebhookList,
+
   // Contexts
   ConfigContext,
   ConfigProvider,
