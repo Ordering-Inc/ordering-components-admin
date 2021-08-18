@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PluginList = void 0;
+exports.WebhookList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -59,7 +59,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var PluginList = function PluginList(props) {
+var WebhookList = function WebhookList(props) {
   var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -79,37 +79,39 @@ var PluginList = function PluginList(props) {
       t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
-    plugins: [],
+    webhooks: [],
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      pluginListState = _useState2[0],
-      setPluginListState = _useState2[1];
+      webhookListState = _useState2[0],
+      setWebhookListState = _useState2[1];
 
   var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
       isAddMode = _useState4[0],
       setIsAddMode = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      newUrl = _useState6[0],
-      setNewUrl = _useState6[1];
-
-  var _useState7 = (0, _react.useState)({
+  var _useState5 = (0, _react.useState)({
     loading: false,
     error: null
   }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      actionState = _useState6[0],
+      setActionState = _useState6[1];
+
+  var _useState7 = (0, _react.useState)({
+    delay: '0'
+  }),
       _useState8 = _slicedToArray(_useState7, 2),
-      actionState = _useState8[0],
-      setActionState = _useState8[1];
+      changesState = _useState8[0],
+      setChangesState = _useState8[1];
   /**
    * Method to get the plugins from API
    */
 
 
-  var getPlugins = /*#__PURE__*/function () {
+  var getWebhooks = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
       var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -117,7 +119,7 @@ var PluginList = function PluginList(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
+              setWebhookListState(_objectSpread(_objectSpread({}, webhookListState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -128,7 +130,7 @@ var PluginList = function PluginList(props) {
                 }
               };
               _context.next = 5;
-              return fetch("".concat(ordering.root, "/plugins"), requestOptions);
+              return fetch("".concat(ordering.root, "/webhooks"), requestOptions);
 
             case 5:
               response = _context.sent;
@@ -139,8 +141,8 @@ var PluginList = function PluginList(props) {
               content = _context.sent;
 
               if (!content.error) {
-                setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
-                  plugins: content.result,
+                setWebhookListState(_objectSpread(_objectSpread({}, webhookListState), {}, {
+                  webhooks: content.result,
                   loading: false
                 }));
               }
@@ -151,7 +153,7 @@ var PluginList = function PluginList(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
+              setWebhookListState(_objectSpread(_objectSpread({}, webhookListState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
@@ -164,7 +166,7 @@ var PluginList = function PluginList(props) {
       }, _callee, null, [[0, 12]]);
     }));
 
-    return function getPlugins() {
+    return function getWebhooks() {
       return _ref.apply(this, arguments);
     };
   }();
@@ -173,9 +175,9 @@ var PluginList = function PluginList(props) {
    */
 
 
-  var handleAddNewPlugin = /*#__PURE__*/function () {
+  var handleAddNewWebhook = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, response, content, plugins;
+      var requestOptions, response, content, webhooks;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -191,12 +193,10 @@ var PluginList = function PluginList(props) {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify({
-                  url: newUrl
-                })
+                body: JSON.stringify(changesState)
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/plugins"), requestOptions);
+              return fetch("".concat(ordering.root, "/webhooks"), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -210,13 +210,15 @@ var PluginList = function PluginList(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                plugins = [].concat(_toConsumableArray(pluginListState.plugins), [content.result]);
-                setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
-                  plugins: plugins
+                webhooks = [].concat(_toConsumableArray(webhookListState.webhooks), [content.result]);
+                setWebhookListState(_objectSpread(_objectSpread({}, webhookListState), {}, {
+                  webhooks: webhooks
                 }));
-                showToast(_ToastContext.ToastType.Success, t('PLUGIN_SAVED', 'Plugin saved'));
+                showToast(_ToastContext.ToastType.Success, t('WEBHOOK_ADDED', 'Webhook added'));
                 setIsAddMode(false);
-                setNewUrl(null);
+                setChangesState({
+                  delay: '0'
+                });
               } else {
                 setActionState({
                   loading: false,
@@ -243,19 +245,29 @@ var PluginList = function PluginList(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function handleAddNewPlugin() {
+    return function handleAddNewWebhook() {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to delete the plugin from API
-   * @param {Number} pluginId plugin id to delete
+   * Method to change state for adding new webhook
+   * @param {String} key filed
+   * @param {String} val value
    */
 
 
-  var handleDeletePlugin = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(pluginId) {
-      var requestOptions, response, content, plugins;
+  var handleChangeAddState = function handleChangeAddState(key, val) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, key, val)));
+  };
+  /**
+   * Method to delete the webhook from API
+   * @param {Number} webhookId webhook id to delete
+   */
+
+
+  var handleDeleteWebhook = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(webhookId) {
+      var requestOptions, response, content, webhooks;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -273,7 +285,7 @@ var PluginList = function PluginList(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/plugins/").concat(pluginId), requestOptions);
+              return fetch("".concat(ordering.root, "/webhooks/").concat(webhookId), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -287,13 +299,17 @@ var PluginList = function PluginList(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                plugins = pluginListState.plugins.filter(function (plugin) {
-                  return plugin.id !== pluginId;
+                webhooks = webhookListState.webhooks.filter(function (webhook) {
+                  return webhook.id !== webhookId;
                 });
-                setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
-                  plugins: plugins
+                setWebhookListState(_objectSpread(_objectSpread({}, webhookListState), {}, {
+                  webhooks: webhooks
                 }));
-                showToast(_ToastContext.ToastType.Success, t('PLUGIN_REMOVED', 'Plugin removed'));
+                showToast(_ToastContext.ToastType.Success, t('WEBHOOK_REMOVED', 'Webhook removed'));
+                setIsAddMode(false);
+                setChangesState({
+                  delay: '0'
+                });
               } else {
                 setActionState({
                   loading: false,
@@ -320,141 +336,58 @@ var PluginList = function PluginList(props) {
       }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeletePlugin(_x) {
+    return function handleDeleteWebhook(_x) {
       return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to update the plugin from API
-   * @param {Number} pluginId plugin id to update
-   * @param {Object} body body to update
-   */
-
-
-  var handleUpdatePlugin = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(pluginId, body) {
-      var requestOptions, response, content, plugins;
-      return _regenerator.default.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(body)
-              };
-              _context4.next = 6;
-              return fetch("".concat(ordering.root, "/plugins/").concat(pluginId), requestOptions);
-
-            case 6:
-              response = _context4.sent;
-              _context4.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context4.sent;
-
-              if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
-                plugins = pluginListState.plugins.filter(function (plugin) {
-                  if (plugin.id === pluginId) {
-                    Object.assign(plugin, content.result);
-                  }
-
-                  return true;
-                });
-                setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
-                  plugins: plugins
-                }));
-                showToast(_ToastContext.ToastType.Success, t('PLUGIN_SAVED', 'Plugin saved'));
-              } else {
-                setActionState({
-                  loading: false,
-                  error: content.result
-                });
-              }
-
-              _context4.next = 16;
-              break;
-
-            case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context4.t0.message]
-              });
-
-            case 16:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4, null, [[0, 13]]);
-    }));
-
-    return function handleUpdatePlugin(_x2, _x3) {
-      return _ref4.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getPlugins();
+    getWebhooks();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    pluginListState: pluginListState,
+    webhookListState: webhookListState,
     isAddMode: isAddMode,
     setIsAddMode: setIsAddMode,
-    setNewUrl: setNewUrl,
+    handleAddNewWebhook: handleAddNewWebhook,
+    changesState: changesState,
     actionState: actionState,
-    handleAddNewPlugin: handleAddNewPlugin,
-    handleDeletePlugin: handleDeletePlugin,
-    handleUpdatePlugin: handleUpdatePlugin
+    handleChangeAddState: handleChangeAddState,
+    handleDeleteWebhook: handleDeleteWebhook
   })));
 };
 
-exports.PluginList = PluginList;
-PluginList.propTypes = {
+exports.WebhookList = WebhookList;
+WebhookList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before plugin list
+   * Components types before webhook list
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after plugin list
+   * Components types after webhook list
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before plugin list
+   * Elements before webhook list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after plugin list
+   * Elements after webhook list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-PluginList.defaultProps = {
+WebhookList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
