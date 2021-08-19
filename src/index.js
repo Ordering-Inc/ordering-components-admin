@@ -9,6 +9,8 @@ import { Settings } from './components/Settings'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
+import { BusinessBrands } from './components/BusinessBrands'
+import { BusinessBrandForm } from './components/BusinessBrandForm'
 import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
@@ -57,6 +59,8 @@ import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
 import { Home } from './components/Home'
+import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
+import { InvoiceDriverManager } from './components/InvoiceDriverManager'
 import { LanguageSelector } from './components/LanguageSelector'
 import { LoginForm } from './components/LoginForm'
 import { LogisticInformation } from './components/LogisticInformation'
@@ -157,6 +161,8 @@ export {
   BusinessAndProductList,
   BusinessAnalytics,
   BusinessBasicInformation,
+  BusinessBrands,
+  BusinessBrandForm,
   BusinessCategoryEdit,
   BusinessController,
   BusinessDeliveryZone,
@@ -207,6 +213,8 @@ export {
   GpsButton,
   GoogleGpsButton,
   Home,
+  InvoiceBusinessManager,
+  InvoiceDriverManager,
   LanguageSelector,
   LoginForm,
   LogisticInformation,
