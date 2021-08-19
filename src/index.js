@@ -59,6 +59,8 @@ import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
 import { Home } from './components/Home'
+import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
+import { InvoiceDriverManager } from './components/InvoiceDriverManager'
 import { LanguageSelector } from './components/LanguageSelector'
 import { LoginForm } from './components/LoginForm'
 import { LogisticInformation } from './components/LogisticInformation'
@@ -206,6 +208,8 @@ export {
   GpsButton,
   GoogleGpsButton,
   Home,
+  InvoiceBusinessManager,
+  InvoiceDriverManager,
   LanguageSelector,
   LoginForm,
   LogisticInformation,
