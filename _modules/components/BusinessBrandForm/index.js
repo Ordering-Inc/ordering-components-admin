@@ -49,7 +49,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessBrandForm = function BusinessBrandForm(props) {
   var UIComponent = props.UIComponent,
-      handleSuccessAddBusinessBrand = props.handleSuccessAddBusinessBrand;
+      handleSuccessAddBusinessBrand = props.handleSuccessAddBusinessBrand,
+      editMode = props.editMode,
+      brand = props.brand,
+      handleUpdateBrandList = props.handleUpdateBrandList,
+      brandList = props.brandList;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -76,12 +80,41 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
+              if (editMode) {
+                updateBrand();
+              } else {
+                createBrand();
+              }
+
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function handleUpdateClick() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to create brand
+   */
+
+
+  var createBrand = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -93,16 +126,16 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 },
                 body: JSON.stringify(formState.changes)
               };
-              _context.next = 5;
+              _context2.next = 5;
               return fetch("".concat(ordering.root, "/franchises"), requestOptions);
 
             case 5:
-              response = _context.sent;
-              _context.next = 8;
+              response = _context2.sent;
+              _context2.next = 8;
               return response.json();
 
             case 8:
-              content = _context.sent;
+              content = _context2.sent;
 
               if (!(content === null || content === void 0 ? void 0 : content.error)) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -122,30 +155,120 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context2.next = 15;
               break;
 
             case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](0);
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
-                  result: _context.t0.message
+                  result: _context2.t0.message
                 },
                 loading: false
               }));
 
             case 15:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function handleUpdateClick() {
-      return _ref.apply(this, arguments);
+    return function createBrand() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to update a brand
+   */
+
+
+  var updateBrand = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content, _brands;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(formState.changes)
+              };
+              _context3.next = 5;
+              return fetch("".concat(ordering.root, "/franchises/").concat(brand === null || brand === void 0 ? void 0 : brand.id), requestOptions);
+
+            case 5:
+              response = _context3.sent;
+              _context3.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context3.sent;
+
+              if (!(content === null || content === void 0 ? void 0 : content.error)) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: {},
+                  result: content,
+                  loading: false
+                }));
+
+                if (handleUpdateBrandList) {
+                  _brands = brandList === null || brandList === void 0 ? void 0 : brandList.brands.map(function (item) {
+                    if (item.id === content.result.id) {
+                      return _objectSpread(_objectSpread({}, item), {}, {
+                        name: content.result.name,
+                        logo: content.result.logo
+                      });
+                    }
+
+                    return item;
+                  });
+                  handleUpdateBrandList(_brands);
+                }
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: formState.changes,
+                  result: content,
+                  loading: false
+                }));
+              }
+
+              _context3.next = 15;
+              break;
+
+            case 12:
+              _context3.prev = 12;
+              _context3.t0 = _context3["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: _context3.t0.message
+                },
+                loading: false
+              }));
+
+            case 15:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 12]]);
+    }));
+
+    return function updateBrand() {
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -198,6 +321,21 @@ BusinessBrandForm.propTypes = {
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
+
+  /**
+   * Object for a brand
+   */
+  brand: _propTypes.default.object,
+
+  /**
+   * Object for brand list
+   */
+  brandList: _propTypes.default.object,
+
+  /**
+  * Function to set a business state
+  */
+  handleUpdateBrandList: _propTypes.default.func,
 
   /**
    * Components types before business type filter
