@@ -495,6 +495,12 @@ Object.defineProperty(exports, "PageForm", {
     return _PageForm.PageForm;
   }
 });
+Object.defineProperty(exports, "PlaceList", {
+  enumerable: true,
+  get: function get() {
+    return _PlaceList.PlaceList;
+  }
+});
 Object.defineProperty(exports, "PluginList", {
   enumerable: true,
   get: function get() {
@@ -1201,6 +1207,8 @@ var _PaymentOptions = require("./components/PaymentOptions");
 var _PagesList = require("./components/PagesList");
 
 var _PageForm = require("./components/PageForm");
+
+var _PlaceList = require("./components/PlaceList");
 
 var _PluginList = require("./components/PluginList");
 
