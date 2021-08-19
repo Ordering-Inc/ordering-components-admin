@@ -80,6 +80,10 @@ import { OrdersManage } from './components/OrdersManage'
 import { OrdersOverview } from './components/OrdersOverview'
 import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
+import { PagesList } from './components/PagesList'
+import { PageForm } from './components/PageForm'
+import { PlaceList } from './components/PlaceList'
+import { PluginList } from './components/PluginList'
 import { Popup } from './components/Popup'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
@@ -143,6 +147,7 @@ import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
+import { WebhookList } from './components/WebhookList'
 
 export {
   AddressDetails,
@@ -229,6 +234,10 @@ export {
   OrderTypeControl,
   Messages,
   PaymentOptions,
+  PagesList,
+  PageForm,
+  PlaceList,
+  PluginList,
   Popup,
   ProductComponent,
   ProductDetatils,
@@ -279,6 +288,8 @@ export {
   UserTypeFilter,
   UserDetails,
   UserMetaFields,
+  WebhookList,
+
   // Contexts
   ConfigContext,
   ConfigProvider,
