@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessMenu = void 0;
+exports.BusinessReviewsList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -24,14 +28,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -55,10 +51,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var BusinessMenu = function BusinessMenu(props) {
-  var business = props.business,
-      UIComponent = props.UIComponent,
-      handleSuccessBusinessMenu = props.handleSuccessBusinessMenu;
+var BusinessReviewsList = function BusinessReviewsList(props) {
+  var UIComponent = props.UIComponent,
+      propsToFetch = props.propsToFetch;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -68,116 +63,131 @@ var BusinessMenu = function BusinessMenu(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
 
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
-    menus: [],
+    reviews: [],
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      businessMenusState = _useState2[0],
-      setBusinessMenusState = _useState2[1];
+      reviewsListState = _useState2[0],
+      setReviewsListState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to get the business menus from API
+   * Method to get business reviews from API
    */
 
 
-  var getBusinessMenus = /*#__PURE__*/function () {
+  var getBusinessReviews = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result, reviews, i, j, _result$i$city;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              setReviewsListState(_objectSpread(_objectSpread({}, reviewsListState), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+              _context.next = 4;
+              return ordering.setAccessToken(token).businesses().select(propsToFetch).asDashboard().get();
+
+            case 4:
+              _yield$ordering$setAc = _context.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
+
+              if (!error) {
+                reviews = [];
+
+                for (i = 0; i < result.length; i++) {
+                  for (j = 0; j < result[i].reviews.reviews.length; j++) {
+                    result[i].reviews.reviews[j].business_id = result[i].id;
+                    result[i].reviews.reviews[j].business_name = result[i].name;
+                    result[i].reviews.reviews[j].business_logo = result[i].logo;
+                    result[i].reviews.reviews[j].city_name = (_result$i$city = result[i].city) === null || _result$i$city === void 0 ? void 0 : _result$i$city.name;
+                    reviews.push(result[i].reviews.reviews[j]);
+                  }
                 }
-              };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus"), requestOptions);
 
-            case 5:
-              response = _context.sent;
-              _context.next = 8;
-              return response.json();
+                if (reviews.length > 0) {
+                  reviews.sort(function (a, b) {
+                    return b.id - a.id;
+                  });
+                }
 
-            case 8:
-              content = _context.sent;
-
-              if (!content.error) {
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                setReviewsListState(_objectSpread(_objectSpread({}, reviewsListState), {}, {
                   loading: false,
-                  menus: content.result
-                }));
-              } else {
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  error: content.result
+                  reviews: reviews
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 14;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](0);
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              setReviewsListState(_objectSpread(_objectSpread({}, reviewsListState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 15:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 11]]);
     }));
 
-    return function getBusinessMenus() {
+    return function getBusinessReviews() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to control business menu active state from API
-   * @param {Number} menuId menu id to change the business menu state
+   * Method to update the business review from API
    */
 
 
-  var handleChangeBusinessMenuActiveState = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(menuId) {
-      var businessMenu, requestOptions, response, content, menus, _business;
-
+  var handleUpdateReview = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(businessId, reviewId, changes) {
+      var requestOptions, response, content, reviews;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
-              businessMenu = businessMenusState.menus.find(function (menu) {
-                return menu.id === menuId;
-              });
               requestOptions = {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify({
-                  enabled: !businessMenu.enabled
-                })
+                body: JSON.stringify(changes)
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/reviews/").concat(reviewId), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -188,26 +198,17 @@ var BusinessMenu = function BusinessMenu(props) {
               content = _context2.sent;
 
               if (!content.error) {
-                menus = businessMenusState.menus.filter(function (menu) {
-                  if (menu.id === menuId) {
-                    Object.assign(menu, content.result);
+                reviews = reviewsListState.reviews.filter(function (review) {
+                  if (review.id === reviewId) {
+                    Object.assign(review, content.result);
                   }
 
                   return true;
                 });
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  menus: menus
+                setReviewsListState(_objectSpread(_objectSpread({}, reviewsListState), {}, {
+                  reviews: reviews
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
-                handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
-              } else {
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  error: content.result
-                }));
+                showToast(_ToastContext.ToastType.Success, t('REVIEW_UPDATED', 'Review updated'));
               }
 
               _context2.next = 16;
@@ -216,10 +217,10 @@ var BusinessMenu = function BusinessMenu(props) {
             case 13:
               _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context2.t0.message]
-              }));
+              });
 
             case 16:
             case "end":
@@ -229,26 +230,25 @@ var BusinessMenu = function BusinessMenu(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function handleChangeBusinessMenuActiveState(_x) {
+    return function handleUpdateReview(_x, _x2, _x3) {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to delete the business menu from API
-   * @param {Number} menuId menu id to delete the business menu
+   * Method to update the business review from API
    */
 
 
-  var handleDeleteBusinessMenu = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(menuId) {
-      var requestOptions, response, content, menus, _business;
-
+  var handleDeleteReview = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(businessId, reviewId) {
+      var requestOptions, response, content, reviews;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -258,113 +258,95 @@ var BusinessMenu = function BusinessMenu(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context3.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId), requestOptions);
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/reviews/").concat(reviewId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context3.sent;
 
               if (!content.error) {
-                menus = businessMenusState.menus.filter(function (menu) {
-                  return menu.id !== menuId;
+                reviews = reviewsListState.reviews.filter(function (review) {
+                  return review.id !== reviewId;
                 });
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  menus: menus
+                setReviewsListState(_objectSpread(_objectSpread({}, reviewsListState), {}, {
+                  reviews: reviews
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
-                handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
-              } else {
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  error: content.result
-                }));
+                showToast(_ToastContext.ToastType.Success, t('REVIEW_REMOVED', 'Review removed'));
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
-              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context3.t0.message]
-              }));
+              });
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeleteBusinessMenu(_x2) {
+    return function handleDeleteReview(_x4, _x5) {
       return _ref3.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (business === null || business === void 0 ? void 0 : business.menus) {
-      setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-        menus: [].concat(_toConsumableArray(business === null || business === void 0 ? void 0 : business.menus), _toConsumableArray(business === null || business === void 0 ? void 0 : business.menus_shared))
-      }));
-    } else {
-      getBusinessMenus();
-    }
-  }, [business]);
+    getBusinessReviews();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    businessMenusState: businessMenusState,
-    handleChangeBusinessMenuActiveState: handleChangeBusinessMenuActiveState,
-    handleDeleteBusinessMenu: handleDeleteBusinessMenu
+    reviewsListState: reviewsListState,
+    actionState: actionState,
+    handleUpdateReview: handleUpdateReview,
+    handleDeleteReview: handleDeleteReview
   })));
 };
 
-exports.BusinessMenu = BusinessMenu;
-BusinessMenu.propTypes = {
+exports.BusinessReviewsList = BusinessReviewsList;
+BusinessReviewsList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-  * Business, this must be contains an object with all business info
-  */
-  business: _propTypes.default.object,
-
-  /**
-   * Components types before order details
+   * Components types before reviews list
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-  * Components types after order details
-  * Array of type components, the parent props will pass to these components
-  */
+   * Components types after reviews list
+   * Array of type components, the parent props will pass to these components
+   */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-  * Elements before order details
-  * Array of HTML/Components elements, these components will not get the parent props
-  */
+   * Elements before reviews list
+   * Array of HTML/Components elements, these components will not get the parent props
+   */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-  * Elements after order details
-  * Array of HTML/Components elements, these components will not get the parent props
-  */
+   * Elements after reviews list
+   * Array of HTML/Components elements, these components will not get the parent props
+   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessMenu.defaultProps = {
+BusinessReviewsList.defaultProps = {
+  propsToFetch: ['reviews', 'name', 'logo', 'city'],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

@@ -207,6 +207,12 @@ Object.defineProperty(exports, "BusinessReviews", {
     return _BusinessReviews.BusinessReviews;
   }
 });
+Object.defineProperty(exports, "BusinessReviewsList", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessReviewsList.BusinessReviewsList;
+  }
+});
 Object.defineProperty(exports, "BusinessSchedule", {
   enumerable: true,
   get: function get() {
@@ -1139,6 +1145,8 @@ var _BusinessPromotionList = require("./components/BusinessPromotionList");
 var _BusinessPromotionMetaFields = require("./components/BusinessPromotionMetaFields");
 
 var _BusinessReviews = require("./components/BusinessReviews");
+
+var _BusinessReviewsList = require("./components/BusinessReviewsList");
 
 var _BusinessSchedule = require("./components/BusinessSchedule");
 
