@@ -141,7 +141,7 @@ export const BusinessMenu = (props) => {
 
   useEffect(() => {
     if (business?.menus) {
-      setBusinessMenusState({ ...businessMenusState, menus: business?.menus })
+      setBusinessMenusState({ ...businessMenusState, menus: [...business?.menus, ...business?.menus_shared] })
     } else {
       getBusinessMenus()
     }
