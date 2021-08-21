@@ -32,6 +32,7 @@ import { BusinessPromotionForm } from './components/BusinessPromotionForm'
 import { BusinessPromotionList } from './components/BusinessPromotionList'
 import { BusinessPromotionMetaFields } from './components/BusinessPromotionMetaFields'
 import { BusinessReviews } from './components/BusinessReviews'
+import { BusinessReviewsList } from './components/BusinessReviewsList'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
@@ -184,6 +185,7 @@ export {
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
+  BusinessReviewsList,
   BusinessSchedule,
   BusinessSortControl,
   BusinessSpreadSheet,
