@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -62,6 +66,10 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
       handleCloseAddForm = props.handleCloseAddForm,
       handleSuccessUpdate = props.handleSuccessUpdate;
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
@@ -69,6 +77,10 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
     promotion: promotion,
@@ -103,10 +115,9 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
   var handleChangeInput = function handleChangeInput(e) {
     var _formState$changes, _formState$changes2, _promotionState$promo;
 
-    if (e.target.name === 'name' && ((formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.type) === 2 || !(formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.type) && (promotionState === null || promotionState === void 0 ? void 0 : (_promotionState$promo = promotionState.promotion) === null || _promotionState$promo === void 0 ? void 0 : _promotionState$promo.type) === 2)) {
+    if (e.target.name === 'coupon' && ((formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.type) === 2 || !(formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.type) && (promotionState === null || promotionState === void 0 ? void 0 : (_promotionState$promo = promotionState.promotion) === null || _promotionState$promo === void 0 ? void 0 : _promotionState$promo.type) === 2)) {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          name: e.target.value.replace(/\s/g, ''),
           coupon: e.target.value.replace(/\s/g, '')
         })
       }));
@@ -163,7 +174,9 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {},
                 loading: true
               }));
               requestOptions = {
@@ -174,15 +187,15 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 },
                 body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
               };
-              _context.next = 5;
+              _context.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/offers/").concat(promotion.id), requestOptions);
 
-            case 5:
+            case 6:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context.sent;
 
               if (!content.error) {
@@ -193,6 +206,7 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                   loading: false,
                   changes: {}
                 }));
+                showToast(_ToastContext.ToastType.Success, t('PROMOTION_SAVED', 'Promotion saved'));
 
                 if (handleSuccessUpdate) {
                   _promotions = business.offers.filter(function (offer) {
@@ -216,11 +230,11 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -230,12 +244,12 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
     return function handleUpdateClick() {
@@ -255,7 +269,9 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {},
                 loading: true
               }));
               requestOptions = {
@@ -266,18 +282,19 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 },
                 body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
               };
-              _context2.next = 5;
+              _context2.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/offers"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context2.sent;
 
               if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'));
                 handleCloseAddForm && handleCloseAddForm();
 
                 if (handleSuccessUpdate) {
@@ -295,11 +312,11 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 }));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -309,12 +326,12 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
     return function handleAddClick() {
