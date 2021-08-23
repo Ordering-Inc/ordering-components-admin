@@ -397,18 +397,8 @@ var UsersList = function UsersList(props) {
    */
 
 
-  var handleSelectedUserTypes = function handleSelectedUserTypes(userType) {
-    var _userTypesSelected;
-
-    if (userTypesSelected.includes(userType)) {
-      _userTypesSelected = userTypesSelected.filter(function (type) {
-        return type !== userType;
-      });
-    } else {
-      _userTypesSelected = [].concat(_toConsumableArray(userTypesSelected), [userType]);
-    }
-
-    setUserTypesSelected(_userTypesSelected);
+  var handleSelectedUserTypes = function handleSelectedUserTypes(userTypes) {
+    setUserTypesSelected(userTypes);
   };
   /**
    * Method to change user active state for filter
@@ -457,13 +447,22 @@ var UsersList = function UsersList(props) {
               }));
 
               if (!error) {
-                users = usersList.users.filter(function (_user) {
-                  if (_user.id === user.id) {
-                    _user.level = user.level;
-                  }
+                users = [];
 
-                  return true;
-                });
+                if (deafultUserTypesSelected.includes(user.level)) {
+                  users = usersList.users.filter(function (_user) {
+                    if (_user.id === user.id) {
+                      _user.level = user.level;
+                    }
+
+                    return true;
+                  });
+                } else {
+                  users = usersList.users.filter(function (_user) {
+                    return _user.id !== result.id;
+                  });
+                }
+
                 setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
                   users: users
                 }));
@@ -710,12 +709,14 @@ var UsersList = function UsersList(props) {
 
 
   var handleSuccessAddUser = function handleSuccessAddUser(newUser) {
-    setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
-      users: [].concat(_toConsumableArray(usersList.users), [newUser])
-    }));
-    setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
-      total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
-    }));
+    if (userTypesSelected.includes(newUser === null || newUser === void 0 ? void 0 : newUser.level)) {
+      setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+        users: [].concat(_toConsumableArray(usersList.users), [newUser])
+      }));
+      setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+        total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
+      }));
+    }
   };
   /**
    * Method to update addresses of selected user
