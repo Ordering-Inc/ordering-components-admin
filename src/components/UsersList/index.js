@@ -258,14 +258,8 @@ export const UsersList = (props) => {
    * Change user type
    * @param {object} userType User type
    */
-  const handleSelectedUserTypes = (userType) => {
-    let _userTypesSelected
-    if (userTypesSelected.includes(userType)) {
-      _userTypesSelected = userTypesSelected.filter(type => type !== userType)
-    } else {
-      _userTypesSelected = [...userTypesSelected, userType]
-    }
-    setUserTypesSelected(_userTypesSelected)
+  const handleSelectedUserTypes = (userTypes) => {
+    setUserTypesSelected(userTypes)
   }
 
   /**
@@ -292,12 +286,17 @@ export const UsersList = (props) => {
         error: error ? result : null
       })
       if (!error) {
-        const users = usersList.users.filter(_user => {
-          if (_user.id === user.id) {
-            _user.level = user.level
-          }
-          return true
-        })
+        let users = []
+        if (deafultUserTypesSelected.includes(user.level)) {
+          users = usersList.users.filter(_user => {
+            if (_user.id === user.id) {
+              _user.level = user.level
+            }
+            return true
+          })
+        } else {
+          users = usersList.users.filter(_user => _user.id !== result.id)
+        }
         setUsersList({ ...usersList, users })
       }
     } catch (err) {
@@ -419,17 +418,19 @@ export const UsersList = (props) => {
    * @param {Object} newUser new user to add
    */
   const handleSuccessAddUser = (newUser) => {
-    setUsersList({
-      ...usersList,
-      users: [
-        ...usersList.users,
-        newUser
-      ]
-    })
-    setPaginationDetail({
-      ...paginationDetail,
-      total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
-    })
+    if (userTypesSelected.includes(newUser?.level)) {
+      setUsersList({
+        ...usersList,
+        users: [
+          ...usersList.users,
+          newUser
+        ]
+      })
+      setPaginationDetail({
+        ...paginationDetail,
+        total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
+      })
+    }
   }
 
   /**
