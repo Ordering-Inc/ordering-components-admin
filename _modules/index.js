@@ -309,6 +309,12 @@ Object.defineProperty(exports, "DragAndDrop", {
     return _DragAndDrop.DragAndDrop;
   }
 });
+Object.defineProperty(exports, "DriversCompaniesList", {
+  enumerable: true,
+  get: function get() {
+    return _DriversCompaniesList.DriversCompaniesList;
+  }
+});
 Object.defineProperty(exports, "DriverTips", {
   enumerable: true,
   get: function get() {
@@ -1179,6 +1185,8 @@ var _DashboardBusinessList = require("./components/DashboardBusinessList");
 var _DashboardOrdersList = require("./components/DashboardOrdersList");
 
 var _DragAndDrop = require("./components/DragAndDrop");
+
+var _DriversCompaniesList = require("./components/DriversCompaniesList");
 
 var _DriverTips = require("./components/DriverTips");
 

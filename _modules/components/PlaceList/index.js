@@ -729,6 +729,9 @@ var PlaceList = function PlaceList(props) {
               content = _context8.sent;
 
               if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
                 dropdownOptions = dropdownOptionsState.options.filter(function (option) {
                   if (option.id === dropdownId) {
                     Object.assign(option, content.result);
@@ -831,6 +834,9 @@ var PlaceList = function PlaceList(props) {
                 showToast(_ToastContext.ToastType.Success, t('ZONE_ADDED', 'Zone added'));
                 setChangesState({});
                 setOpenZonedropdown(false);
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
               } else {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false,
