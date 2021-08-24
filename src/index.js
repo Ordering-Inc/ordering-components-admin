@@ -49,6 +49,7 @@ import { CouponControl } from './components/CouponControl'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
+import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
@@ -205,6 +206,7 @@ export {
   DriverTips,
   DriversList,
   DriverAnalytics,
+  DriversCompaniesList,
   ExamineClick,
   ExportCSV,
   FacebookLoginButton,

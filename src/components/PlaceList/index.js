@@ -281,6 +281,7 @@ export const PlaceList = (props) => {
       const response = await fetch(`${ordering.root}/dropdownoptions/${dropdownId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
+        setActionState({ ...actionState, loading: false })
         const dropdownOptions = dropdownOptionsState.options.filter(option => {
           if (option.id === dropdownId) {
             Object.assign(option, content.result)
@@ -333,6 +334,7 @@ export const PlaceList = (props) => {
         showToast(ToastType.Success, t('ZONE_ADDED', 'Zone added'))
         setChangesState({})
         setOpenZonedropdown(false)
+        setActionState({ ...actionState, loading: false })
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
       }
