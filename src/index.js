@@ -62,7 +62,10 @@ import { GpsButton, GoogleGpsButton } from './components/GpsButton'
 import { Home } from './components/Home'
 import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
 import { InvoiceDriverManager } from './components/InvoiceDriverManager'
+import { LanguageManager } from './components/LanguageManager'
 import { LanguageSelector } from './components/LanguageSelector'
+import { LanguageTransSpread } from './components/LanguageTransSpread'
+import { LanguageTransTable } from './components/LanguageTransTable'
 import { LoginForm } from './components/LoginForm'
 import { LogisticInformation } from './components/LogisticInformation'
 import { Logistics } from './components/Logistics'
@@ -217,7 +220,10 @@ export {
   Home,
   InvoiceBusinessManager,
   InvoiceDriverManager,
+  LanguageManager,
   LanguageSelector,
+  LanguageTransSpread,
+  LanguageTransTable,
   LoginForm,
   LogisticInformation,
   Logistics,
