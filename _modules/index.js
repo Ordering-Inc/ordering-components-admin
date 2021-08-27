@@ -309,6 +309,36 @@ Object.defineProperty(exports, "DragAndDrop", {
     return _DragAndDrop.DragAndDrop;
   }
 });
+Object.defineProperty(exports, "DriverGroupSetting", {
+  enumerable: true,
+  get: function get() {
+    return _DriverGroupSetting.DriverGroupSetting;
+  }
+});
+Object.defineProperty(exports, "DriversCompaniesList", {
+  enumerable: true,
+  get: function get() {
+    return _DriversCompaniesList.DriversCompaniesList;
+  }
+});
+Object.defineProperty(exports, "DriversGroupAutoassign", {
+  enumerable: true,
+  get: function get() {
+    return _DriversGroupAutoassign.DriversGroupAutoassign;
+  }
+});
+Object.defineProperty(exports, "DriversGroupOrders", {
+  enumerable: true,
+  get: function get() {
+    return _DriversGroupOrders.DriversGroupOrders;
+  }
+});
+Object.defineProperty(exports, "DriversGroupsList", {
+  enumerable: true,
+  get: function get() {
+    return _DriversGroupsList.DriversGroupsList;
+  }
+});
 Object.defineProperty(exports, "DriverTips", {
   enumerable: true,
   get: function get() {
@@ -1197,6 +1227,16 @@ var _DashboardBusinessList = require("./components/DashboardBusinessList");
 var _DashboardOrdersList = require("./components/DashboardOrdersList");
 
 var _DragAndDrop = require("./components/DragAndDrop");
+
+var _DriverGroupSetting = require("./components/DriverGroupSetting");
+
+var _DriversCompaniesList = require("./components/DriversCompaniesList");
+
+var _DriversGroupAutoassign = require("./components/DriversGroupAutoassign");
+
+var _DriversGroupOrders = require("./components/DriversGroupOrders");
+
+var _DriversGroupsList = require("./components/DriversGroupsList");
 
 var _DriverTips = require("./components/DriverTips");
 

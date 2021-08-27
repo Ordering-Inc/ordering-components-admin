@@ -17,6 +17,10 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _SessionContext = require("../../contexts/SessionContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -66,7 +70,8 @@ var UsersList = function UsersList(props) {
       isSearchByUserPhone = props.isSearchByUserPhone,
       isSearchByUserName = props.isSearchByUserName,
       isBusinessOwners = props.isBusinessOwners,
-      deafultUserTypesSelected = props.deafultUserTypesSelected;
+      deafultUserTypesSelected = props.deafultUserTypesSelected,
+      disabledActiveStateCondition = props.disabledActiveStateCondition;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -75,6 +80,14 @@ var UsersList = function UsersList(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     users: [],
@@ -173,10 +186,13 @@ var UsersList = function UsersList(props) {
 
               where = null;
               conditions = [];
-              conditions.push({
-                attribute: 'enabled',
-                value: selectedUserActiveState
-              });
+
+              if (!disabledActiveStateCondition) {
+                conditions.push({
+                  attribute: 'enabled',
+                  value: selectedUserActiveState
+                });
+              }
 
               if (userTypesSelected.length > 0) {
                 conditions.push({
@@ -381,18 +397,8 @@ var UsersList = function UsersList(props) {
    */
 
 
-  var handleSelectedUserTypes = function handleSelectedUserTypes(userType) {
-    var _userTypesSelected;
-
-    if (userTypesSelected.includes(userType)) {
-      _userTypesSelected = userTypesSelected.filter(function (type) {
-        return type !== userType;
-      });
-    } else {
-      _userTypesSelected = [].concat(_toConsumableArray(userTypesSelected), [userType]);
-    }
-
-    setUserTypesSelected(_userTypesSelected);
+  var handleSelectedUserTypes = function handleSelectedUserTypes(userTypes) {
+    setUserTypesSelected(userTypes);
   };
   /**
    * Method to change user active state for filter
@@ -441,13 +447,22 @@ var UsersList = function UsersList(props) {
               }));
 
               if (!error) {
-                users = usersList.users.filter(function (_user) {
-                  if (_user.id === user.id) {
-                    _user.level = user.level;
-                  }
+                users = [];
 
-                  return true;
-                });
+                if (deafultUserTypesSelected.includes(user.level)) {
+                  users = usersList.users.filter(function (_user) {
+                    if (_user.id === user.id) {
+                      _user.level = user.level;
+                    }
+
+                    return true;
+                  });
+                } else {
+                  users = usersList.users.filter(function (_user) {
+                    return _user.id !== result.id;
+                  });
+                }
+
                 setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
                   users: users
                 }));
@@ -491,15 +506,16 @@ var UsersList = function UsersList(props) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context3.next = 4;
+              _context3.next = 5;
               return ordering.setAccessToken(session.token).users(user.id).save({
                 enabled: user.enabled
               });
 
-            case 4:
+            case 5:
               _yield$ordering$setAc3 = _context3.sent;
               _yield$ordering$setAc4 = _yield$ordering$setAc3.content;
               error = _yield$ordering$setAc4.error;
@@ -510,39 +526,43 @@ var UsersList = function UsersList(props) {
               }));
 
               if (!error) {
-                users = usersList.users.filter(function (_user) {
-                  var valid = true;
+                if (!disabledActiveStateCondition) {
+                  users = usersList.users.filter(function (_user) {
+                    var valid = true;
 
-                  if (_user.id === user.id) {
-                    if (user.enabled === !selectedUserActiveState) {
-                      valid = false;
+                    if (_user.id === user.id) {
+                      if (user.enabled === !selectedUserActiveState) {
+                        valid = false;
+                      }
                     }
-                  }
 
-                  return valid;
-                });
-                setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
-                  users: users
-                }));
+                    return valid;
+                  });
+                  setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+                    users: users
+                  }));
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('UPDATED', 'Updated'));
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
     return function handleChangeActiveUser(_x4) {
@@ -689,12 +709,14 @@ var UsersList = function UsersList(props) {
 
 
   var handleSuccessAddUser = function handleSuccessAddUser(newUser) {
-    setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
-      users: [].concat(_toConsumableArray(usersList.users), [newUser])
-    }));
-    setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
-      total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
-    }));
+    if (userTypesSelected.includes(newUser === null || newUser === void 0 ? void 0 : newUser.level)) {
+      setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+        users: [].concat(_toConsumableArray(usersList.users), [newUser])
+      }));
+      setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+        total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
+      }));
+    }
   };
   /**
    * Method to update addresses of selected user
@@ -788,7 +810,7 @@ UsersList.propTypes = {
   propsToFetch: _propTypes.default.arrayOf(_propTypes.string)
 };
 UsersList.defaultProps = {
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname'],
+  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'],
   paginationSettings: {
     initialPage: 1,
     pageSize: 10,
