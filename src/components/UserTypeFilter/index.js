@@ -18,15 +18,9 @@ export const UserTypeFilter = (props) => {
    * Handle when select value changes
    * @param {number} userType Select a userType
    */
-  const handleChangeUserType = (userType) => {
-    let _typesSelected
-    if (typesSelected.includes(userType)) {
-      _typesSelected = typesSelected.filter(type => type !== userType)
-    } else {
-      _typesSelected = [...typesSelected, userType]
-    }
-    setTypesSelected(_typesSelected)
-    onChangeUserType(userType)
+  const handleChangeUserType = (userTypes) => {
+    setTypesSelected(userTypes)
+    onChangeUserType(userTypes)
   }
 
   return (
