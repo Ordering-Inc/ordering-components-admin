@@ -181,7 +181,7 @@ export const DriversGroupsList = (props) => {
       const response = await fetch(`${ordering.root}/drivergroups/${driverGroupId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setActionState({ ...actionState, loading: false })
+        setActionState({ error: null, loading: false })
         const groups = driversGroupsState.groups.filter(group => {
           if (group.id === driverGroupId) {
             Object.assign(group, content.result)

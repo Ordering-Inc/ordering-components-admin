@@ -49,6 +49,7 @@ import { CouponControl } from './components/CouponControl'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
+import { DriverGroupSetting } from './components/DriverGroupSetting'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
 import { DriversGroupOrders } from './components/DriversGroupOrders'
@@ -206,6 +207,7 @@ export {
   DashboardBusinessList,
   DashboardOrdersList,
   DragAndDrop,
+  DriverGroupSetting,
   DriverTips,
   DriversList,
   DriverAnalytics,
