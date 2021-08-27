@@ -50,6 +50,7 @@ import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
+import { DriversGroupsList } from './components/DriversGroupsList'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
@@ -207,6 +208,7 @@ export {
   DriversList,
   DriverAnalytics,
   DriversCompaniesList,
+  DriversGroupsList,
   ExamineClick,
   ExportCSV,
   FacebookLoginButton,
