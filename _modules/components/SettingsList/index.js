@@ -271,7 +271,7 @@ var SettingsList = function SettingsList(props) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
-                    error: false,
+                    error: true,
                     result: result
                   },
                   API: false
