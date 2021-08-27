@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const UsersList = (props) => {
   const {
@@ -13,11 +15,15 @@ export const UsersList = (props) => {
     isSearchByUserPhone,
     isSearchByUserName,
     isBusinessOwners,
-    deafultUserTypesSelected
+    deafultUserTypesSelected,
+    disabledActiveStateCondition
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchValue, setSearchValue] = useState(null)
@@ -55,7 +61,9 @@ export const UsersList = (props) => {
       let where = null
       const conditions = []
 
-      conditions.push({ attribute: 'enabled', value: selectedUserActiveState })
+      if (!disabledActiveStateCondition) {
+        conditions.push({ attribute: 'enabled', value: selectedUserActiveState })
+      }
 
       if (userTypesSelected.length > 0) {
         conditions.push({ attribute: 'level', value: userTypesSelected })
@@ -250,14 +258,8 @@ export const UsersList = (props) => {
    * Change user type
    * @param {object} userType User type
    */
-  const handleSelectedUserTypes = (userType) => {
-    let _userTypesSelected
-    if (userTypesSelected.includes(userType)) {
-      _userTypesSelected = userTypesSelected.filter(type => type !== userType)
-    } else {
-      _userTypesSelected = [...userTypesSelected, userType]
-    }
-    setUserTypesSelected(_userTypesSelected)
+  const handleSelectedUserTypes = (userTypes) => {
+    setUserTypesSelected(userTypes)
   }
 
   /**
@@ -284,12 +286,17 @@ export const UsersList = (props) => {
         error: error ? result : null
       })
       if (!error) {
-        const users = usersList.users.filter(_user => {
-          if (_user.id === user.id) {
-            _user.level = user.level
-          }
-          return true
-        })
+        let users = []
+        if (deafultUserTypesSelected.includes(user.level)) {
+          users = usersList.users.filter(_user => {
+            if (_user.id === user.id) {
+              _user.level = user.level
+            }
+            return true
+          })
+        } else {
+          users = usersList.users.filter(_user => _user.id !== result.id)
+        }
         setUsersList({ ...usersList, users })
       }
     } catch (err) {
@@ -304,6 +311,7 @@ export const UsersList = (props) => {
 
   const handleChangeActiveUser = async (user) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const { content: { error, result } } = await ordering.setAccessToken(session.token).users(user.id).save({ enabled: user.enabled })
       setActionStatus({
@@ -312,16 +320,19 @@ export const UsersList = (props) => {
         error: error ? result : null
       })
       if (!error) {
-        const users = usersList.users.filter(_user => {
-          let valid = true
-          if (_user.id === user.id) {
-            if (user.enabled === !selectedUserActiveState) {
-              valid = false
+        if (!disabledActiveStateCondition) {
+          const users = usersList.users.filter(_user => {
+            let valid = true
+            if (_user.id === user.id) {
+              if (user.enabled === !selectedUserActiveState) {
+                valid = false
+              }
             }
-          }
-          return valid
-        })
-        setUsersList({ ...usersList, users })
+            return valid
+          })
+          setUsersList({ ...usersList, users })
+        }
+        showToast(ToastType.Success, t('UPDATED', 'Updated'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -407,17 +418,19 @@ export const UsersList = (props) => {
    * @param {Object} newUser new user to add
    */
   const handleSuccessAddUser = (newUser) => {
-    setUsersList({
-      ...usersList,
-      users: [
-        ...usersList.users,
-        newUser
-      ]
-    })
-    setPaginationDetail({
-      ...paginationDetail,
-      total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
-    })
+    if (userTypesSelected.includes(newUser?.level)) {
+      setUsersList({
+        ...usersList,
+        users: [
+          ...usersList.users,
+          newUser
+        ]
+      })
+      setPaginationDetail({
+        ...paginationDetail,
+        total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
+      })
+    }
   }
 
   /**
@@ -517,7 +530,12 @@ UsersList.propTypes = {
 }
 
 UsersList.defaultProps = {
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname'],
+  propsToFetch: [
+    'name', 'lastname', 'email', 'phone', 'photo', 'cellphone',
+    'country_phone_code', 'city_id', 'city', 'address', 'addresses',
+    'address_notes', 'dropdown_option_id', 'dropdown_option', 'location',
+    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'
+  ],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
   deafultUserTypesSelected: [0, 1, 2, 3]
 }
