@@ -50,6 +50,8 @@ import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
+import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
+import { DriversGroupOrders } from './components/DriversGroupOrders'
 import { DriversGroupsList } from './components/DriversGroupsList'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
@@ -208,6 +210,8 @@ export {
   DriversList,
   DriverAnalytics,
   DriversCompaniesList,
+  DriversGroupAutoassign,
+  DriversGroupOrders,
   DriversGroupsList,
   ExamineClick,
   ExportCSV,
