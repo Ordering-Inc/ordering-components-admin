@@ -591,9 +591,10 @@ var DriversGroupsList = function DriversGroupsList(props) {
               content = _context7.sent;
 
               if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                setActionState({
+                  error: null,
                   loading: false
-                }));
+                });
                 groups = driversGroupsState.groups.filter(function (group) {
                   if (group.id === driverGroupId) {
                     Object.assign(group, content.result);
