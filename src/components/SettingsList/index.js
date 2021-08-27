@@ -154,7 +154,7 @@ export const SettingsList = (props) => {
           ...formState,
           loading: false,
           result: {
-            error: false,
+            error: true,
             result: result
           },
           API: false
