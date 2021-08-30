@@ -69,16 +69,22 @@ Object.defineProperty(exports, "BusinessBasicInformation", {
     return _BusinessBasicInformation.BusinessBasicInformation;
   }
 });
-Object.defineProperty(exports, "BusinessBrands", {
+Object.defineProperty(exports, "BusinessBrandBUSIDetail", {
   enumerable: true,
   get: function get() {
-    return _BusinessBrands.BusinessBrands;
+    return _BusinessBrandBUSIDetail.BusinessBrandBUSIDetail;
   }
 });
-Object.defineProperty(exports, "BusinessBrandForm", {
+Object.defineProperty(exports, "BusinessBrandGENDetail", {
   enumerable: true,
   get: function get() {
-    return _BusinessBrandForm.BusinessBrandForm;
+    return _BusinessBrandGENDetail.BusinessBrandGENDetail;
+  }
+});
+Object.defineProperty(exports, "BusinessBrandListing", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessBrandListing.BusinessBrandListing;
   }
 });
 Object.defineProperty(exports, "BusinessCategoryEdit", {
@@ -1148,9 +1154,11 @@ var _BusinessAnalytics = require("./components/BusinessAnalytics");
 
 var _BusinessBasicInformation = require("./components/BusinessBasicInformation");
 
-var _BusinessBrands = require("./components/BusinessBrands");
+var _BusinessBrandBUSIDetail = require("./components/BusinessBrandBUSIDetail");
 
-var _BusinessBrandForm = require("./components/BusinessBrandForm");
+var _BusinessBrandGENDetail = require("./components/BusinessBrandGENDetail");
+
+var _BusinessBrandListing = require("./components/BusinessBrandListing");
 
 var _BusinessCategoryEdit = require("./components/BusinessCategoryEdit");
 

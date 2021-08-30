@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessBrandForm = void 0;
+exports.BusinessBrandGENDetail = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,9 +13,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _SessionContext = require("../../contexts/SessionContext");
+
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _SessionContext = require("../../contexts/SessionContext");
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -24,6 +28,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -47,17 +59,27 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var BusinessBrandForm = function BusinessBrandForm(props) {
+/**
+ * Component to manage BusinessBrandGENDetail behavior without UI component
+ */
+var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
   var UIComponent = props.UIComponent,
-      handleSuccessAddBusinessBrand = props.handleSuccessAddBusinessBrand,
-      editMode = props.editMode,
       brand = props.brand,
       handleUpdateBrandList = props.handleUpdateBrandList,
-      brandList = props.brandList;
+      brandListState = props.brandListState,
+      onSelectedBrand = props.onSelectedBrand;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -74,7 +96,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
       formState = _useState2[0],
       setFormState = _useState2[1];
   /**
-   * Default fuction for business profile workflow
+   * Method to update or create a brand
    */
 
 
@@ -84,7 +106,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (editMode) {
+              if (brand) {
                 updateBrand();
               } else {
                 createBrand();
@@ -103,7 +125,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
     };
   }();
   /**
-   * Method to create brand
+   * Method to create brand from API
    */
 
 
@@ -118,6 +140,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
                 method: 'POST',
                 headers: {
@@ -126,15 +149,15 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 },
                 body: JSON.stringify(formState.changes)
               };
-              _context2.next = 5;
+              _context2.next = 6;
               return fetch("".concat(ordering.root, "/franchises"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context2.sent;
 
               if (!(content === null || content === void 0 ? void 0 : content.error)) {
@@ -144,9 +167,12 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                   loading: false
                 }));
 
-                if (handleSuccessAddBusinessBrand) {
-                  handleSuccessAddBusinessBrand(content.result);
+                if (handleUpdateBrandList) {
+                  handleUpdateBrandList([].concat(_toConsumableArray(brandListState === null || brandListState === void 0 ? void 0 : brandListState.brands), [content.result]));
                 }
+
+                onSelectedBrand && onSelectedBrand(content.result);
+                showToast(_ToastContext.ToastType.Success, t('BRAND_ADDED', 'Brand added'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -155,11 +181,11 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 }));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -169,12 +195,12 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
     return function createBrand() {
@@ -198,6 +224,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
                 method: 'POST',
                 headers: {
@@ -206,15 +233,15 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 },
                 body: JSON.stringify(formState.changes)
               };
-              _context3.next = 5;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/franchises/").concat(brand === null || brand === void 0 ? void 0 : brand.id), requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context3.sent;
 
               if (!(content === null || content === void 0 ? void 0 : content.error)) {
@@ -225,7 +252,7 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 }));
 
                 if (handleUpdateBrandList) {
-                  _brands = brandList === null || brandList === void 0 ? void 0 : brandList.brands.map(function (item) {
+                  _brands = brandListState === null || brandListState === void 0 ? void 0 : brandListState.brands.map(function (item) {
                     if (item.id === content.result.id) {
                       return _objectSpread(_objectSpread({}, item), {}, {
                         name: content.result.name,
@@ -237,6 +264,8 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                   });
                   handleUpdateBrandList(_brands);
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('BRAND_UPDATED', 'Brand updated'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -245,11 +274,11 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 }));
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -259,12 +288,12 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
     return function updateBrand() {
@@ -290,15 +319,13 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
    */
 
 
-  var handlechangeImage = function handlechangeImage(file) {
+  var handlechangeImage = function handlechangeImage(file, name) {
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
     reader.onload = function () {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          logo: reader.result
-        })
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, reader.result))
       }));
     };
 
@@ -308,15 +335,15 @@ var BusinessBrandForm = function BusinessBrandForm(props) {
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    formState: formState,
+    brandFormState: formState,
     handleUpdateClick: handleUpdateClick,
     handleChangeInput: handleChangeInput,
     handlechangeImage: handlechangeImage
   })));
 };
 
-exports.BusinessBrandForm = BusinessBrandForm;
-BusinessBrandForm.propTypes = {
+exports.BusinessBrandGENDetail = BusinessBrandGENDetail;
+BusinessBrandGENDetail.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -330,12 +357,17 @@ BusinessBrandForm.propTypes = {
   /**
    * Object for brand list
    */
-  brandList: _propTypes.default.object,
+  brandListState: _propTypes.default.object,
 
   /**
   * Function to set a business state
   */
   handleUpdateBrandList: _propTypes.default.func,
+
+  /**
+   * Function to set selected brand
+   */
+  onSelectedBrand: _propTypes.default.func,
 
   /**
    * Components types before business type filter
@@ -361,7 +393,7 @@ BusinessBrandForm.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessBrandForm.defaultProps = {
+BusinessBrandGENDetail.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
