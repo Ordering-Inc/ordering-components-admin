@@ -1,28 +1,34 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
-export const BusinessBrandForm = (props) => {
+/**
+ * Component to manage BusinessBrandGENDetail behavior without UI component
+ */
+export const BusinessBrandGENDetail = (props) => {
   const {
     UIComponent,
-    handleSuccessAddBusinessBrand,
-    editMode,
     brand,
     handleUpdateBrandList,
-    brandList
+    brandListState,
+    onSelectedBrand
   } = props
 
   const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
   const [{ token }] = useSession()
 
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
-   * Default fuction for business profile workflow
+   * Method to update or create a brand
    */
   const handleUpdateClick = async () => {
-    if (editMode) {
+    if (brand) {
       updateBrand()
     } else {
       createBrand()
@@ -30,11 +36,12 @@ export const BusinessBrandForm = (props) => {
   }
 
   /**
-   * Method to create brand
+   * Method to create brand from API
    */
   const createBrand = async () => {
     try {
       setFormState({ ...formState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -52,9 +59,11 @@ export const BusinessBrandForm = (props) => {
           result: content,
           loading: false
         })
-        if (handleSuccessAddBusinessBrand) {
-          handleSuccessAddBusinessBrand(content.result)
+        if (handleUpdateBrandList) {
+          handleUpdateBrandList([...brandListState?.brands, content.result])
         }
+        onSelectedBrand && onSelectedBrand(content.result)
+        showToast(ToastType.Success, t('BRAND_ADDED', 'Brand added'))
       } else {
         setFormState({
           ...formState,
@@ -81,6 +90,7 @@ export const BusinessBrandForm = (props) => {
   const updateBrand = async () => {
     try {
       setFormState({ ...formState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -99,7 +109,7 @@ export const BusinessBrandForm = (props) => {
           loading: false
         })
         if (handleUpdateBrandList) {
-          const _brands = brandList?.brands.map(item => {
+          const _brands = brandListState?.brands.map(item => {
             if (item.id === content.result.id) {
               return {
                 ...item,
@@ -111,6 +121,7 @@ export const BusinessBrandForm = (props) => {
           })
           handleUpdateBrandList(_brands)
         }
+        showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
       } else {
         setFormState({
           ...formState,
@@ -150,7 +161,7 @@ export const BusinessBrandForm = (props) => {
    * Update business brand logo data
    * @param {File} file Image to change business brand logo
    */
-  const handlechangeImage = (file) => {
+  const handlechangeImage = (file, name) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
@@ -158,7 +169,7 @@ export const BusinessBrandForm = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          logo: reader.result
+          [name]: reader.result
         }
       })
     }
@@ -170,7 +181,7 @@ export const BusinessBrandForm = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          formState={formState}
+          brandFormState={formState}
           handleUpdateClick={handleUpdateClick}
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
@@ -180,7 +191,7 @@ export const BusinessBrandForm = (props) => {
   )
 }
 
-BusinessBrandForm.propTypes = {
+BusinessBrandGENDetail.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -192,11 +203,15 @@ BusinessBrandForm.propTypes = {
   /**
    * Object for brand list
    */
-  brandList: PropTypes.object,
+  brandListState: PropTypes.object,
   /**
   * Function to set a business state
   */
   handleUpdateBrandList: PropTypes.func,
+  /**
+   * Function to set selected brand
+   */
+  onSelectedBrand: PropTypes.func,
   /**
    * Components types before business type filter
    * Array of type components, the parent props will pass to these components
@@ -219,7 +234,7 @@ BusinessBrandForm.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-BusinessBrandForm.defaultProps = {
+BusinessBrandGENDetail.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
