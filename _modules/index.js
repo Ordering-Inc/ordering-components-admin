@@ -459,6 +459,12 @@ Object.defineProperty(exports, "LanguageSelector", {
     return _LanguageSelector.LanguageSelector;
   }
 });
+Object.defineProperty(exports, "LanguageSetting", {
+  enumerable: true,
+  get: function get() {
+    return _LanguageSetting.LanguageSetting;
+  }
+});
 Object.defineProperty(exports, "LanguageTransSpread", {
   enumerable: true,
   get: function get() {
@@ -1291,6 +1297,8 @@ var _InvoiceDriverManager = require("./components/InvoiceDriverManager");
 var _LanguageManager = require("./components/LanguageManager");
 
 var _LanguageSelector = require("./components/LanguageSelector");
+
+var _LanguageSetting = require("./components/LanguageSetting");
 
 var _LanguageTransSpread = require("./components/LanguageTransSpread");
 
