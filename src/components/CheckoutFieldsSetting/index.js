@@ -19,7 +19,7 @@ export const CheckoutFieldsSetting = (props) => {
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
-   * Method to get the pages from API
+   * Method to get the checkout fields from API
    */
   const getCheckoutFields = async () => {
     try {
