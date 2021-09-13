@@ -72,6 +72,7 @@ import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
 import { InvoiceDriverManager } from './components/InvoiceDriverManager'
 import { LanguageManager } from './components/LanguageManager'
 import { LanguageSelector } from './components/LanguageSelector'
+import { LanguageSetting } from './components/LanguageSetting'
 import { LanguageTransSpread } from './components/LanguageTransSpread'
 import { LanguageTransTable } from './components/LanguageTransTable'
 import { LoginForm } from './components/LoginForm'
@@ -238,6 +239,7 @@ export {
   InvoiceDriverManager,
   LanguageManager,
   LanguageSelector,
+  LanguageSetting,
   LanguageTransSpread,
   LanguageTransTable,
   LoginForm,
