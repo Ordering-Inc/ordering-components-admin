@@ -1,4 +1,5 @@
 import { AddressDetails } from './components/AddressDetails'
+import { AddressFieldsSetting } from './components/AddressFieldsSetting'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { AnalyticsBusinessFilter } from './components/AnalyticsBusinessFilter'
@@ -162,6 +163,7 @@ import { WebhookList } from './components/WebhookList'
 
 export {
   AddressDetails,
+  AddressFieldsSetting,
   AddressForm,
   AddressList,
   AnalyticsBusinessFilter,
