@@ -5,15 +5,13 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CheckoutFieldsSetting = void 0;
+exports.AddressFieldsSetting = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
@@ -51,16 +49,12 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
+var AddressFieldsSetting = function AddressFieldsSetting(props) {
   var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      token = _useSession2[0].token;
 
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
@@ -76,8 +70,8 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      checkoutFieldsState = _useState2[0],
-      setCheckoutFieldsState = _useState2[1];
+      addressFieldsState = _useState2[0],
+      setAddressFieldsState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
@@ -87,42 +81,38 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       actionState = _useState4[0],
       setActionState = _useState4[1];
   /**
-   * Method to get the checkout fields from API
+   * Method to get the address fields from API
    */
 
 
-  var getCheckoutFields = /*#__PURE__*/function () {
+  var getAddressFields = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+      var conditons, _yield$ordering$valid, _yield$ordering$valid2, result, error;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
+              setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
+              conditons = [{
+                attribute: 'validate',
+                value: 'address'
+              }];
               _context.next = 5;
-              return fetch("".concat(ordering.root, "/checkoutfields"), requestOptions);
+              return ordering.validationFields().where(conditons).get();
 
             case 5:
-              response = _context.sent;
-              _context.next = 8;
-              return response.json();
+              _yield$ordering$valid = _context.sent;
+              _yield$ordering$valid2 = _yield$ordering$valid.content;
+              result = _yield$ordering$valid2.result;
+              error = _yield$ordering$valid2.error;
 
-            case 8:
-              content = _context.sent;
-
-              if (!content.error) {
-                setCheckoutFieldsState({
-                  fields: content.result,
+              if (!error) {
+                setAddressFieldsState({
+                  fields: result,
                   loading: false
                 });
               }
@@ -133,7 +123,7 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
+              setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
@@ -146,20 +136,21 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       }, _callee, null, [[0, 12]]);
     }));
 
-    return function getCheckoutFields() {
+    return function getAddressFields() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to update the checkout fields setting from API
+   * Method to update the address fields setting from API
    * @param {Number} fieldId selected field id
    * @param {Object} changes changes
    */
 
 
-  var handleChangeCheckoutFieldSetting = /*#__PURE__*/function () {
+  var handleChangeFieldSetting = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(fieldId, changes) {
-      var requestOptions, response, content, fields;
+      var _yield$ordering$valid3, _yield$ordering$valid4, result, error, fields;
+
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -169,113 +160,103 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
-              };
-              _context2.next = 6;
-              return fetch("".concat(ordering.root, "/checkoutfields/").concat(fieldId), requestOptions);
+              _context2.next = 5;
+              return ordering.validationFields(fieldId).save(changes);
 
-            case 6:
-              response = _context2.sent;
-              _context2.next = 9;
-              return response.json();
+            case 5:
+              _yield$ordering$valid3 = _context2.sent;
+              _yield$ordering$valid4 = _yield$ordering$valid3.content;
+              result = _yield$ordering$valid4.result;
+              error = _yield$ordering$valid4.error;
 
-            case 9:
-              content = _context2.sent;
-
-              if (!content.error) {
+              if (!error) {
                 setActionState({
                   loading: false,
                   error: null
                 });
                 showToast(_ToastContext.ToastType.Success, t('FIELD_SAVED', 'Field saved'));
-                fields = checkoutFieldsState.fields.filter(function (field) {
+                fields = addressFieldsState.fields.filter(function (field) {
                   if (field.id === fieldId) {
-                    Object.assign(field, content.result);
+                    Object.assign(field, result);
                   }
 
                   return true;
                 });
-                setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
+                setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
                   fields: fields
                 }));
               } else {
                 setActionState({
                   loading: false,
-                  error: content.result
+                  error: result
                 });
               }
 
-              _context2.next = 16;
+              _context2.next = 15;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
               setActionState({
                 loading: false,
                 error: [_context2.t0.message]
               });
 
-            case 16:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function handleChangeCheckoutFieldSetting(_x, _x2) {
+    return function handleChangeFieldSetting(_x, _x2) {
       return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getCheckoutFields();
+    getAddressFields();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    checkoutFieldsState: checkoutFieldsState,
-    handleChangeCheckoutFieldSetting: handleChangeCheckoutFieldSetting
+    addressFieldsState: addressFieldsState,
+    handleChangeFieldSetting: handleChangeFieldSetting
   })));
 };
 
-exports.CheckoutFieldsSetting = CheckoutFieldsSetting;
-CheckoutFieldsSetting.propTypes = {
+exports.AddressFieldsSetting = AddressFieldsSetting;
+AddressFieldsSetting.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before checkout fields
+   * Components types before address fields
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after checkout fields
+   * Components types after address fields
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before checkout fields
+   * Elements before address fields
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after checkout fields
+   * Elements after address fields
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CheckoutFieldsSetting.defaultProps = {
+AddressFieldsSetting.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
