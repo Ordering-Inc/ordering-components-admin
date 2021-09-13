@@ -44,6 +44,7 @@ import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { BusinessCategoryCreator } from './components/BusinessCategoryCreator'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
+import { CheckoutFieldsSetting } from './components/CheckoutFieldsSetting'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
@@ -206,6 +207,7 @@ export {
   BusinessProductCreator,
   Cart,
   Checkout,
+  CheckoutFieldsSetting,
   CheckPassword,
   CityList,
   CouponControl,
