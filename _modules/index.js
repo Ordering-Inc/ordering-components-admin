@@ -9,6 +9,12 @@ Object.defineProperty(exports, "AddressDetails", {
     return _AddressDetails.AddressDetails;
   }
 });
+Object.defineProperty(exports, "AddressFieldsSetting", {
+  enumerable: true,
+  get: function get() {
+    return _AddressFieldsSetting.AddressFieldsSetting;
+  }
+});
 Object.defineProperty(exports, "AddressForm", {
   enumerable: true,
   get: function get() {
@@ -1139,6 +1145,8 @@ Object.defineProperty(exports, "WebhookList", {
 });
 
 var _AddressDetails = require("./components/AddressDetails");
+
+var _AddressFieldsSetting = require("./components/AddressFieldsSetting");
 
 var _AddressForm = require("./components/AddressForm");
 
