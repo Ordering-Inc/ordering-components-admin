@@ -19,8 +19,8 @@ export const BusinessBrandBUSIDetail = (props) => {
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
 
   const handleChangeCheckBox = (e, businessId, brandId) => {
-    if (!e.target.checked) return
-    const changes = { franchise_id: brandId }
+    let changes = { franchise_id: brandId }
+    if (!e.target.checked) changes = { franchise_id: null }
     updateBusinessList(businessId, changes)
   }
 

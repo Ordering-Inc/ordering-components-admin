@@ -24,7 +24,6 @@ export const PageForm = (props) => {
   const [insertImageState, setInsertImageState] = useState({ loading: false, change: {}, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
-  const [bodyContent, setBodyContent] = useState('<p><br></p>')
   const [selectedImageUrl, setSelectedImageUrl] = useState(null)
   const [isAddMode, setIsAddMode] = useState(null)
 
@@ -147,7 +146,6 @@ export const PageForm = (props) => {
         }
       }
       if (Object.keys(changes).length === 0) return
-      changes.body = bodyContent
 
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
@@ -195,7 +193,10 @@ export const PageForm = (props) => {
         }
       }
       if (Object.keys(changes).length === 0) return
-      changes.body = bodyContent
+      changes.enabled = true
+      if (!changes?.body) {
+        changes.body = '<p><br></p>'
+      }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
@@ -274,7 +275,6 @@ export const PageForm = (props) => {
           imageListState={imageListState}
           insertImageState={insertImageState}
           formState={formState}
-          setBodyContent={setBodyContent}
           selectedImageUrl={selectedImageUrl}
           setSelectedImageUrl={setSelectedImageUrl}
           handleInsertImage={handleInsertImage}

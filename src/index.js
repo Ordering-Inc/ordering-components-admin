@@ -1,4 +1,5 @@
 import { AddressDetails } from './components/AddressDetails'
+import { AddressFieldsSetting } from './components/AddressFieldsSetting'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
 import { AnalyticsBusinessFilter } from './components/AnalyticsBusinessFilter'
@@ -44,6 +45,7 @@ import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { BusinessCategoryCreator } from './components/BusinessCategoryCreator'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
+import { CheckoutFieldsSetting } from './components/CheckoutFieldsSetting'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
@@ -70,6 +72,7 @@ import { InvoiceBusinessManager } from './components/InvoiceBusinessManager'
 import { InvoiceDriverManager } from './components/InvoiceDriverManager'
 import { LanguageManager } from './components/LanguageManager'
 import { LanguageSelector } from './components/LanguageSelector'
+import { LanguageSetting } from './components/LanguageSetting'
 import { LanguageTransSpread } from './components/LanguageTransSpread'
 import { LanguageTransTable } from './components/LanguageTransTable'
 import { LoginForm } from './components/LoginForm'
@@ -161,6 +164,7 @@ import { WebhookList } from './components/WebhookList'
 
 export {
   AddressDetails,
+  AddressFieldsSetting,
   AddressForm,
   AddressList,
   AnalyticsBusinessFilter,
@@ -206,6 +210,7 @@ export {
   BusinessProductCreator,
   Cart,
   Checkout,
+  CheckoutFieldsSetting,
   CheckPassword,
   CityList,
   CouponControl,
@@ -234,6 +239,7 @@ export {
   InvoiceDriverManager,
   LanguageManager,
   LanguageSelector,
+  LanguageSetting,
   LanguageTransSpread,
   LanguageTransTable,
   LoginForm,
