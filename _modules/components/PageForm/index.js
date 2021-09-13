@@ -126,20 +126,15 @@ var PageForm = function PageForm(props) {
       formState = _useState10[0],
       setFormState = _useState10[1];
 
-  var _useState11 = (0, _react.useState)('<p><br></p>'),
+  var _useState11 = (0, _react.useState)(null),
       _useState12 = _slicedToArray(_useState11, 2),
-      bodyContent = _useState12[0],
-      setBodyContent = _useState12[1];
+      selectedImageUrl = _useState12[0],
+      setSelectedImageUrl = _useState12[1];
 
   var _useState13 = (0, _react.useState)(null),
       _useState14 = _slicedToArray(_useState13, 2),
-      selectedImageUrl = _useState14[0],
-      setSelectedImageUrl = _useState14[1];
-
-  var _useState15 = (0, _react.useState)(null),
-      _useState16 = _slicedToArray(_useState15, 2),
-      isAddMode = _useState16[0],
-      setIsAddMode = _useState16[1];
+      isAddMode = _useState14[0],
+      setIsAddMode = _useState14[1];
   /**
    * Method to get the pages from API
    */
@@ -456,7 +451,6 @@ var PageForm = function PageForm(props) {
               return _context5.abrupt("return");
 
             case 6:
-              changes.body = bodyContent;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
@@ -469,15 +463,15 @@ var PageForm = function PageForm(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context5.next = 12;
+              _context5.next = 11;
               return fetch("".concat(ordering.root, "/pages/").concat(pageId), requestOptions);
 
-            case 12:
+            case 11:
               response = _context5.sent;
-              _context5.next = 15;
+              _context5.next = 14;
               return response.json();
 
-            case 15:
+            case 14:
               content = _context5.sent;
 
               if (!content.error) {
@@ -508,23 +502,23 @@ var PageForm = function PageForm(props) {
                 });
               }
 
-              _context5.next = 22;
+              _context5.next = 21;
               break;
 
-            case 19:
-              _context5.prev = 19;
+            case 18:
+              _context5.prev = 18;
               _context5.t0 = _context5["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context5.t0.message]
               }));
 
-            case 22:
+            case 21:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[0, 19]]);
+      }, _callee5, null, [[0, 18]]);
     }));
 
     return function handleSavePage() {
@@ -538,7 +532,7 @@ var PageForm = function PageForm(props) {
 
   var handleAddPage = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
-      var _changes, changes, key, requestOptions, response, content, updatedPages;
+      var _changes2, _changes, changes, key, requestOptions, response, content, updatedPages;
 
       return _regenerator.default.wrap(function _callee6$(_context6) {
         while (1) {
@@ -562,7 +556,12 @@ var PageForm = function PageForm(props) {
               return _context6.abrupt("return");
 
             case 6:
-              changes.body = bodyContent;
+              changes.enabled = true;
+
+              if (!((_changes2 = changes) === null || _changes2 === void 0 ? void 0 : _changes2.body)) {
+                changes.body = '<p><br></p>';
+              }
+
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
@@ -575,15 +574,15 @@ var PageForm = function PageForm(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context6.next = 12;
+              _context6.next = 13;
               return fetch("".concat(ordering.root, "/pages"), requestOptions);
 
-            case 12:
+            case 13:
               response = _context6.sent;
-              _context6.next = 15;
+              _context6.next = 16;
               return response.json();
 
-            case 15:
+            case 16:
               content = _context6.sent;
 
               if (!content.error) {
@@ -606,23 +605,23 @@ var PageForm = function PageForm(props) {
                 }));
               }
 
-              _context6.next = 22;
+              _context6.next = 23;
               break;
 
-            case 19:
-              _context6.prev = 19;
+            case 20:
+              _context6.prev = 20;
               _context6.t0 = _context6["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context6.t0.message]
               }));
 
-            case 22:
+            case 23:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, null, [[0, 19]]);
+      }, _callee6, null, [[0, 20]]);
     }));
 
     return function handleAddPage() {
@@ -674,7 +673,6 @@ var PageForm = function PageForm(props) {
     imageListState: imageListState,
     insertImageState: insertImageState,
     formState: formState,
-    setBodyContent: setBodyContent,
     selectedImageUrl: selectedImageUrl,
     setSelectedImageUrl: setSelectedImageUrl,
     handleInsertImage: handleInsertImage,

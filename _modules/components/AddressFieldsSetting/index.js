@@ -5,19 +5,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessBrandBUSIDetail = void 0;
+exports.AddressFieldsSetting = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _LanguageContext = require("../../contexts/LanguageContext");
-
 var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -49,21 +49,12 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to manage BusinessBrandBUSIDetail behavior without UI component
- */
-var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
-  var UIComponent = props.UIComponent,
-      propsToFetch = props.propsToFetch;
+var AddressFieldsSetting = function AddressFieldsSetting(props) {
+  var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-
-  var _useState = (0, _react.useState)(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      searchValue = _useState2[0],
-      setSearchValue = _useState2[1];
 
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
@@ -73,64 +64,57 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
+  var _useState = (0, _react.useState)({
+    fields: [],
+    loading: false,
+    error: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      addressFieldsState = _useState2[0],
+      setAddressFieldsState = _useState2[1];
+
   var _useState3 = (0, _react.useState)({
     loading: false,
-    businesses: [],
-    result: {
-      error: null
-    }
+    error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      businessList = _useState4[0],
-      setBusinessList = _useState4[1];
-
-  var handleChangeCheckBox = function handleChangeCheckBox(e, businessId, brandId) {
-    var changes = {
-      franchise_id: brandId
-    };
-    if (!e.target.checked) changes = {
-      franchise_id: null
-    };
-    updateBusinessList(businessId, changes);
-  };
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to get business list from API
+   * Method to get the address fields from API
    */
 
 
-  var getBusinessList = /*#__PURE__*/function () {
+  var getAddressFields = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination;
+      var conditons, _yield$ordering$valid, _yield$ordering$valid2, result, error;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses().asDashboard().select(propsToFetch).get();
+              conditons = [{
+                attribute: 'validate',
+                value: 'address'
+              }];
+              _context.next = 5;
+              return ordering.validationFields().where(conditons).get();
 
-            case 4:
-              _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
-              pagination = _yield$ordering$busin2.pagination;
+            case 5:
+              _yield$ordering$valid = _context.sent;
+              _yield$ordering$valid2 = _yield$ordering$valid.content;
+              result = _yield$ordering$valid2.result;
+              error = _yield$ordering$valid2.error;
 
               if (!error) {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
-                  loading: false,
-                  businesses: result,
-                  pagination: pagination
-                }));
-              } else {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
-                  loading: false,
-                  error: result
-                }));
+                setAddressFieldsState({
+                  fields: result,
+                  loading: false
+                });
               }
 
               _context.next = 15;
@@ -139,9 +123,9 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
                 loading: false,
-                error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
+                error: [_context.t0.message]
               }));
 
             case 15:
@@ -152,18 +136,20 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
       }, _callee, null, [[0, 12]]);
     }));
 
-    return function getBusinessList() {
+    return function getAddressFields() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to update business list from API
+   * Method to update the address fields setting from API
+   * @param {Number} fieldId selected field id
+   * @param {Object} changes changes
    */
 
 
-  var updateBusinessList = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, changes) {
-      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _businesses;
+  var handleChangeFieldSetting = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(fieldId, changes) {
+      var _yield$ordering$valid3, _yield$ordering$valid4, result, error, fields;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -171,103 +157,108 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
             case 0:
               _context2.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              _context2.next = 4;
-              return ordering.businesses(parseInt(id)).save(changes);
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              _context2.next = 5;
+              return ordering.validationFields(fieldId).save(changes);
 
-            case 4:
-              _yield$ordering$busin3 = _context2.sent;
-              _yield$ordering$busin4 = _yield$ordering$busin3.content;
-              error = _yield$ordering$busin4.error;
-              result = _yield$ordering$busin4.result;
+            case 5:
+              _yield$ordering$valid3 = _context2.sent;
+              _yield$ordering$valid4 = _yield$ordering$valid3.content;
+              result = _yield$ordering$valid4.result;
+              error = _yield$ordering$valid4.error;
 
               if (!error) {
-                _businesses = businessList === null || businessList === void 0 ? void 0 : businessList.businesses.map(function (business) {
-                  if (business.id === id) {
-                    return _objectSpread(_objectSpread({}, business), {}, {
-                      franchise_id: result.id
-                    });
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                showToast(_ToastContext.ToastType.Success, t('FIELD_SAVED', 'Field saved'));
+                fields = addressFieldsState.fields.filter(function (field) {
+                  if (field.id === fieldId) {
+                    Object.assign(field, result);
                   }
 
-                  return business;
+                  return true;
                 });
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
-                  businesses: _businesses
+                setAddressFieldsState(_objectSpread(_objectSpread({}, addressFieldsState), {}, {
+                  fields: fields
                 }));
-                showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
+                });
               }
 
-              _context2.next = 14;
+              _context2.next = 15;
               break;
 
-            case 11:
-              _context2.prev = 11;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0 || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.toString()) || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.message));
+              setActionState({
+                loading: false,
+                error: [_context2.t0.message]
+              });
 
-            case 14:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 11]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function updateBusinessList(_x, _x2) {
+    return function handleChangeFieldSetting(_x, _x2) {
       return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getBusinessList();
+    getAddressFields();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    searchValue: searchValue,
-    onSearch: setSearchValue,
-    businessList: businessList,
-    handleChangeCheckBox: handleChangeCheckBox
+    addressFieldsState: addressFieldsState,
+    handleChangeFieldSetting: handleChangeFieldSetting
   })));
 };
 
-exports.BusinessBrandBUSIDetail = BusinessBrandBUSIDetail;
-BusinessBrandBUSIDetail.propTypes = {
+exports.AddressFieldsSetting = AddressFieldsSetting;
+AddressFieldsSetting.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array of business props to fetch
-   */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
-
-  /**
-   * Components types before business type filter
+   * Components types before address fields
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business type filter
+   * Components types after address fields
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business type filter
+   * Elements before address fields
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business type filter
+   * Elements after address fields
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessBrandBUSIDetail.defaultProps = {
+AddressFieldsSetting.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
+  afterElements: []
 };

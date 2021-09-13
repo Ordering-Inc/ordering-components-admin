@@ -9,6 +9,12 @@ Object.defineProperty(exports, "AddressDetails", {
     return _AddressDetails.AddressDetails;
   }
 });
+Object.defineProperty(exports, "AddressFieldsSetting", {
+  enumerable: true,
+  get: function get() {
+    return _AddressFieldsSetting.AddressFieldsSetting;
+  }
+});
 Object.defineProperty(exports, "AddressForm", {
   enumerable: true,
   get: function get() {
@@ -279,6 +285,12 @@ Object.defineProperty(exports, "Checkout", {
     return _Checkout.Checkout;
   }
 });
+Object.defineProperty(exports, "CheckoutFieldsSetting", {
+  enumerable: true,
+  get: function get() {
+    return _CheckoutFieldsSetting.CheckoutFieldsSetting;
+  }
+});
 Object.defineProperty(exports, "CheckPassword", {
   enumerable: true,
   get: function get() {
@@ -445,6 +457,12 @@ Object.defineProperty(exports, "LanguageSelector", {
   enumerable: true,
   get: function get() {
     return _LanguageSelector.LanguageSelector;
+  }
+});
+Object.defineProperty(exports, "LanguageSetting", {
+  enumerable: true,
+  get: function get() {
+    return _LanguageSetting.LanguageSetting;
   }
 });
 Object.defineProperty(exports, "LanguageTransSpread", {
@@ -1134,6 +1152,8 @@ Object.defineProperty(exports, "WebhookList", {
 
 var _AddressDetails = require("./components/AddressDetails");
 
+var _AddressFieldsSetting = require("./components/AddressFieldsSetting");
+
 var _AddressForm = require("./components/AddressForm");
 
 var _AddressList = require("./components/AddressList");
@@ -1224,6 +1244,8 @@ var _Cart = require("./components/Cart");
 
 var _Checkout = require("./components/Checkout");
 
+var _CheckoutFieldsSetting = require("./components/CheckoutFieldsSetting");
+
 var _CheckPassword = require("./components/CheckPassword");
 
 var _CityList = require("./components/CityList");
@@ -1275,6 +1297,8 @@ var _InvoiceDriverManager = require("./components/InvoiceDriverManager");
 var _LanguageManager = require("./components/LanguageManager");
 
 var _LanguageSelector = require("./components/LanguageSelector");
+
+var _LanguageSetting = require("./components/LanguageSetting");
 
 var _LanguageTransSpread = require("./components/LanguageTransSpread");
 
