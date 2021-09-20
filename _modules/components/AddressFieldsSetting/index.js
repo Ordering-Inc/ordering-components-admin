@@ -87,7 +87,7 @@ var AddressFieldsSetting = function AddressFieldsSetting(props) {
 
   var getAddressFields = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var conditons, _yield$ordering$valid, _yield$ordering$valid2, result, error;
+      var conditons, _yield$ordering$valid, _yield$ordering$valid2, result, error, filteredResult;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -111,8 +111,11 @@ var AddressFieldsSetting = function AddressFieldsSetting(props) {
               error = _yield$ordering$valid2.error;
 
               if (!error) {
+                filteredResult = result.filter(function (field) {
+                  return field.code !== 'city_dropdown_option' && field.code !== 'name' && field.code !== 'lastname' && field.code !== 'mobile_phone' && field.code !== 'email' && field.code !== 'middle_name' && field.code !== 'second_lastname';
+                });
                 setAddressFieldsState({
-                  fields: result,
+                  fields: filteredResult,
                   loading: false
                 });
               }
