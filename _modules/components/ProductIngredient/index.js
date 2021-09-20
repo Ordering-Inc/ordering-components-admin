@@ -158,7 +158,13 @@ var ProductIngredient = function ProductIngredient(props) {
               if (!content.error) {
                 setChangesState({});
                 setIsAddMode(false);
-                ingredients = [].concat(_toConsumableArray(productState === null || productState === void 0 ? void 0 : productState.product.ingredients), [content.result]);
+
+                if (productState === null || productState === void 0 ? void 0 : productState.product.ingredients) {
+                  ingredients = [].concat(_toConsumableArray(productState === null || productState === void 0 ? void 0 : productState.product.ingredients), [content.result]);
+                } else {
+                  ingredients = [content.result];
+                }
+
                 updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
                   ingredients: ingredients
                 });

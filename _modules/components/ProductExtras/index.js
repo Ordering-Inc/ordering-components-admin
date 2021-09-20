@@ -529,9 +529,7 @@ var ProductExtras = function ProductExtras(props) {
               if (!content.error) {
                 setChangesState({});
                 setIsAddMode(false);
-                extras = [].concat(_toConsumableArray(extrasState.extras), [_objectSpread(_objectSpread({}, content.result), {}, {
-                  options: []
-                })]);
+                extras = [].concat(_toConsumableArray(extrasState.extras), [content.result]);
                 setExtrasState(_objectSpread(_objectSpread({}, extrasState), {}, {
                   loading: false,
                   extras: extras
