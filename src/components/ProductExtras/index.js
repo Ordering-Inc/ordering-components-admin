@@ -248,7 +248,7 @@ export const ProductExtras = (props) => {
       if (!content.error) {
         setChangesState({})
         setIsAddMode(false)
-        const extras = [...extrasState.extras, { ...content.result, options: [] }]
+        const extras = [...extrasState.extras, content.result]
         setExtrasState({ ...extrasState, loading: false, extras: extras })
         if (handleUpdateBusinessState) {
           const updatedBusiness = { ...business, extras: extras }
