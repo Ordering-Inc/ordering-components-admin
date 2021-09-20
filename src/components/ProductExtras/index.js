@@ -91,7 +91,12 @@ export const ProductExtras = (props) => {
    * @param {Boolean} checked check state
    */
   const handleClickExtra = (extraId, checked) => {
-    let extraIds = productState.product.extras.reduce((ids, extra) => [...ids, extra.id], [])
+    let extraIds
+    if (productState.product.extras) {
+      extraIds = productState.product.extras.reduce((ids, extra) => [...ids, extra.id], [])
+    } else {
+      extraIds = []
+    }
     if (checked) {
       extraIds.push(extraId)
     } else {
