@@ -30,7 +30,12 @@ export const AddressFieldsSetting = (props) => {
       ]
       const { content: { result, error } } = await ordering.validationFields().where(conditons).get()
       if (!error) {
-        setAddressFieldsState({ fields: result, loading: false })
+        const filteredResult = result.filter(
+          field => field.code !== 'city_dropdown_option' && field.code !== 'name' &&
+          field.code !== 'lastname' && field.code !== 'mobile_phone' &&
+          field.code !== 'email' && field.code !== 'middle_name' && field.code !== 'second_lastname'
+        )
+        setAddressFieldsState({ fields: filteredResult, loading: false })
       }
     } catch (err) {
       setAddressFieldsState({ ...addressFieldsState, loading: false, error: [err.message] })
