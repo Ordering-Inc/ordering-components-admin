@@ -133,15 +133,6 @@ export const LanguageManager = (props) => {
       const main = []
       for (let i = 0; i < translationList?.translations.length; i++) {
         switch (translationList?.translations[i].key) {
-          case 'Panel_Currency':
-            main.push({
-              i: 0,
-              id: translationList?.translations[i].id,
-              name: 'CURRENCY',
-              key: translationList?.translations[i].key,
-              text: translationList?.translations[i].text
-            })
-            break
           case 'BUSINESS_TYPE_FOOD':
             main.push({
               i: 1,

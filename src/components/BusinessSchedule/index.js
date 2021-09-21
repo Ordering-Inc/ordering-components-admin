@@ -37,7 +37,7 @@ export const BusinessSchedule = (props) => {
         const openOld = lapses[i].open.hour * 60 + lapses[i].open.minute
         const closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute
 
-        if (openNew < openOld && closeNew > closeOld) return true
+        if (openNew <= openOld && closeNew >= closeOld) return true
         if (openNew < openOld && closeNew > openOld) return true
         if (openNew > openOld && closeNew < closeOld) return true
         if (openNew < closeOld && closeNew > closeOld) return true

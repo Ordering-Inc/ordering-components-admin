@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessGallery = (props) => {
   const {
     business,
+    isVideoGallery,
+    isImageGallery,
     UIComponent,
     handleSucessAddBusinessGallery,
     handleSucessDeleteBusinessGallery
@@ -13,6 +17,9 @@ export const BusinessGallery = (props) => {
 
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   const [photos, setPhotos] = useState([])
@@ -65,6 +72,7 @@ export const BusinessGallery = (props) => {
    */
   const handleUpdateBusinessGallery = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -86,6 +94,12 @@ export const BusinessGallery = (props) => {
       })
 
       if (!content.error) {
+        if (isVideoGallery) {
+          showToast(ToastType.Success, t('GALLERY_VIDEO_ADDED'))
+        }
+        if (isImageGallery) {
+          showToast(ToastType.Success, t('GALLERY_IMAGE_ADDED'))
+        }
         if (handleSucessAddBusinessGallery) {
           handleSucessAddBusinessGallery(content.result)
         }
@@ -106,6 +120,7 @@ export const BusinessGallery = (props) => {
    */
   const handleDeleteBusinessGallery = async (id) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -124,6 +139,7 @@ export const BusinessGallery = (props) => {
       })
 
       if (!content.error) {
+        showToast(ToastType.Success, t('GALLERY_ITEM_DELETED'))
         handleSucessDeleteBusinessGallery && handleSucessDeleteBusinessGallery(id)
       }
     } catch (err) {
