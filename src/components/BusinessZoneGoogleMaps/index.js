@@ -26,7 +26,7 @@ export const BusinessZoneGoogleMaps = (props) => {
   const [polygonZone, setPolygonZone] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
   const [drawingManager, setDrawingManager] = useState(null)
-  const center = { lat: location?.lat, lng: location?.lng }
+  const center = location ? { lat: location?.lat, lng: location?.lng } : mapControls?.defaultPosition
   const [googleReady, setGoogleReady] = useState(false)
 
   /**
@@ -199,7 +199,7 @@ export const BusinessZoneGoogleMaps = (props) => {
   useEffect(() => {
     if (googleReady) {
       const map = new window.google.maps.Map(divRef.current, {
-        zoom: location.zoom ?? mapControls.defaultZoom,
+        zoom: location?.zoom ?? mapControls.defaultZoom,
         center,
         zoomControl: mapControls?.zoomControl,
         streetViewControl: mapControls?.streetViewControl,
