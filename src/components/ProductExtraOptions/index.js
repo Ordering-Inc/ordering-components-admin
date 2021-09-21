@@ -215,7 +215,9 @@ export const ProductExtraOptions = (props) => {
           min: 1,
           max: 1
         })
-        const options = [...extraState.extra.options, content.result]
+        let options
+        if (extraState.extra.options) options = [...extraState.extra.options, content.result]
+        else options = [content.result]
         const updatedExtra = { ...extraState.extra, options: options }
         setExtraState({ ...extraState, loading: false, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)

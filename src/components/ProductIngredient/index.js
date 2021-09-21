@@ -62,7 +62,12 @@ export const ProductIngredient = (props) => {
       if (!content.error) {
         setChangesState({})
         setIsAddMode(false)
-        const ingredients = [...productState?.product.ingredients, content.result]
+        let ingredients
+        if (productState?.product.ingredients) {
+          ingredients = [...productState?.product.ingredients, content.result]
+        } else {
+          ingredients = [content.result]
+        }
         const updatedProduct = { ...productState.product, ingredients: ingredients }
         setProductState({
           ...productState,
