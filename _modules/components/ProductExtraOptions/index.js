@@ -383,7 +383,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   min: 1,
                   max: 1
                 });
-                options = [].concat(_toConsumableArray(extraState.extra.options), [content.result]);
+                if (extraState.extra.options) options = [].concat(_toConsumableArray(extraState.extra.options), [content.result]);else options = [content.result];
                 updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
                   options: options
                 });

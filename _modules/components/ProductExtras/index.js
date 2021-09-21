@@ -219,9 +219,15 @@ var ProductExtras = function ProductExtras(props) {
 
 
   var handleClickExtra = function handleClickExtra(extraId, checked) {
-    var extraIds = productState.product.extras.reduce(function (ids, extra) {
-      return [].concat(_toConsumableArray(ids), [extra.id]);
-    }, []);
+    var extraIds;
+
+    if (productState.product.extras) {
+      extraIds = productState.product.extras.reduce(function (ids, extra) {
+        return [].concat(_toConsumableArray(ids), [extra.id]);
+      }, []);
+    } else {
+      extraIds = [];
+    }
 
     if (checked) {
       extraIds.push(extraId);

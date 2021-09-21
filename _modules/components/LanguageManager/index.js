@@ -290,16 +290,6 @@ var LanguageManager = function LanguageManager(props) {
 
       for (var i = 0; i < (translationList === null || translationList === void 0 ? void 0 : translationList.translations.length); i++) {
         switch (translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key) {
-          case 'Panel_Currency':
-            main.push({
-              i: 0,
-              id: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].id,
-              name: 'CURRENCY',
-              key: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key,
-              text: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].text
-            });
-            break;
-
           case 'BUSINESS_TYPE_FOOD':
             main.push({
               i: 1,
