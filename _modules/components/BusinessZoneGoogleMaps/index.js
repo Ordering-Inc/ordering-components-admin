@@ -85,10 +85,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       drawingManager = _useState12[0],
       setDrawingManager = _useState12[1];
 
-  var center = {
+  var center = location ? {
     lat: location === null || location === void 0 ? void 0 : location.lat,
     lng: location === null || location === void 0 ? void 0 : location.lng
-  };
+  } : mapControls === null || mapControls === void 0 ? void 0 : mapControls.defaultPosition;
 
   var _useState13 = (0, _react.useState)(false),
       _useState14 = _slicedToArray(_useState13, 2),
@@ -306,7 +306,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       var _location$zoom;
 
       var map = new window.google.maps.Map(divRef.current, {
-        zoom: (_location$zoom = location.zoom) !== null && _location$zoom !== void 0 ? _location$zoom : mapControls.defaultZoom,
+        zoom: (_location$zoom = location === null || location === void 0 ? void 0 : location.zoom) !== null && _location$zoom !== void 0 ? _location$zoom : mapControls.defaultZoom,
         center: center,
         zoomControl: mapControls === null || mapControls === void 0 ? void 0 : mapControls.zoomControl,
         streetViewControl: mapControls === null || mapControls === void 0 ? void 0 : mapControls.streetViewControl,
