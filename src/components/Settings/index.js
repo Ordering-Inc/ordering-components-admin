@@ -17,6 +17,9 @@ export const Settings = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
+  const categoryHideList = ['cloudinary', 'tookan']
+  const configHideList = ['search_by_address']
+
   /**
    * Method to update the category
    */
@@ -41,18 +44,25 @@ export const Settings = (props) => {
       }
 
       const filterConditons = []
-      if (settingsType === 'basic') filterConditons.push({ attribute: 'parent_category_id', value: 1 })
-      else filterConditons.push({ attribute: 'parent_category_id', value: 2 })
+      filterConditons.push({ attribute: 'parent_category_id', value: parseInt(settingsType) })
 
       const functionFetch = `${ordering.root}/config_categories?orderBy=rank&where=${JSON.stringify(filterConditons)}`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
+
       if (!error) {
+        const _result = result.filter(setting => !categoryHideList.includes(setting.key)).map(setting => {
+          const configs = setting.configs?.filter(config => !configHideList.includes(config.key))
+          return {
+            ...setting,
+            configs: [...configs]
+          }
+        })
         setCategoryList({
           ...categoryList,
           loading: false,
-          categories: result
+          categories: _result
         })
       } else {
         setCategoryList({
@@ -95,9 +105,9 @@ Settings.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
-   * String to idenity setting group
+   * Number to idenity setting group
    */
-  settingsType: PropTypes.string,
+  settingsType: PropTypes.number,
   /**
    * Components types before Checkout
    * Array of type components, the parent props will pass to these components
