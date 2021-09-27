@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
+const categoryHideList = ['cloudinary', 'tookan']
+const configHideList = ['search_by_address']
+
 /**
  * Component to manage Settings page behavior without UI component
  */
@@ -16,9 +19,6 @@ export const Settings = (props) => {
   const [isUpdateConfig, setIsUpdateConfig] = useState(false)
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
-
-  const categoryHideList = ['cloudinary', 'tookan']
-  const configHideList = ['search_by_address']
 
   /**
    * Method to update the category
