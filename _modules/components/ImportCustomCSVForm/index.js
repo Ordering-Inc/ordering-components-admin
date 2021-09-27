@@ -5,17 +5,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Settings = void 0;
+exports.ImportCustomCSVForm = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
+
+var _papaparse = _interopRequireDefault(require("papaparse"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -24,14 +30,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -55,197 +53,265 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var categoryHideList = ['cloudinary', 'tookan'];
-var configHideList = ['search_by_address'];
 /**
- * Component to manage Settings page behavior without UI component
+ * Component to create importer form without UI component
  */
-
-var Settings = function Settings(props) {
-  var UIComponent = props.UIComponent,
-      settingsType = props.settingsType;
-
-  var _useState = (0, _react.useState)({
-    categories: [],
-    loading: false,
-    error: null
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      categoryList = _useState2[0],
-      setCategoryList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
-      _useState4 = _slicedToArray(_useState3, 2),
-      isUpdateConfig = _useState4[0],
-      setIsUpdateConfig = _useState4[1];
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
+  var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-  /**
-   * Method to update the category
-   */
 
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      session = _useSession2[0];
 
-  var handleUpdateCategoryList = function handleUpdateCategoryList(categories) {
-    setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-      categories: categories
+  var _useState = (0, _react.useState)({
+    loading: false,
+    changes: {},
+    result: {
+      error: false
+    }
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      formState = _useState2[0],
+      setFormState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    fileName: null,
+    fileType: null,
+    delim: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      fileState = _useState4[0],
+      setFileState = _useState4[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var processCSV = function processCSV(results) {
+    var resultArr = results.data;
+    var target = []; // [{key1: value1, key2: value2,}, {},,,]
+
+    var headerFieles = resultArr[0];
+    var valuesArray = resultArr.slice(1, resultArr.length);
+    valuesArray.forEach(function (row) {
+      if (headerFieles.length === row.length) {
+        var obj = {};
+        row.forEach(function (value, index) {
+          if (headerFieles[index].indexOf('/') > -1) {
+            var nestObjKey = headerFieles[index].split('/')[0];
+            var nestObj = null;
+
+            if (!Object.prototype.hasOwnProperty.call(obj, nestObjKey)) {
+              // if nestObjKey not exist in obj
+              nestObj = {};
+              Object.assign(obj, _defineProperty({}, nestObjKey, nestObj));
+            } else {
+              nestObj = obj[nestObjKey];
+            }
+
+            var nestObjFileldKey = headerFieles[index].split('/')[1];
+            Object.assign(nestObj, _defineProperty({}, nestObjFileldKey, parseInt(value)));
+          } else {
+            // check if value will be int or same.
+            var _value = headerFieles[index].indexOf('id') > -1 ? parseInt(value) : value;
+
+            Object.assign(obj, _defineProperty({}, headerFieles[index], _value));
+          }
+        });
+        target.push(obj);
+      }
+    });
+    var currentChanges = {};
+    currentChanges = {
+      mapping: JSON.stringify(target[0])
+    };
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
     }));
-    setIsUpdateConfig(true);
   };
   /**
-   * Method to get Configration List
+   * Create Importer CSV
+   * @param {File} file CSV file to create importer
    */
 
 
-  var getCagegories = /*#__PURE__*/function () {
+  var handleUploadCsv = function handleUploadCsv(file) {
+    if (file) {
+      setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
+        fileName: file.name,
+        fileType: file.type,
+        delim: ';'
+      }));
+
+      _papaparse.default.parse(file, {
+        complete: function complete(results) {
+          processCSV(results);
+        }
+      });
+    }
+  };
+  /**
+  * Update credential data
+  * @param {EventTarget} e Related HTML event
+  */
+
+
+  var handleChangeInput = function handleChangeInput(e, isMany) {
+    var currentChanges = {};
+
+    if (isMany) {
+      Object.values(e).map(function (obj) {
+        currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, _defineProperty({}, obj.name, obj.value));
+      });
+    } else {
+      currentChanges = _defineProperty({}, e.target.name, e.target.value);
+    }
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+
+  var handleChangeSelect = function handleChangeSelect(type, value) {
+    var currentChanges = {};
+    currentChanges = _defineProperty({}, type, value);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+
+  var handleCreateImporter = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result, _result;
+      var data, requestOptions, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              data = _objectSpread({}, formState.changes);
               _context.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
+                  Authorization: "Bearer ".concat(session.token)
+                },
+                body: JSON.stringify(data)
               };
-              filterConditons = [];
-              filterConditons.push({
-                attribute: 'parent_category_id',
-                value: parseInt(settingsType)
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=rank&where=").concat(JSON.stringify(filterConditons));
-              _context.next = 10;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 7;
+              return fetch("".concat(ordering.root, "/importers"), requestOptions);
 
-            case 10:
+            case 7:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 10;
               return response.json();
 
-            case 13:
+            case 10:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
-              if (!error) {
-                _result = result.filter(function (setting) {
-                  return !categoryHideList.includes(setting.key);
-                }).map(function (setting) {
-                  var _setting$configs;
-
-                  var configs = (_setting$configs = setting.configs) === null || _setting$configs === void 0 ? void 0 : _setting$configs.filter(function (config) {
-                    return !configHideList.includes(config.key);
-                  });
-                  return _objectSpread(_objectSpread({}, setting), {}, {
-                    configs: _toConsumableArray(configs)
-                  });
-                });
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              if (error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
-                  categories: _result
+                  result: {
+                    error: true,
+                    result: result
+                  }
                 }));
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-                  loading: true,
-                  error: result
-                }));
+                showToast(_ToastContext.ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'));
+                setFormState({
+                  loading: false,
+                  changes: {},
+                  result: {
+                    error: false,
+                    result: result
+                  }
+                });
               }
 
-              _context.next = 22;
+              _context.next = 19;
               break;
 
-            case 19:
-              _context.prev = 19;
+            case 16:
+              _context.prev = 16;
               _context.t0 = _context["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-                loading: false,
-                error: _context.t0
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: [_context.t0.message]
+                },
+                loading: false
               }));
 
-            case 22:
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[2, 16]]);
     }));
 
-    return function getCagegories() {
+    return function handleCreateImporter() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  (0, _react.useEffect)(function () {
-    getCagegories();
-  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    isUpdateConfig: isUpdateConfig,
-    handChangeConfig: setIsUpdateConfig,
-    categoryList: categoryList,
-    handleUpdateCategoryList: handleUpdateCategoryList
+    formState: formState,
+    fileState: fileState,
+    handleChangeInput: handleChangeInput,
+    handleChangeSelect: handleChangeSelect,
+    handleUploadCsv: handleUploadCsv,
+    handleCreateImporter: handleCreateImporter
   })));
 };
 
-exports.Settings = Settings;
-Settings.propTypes = {
+exports.ImportCustomCSVForm = ImportCustomCSVForm;
+ImportCustomCSVForm.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Number to idenity setting group
-   */
-  settingsType: _propTypes.default.number,
-
-  /**
-   * Components types before Checkout
+   * Components types before business details form
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after business details form
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before business details form
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after business details form
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Settings.defaultProps = {
+ImportCustomCSVForm.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
