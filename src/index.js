@@ -157,6 +157,7 @@ import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
+import { ReportsBrandFilter } from './components/ReportsBrandFilter'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
@@ -313,6 +314,7 @@ export {
   CmsContent,
   FloatingButton,
   ResetPassword,
+  ReportsBrandFilter,
   Analytics,
   UsersList,
   UserTypeFilter,
