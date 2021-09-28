@@ -15,7 +15,7 @@ export const AdvancedReports = (props) => {
 
   const [ordering] = useApi()
   const [{ token, loading }] = useSession()
-  const [businessDistanceList, setBusinessDistanceList] = useState({ distances: [], loading: false, error: null })
+  const [businessDistanceList, setBusinessDistanceList] = useState({ content: [], loading: false, error: null })
   const [filterList, setFilterList] = useState({ from: '', to: '', businessIds: null, drivers_ids: null, franchises_id: null, driver_companies_ids: null })
 
   const getBusinessDistanceList = async () => {
@@ -44,7 +44,7 @@ export const AdvancedReports = (props) => {
         setBusinessDistanceList({
           ...businessDistanceList,
           loading: false,
-          distances: result
+          content: result
         })
       } else {
         setBusinessDistanceList({
@@ -73,7 +73,7 @@ export const AdvancedReports = (props) => {
           {...props}
           filterList={filterList}
           handleChangeFilterList={setFilterList}
-          businessDistanceList={businessDistanceList}
+          reportData={businessDistanceList}
         />
       )}
     </>

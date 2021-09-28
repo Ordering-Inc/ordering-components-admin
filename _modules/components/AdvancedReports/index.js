@@ -67,7 +67,7 @@ var AdvancedReports = function AdvancedReports(props) {
       loading = _useSession2$.loading;
 
   var _useState = (0, _react.useState)({
-    distances: [],
+    content: [],
     loading: false,
     error: null
   }),
@@ -137,7 +137,7 @@ var AdvancedReports = function AdvancedReports(props) {
               if (!error) {
                 setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
                   loading: false,
-                  distances: result
+                  content: result
                 }));
               } else {
                 setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
@@ -176,7 +176,7 @@ var AdvancedReports = function AdvancedReports(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     filterList: filterList,
     handleChangeFilterList: setFilterList,
-    businessDistanceList: businessDistanceList
+    reportData: businessDistanceList
   })));
 };
 
