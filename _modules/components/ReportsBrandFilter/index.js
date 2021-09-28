@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AnalyticsBusinessFilter = void 0;
+exports.ReportsBrandFilter = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -14,6 +14,8 @@ var _react = _interopRequireWildcard(require("react"));
 var _propTypes = _interopRequireWildcard(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _SessionContext = require("../../contexts/SessionContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -55,7 +57,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
+var ReportsBrandFilter = function ReportsBrandFilter(props) {
   var UIComponent = props.UIComponent,
       filterList = props.filterList,
       handleChangeFilterList = props.handleChangeFilterList,
@@ -66,54 +68,60 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
   /**
-   * This state save the business type info from API
+   * This state save the brand type info from API
    */
 
 
   var _useState = (0, _react.useState)({
     loading: true,
     error: null,
-    businesses: [],
+    brands: [],
     pagination: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      businessList = _useState2[0],
-      setBusinessList = _useState2[1];
+      brandList = _useState2[0],
+      setBrandList = _useState2[1];
 
   var _useState3 = (0, _react.useState)(null),
       _useState4 = _slicedToArray(_useState3, 2),
-      businessIds = _useState4[0],
-      setBusinessIds = _useState4[1];
+      brandIds = _useState4[0],
+      setBrandIds = _useState4[1];
 
   var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
       isAllCheck = _useState6[0],
       setIsAllCheck = _useState6[1];
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      _useSession2$ = _useSession2[0],
+      token = _useSession2$.token,
+      loading = _useSession2$.loading;
   /**
-   * Method to change business id
+   * Method to change brand id
    * @param {number} id
    */
 
 
-  var handleChangeBusinessId = function handleChangeBusinessId(id) {
-    var found = businessIds === null || businessIds === void 0 ? void 0 : businessIds.find(function (businessId) {
-      return businessId === id;
+  var handleChangeBrandId = function handleChangeBrandId(id) {
+    var found = brandIds === null || brandIds === void 0 ? void 0 : brandIds.find(function (brandId) {
+      return brandId === id;
     });
 
     if (found) {
-      var _businessIds = businessIds === null || businessIds === void 0 ? void 0 : businessIds.filter(function (businessId) {
-        return businessId !== id;
+      var _brandIds = brandIds === null || brandIds === void 0 ? void 0 : brandIds.filter(function (brandId) {
+        return brandId !== id;
       });
 
-      setBusinessIds(_businessIds);
+      setBrandIds(_brandIds);
       setIsAllCheck(false);
     } else {
-      var _businessIds2 = businessIds ? _toConsumableArray(businessIds) : [];
+      var _brandIds2 = brandIds ? _toConsumableArray(brandIds) : [];
 
-      _businessIds2.push(id);
+      _brandIds2.push(id);
 
-      if (_businessIds2.length === (businessList === null || businessList === void 0 ? void 0 : businessList.businesses.length)) setIsAllCheck(true);
-      setBusinessIds(_businessIds2);
+      if (_brandIds2.length === (brandList === null || brandList === void 0 ? void 0 : brandList.brands.length)) setIsAllCheck(true);
+      setBrandIds(_brandIds2);
     }
   };
   /**
@@ -122,10 +130,10 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
 
   var handleClickFilterButton = function handleClickFilterButton() {
-    var _businessIds = businessIds ? _toConsumableArray(businessIds) : null;
+    var _brandIds = brandIds ? _toConsumableArray(brandIds) : null;
 
     handleChangeFilterList(_objectSpread(_objectSpread({}, filterList), {}, {
-      businessIds: _businessIds
+      franchises_id: _brandIds
     }));
     onClose && onClose();
   };
@@ -136,18 +144,18 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var handleChangeAllCheck = function handleChangeAllCheck() {
     if (isAllCheck) {
-      setBusinessIds(null);
+      setBrandIds(null);
     } else {
-      var _businessIds = [];
+      var _brandIds = [];
 
-      var _iterator = _createForOfIteratorHelper(businessList.businesses),
+      var _iterator = _createForOfIteratorHelper(brandList.brands),
           _step;
 
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var business = _step.value;
+          var brand = _step.value;
 
-          _businessIds.push(business.id);
+          _brandIds.push(brand.id);
         }
       } catch (err) {
         _iterator.e(err);
@@ -155,104 +163,127 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
         _iterator.f();
       }
 
-      setBusinessIds(_businessIds);
+      setBrandIds(_brandIds);
     }
 
     setIsAllCheck(!isAllCheck);
   };
   /**
-   * Method to get business types from API
+   * Method to get brand list
    */
 
 
-  var getBusinessTypes = /*#__PURE__*/function () {
+  var getBrands = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination, availableBrands;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              if (!loading) {
+                _context.next = 2;
+                break;
+              }
+
+              return _context.abrupt("return");
+
+            case 2:
+              _context.prev = 2;
+              setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses().asDashboard().select(propsToFetch).get();
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              functionFetch = "".concat(ordering.root, "/franchises?params=").concat(propsToFetch);
+              _context.next = 8;
+              return fetch(functionFetch, requestOptions);
 
-            case 4:
-              _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
-              pagination = _yield$ordering$busin2.pagination;
+            case 8:
+              response = _context.sent;
+              _context.next = 11;
+              return response.json();
+
+            case 11:
+              _yield$response$json = _context.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+              pagination = _yield$response$json.pagination;
 
               if (!error) {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                availableBrands = result === null || result === void 0 ? void 0 : result.filter(function (brand) {
+                  return brand.enabled;
+                });
+                setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                   loading: false,
-                  businesses: result,
+                  brands: availableBrands,
                   pagination: pagination
                 }));
               } else {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                   loading: false,
                   error: result
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 21;
               break;
 
-            case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](0);
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+            case 18:
+              _context.prev = 18;
+              _context.t0 = _context["catch"](2);
+              setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                 loading: false,
-                error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
+                error: _context.t0
               }));
 
-            case 15:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[2, 18]]);
     }));
 
-    return function getBusinessTypes() {
+    return function getBrands() {
       return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
     var controller = new AbortController();
-    getBusinessTypes();
+    getBrands();
     return controller.abort();
   }, []);
   (0, _react.useEffect)(function () {
-    var _businessList$busines, _filterList$businessI;
+    var _brandList$brands, _filterList$franchise;
 
-    if ((businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.length) === 0) return;
+    if ((brandList === null || brandList === void 0 ? void 0 : (_brandList$brands = brandList.brands) === null || _brandList$brands === void 0 ? void 0 : _brandList$brands.length) === 0) return;
 
-    var _businessIds = businessList.businesses.reduce(function (prev, cur) {
+    var _brandIds = brandList.brands.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 
-    setBusinessIds(_toConsumableArray((filterList === null || filterList === void 0 ? void 0 : filterList.businessIds) || _businessIds));
-    if (!(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds) || (filterList === null || filterList === void 0 ? void 0 : (_filterList$businessI = filterList.businessIds) === null || _filterList$businessI === void 0 ? void 0 : _filterList$businessI.length) === (businessList === null || businessList === void 0 ? void 0 : businessList.businesses.length)) setIsAllCheck(true);
-  }, [businessList === null || businessList === void 0 ? void 0 : businessList.businesses]);
+    setBrandIds(_toConsumableArray((filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id) || _brandIds));
+    if (!(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id) || (filterList === null || filterList === void 0 ? void 0 : (_filterList$franchise = filterList.franchises_id) === null || _filterList$franchise === void 0 ? void 0 : _filterList$franchise.length) === (brandList === null || brandList === void 0 ? void 0 : brandList.brands.length)) setIsAllCheck(true);
+  }, [brandList === null || brandList === void 0 ? void 0 : brandList.brands]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    businessList: businessList,
-    businessIds: businessIds,
-    handleChangeBusinessId: handleChangeBusinessId,
+    brandList: brandList,
+    brandIds: brandIds,
+    handleChangeBrandId: handleChangeBrandId,
     handleClickFilterButton: handleClickFilterButton,
     isAllCheck: isAllCheck,
     handleChangeAllCheck: handleChangeAllCheck
   })));
 };
 
-exports.AnalyticsBusinessFilter = AnalyticsBusinessFilter;
-AnalyticsBusinessFilter.propTypes = {
+exports.ReportsBrandFilter = ReportsBrandFilter;
+ReportsBrandFilter.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -269,43 +300,43 @@ AnalyticsBusinessFilter.propTypes = {
   handleChangeFilterList: _propTypes.default.func,
 
   /**
-  * Method to close business filter Modal
+  * Method to close brand filter Modal
   */
   onClose: _propTypes.default.func,
 
   /**
-   * Array of business props to fetch
+   * Array of brand props to fetch
    */
   propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
 
   /**
-   * Components types before business type filter
+   * Components types before brand type filter
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business type filter
+   * Components types after brand type filter
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business type filter
+   * Elements before brand type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business type filter
+   * Elements after brand type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-AnalyticsBusinessFilter.defaultProps = {
+ReportsBrandFilter.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
+  propsToFetch: ['id', 'name', 'logo', 'description', 'header', 'enabled', 'created_at', 'updated_at']
 };

@@ -27,6 +27,12 @@ Object.defineProperty(exports, "AddressList", {
     return _AddressList.AddressList;
   }
 });
+Object.defineProperty(exports, "AdvancedReports", {
+  enumerable: true,
+  get: function get() {
+    return _AdvancedReports.AdvancedReports;
+  }
+});
 Object.defineProperty(exports, "AnalyticsBusinessFilter", {
   enumerable: true,
   get: function get() {
@@ -1119,6 +1125,12 @@ Object.defineProperty(exports, "ResetPassword", {
     return _ResetPassword.ResetPassword;
   }
 });
+Object.defineProperty(exports, "ReportsBrandFilter", {
+  enumerable: true,
+  get: function get() {
+    return _ReportsBrandFilter.ReportsBrandFilter;
+  }
+});
 Object.defineProperty(exports, "Analytics", {
   enumerable: true,
   get: function get() {
@@ -1163,6 +1175,8 @@ var _AddressFieldsSetting = require("./components/AddressFieldsSetting");
 var _AddressForm = require("./components/AddressForm");
 
 var _AddressList = require("./components/AddressList");
+
+var _AdvancedReports = require("./components/AdvancedReports");
 
 var _AnalyticsBusinessFilter = require("./components/AnalyticsBusinessFilter");
 
@@ -1471,6 +1485,8 @@ var _StripeRedirectForm = require("./components/PaymentOptionStripeRedirect/Stri
 var _FloatingButton = require("./components/FloatingButton");
 
 var _ResetPassword = require("./components/ResetPassword");
+
+var _ReportsBrandFilter = require("./components/ReportsBrandFilter");
 
 var _Analitycs = require("./components/Analitycs");
 
