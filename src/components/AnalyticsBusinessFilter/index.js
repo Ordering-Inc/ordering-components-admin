@@ -103,18 +103,10 @@ export const AnalyticsBusinessFilter = (props) => {
   }, [])
 
   useEffect(() => {
-    if (businessList?.businesses?.length > 0) {
-      const _businessIds = []
-      for (const business of businessList.businesses) {
-        _businessIds.push(business.id)
-      }
-      if (filterList?.businessIds) {
-        setBusinessIds([...filterList?.businessIds])
-      } else {
-        setBusinessIds(_businessIds)
-        setIsAllCheck(true)
-      }
-    }
+    if (businessList?.businesses?.length === 0) return
+    const _businessIds = businessList.businesses.reduce((prev, cur) => [...prev, cur.id], [])
+    setBusinessIds([...filterList?.businessIds || _businessIds])
+    if (!filterList?.businessIds || filterList?.businessIds?.length === businessList?.businesses.length) setIsAllCheck(true)
   }, [businessList?.businesses])
 
   return (

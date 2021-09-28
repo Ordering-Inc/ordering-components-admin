@@ -2,6 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressFieldsSetting } from './components/AddressFieldsSetting'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
+import { AdvancedReports } from './components/AdvancedReports'
 import { AnalyticsBusinessFilter } from './components/AnalyticsBusinessFilter'
 import { AnalyticsDriversFilter } from './components/AnalyticsDriversFilter'
 import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
@@ -167,6 +168,7 @@ export {
   AddressFieldsSetting,
   AddressForm,
   AddressList,
+  AdvancedReports,
   AnalyticsBusinessFilter,
   AnalyticsDriversFilter,
   AnalyticsStatusSubFilter,
