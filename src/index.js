@@ -2,6 +2,7 @@ import { AddressDetails } from './components/AddressDetails'
 import { AddressFieldsSetting } from './components/AddressFieldsSetting'
 import { AddressForm } from './components/AddressForm'
 import { AddressList } from './components/AddressList'
+import { AdvancedReports } from './components/AdvancedReports'
 import { AnalyticsBusinessFilter } from './components/AnalyticsBusinessFilter'
 import { AnalyticsDriversFilter } from './components/AnalyticsDriversFilter'
 import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
@@ -156,6 +157,7 @@ import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
+import { ReportsBrandFilter } from './components/ReportsBrandFilter'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
@@ -168,6 +170,7 @@ export {
   AddressFieldsSetting,
   AddressForm,
   AddressList,
+  AdvancedReports,
   AnalyticsBusinessFilter,
   AnalyticsDriversFilter,
   AnalyticsStatusSubFilter,
@@ -311,6 +314,7 @@ export {
   CmsContent,
   FloatingButton,
   ResetPassword,
+  ReportsBrandFilter,
   Analytics,
   UsersList,
   UserTypeFilter,
