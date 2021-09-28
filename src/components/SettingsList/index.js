@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Settings List page behavior without UI component
@@ -14,10 +16,12 @@ export const SettingsList = (props) => {
     categoryList
   } = props
 
-  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
   const [configs, setConfigs] = useState(null)
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
 
   /** Method to change checkbox status
    * @param {EventTarget} evt
@@ -96,6 +100,7 @@ export const SettingsList = (props) => {
   const saveConfig = async (id, params) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true,
@@ -135,7 +140,7 @@ export const SettingsList = (props) => {
             API: false,
             finalResult: _configs
           })
-
+          showToast(ToastType.Success, t('SETTINGS_UPDATE', 'Settings updated'))
           if (handleUpdateCategoryList) {
             const _categories = categoryList?.categories.map(item => {
               if (item.id === category.id) {
