@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes, { string } from 'prop-types'
+import PropTypes, { object, string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
@@ -13,7 +13,9 @@ export const SettingsList = (props) => {
     UIComponent,
     category,
     handleUpdateCategoryList,
-    categoryList
+    categoryList,
+    staticConfigs,
+    handleChangeStaic
   } = props
 
   const [configs, setConfigs] = useState(null)
@@ -153,6 +155,7 @@ export const SettingsList = (props) => {
             })
             handleUpdateCategoryList(_categories)
           }
+          handleChangeStaic && handleChangeStaic([..._configs])
         }
       } else {
         setFormState({
@@ -190,6 +193,16 @@ export const SettingsList = (props) => {
   }, [category?.configs])
 
   useEffect(() => {
+    if (staticConfigs) {
+      setConfigs([...staticConfigs])
+      setFormState({
+        ...formState,
+        finalResult: [...staticConfigs]
+      })
+    }
+  }, [staticConfigs])
+
+  useEffect(() => {
     if (formState?.API && formState?.changes?.length > 0) {
       const params = { key: formState?.changes[0].key, value: formState?.changes[0].value }
       saveConfig(formState?.changes[0].id, params)
@@ -206,6 +219,8 @@ export const SettingsList = (props) => {
           handleInputChange={saveChanges}
           handleCheckBoxChange={handleCheckBoxChange}
           handleClickUpdate={handleClickUpdate}
+          formState={formState}
+          handleChangeFormState={setFormState}
         />
       )}
     </>
@@ -222,6 +237,10 @@ SettingsList.propTypes = {
   */
   category: PropTypes.object,
   /**
+   * Array of config
+   */
+  staticConfigs: PropTypes.arrayOf(object),
+  /**
   * Object for a category
   */
   categoryList: PropTypes.object,
@@ -229,6 +248,10 @@ SettingsList.propTypes = {
   * Function to set a category list
   */
   handleUpdateCategoryList: PropTypes.func,
+  /**
+   * Function to set a config
+   */
+  handleChangeStaic: PropTypes.func,
   /**
    * Array of drivers props to fetch
    */
