@@ -66,7 +66,9 @@ var SettingsList = function SettingsList(props) {
   var UIComponent = props.UIComponent,
       category = props.category,
       handleUpdateCategoryList = props.handleUpdateCategoryList,
-      categoryList = props.categoryList;
+      categoryList = props.categoryList,
+      staticConfigs = props.staticConfigs,
+      handleChangeStaic = props.handleChangeStaic;
 
   var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
@@ -280,6 +282,8 @@ var SettingsList = function SettingsList(props) {
                     });
                     handleUpdateCategoryList(_categories);
                   }
+
+                  handleChangeStaic && handleChangeStaic(_toConsumableArray(_configs));
                 }
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -331,6 +335,14 @@ var SettingsList = function SettingsList(props) {
     }
   }, [category === null || category === void 0 ? void 0 : category.configs]);
   (0, _react.useEffect)(function () {
+    if (staticConfigs) {
+      setConfigs(_toConsumableArray(staticConfigs));
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        finalResult: _toConsumableArray(staticConfigs)
+      }));
+    }
+  }, [staticConfigs]);
+  (0, _react.useEffect)(function () {
     var _formState$changes3;
 
     if ((formState === null || formState === void 0 ? void 0 : formState.API) && (formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.length) > 0) {
@@ -346,7 +358,9 @@ var SettingsList = function SettingsList(props) {
     configs: configs,
     handleInputChange: saveChanges,
     handleCheckBoxChange: handleCheckBoxChange,
-    handleClickUpdate: handleClickUpdate
+    handleClickUpdate: handleClickUpdate,
+    formState: formState,
+    handleChangeFormState: setFormState
   })));
 };
 
@@ -363,6 +377,11 @@ SettingsList.propTypes = {
   category: _propTypes.default.object,
 
   /**
+   * Array of config
+   */
+  staticConfigs: _propTypes.default.arrayOf(_propTypes.object),
+
+  /**
   * Object for a category
   */
   categoryList: _propTypes.default.object,
@@ -371,6 +390,11 @@ SettingsList.propTypes = {
   * Function to set a category list
   */
   handleUpdateCategoryList: _propTypes.default.func,
+
+  /**
+   * Function to set a config
+   */
+  handleChangeStaic: _propTypes.default.func,
 
   /**
    * Array of drivers props to fetch
