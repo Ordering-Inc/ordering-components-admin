@@ -54,7 +54,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
   var UIComponent = props.UIComponent,
-      propsToFetch = props.propsToFetch;
+      propsToFetch = props.propsToFetch,
+      isSearchByName = props.isSearchByName;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -84,6 +85,8 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
       businessList = _useState4[0],
       setBusinessList = _useState4[1];
 
+  var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
+
   var handleChangeCheckBox = function handleChangeCheckBox(e, businessId, brandId) {
     var changes = {
       franchise_id: brandId
@@ -100,7 +103,7 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
 
   var getBusinessList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -110,15 +113,46 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses().asDashboard().select(propsToFetch).get();
+              where = null;
+              conditions = [];
 
-            case 4:
-              _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
-              pagination = _yield$ordering$busin2.pagination;
+              if (searchValue) {
+                searchConditions = [];
+                isSpecialCharacter = rex.test(searchValue);
+
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
+              fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
+              _context.next = 9;
+              return fetchEndpoint.get();
+
+            case 9:
+              _yield$fetchEndpoint$ = _context.sent;
+              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
+              error = _yield$fetchEndpoint$2.error;
+              result = _yield$fetchEndpoint$2.result;
+              pagination = _yield$fetchEndpoint$2.pagination;
 
               if (!error) {
                 setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
@@ -133,23 +167,23 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 20;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
                 error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 15:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
     return function getBusinessList() {
@@ -163,7 +197,7 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
 
   var updateBusinessList = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, changes) {
-      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _businesses;
+      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _businesses;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -175,10 +209,10 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
               return ordering.businesses(parseInt(id)).save(changes);
 
             case 4:
-              _yield$ordering$busin3 = _context2.sent;
-              _yield$ordering$busin4 = _yield$ordering$busin3.content;
-              error = _yield$ordering$busin4.error;
-              result = _yield$ordering$busin4.result;
+              _yield$ordering$busin = _context2.sent;
+              _yield$ordering$busin2 = _yield$ordering$busin.content;
+              error = _yield$ordering$busin2.error;
+              result = _yield$ordering$busin2.result;
 
               if (!error) {
                 _businesses = businessList === null || businessList === void 0 ? void 0 : businessList.businesses.map(function (business) {
@@ -219,7 +253,7 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
 
   (0, _react.useEffect)(function () {
     getBusinessList();
-  }, []);
+  }, [searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     searchValue: searchValue,
     onSearch: setSearchValue,
