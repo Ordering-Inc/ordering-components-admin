@@ -59,6 +59,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       slug = props.slug,
       categoryId = props.categoryId,
       productId = props.productId,
+      isAllCategoryProducts = props.isAllCategoryProducts,
       isInitialRender = props.isInitialRender,
       ordering = props.ordering,
       UIComponent = props.UIComponent;
@@ -436,7 +437,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   (0, _react.useEffect)(function () {
     var _businessState$busine9;
 
-    if (!businessState.loading && categorySelected) {
+    if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
     } else if (businessState === null || businessState === void 0 ? void 0 : (_businessState$busine9 = businessState.business) === null || _businessState$busine9 === void 0 ? void 0 : _businessState$busine9.categories) {
       var _businessState$busine10;
@@ -522,4 +523,9 @@ BusinessProductsListing.propTypes = {
    */
   isInitialRender: _propTypes.default.bool
 };
-BusinessProductsListing.defaultProps = {};
+BusinessProductsListing.defaultProps = {
+  beforeComponents: [],
+  afterComponents: [],
+  beforeElements: [],
+  afterElements: []
+};
