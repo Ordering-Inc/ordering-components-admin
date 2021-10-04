@@ -314,6 +314,7 @@ export const DashboardBusinessList = (props) => {
             {...props}
             businessList={businessList}
             pagination={pagination}
+            searchValue={searchValue}
             onSearch={setSearchValue}
             selectedBusinessActiveState={selectedBusinessActiveState}
             loadMoreBusinesses={loadMoreBusinesses}
