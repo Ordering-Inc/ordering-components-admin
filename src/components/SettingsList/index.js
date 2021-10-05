@@ -88,10 +88,20 @@ export const SettingsList = (props) => {
    */
   const handleClickUpdate = () => {
     if (!formState?.changes || formState?.changes?.length === 0) return
-    setFormState({
-      ...formState,
-      API: true
+    const _changes = formState?.changes.map(item => {
+      if (item.key === 'driver_tip_options') {
+        return {
+          ...item,
+          value: transformArray(item?.value)
+        }
+      }
+      return item
     })
+    setFormState({ ...formState, changes: [..._changes], API: true })
+  }
+
+  const transformArray = (values) => {
+    return '[' + values + ']'
   }
 
   /**
