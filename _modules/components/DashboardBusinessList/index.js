@@ -528,6 +528,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,
     pagination: pagination,
+    searchValue: searchValue,
     onSearch: setSearchValue,
     selectedBusinessActiveState: selectedBusinessActiveState,
     loadMoreBusinesses: loadMoreBusinesses,

@@ -339,6 +339,12 @@ Object.defineProperty(exports, "DriverGroupSetting", {
     return _DriverGroupSetting.DriverGroupSetting;
   }
 });
+Object.defineProperty(exports, "DriverReviewDetails", {
+  enumerable: true,
+  get: function get() {
+    return _DriverReviewDetails.DriverReviewDetails;
+  }
+});
 Object.defineProperty(exports, "DriversCompaniesList", {
   enumerable: true,
   get: function get() {
@@ -685,6 +691,12 @@ Object.defineProperty(exports, "ProductProperties", {
   enumerable: true,
   get: function get() {
     return _ProductProperties.ProductProperties;
+  }
+});
+Object.defineProperty(exports, "ProductReviews", {
+  enumerable: true,
+  get: function get() {
+    return _ProductReviews.ProductReviews;
   }
 });
 Object.defineProperty(exports, "ProductShare", {
@@ -1280,6 +1292,8 @@ var _DragAndDrop = require("./components/DragAndDrop");
 
 var _DriverGroupSetting = require("./components/DriverGroupSetting");
 
+var _DriverReviewDetails = require("./components/DriverReviewDetails");
+
 var _DriversCompaniesList = require("./components/DriversCompaniesList");
 
 var _DriversGroupAutoassign = require("./components/DriversGroupAutoassign");
@@ -1391,6 +1405,8 @@ var _ProductForm = require("./components/ProductForm");
 var _ProductMetaFields = require("./components/ProductMetaFields");
 
 var _ProductProperties = require("./components/ProductProperties");
+
+var _ProductReviews = require("./components/ProductReviews");
 
 var _ProductShare = require("./components/ProductShare");
 

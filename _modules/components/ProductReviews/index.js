@@ -5,19 +5,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessBrandBUSIDetail = void 0;
+exports.ProductReviews = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _LanguageContext = require("../../contexts/LanguageContext");
-
-var _ToastContext = require("../../contexts/ToastContext");
+var _SessionContext = require("../../contexts/SessionContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -49,259 +47,139 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to manage BusinessBrandBUSIDetail behavior without UI component
- */
-var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
+var ProductReviews = function ProductReviews(props) {
   var UIComponent = props.UIComponent,
-      propsToFetch = props.propsToFetch,
-      isSearchByName = props.isSearchByName;
+      businessId = props.businessId,
+      productId = props.productId;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var _useState = (0, _react.useState)(null),
-      _useState2 = _slicedToArray(_useState, 2),
-      searchValue = _useState2[0],
-      setSearchValue = _useState2[1];
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
 
-  var _useToast = (0, _ToastContext.useToast)(),
-      _useToast2 = _slicedToArray(_useToast, 2),
-      showToast = _useToast2[1].showToast;
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
-  var _useState3 = (0, _react.useState)({
+  var _useState = (0, _react.useState)({
+    reviews: [],
     loading: false,
-    businesses: [],
-    result: {
-      error: null
-    }
+    error: null
   }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      businessList = _useState4[0],
-      setBusinessList = _useState4[1];
-
-  var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
-
-  var handleChangeCheckBox = function handleChangeCheckBox(e, businessId, brandId) {
-    var changes = {
-      franchise_id: brandId
-    };
-    if (!e.target.checked) changes = {
-      franchise_id: null
-    };
-    updateBusinessList(businessId, changes);
-  };
+      _useState2 = _slicedToArray(_useState, 2),
+      productReviewList = _useState2[0],
+      setProductReviewList = _useState2[1];
   /**
-   * Method to get business list from API
+   * Method to get the product reviews from API
    */
 
 
-  var getBusinessList = /*#__PURE__*/function () {
+  var getProductReviews = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination;
-
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              setProductReviewList(_objectSpread(_objectSpread({}, productReviewList), {}, {
                 loading: true
               }));
-              where = null;
-              conditions = [];
-
-              if (searchValue) {
-                searchConditions = [];
-                isSpecialCharacter = rex.test(searchValue);
-
-                if (isSearchByName) {
-                  searchConditions.push({
-                    attribute: 'name',
-                    value: {
-                      condition: 'ilike',
-                      value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
-                    }
-                  });
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
                 }
+              };
+              _context.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/product_reviews/").concat(productId, "/reviews"), requestOptions);
 
-                conditions.push({
-                  conector: 'OR',
-                  conditions: searchConditions
-                });
-              }
+            case 5:
+              response = _context.sent;
+              _context.next = 8;
+              return response.json();
 
-              if (conditions.length) {
-                where = {
-                  conditions: conditions,
-                  conector: 'AND'
-                };
-              }
+            case 8:
+              content = _context.sent;
 
-              fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
-              _context.next = 9;
-              return fetchEndpoint.get();
-
-            case 9:
-              _yield$fetchEndpoint$ = _context.sent;
-              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
-              error = _yield$fetchEndpoint$2.error;
-              result = _yield$fetchEndpoint$2.result;
-              pagination = _yield$fetchEndpoint$2.pagination;
-
-              if (!error) {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              if (!content.error) {
+                setProductReviewList(_objectSpread(_objectSpread({}, productReviewList), {}, {
                   loading: false,
-                  businesses: result,
-                  pagination: pagination
+                  reviews: content.result
                 }));
               } else {
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                setProductReviewList(_objectSpread(_objectSpread({}, productReviewList), {}, {
                   loading: false,
-                  error: result
+                  error: content.error
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 15;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+              setProductReviewList(_objectSpread(_objectSpread({}, productReviewList), {}, {
                 loading: false,
-                error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
+                error: [_context.t0.message]
               }));
 
-            case 20:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 12]]);
     }));
 
-    return function getBusinessList() {
+    return function getProductReviews() {
       return _ref.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to update business list from API
-   */
-
-
-  var updateBusinessList = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, changes) {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _businesses;
-
-      return _regenerator.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              _context2.next = 4;
-              return ordering.businesses(parseInt(id)).save(changes);
-
-            case 4:
-              _yield$ordering$busin = _context2.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
-
-              if (!error) {
-                _businesses = businessList === null || businessList === void 0 ? void 0 : businessList.businesses.map(function (business) {
-                  if (business.id === id) {
-                    return _objectSpread(_objectSpread({}, business), {}, {
-                      franchise_id: result.id
-                    });
-                  }
-
-                  return business;
-                });
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
-                  businesses: _businesses
-                }));
-                showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
-              }
-
-              _context2.next = 14;
-              break;
-
-            case 11:
-              _context2.prev = 11;
-              _context2.t0 = _context2["catch"](0);
-              console.log(_context2.t0 || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.toString()) || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.message));
-
-            case 14:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[0, 11]]);
-    }));
-
-    return function updateBusinessList(_x, _x2) {
-      return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getBusinessList();
-  }, [searchValue]);
+    getProductReviews();
+  }, [productId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    searchValue: searchValue,
-    onSearch: setSearchValue,
-    businessList: businessList,
-    handleChangeCheckBox: handleChangeCheckBox
+    productReviewList: productReviewList
   })));
 };
 
-exports.BusinessBrandBUSIDetail = BusinessBrandBUSIDetail;
-BusinessBrandBUSIDetail.propTypes = {
+exports.ProductReviews = ProductReviews;
+ProductReviews.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array of business props to fetch
-   */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
-
-  /**
-   * Components types before business type filter
-   * Array of type components, the parent props will pass to these components
-   */
+    * Components types before product review
+    * Array of type components, the parent props will pass to these components
+    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business type filter
+   * Components types after product review
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business type filter
+   * Elements before product review
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business type filter
+   * Elements after product review
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessBrandBUSIDetail.defaultProps = {
+ProductReviews.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
+  afterElements: []
 };
