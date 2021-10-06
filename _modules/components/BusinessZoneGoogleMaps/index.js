@@ -267,7 +267,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
    */
 
   (0, _react.useEffect)(function () {
-    if (!googleReady) return;
+    if (!googleReady || !googleMap) return;
     var bounds = new window.google.maps.LatLngBounds();
 
     if (circleZone) {
@@ -335,7 +335,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
 
         setInfoWindow(_infoWindow);
 
-        if (type === 1) {
+        if (type === 1 && (data === null || data === void 0 ? void 0 : data.center)) {
           var circle = new window.google.maps.Circle(_objectSpread(_objectSpread({}, fillStyle), {}, {
             draggable: true,
             map: map,
@@ -347,7 +347,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           _infoWindow.open(map);
         }
 
-        if (type === 2) {
+        if (type === 2 && Array.isArray(data)) {
           var polygon = new window.google.maps.Polygon(_objectSpread(_objectSpread({}, fillStyle), {}, {
             draggable: false,
             map: map,
@@ -355,25 +355,25 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           }));
           setPolygonZone(polygon);
         }
-      } else {
-        var _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: true,
-          drawingControlOptions: {
-            position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [window.google.maps.drawing.OverlayType.POLYGON]
-          },
-          circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
-            draggable: true
-          }),
-          polygonOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
-            draggable: false
-          })
-        });
-
-        setDrawingManager(_drawingManager);
-
-        _drawingManager.setMap(map);
       }
+
+      var _drawingManager = new window.google.maps.drawing.DrawingManager({
+        drawingControl: true,
+        drawingControlOptions: {
+          position: window.google.maps.ControlPosition.TOP_CENTER,
+          drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+        },
+        circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          draggable: true
+        }),
+        polygonOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          draggable: false
+        })
+      });
+
+      setDrawingManager(_drawingManager);
+
+      _drawingManager.setMap(map);
     }
   }, [googleReady]);
   /**
