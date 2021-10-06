@@ -229,7 +229,7 @@ export const BusinessZoneGoogleMaps = (props) => {
         })
         setInfoWindow(_infoWindow)
 
-        if (type === 1) {
+        if (type === 1 && data?.center) {
           const circle = new window.google.maps.Circle({
             ...fillStyle,
             draggable: true,
@@ -240,7 +240,7 @@ export const BusinessZoneGoogleMaps = (props) => {
           setCircleZone(circle)
           _infoWindow.open(map)
         }
-        if (type === 2) {
+        if (type === 2 && Array.isArray(data)) {
           const polygon = new window.google.maps.Polygon({
             ...fillStyle,
             draggable: false,
@@ -249,25 +249,25 @@ export const BusinessZoneGoogleMaps = (props) => {
           })
           setPolygonZone(polygon)
         }
-      } else {
-        const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: true,
-          drawingControlOptions: {
-            position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [window.google.maps.drawing.OverlayType.POLYGON]
-          },
-          circleOptions: {
-            ...fillStyle,
-            draggable: true
-          },
-          polygonOptions: {
-            ...fillStyle,
-            draggable: false
-          }
-        })
-        setDrawingManager(_drawingManager)
-        _drawingManager.setMap(map)
       }
+
+      const _drawingManager = new window.google.maps.drawing.DrawingManager({
+        drawingControl: true,
+        drawingControlOptions: {
+          position: window.google.maps.ControlPosition.TOP_CENTER,
+          drawingModes: [window.google.maps.drawing.OverlayType.POLYGON]
+        },
+        circleOptions: {
+          ...fillStyle,
+          draggable: true
+        },
+        polygonOptions: {
+          ...fillStyle,
+          draggable: false
+        }
+      })
+      setDrawingManager(_drawingManager)
+      _drawingManager.setMap(map)
     }
   }, [googleReady])
 
