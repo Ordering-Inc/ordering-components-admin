@@ -145,7 +145,7 @@ export const BusinessMenuOptions = (props) => {
   /**
    * Method to check contain conflict
    */
-   const isCheckConflict = (lapses, newSchedule, index) => {
+  const isCheckConflict = (lapses, newSchedule, index) => {
     const openNew = newSchedule.open.hour * 60 + newSchedule.open.minute
     const closeNew = newSchedule.close.hour * 60 + newSchedule.close.minute
     for (let i = 0; i < lapses.length; i++) {
@@ -153,7 +153,7 @@ export const BusinessMenuOptions = (props) => {
         const openOld = lapses[i].open.hour * 60 + lapses[i].open.minute
         const closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute
 
-        if (openNew < openOld && closeNew > closeOld) return true
+        if (openNew <= openOld && closeNew >= closeOld) return true
         if (openNew < openOld && closeNew > openOld) return true
         if (openNew > openOld && closeNew < closeOld) return true
         if (openNew < closeOld && closeNew > closeOld) return true
@@ -277,7 +277,7 @@ export const BusinessMenuOptions = (props) => {
    * @param {Boolean} isHour hour if true, else minute
    * @param {String} value changed value
    */
-   const handleChangeAddScheduleTime = (daysOfWeekIndex, isOpen, isHour, value) => {
+  const handleChangeAddScheduleTime = (daysOfWeekIndex, isOpen, isHour, value) => {
     const _schedule = [...schedule]
     let conflict
 
