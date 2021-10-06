@@ -361,7 +361,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
         drawingControl: true,
         drawingControlOptions: {
           position: window.google.maps.ControlPosition.TOP_CENTER,
-          drawingModes: [window.google.maps.drawing.OverlayType.POLYGON]
+          drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
         },
         circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
           draggable: true
