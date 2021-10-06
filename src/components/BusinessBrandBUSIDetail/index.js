@@ -10,13 +10,16 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 export const BusinessBrandBUSIDetail = (props) => {
   const {
     UIComponent,
-    propsToFetch
+    propsToFetch,
+    isSearchByName
   } = props
   const [ordering] = useApi()
   const [searchValue, setSearchValue] = useState(null)
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
+
+  const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   const handleChangeCheckBox = (e, businessId, brandId) => {
     let changes = { franchise_id: brandId }
@@ -33,7 +36,38 @@ export const BusinessBrandBUSIDetail = (props) => {
         ...businessList,
         loading: true
       })
-      const { content: { error, result, pagination } } = await ordering.businesses().asDashboard().select(propsToFetch).get()
+
+      let where = null
+      const conditions = []
+      if (searchValue) {
+        const searchConditions = []
+        const isSpecialCharacter = rex.test(searchValue)
+        if (isSearchByName) {
+          searchConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
+      }
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const fetchEndpoint = where
+        ? ordering.businesses().asDashboard().select(propsToFetch).where(where)
+        : ordering.businesses().asDashboard().select(propsToFetch)
+      const { content: { error, result, pagination } } = await fetchEndpoint.get()
       if (!error) {
         setBusinessList({
           ...businessList,
@@ -84,7 +118,7 @@ export const BusinessBrandBUSIDetail = (props) => {
 
   useEffect(() => {
     getBusinessList()
-  }, [])
+  }, [searchValue])
 
   return (
     <>
