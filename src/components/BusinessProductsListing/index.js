@@ -8,6 +8,7 @@ export const BusinessProductsListing = (props) => {
     slug,
     categoryId,
     productId,
+    isAllCategoryProducts,
     isInitialRender,
     ordering,
     UIComponent
@@ -251,7 +252,7 @@ export const BusinessProductsListing = (props) => {
   }
 
   useEffect(() => {
-    if (!businessState.loading && categorySelected) {
+    if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true)
     } else if (businessState?.business?.categories) {
       setCategorySelected(businessState?.business?.categories[0])
@@ -340,4 +341,8 @@ BusinessProductsListing.propTypes = {
 }
 
 BusinessProductsListing.defaultProps = {
+  beforeComponents: [],
+  afterComponents: [],
+  beforeElements: [],
+  afterElements: []
 }
