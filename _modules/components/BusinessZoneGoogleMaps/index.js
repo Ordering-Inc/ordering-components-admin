@@ -267,7 +267,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
    */
 
   (0, _react.useEffect)(function () {
-    if (!googleReady) return;
+    if (!googleReady || !googleMap) return;
     var bounds = new window.google.maps.LatLngBounds();
 
     if (circleZone) {
