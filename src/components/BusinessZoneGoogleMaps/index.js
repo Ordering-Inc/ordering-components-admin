@@ -173,7 +173,7 @@ export const BusinessZoneGoogleMaps = (props) => {
    * Fit map
    */
   useEffect(() => {
-    if (!googleReady) return
+    if (!googleReady || !googleMap) return
     const bounds = new window.google.maps.LatLngBounds()
     if (circleZone) {
       bounds.union(circleZone.getBounds())
