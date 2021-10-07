@@ -39,8 +39,10 @@ import { BusinessReviewsList } from './components/BusinessReviewsList'
 import { BusinessSchedule } from './components/BusinessSchedule'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
+import { BusinessType } from './components/BusinessType'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
 import { BusinessTypeForm } from './components/BusinessTypeForm'
+import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { BusinessCategoryCreator } from './components/BusinessCategoryCreator'
@@ -209,8 +211,10 @@ export {
   BusinessSchedule,
   BusinessSortControl,
   BusinessSpreadSheet,
+  BusinessType,
   BusinessTypeFilter,
   BusinessTypeForm,
+  BusinessWebhooks,
   BusinessZoneGoogleMaps,
   BusinessCategoryCreator,
   BusinessProductCreator,
