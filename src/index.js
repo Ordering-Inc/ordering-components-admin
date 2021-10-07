@@ -56,6 +56,7 @@ import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriverGroupSetting } from './components/DriverGroupSetting'
+import { DriverReviewDetails } from './components/DriverReviewDetails'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
 import { DriversGroupOrders } from './components/DriversGroupOrders'
@@ -112,6 +113,7 @@ import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
 import { ProductMetaFields } from './components/ProductMetaFields'
 import { ProductProperties } from './components/ProductProperties'
+import { ProductReviews } from './components/ProductReviews'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
 import { ProductIngredient } from './components/ProductIngredient'
@@ -226,6 +228,7 @@ export {
   DashboardOrdersList,
   DragAndDrop,
   DriverGroupSetting,
+  DriverReviewDetails,
   DriverTips,
   DriversList,
   DriverAnalytics,
@@ -289,6 +292,7 @@ export {
   ProductIngredient,
   ProductOption,
   ProductOptionSuboption,
+  ProductReviews,
   ProductsList,
   ProductsListing,
   SearchOptions,

@@ -89,7 +89,7 @@ export const BusinessReviews = (props) => {
         requestsState.reviews.cancel()
       }
     }
-  }, [])
+  }, [businessId])
 
   return (
     <>
