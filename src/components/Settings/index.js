@@ -4,7 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
 const categoryHideList = ['cloudinary', 'tookan', 'order_type', 'others']
-const configHideList = ['search_by_address', 'stripe_connect_sandbox', 'distance_unit_km']
+const configHideList = ['search_by_address', 'distance_unit_km']
 
 /**
  * Component to manage Settings page behavior without UI component
