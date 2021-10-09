@@ -222,9 +222,13 @@ BusinessWebhooks.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Array that contains business data
+   * Object for a business
    */
-  business: PropTypes.arrayOf(PropTypes.object),
+  business: PropTypes.object,
+  /**
+   * Function to set a business state
+   */
+  handleSuccessUpdate: PropTypes.func,
   /**
    * Components types before business type filter
    * Array of type components, the parent props will pass to these components
