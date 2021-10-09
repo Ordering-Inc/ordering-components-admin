@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
  * Component to manage BusinessCategoryEdit behavior without UI component
@@ -18,6 +20,8 @@ export const BusinessCategoryEdit = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
   const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   useEffect(() => {
@@ -47,9 +51,9 @@ export const BusinessCategoryEdit = (props) => {
   }
 
   /**
-* Update credential data
-* @param {Boolean} isChecked checkbox status
-*/
+  * Update credential data
+  * @param {Boolean} isChecked checkbox status
+  */
   const handleChangeCheckBox = (isChecked) => {
     const currentChanges = { enabled: isChecked }
 
@@ -86,6 +90,7 @@ export const BusinessCategoryEdit = (props) => {
       const id = category?.id || categoryId
       if (loading) return
       try {
+        showToast(ToastType.Info, t('LOADING', 'Loading'))
         setFormState({
           ...formState,
           loading: true
@@ -116,6 +121,7 @@ export const BusinessCategoryEdit = (props) => {
             const _business = { ...businessState.business, categories: _categories }
             handleUpdateBusinessState(_business)
           }
+          showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
         } else {
           setFormState({
             ...formState,
@@ -142,6 +148,7 @@ export const BusinessCategoryEdit = (props) => {
   const createBusinessCategory = async () => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -163,6 +170,7 @@ export const BusinessCategoryEdit = (props) => {
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
         onClose()
+        showToast(ToastType.Success, t('CATEOGORY_CREATED', 'Category created'))
       } else {
         setFormState({
           ...formState,
