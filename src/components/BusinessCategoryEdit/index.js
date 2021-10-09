@@ -169,8 +169,8 @@ export const BusinessCategoryEdit = (props) => {
           _categories.push(content.result)
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
-        onClose()
         showToast(ToastType.Success, t('CATEOGORY_CREATED', 'Category created'))
+        onClose()
       } else {
         setFormState({
           ...formState,
