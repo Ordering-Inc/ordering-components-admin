@@ -4,6 +4,9 @@ import PropTypes from 'prop-types'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useApi } from '../../contexts/ApiContext'
 
+/**
+ * Component to manage LanguageSelector behavior without UI component
+ */
 export const LanguageSelector = (props) => {
   const {
     currentLanguage,
