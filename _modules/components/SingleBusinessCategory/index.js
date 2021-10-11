@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -66,13 +70,20 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
   var _useState = (0, _react.useState)({
     changes: {},
     loading: false,
     result: {
       error: false
-    },
-    status: null
+    }
   }),
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
@@ -157,13 +168,14 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
             case 2:
               _context.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 6;
+              _context.next = 7;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).save(params);
 
-            case 6:
+            case 7:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
@@ -175,8 +187,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   result: {
                     error: false,
                     result: result
-                  },
-                  status: 'update'
+                  }
                 }));
                 setIsEditMode(false);
 
@@ -192,6 +203,8 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                     categories: _categories
                   }));
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -202,11 +215,11 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }));
               }
 
-              _context.next = 16;
+              _context.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -216,12 +229,12 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 13]]);
+      }, _callee, null, [[2, 14]]);
     }));
 
     return function editCategory(_x) {
@@ -250,13 +263,14 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
             case 2:
               _context2.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context2.next = 6;
+              _context2.next = 7;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).delete();
 
-            case 6:
+            case 7:
               _yield$ordering$busin3 = _context2.sent;
               _yield$ordering$busin4 = _yield$ordering$busin3.content;
               error = _yield$ordering$busin4.error;
@@ -268,8 +282,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   result: {
                     error: false,
                     result: result
-                  },
-                  status: 'delete'
+                  }
                 }));
 
                 if (handleUpdateBusinessState) {
@@ -286,6 +299,8 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   }));
                   if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -296,11 +311,11 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }));
               }
 
-              _context2.next = 16;
+              _context2.next = 17;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 14:
+              _context2.prev = 14;
               _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -310,12 +325,12 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 13]]);
+      }, _callee2, null, [[2, 14]]);
     }));
 
     return function deleteCategory() {

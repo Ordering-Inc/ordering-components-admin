@@ -56,7 +56,7 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var categoryHideList = ['cloudinary', 'tookan', 'order_type', 'others'];
-var configHideList = ['search_by_address', 'stripe_connect_sandbox', 'distance_unit_km'];
+var configHideList = ['search_by_address', 'distance_unit_km'];
 /**
  * Component to manage Settings page behavior without UI component
  */

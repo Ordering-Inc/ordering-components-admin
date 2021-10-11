@@ -47,6 +47,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage LanguageSelector behavior without UI component
+ */
 var LanguageSelector = function LanguageSelector(props) {
   var _languageState$langua3;
 

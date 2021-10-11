@@ -49,6 +49,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage Home page behavior without UI component
+ */
 var Home = function Home(props) {
   var UIComponent = props.UIComponent;
 

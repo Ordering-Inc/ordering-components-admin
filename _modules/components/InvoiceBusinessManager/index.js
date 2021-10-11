@@ -51,6 +51,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage InvoiceBusunessManager behavior without UI component
+ */
 var InvoiceBusinessManager = function InvoiceBusinessManager(props) {
   var UIComponent = props.UIComponent,
       propsToFetch = props.propsToFetch;

@@ -45,6 +45,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to filter Busness type behavior without UI component
+ */
 var BusinessTypeFilter = function BusinessTypeFilter(props) {
   var businessTypes = props.businessTypes,
       onChangeBusinessType = props.onChangeBusinessType,

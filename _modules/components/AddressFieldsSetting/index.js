@@ -49,6 +49,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage address field behavior without UI component
+ */
 var AddressFieldsSetting = function AddressFieldsSetting(props) {
   var UIComponent = props.UIComponent;
 

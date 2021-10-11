@@ -86,6 +86,10 @@ var AdvancedReports = function AdvancedReports(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       filterList = _useState4[0],
       setFilterList = _useState4[1];
+  /**
+   * Function to get Business distance list from API
+   */
+
 
   var getBusinessDistanceList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {

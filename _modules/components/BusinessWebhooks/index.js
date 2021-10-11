@@ -59,6 +59,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage Busness webhook behavior without UI component
+ */
 var BusinessWebhooks = function BusinessWebhooks(props) {
   var UIComponent = props.UIComponent,
       business = props.business,
@@ -91,7 +94,7 @@ var BusinessWebhooks = function BusinessWebhooks(props) {
       formState = _useState2[0],
       setFormState = _useState2[1];
   /**
-   * Default fuction for business profile workflow
+   * Default fuction to add a webhook
    */
 
 
@@ -184,7 +187,7 @@ var BusinessWebhooks = function BusinessWebhooks(props) {
     updateWebhook(changes, webhook === null || webhook === void 0 ? void 0 : webhook.id);
   };
   /**
-   * Default fuction for business profile workflow
+   * Function to update a webhook
    */
 
 
@@ -276,7 +279,7 @@ var BusinessWebhooks = function BusinessWebhooks(props) {
     };
   }();
   /**
-   * fuction to delete a businessType
+   * fuction to delete a webhook
    */
 
 
@@ -357,7 +360,7 @@ var BusinessWebhooks = function BusinessWebhooks(props) {
     };
   }();
   /**
-   * Update credential data
+   * Update webhook data
    * @param {EventTarget} e Related HTML event
    */
 
@@ -370,7 +373,7 @@ var BusinessWebhooks = function BusinessWebhooks(props) {
     }));
   };
   /**
-   * Update business type image data
+   * Update webhook data
    * @param {string} value selected data from select
    * @param {string} name current hook name
    */
@@ -401,9 +404,14 @@ BusinessWebhooks.propTypes = {
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array that contains business data
+   * Object for a business
    */
-  business: _propTypes.default.arrayOf(_propTypes.default.object),
+  business: _propTypes.default.object,
+
+  /**
+   * Function to set a business state
+   */
+  handleSuccessUpdate: _propTypes.default.func,
 
   /**
    * Components types before business type filter
