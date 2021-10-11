@@ -55,8 +55,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var categoryHideList = ['cloudinary', 'tookan', 'order_type', 'others'];
-var configHideList = ['search_by_address', 'distance_unit_km'];
+var categoryHideList = ['cloudinary', 'tookan', 'apple_login', 'order_messages', 'others', 'location', 'twilio'];
+var configHideList = ['search_by_address', 'distance_unit_km', 'google_login_client_id', 'pickup', 'orders_metafields_strategy', 'order_validate', 'time_format', 'driver_close_distance'];
 /**
  * Component to manage Settings page behavior without UI component
  */
