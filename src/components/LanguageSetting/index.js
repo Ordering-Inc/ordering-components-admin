@@ -5,6 +5,9 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
+/**
+ * Component to manage LanguageSetting behavior without UI component
+ */
 export const LanguageSetting = (props) => {
   const {
     UIComponent

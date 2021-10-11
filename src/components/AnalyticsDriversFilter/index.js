@@ -12,10 +12,6 @@ export const AnalyticsDriversFilter = (props) => {
   } = props
 
   const [ordering] = useApi()
-
-  /**
-   * This state save the user info from API
-   */
   const [usersList, setUsersList] = useState({ loading: true, error: null, users: [], pagination: null })
   const [groupList, setGroupList] = useState(null)
   const [userIds, setUserIds] = useState(null)

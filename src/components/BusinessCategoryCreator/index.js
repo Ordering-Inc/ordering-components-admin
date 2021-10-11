@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
  * Component to manage BusinessCategoryCreator behavior without UI component
@@ -16,6 +18,8 @@ export const BusinessCategoryCreator = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
 
   const [categoryState, setCategoryState] = useState({ loading: false, category: { enabled: true }, result: { error: false } })
 
@@ -66,6 +70,7 @@ export const BusinessCategoryCreator = (props) => {
   const handleUpdateClick = async () => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setCategoryState({
         ...categoryState,
         loading: true
@@ -89,6 +94,7 @@ export const BusinessCategoryCreator = (props) => {
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
         setIsAddCategory(false)
+        showToast(ToastType.Success, t('CATEOGORY_CREATED', 'Category created'))
       } else {
         setCategoryState({
           ...categoryState,

@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
+/**
+ * Component to manage Home page behavior without UI component
+ */
 export const Home = (props) => {
   const {
     UIComponent

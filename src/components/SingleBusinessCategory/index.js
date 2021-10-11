@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -18,8 +20,10 @@ export const SingleBusinessCategory = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
 
-  const [formState, setFormState] = useState({ changes: {}, loading: false, result: { error: false }, status: null })
+  const [formState, setFormState] = useState({ changes: {}, loading: false, result: { error: false } })
   const [isEditMode, setIsEditMode] = useState(false)
 
   const handelChangeCategoryActive = (isChecked) => {
@@ -72,6 +76,7 @@ export const SingleBusinessCategory = (props) => {
   const editCategory = async (params) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -84,8 +89,7 @@ export const SingleBusinessCategory = (props) => {
           result: {
             error: false,
             result: result
-          },
-          status: 'update'
+          }
         })
         setIsEditMode(false)
         if (handleUpdateBusinessState) {
@@ -100,6 +104,7 @@ export const SingleBusinessCategory = (props) => {
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
+        showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
       } else {
         setFormState({
           ...formState,
@@ -128,6 +133,7 @@ export const SingleBusinessCategory = (props) => {
   const deleteCategory = async () => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -140,8 +146,7 @@ export const SingleBusinessCategory = (props) => {
           result: {
             error: false,
             result: result
-          },
-          status: 'delete'
+          }
         })
         if (handleUpdateBusinessState) {
           const _categories = business.categories.map(item => {
@@ -153,6 +158,7 @@ export const SingleBusinessCategory = (props) => {
           handleUpdateBusinessState({ ...business, categories: _categories })
           if (category.id === categorySelected.id) setCategorySelected(_categories[0])
         }
+        showToast(ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'))
       } else {
         setFormState({
           ...formState,

@@ -5,6 +5,9 @@ import { useApi } from '../../contexts/ApiContext'
 import { useValidationFields } from '../../contexts/ValidationsFieldsContext'
 import { useCustomer } from '../../contexts/CustomerContext'
 
+/**
+ * Component to manage address form behavior without UI component
+ */
 export const AddressForm = (props) => {
   const {
     UIComponent,

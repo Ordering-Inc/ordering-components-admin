@@ -4,6 +4,9 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
 
+/**
+ * Component to manage InvoiceBusunessManager behavior without UI component
+ */
 export const InvoiceBusinessManager = (props) => {
   const {
     UIComponent,

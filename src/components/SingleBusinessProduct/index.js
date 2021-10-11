@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
  * Component to manage Checkout page behavior without UI component
@@ -16,6 +18,8 @@ export const SingleBusinessProduct = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [isEditMode, setIsEditMode] = useState(false)
 
@@ -80,6 +84,7 @@ export const SingleBusinessProduct = (props) => {
   const editProduct = async (params) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -115,6 +120,7 @@ export const SingleBusinessProduct = (props) => {
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
+        showToast(ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'))
         setIsEditMode(false)
       } else {
         setFormState({
@@ -144,6 +150,7 @@ export const SingleBusinessProduct = (props) => {
   const deleteProduct = async () => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true
@@ -174,6 +181,7 @@ export const SingleBusinessProduct = (props) => {
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
+        showToast(ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'))
       } else {
         setFormState({
           ...formState,

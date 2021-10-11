@@ -4,6 +4,9 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
 
+/**
+ * Component to manage InvoiceDriverManager behavior without UI component
+ */
 export const InvoiceDriverManager = (props) => {
   const {
     UIComponent,

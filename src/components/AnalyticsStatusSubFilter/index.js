@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
-
 export const AnalyticsStatusSubFilter = (props) => {
   const {
     UIComponent

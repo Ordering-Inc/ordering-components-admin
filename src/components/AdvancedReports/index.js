@@ -18,6 +18,9 @@ export const AdvancedReports = (props) => {
   const [businessDistanceList, setBusinessDistanceList] = useState({ content: [], loading: false, error: null })
   const [filterList, setFilterList] = useState({ from: '', to: '', businessIds: null, drivers_ids: null, franchises_id: null, driver_companies_ids: null })
 
+  /**
+   * Function to get Business distance list from API
+   */
   const getBusinessDistanceList = async () => {
     if (loading) return
     try {

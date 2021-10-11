@@ -5,6 +5,9 @@ import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
+/**
+ * Component to manage Busness webhook behavior without UI component
+ */
 export const BusinessWebhooks = (props) => {
   const {
     UIComponent,
@@ -20,7 +23,7 @@ export const BusinessWebhooks = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
-   * Default fuction for business profile workflow
+   * Default fuction to add a webhook
    */
   const handleUpdateAddClick = async () => {
     try {
@@ -74,8 +77,9 @@ export const BusinessWebhooks = (props) => {
     }
     updateWebhook(changes, webhook?.id)
   }
+
   /**
-   * Default fuction for business profile workflow
+   * Function to update a webhook
    */
   const updateWebhook = async (changes, id) => {
     try {
@@ -128,7 +132,7 @@ export const BusinessWebhooks = (props) => {
   }
 
   /**
-   * fuction to delete a businessType
+   * fuction to delete a webhook
    */
   const handleDeleteWebhook = async (id) => {
     try {
@@ -172,7 +176,7 @@ export const BusinessWebhooks = (props) => {
   }
 
   /**
-   * Update credential data
+   * Update webhook data
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeInput = (e) => {
@@ -187,7 +191,7 @@ export const BusinessWebhooks = (props) => {
   }
 
   /**
-   * Update business type image data
+   * Update webhook data
    * @param {string} value selected data from select
    * @param {string} name current hook name
    */
@@ -222,9 +226,13 @@ BusinessWebhooks.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Array that contains business data
+   * Object for a business
    */
-  business: PropTypes.arrayOf(PropTypes.object),
+  business: PropTypes.object,
+  /**
+   * Function to set a business state
+   */
+  handleSuccessUpdate: PropTypes.func,
   /**
    * Components types before business type filter
    * Array of type components, the parent props will pass to these components

@@ -4,6 +4,9 @@ import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
+/**
+ * Component to manage address field behavior without UI component
+ */
 export const AddressFieldsSetting = (props) => {
   const {
     UIComponent
