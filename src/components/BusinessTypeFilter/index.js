@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 
+/**
+ * Component to filter Busness type behavior without UI component
+ */
 export const BusinessTypeFilter = (props) => {
   const {
     businessTypes,
