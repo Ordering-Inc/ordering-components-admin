@@ -21,6 +21,7 @@ import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
+import { BusinessGprsPrinters } from './components/BusinessGprsPrinters'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
 import { BusinessMenu } from './components/BusinessMenu'
@@ -194,6 +195,7 @@ export {
   BusinessDetails,
   BusinessFormDetails,
   BusinessGallery,
+  BusinessGprsPrinters,
   BusinessInformation,
   BusinessList,
   BusinessMenu,
