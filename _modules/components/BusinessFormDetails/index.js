@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ConfigContext = require("../../contexts/ConfigContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -51,7 +53,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * Component to manage business form details behavior without UI component
  */
 var BusinessFormDetails = function BusinessFormDetails(props) {
-  var _session$user;
+  var _configs$google_maps_, _session$user;
 
   var UIComponent = props.UIComponent,
       business = props.business,
@@ -65,6 +67,10 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useConfig = (0, _ConfigContext.useConfig)(),
+      _useConfig2 = _slicedToArray(_useConfig, 1),
+      configs = _useConfig2[0].configs;
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -85,10 +91,17 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       formState = _useState4[0],
       setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(null),
+      _useState6 = _slicedToArray(_useState5, 2),
+      addressChange = _useState6[0],
+      setAddressChange = _useState6[1];
+
+  var timeout = null;
+  var googleMapsApiKey = configs === null || configs === void 0 ? void 0 : (_configs$google_maps_ = configs.google_maps_api_key) === null || _configs$google_maps_ === void 0 ? void 0 : _configs$google_maps_.value;
   /**
    * Clean formState
    */
-
 
   var cleanFormState = function cleanFormState(values) {
     return setFormState(_objectSpread(_objectSpread({}, formState), values));
@@ -364,6 +377,117 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     };
   };
 
+  var getTimeZone = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(lat, lng) {
+      var date, timestamp, url, response, result;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              date = new Date();
+              timestamp = Math.floor(date.getTime() / 1000);
+              url = "https://maps.googleapis.com/maps/api/timezone/json?location=".concat(lat, ",").concat(lng, "&timestamp=").concat(timestamp, "&key=").concat(googleMapsApiKey);
+              _context3.next = 5;
+              return fetch(url, {
+                method: 'GET'
+              });
+
+            case 5:
+              response = _context3.sent;
+              _context3.next = 8;
+              return response.json();
+
+            case 8:
+              result = _context3.sent;
+              return _context3.abrupt("return", result === null || result === void 0 ? void 0 : result.timeZoneId);
+
+            case 10:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function getTimeZone(_x, _x2) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
+  var handleChangeAddress = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(address) {
+      var _address$location, _address$location2;
+
+      var timezone;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.next = 2;
+              return getTimeZone(address === null || address === void 0 ? void 0 : (_address$location = address.location) === null || _address$location === void 0 ? void 0 : _address$location.lat, address === null || address === void 0 ? void 0 : (_address$location2 = address.location) === null || _address$location2 === void 0 ? void 0 : _address$location2.lng);
+
+            case 2:
+              timezone = _context4.sent;
+              setAddressChange({
+                address: address === null || address === void 0 ? void 0 : address.address,
+                location: _objectSpread(_objectSpread({}, address === null || address === void 0 ? void 0 : address.location), {}, {
+                  zipcode: (address === null || address === void 0 ? void 0 : address.zipcode) ? address.zipcode : -1,
+                  zoom: 15
+                }),
+                timezone: timezone
+              });
+
+            case 4:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function handleChangeAddress(_x3) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  var handleChangeCenter = function handleChangeCenter(address) {
+    var timezone;
+    clearTimeout(timeout);
+    timeout = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.next = 2;
+              return getTimeZone(address === null || address === void 0 ? void 0 : address.lat(), address === null || address === void 0 ? void 0 : address.lng());
+
+            case 2:
+              timezone = _context5.sent;
+              setAddressChange({
+                location: {
+                  lat: address === null || address === void 0 ? void 0 : address.lat(),
+                  lng: address === null || address === void 0 ? void 0 : address.lng(),
+                  zoom: 15,
+                  zipcode: -1
+                },
+                timezone: timezone
+              });
+
+            case 4:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    })), 200);
+  };
+
+  (0, _react.useEffect)(function () {
+    if (!addressChange) return;
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), addressChange)
+    }));
+  }, [addressChange]);
   (0, _react.useEffect)(function () {
     if (!business) return;
     setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
@@ -378,7 +502,9 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     handleChangeInput: handleChangeInput,
     handleButtonUpdateClick: handleUpdateClick,
     handlechangeImage: handlechangeImage,
-    handleAddBusiness: handleAddBusiness
+    handleAddBusiness: handleAddBusiness,
+    handleChangeAddress: handleChangeAddress,
+    handleChangeCenter: handleChangeCenter
   })));
 };
 
