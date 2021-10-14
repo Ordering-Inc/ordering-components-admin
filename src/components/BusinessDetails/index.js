@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const BusinessDetails = (props) => {
   const {
@@ -17,6 +19,8 @@ export const BusinessDetails = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
@@ -201,6 +205,7 @@ export const BusinessDetails = (props) => {
   const handleUpdateBusinessClick = async () => {
     try {
       setFormState({ ...formState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const response = await ordering.businesses(businessId).save(formState.changes, {
         accessToken: session.token
       })
@@ -219,6 +224,7 @@ export const BusinessDetails = (props) => {
             ...response.content.result
           }
         })
+        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
     } catch (err) {
       setFormState({
