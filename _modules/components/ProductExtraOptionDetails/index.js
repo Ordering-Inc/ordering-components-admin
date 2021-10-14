@@ -336,23 +336,24 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       for (_iterator3.s(); !(_step3 = _iterator3.n()).done;) {
         var item = _step3.value;
 
-        var _iterator4 = _createForOfIteratorHelper(item.suboptions),
-            _step4;
+        if (item !== null && item !== void 0 && item.suboptions) {
+          var _iterator4 = _createForOfIteratorHelper(item.suboptions),
+              _step4;
 
-        try {
-          for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
-            var subItem = _step4.value;
+          try {
+            for (_iterator4.s(); !(_step4 = _iterator4.n()).done;) {
+              var subItem = _step4.value;
 
-            if (subItem.id === respectTo) {
-              setConditionalOptionId(item.id); // setDefaultCondition({ option: item.id, subOption: subItem.id })
-
-              setConditionalSubOptionId(subItem.id);
+              if (subItem.id === respectTo) {
+                setConditionalOptionId(item.id);
+                setConditionalSubOptionId(subItem.id);
+              }
             }
+          } catch (err) {
+            _iterator4.e(err);
+          } finally {
+            _iterator4.f();
           }
-        } catch (err) {
-          _iterator4.e(err);
-        } finally {
-          _iterator4.f();
         }
       }
     } catch (err) {
