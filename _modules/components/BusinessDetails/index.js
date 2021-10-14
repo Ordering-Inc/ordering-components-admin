@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -72,6 +76,14 @@ var BusinessDetails = function BusinessDetails(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     business: null,
@@ -500,12 +512,13 @@ var BusinessDetails = function BusinessDetails(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context7.next = 4;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              _context7.next = 5;
               return ordering.businesses(businessId).save(formState.changes, {
                 accessToken: session.token
               });
 
-            case 4:
+            case 5:
               response = _context7.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
@@ -517,13 +530,14 @@ var BusinessDetails = function BusinessDetails(props) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                   business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
               }
 
-              _context7.next = 12;
+              _context7.next = 13;
               break;
 
-            case 9:
-              _context7.prev = 9;
+            case 10:
+              _context7.prev = 10;
               _context7.t0 = _context7["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -533,12 +547,12 @@ var BusinessDetails = function BusinessDetails(props) {
                 loading: false
               }));
 
-            case 12:
+            case 13:
             case "end":
               return _context7.stop();
           }
         }
-      }, _callee7, null, [[0, 9]]);
+      }, _callee7, null, [[0, 10]]);
     }));
 
     return function handleUpdateBusinessClick() {
