@@ -103,7 +103,7 @@ export const BusinessBrandBUSIDetail = (props) => {
           if (business.id === id) {
             return {
               ...business,
-              franchise_id: result.id
+              franchise_id: result.franchise_id
             }
           }
           return business
