@@ -218,7 +218,7 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
                 _businesses = businessList === null || businessList === void 0 ? void 0 : businessList.businesses.map(function (business) {
                   if (business.id === id) {
                     return _objectSpread(_objectSpread({}, business), {}, {
-                      franchise_id: result.id
+                      franchise_id: result.franchise_id
                     });
                   }
 
