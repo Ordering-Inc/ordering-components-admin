@@ -47,7 +47,7 @@ export const ValidationFieldsProvider = ({ children }) => {
   useEffect(() => {
     if (!ordering?.project) return
     loadValidationFields()
-  }, [ordering])
+  }, [ordering?.project])
 
   return (
     <ValidationFieldsContext.Provider value={[state, functions]}>
