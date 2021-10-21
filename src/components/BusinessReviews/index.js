@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
+import { useSession } from '../../contexts/SessionContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const BusinessReviews = (props) => {
   const {
@@ -10,6 +13,9 @@ export const BusinessReviews = (props) => {
   } = props
 
   const [ordering] = useApi()
+  const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
   const requestsState = {}
 
   /**
@@ -21,6 +27,8 @@ export const BusinessReviews = (props) => {
    * ReviewsList, this must be contain an original array of business reviews
    */
   const [reviewsList, setReviewsList] = useState(reviews)
+
+  const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
    * Method to change filter value for business reviews
@@ -70,6 +78,39 @@ export const BusinessReviews = (props) => {
     }
   }
 
+  /**
+   * Method to change the enabled of the review
+   * @param {boolean} enabled
+   */
+  const handleChangeReviewEnabled = async (reviewId, enabled) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({ enabled: enabled })
+      }
+      const response = await fetch(`${ordering.root}/business/${businessId}/reviews/${reviewId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        const reviews = businessReviewsList.reviews.filter(review => {
+          if (review.id === reviewId) {
+            Object.assign(review, content.result)
+          }
+          return true
+        })
+        setBusinessReviewsList({ ...businessReviewsList, reviews: reviews })
+        showToast(ToastType.Success, t('REVIEW_UPDATED', 'Review updated'))
+      }
+    } catch (err) {
+      setActionState({ loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
     if (reviews) {
       reviews.length &&
@@ -97,7 +138,9 @@ export const BusinessReviews = (props) => {
         <UIComponent
           {...props}
           reviewsList={businessReviewsList}
+          actionState={actionState}
           handleClickOption={onChangeOption}
+          handleChangeReviewEnabled={handleChangeReviewEnabled}
         />
       )}
     </>

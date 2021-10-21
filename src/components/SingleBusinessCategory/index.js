@@ -71,6 +71,77 @@ export const SingleBusinessCategory = (props) => {
   }
 
   /**
+   * Method to handle drag start
+   */
+  const handleDragStart = (event) => {
+    event.dataTransfer.setData('transferCategoryId', category?.id)
+    const ghostEle = document.createElement('div')
+    ghostEle.classList.add('ghostDragging')
+    ghostEle.innerHTML = category.name
+    document.body.appendChild(ghostEle)
+    event.dataTransfer.setDragImage(ghostEle, 0, 0)
+  }
+
+  /**
+   * Method to handle drag over
+   */
+  const handleDragOver = (event) => {
+    event.preventDefault()
+  }
+
+  /**
+   * Method to handle drag drop
+   */
+  const handleDrop = (event) => {
+    event.preventDefault()
+    const transferCategoryId = parseInt(event.dataTransfer.getData('transferCategoryId'))
+    const transferCategory = business?.categories.find(_category => _category.id === transferCategoryId)
+    const transferCategoryRank = transferCategory?.rank
+    const dropCategoryRank = category?.rank
+
+    const updatedCategories = business?.categories.filter(_category => {
+      if (_category.id === transferCategoryId) _category.rank = dropCategoryRank
+      if (_category.id === category.id) _category.rank = transferCategoryRank
+      return true
+    })
+    handleUpdateBusinessState({ ...business, categories: updatedCategories })
+    handleChangeCategoryRank(transferCategoryId, { rank: dropCategoryRank })
+  }
+
+  /**
+   * Method to change the rank of transfer category
+   */
+  const handleChangeCategoryRank = async (transferCategoryId, params) => {
+    if (loading) return
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const { content } = await ordering.businesses(parseInt(business?.id)).categories(transferCategoryId).save(params)
+      if (!content.error) {
+        showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
+      })
+    }
+  }
+
+  /**
+   * Method to handle drag end
+   */
+  const handleDragEnd = () => {
+    const elements = document.getElementsByClassName('ghostDragging')
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0])
+    }
+  }
+
+  /**
    * Method to edit a category
    */
   const editCategory = async (params) => {
@@ -202,6 +273,10 @@ export const SingleBusinessCategory = (props) => {
           deleteCategory={deleteCategory}
           handleInputChange={handleInputChange}
           isEditMode={isEditMode}
+          handleDragStart={handleDragStart}
+          handleDragOver={handleDragOver}
+          handleDrop={handleDrop}
+          handleDragEnd={handleDragEnd}
         />
       )}
     </>
