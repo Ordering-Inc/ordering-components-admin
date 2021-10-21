@@ -383,6 +383,7 @@ export const OrdersManage = (props) => {
           handleOrdersStatusGroupFilter={handleOrdersStatusGroupFilter}
           handleChangeMultiOrdersStatus={handleChangeMultiOrdersStatus}
           handleDeleteMultiOrders={handleDeleteMultiOrders}
+          setSelectedOrderIds={setSelectedOrderIds}
         />
       )}
     </>
