@@ -794,7 +794,8 @@ var OrdersManage = function OrdersManage(props) {
     handleChangeFilterValues: handleChangeFilterValues,
     handleOrdersStatusGroupFilter: handleOrdersStatusGroupFilter,
     handleChangeMultiOrdersStatus: handleChangeMultiOrdersStatus,
-    handleDeleteMultiOrders: handleDeleteMultiOrders
+    handleDeleteMultiOrders: handleDeleteMultiOrders,
+    setSelectedOrderIds: setSelectedOrderIds
   })));
 };
 

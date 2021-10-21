@@ -128,8 +128,9 @@ var ValidationFieldsProvider = function ValidationFieldsProvider(_ref) {
     loadValidationFields: loadValidationFields
   };
   (0, _react.useEffect)(function () {
+    if (!(ordering === null || ordering === void 0 ? void 0 : ordering.project)) return;
     loadValidationFields();
-  }, []);
+  }, [ordering === null || ordering === void 0 ? void 0 : ordering.project]);
   return /*#__PURE__*/_react.default.createElement(ValidationFieldsContext.Provider, {
     value: [state, functions]
   }, children);
