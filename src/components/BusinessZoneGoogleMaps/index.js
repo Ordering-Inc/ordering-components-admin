@@ -157,10 +157,12 @@ export const BusinessZoneGoogleMaps = (props) => {
         },
         circleOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: true
         },
         polygonOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: false
         }
       })
@@ -185,7 +187,7 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       googleMap.fitBounds(bounds)
     }
-  }, [googleReady, data, type, center, googleMap, circleZone, polygonZone])
+  }, [googleReady, data, type, googleMap, circleZone, polygonZone])
 
   useEffect(() => {
     if (googleReady) {
@@ -261,10 +263,12 @@ export const BusinessZoneGoogleMaps = (props) => {
         },
         circleOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: true
         },
         polygonOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: false
         }
       })

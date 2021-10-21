@@ -67,7 +67,7 @@ export const DriversGroupsList = (props) => {
         .setAccessToken(token)
         .users()
         .where([{ attribute: 'level', value: 5 }])
-        .select(['name']).get()
+        .select(['name', 'email', 'photo']).get()
       if (!error) {
         setDriversManagersList({ ...driversManagersList, loading: false, managers: result })
       }
@@ -282,7 +282,12 @@ export const DriversGroupsList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const groups = [...driversGroupsState.groups, content.result]
+        let newGroup = { ...content.result }
+        if (!content.result?.administrator && driversManagersList.managers.length > 0) {
+          const newAdmin = driversManagersList.managers.find(manager => manager.id === content.result?.administrator_id)
+          newGroup = { ...newGroup, administrator: newAdmin }
+        }
+        const groups = [...driversGroupsState.groups, newGroup]
         setDriversGroupsState({ ...driversGroupsState, groups: groups })
         showToast(ToastType.Success, t('DRIVER_GROUP_ADDED', 'Driver group added'))
         setChangesState({})
