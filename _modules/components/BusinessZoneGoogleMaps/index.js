@@ -250,9 +250,11 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
         },
         circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          clickable: false,
           draggable: true
         }),
         polygonOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          clickable: false,
           draggable: false
         })
       });
@@ -292,7 +294,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
 
       googleMap.fitBounds(bounds);
     }
-  }, [googleReady, data, type, center, googleMap, circleZone, polygonZone]);
+  }, [googleReady, data, type, googleMap, circleZone, polygonZone]);
   (0, _react.useEffect)(function () {
     if (googleReady) {
       center.lat = location === null || location === void 0 ? void 0 : location.lat;
@@ -364,9 +366,11 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
         },
         circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          clickable: false,
           draggable: true
         }),
         polygonOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
+          clickable: false,
           draggable: false
         })
       });

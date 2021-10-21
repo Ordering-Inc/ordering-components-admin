@@ -270,7 +270,7 @@ var DriversGroupsList = function DriversGroupsList(props) {
               return ordering.setAccessToken(token).users().where([{
                 attribute: 'level',
                 value: 5
-              }]).select(['name']).get();
+              }]).select(['name', 'email', 'photo']).get();
 
             case 4:
               _yield$ordering$setAc = _context2.sent;
@@ -734,7 +734,8 @@ var DriversGroupsList = function DriversGroupsList(props) {
 
   var handleAddDriversGroup = /*#__PURE__*/function () {
     var _ref9 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee9() {
-      var extraAttributes, changes, requestOptions, response, content, groups;
+      var extraAttributes, changes, requestOptions, response, content, _content$result, newGroup, newAdmin, groups;
+
       return _regenerator.default.wrap(function _callee9$(_context9) {
         while (1) {
           switch (_context9.prev = _context9.next) {
@@ -792,7 +793,20 @@ var DriversGroupsList = function DriversGroupsList(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                groups = [].concat(_toConsumableArray(driversGroupsState.groups), [content.result]);
+                newGroup = _objectSpread({}, content.result);
+
+                if (!((_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.administrator) && driversManagersList.managers.length > 0) {
+                  newAdmin = driversManagersList.managers.find(function (manager) {
+                    var _content$result2;
+
+                    return manager.id === ((_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.administrator_id);
+                  });
+                  newGroup = _objectSpread(_objectSpread({}, newGroup), {}, {
+                    administrator: newAdmin
+                  });
+                }
+
+                groups = [].concat(_toConsumableArray(driversGroupsState.groups), [newGroup]);
                 setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
                   groups: groups
                 }));
