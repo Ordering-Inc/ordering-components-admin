@@ -113,6 +113,7 @@ import { ProductExtraOptionMetaFields } from './components/ProductExtraOptionMet
 import { ProductExtraOptions } from './components/ProductExtraOptions'
 import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
+import { ProductGallery } from './components/ProductGallery'
 import { ProductMetaFields } from './components/ProductMetaFields'
 import { ProductProperties } from './components/ProductProperties'
 import { ProductReviews } from './components/ProductReviews'
@@ -289,6 +290,7 @@ export {
   ProductExtraOptionMetaFields,
   ProductExtras,
   ProductForm,
+  ProductGallery,
   ProductMetaFields,
   ProductProperties,
   ProductShare,
