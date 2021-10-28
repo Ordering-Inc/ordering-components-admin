@@ -52,7 +52,7 @@ export const AdvancedReports = (props) => {
       } else {
         setBusinessDistanceList({
           ...businessDistanceList,
-          loading: true,
+          loading: false,
           error: result
         })
       }
