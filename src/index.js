@@ -156,6 +156,7 @@ import { PaymentOptionPaypal } from './components/PaymentOptionPaypal'
 import { PaymentOptionStripe } from './components/PaymentOptionStripe'
 import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirect'
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
+import { ReportsDriverFilter } from './components/ReportsDriverFilter'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleBusinessCategory } from './components/SingleBusinessCategory'
@@ -301,6 +302,7 @@ export {
   ProductReviews,
   ProductsList,
   ProductsListing,
+  ReportsDriverFilter,
   SearchOptions,
   SignupForm,
   SingleBusinessCard,

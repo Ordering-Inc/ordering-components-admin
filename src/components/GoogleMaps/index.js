@@ -251,7 +251,7 @@ export const GoogleMaps = (props) => {
           })
         }
 
-        if (isHeatMap) {
+        if (isHeatMap && !markerCluster) {
           const _heatMap = new window.google.maps.visualization.HeatmapLayer({
             data: locations.map(location => {
               return new window.google.maps.LatLng(location.lat, location.lng)
