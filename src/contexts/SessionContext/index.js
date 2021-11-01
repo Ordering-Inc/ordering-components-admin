@@ -88,8 +88,8 @@ export const SessionProvider = ({ children, strategy }) => {
 
   const checkLocalStorage = async () => {
     const { token, user } = await getValuesFromLocalStorage()
-    const allowedUserLevels  = [0, 2, 5]    
-  
+    const allowedUserLevels = [0, 2, 5]
+
     if (token && allowedUserLevels.includes(user?.level) && !state.token) {
       login({
         user,
