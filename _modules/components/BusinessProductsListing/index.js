@@ -103,6 +103,11 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       productModal = _useState12[0],
       setProductModal = _useState12[1];
 
+  var _useState13 = (0, _react.useState)(slug),
+      _useState14 = _slicedToArray(_useState13, 2),
+      businessSlug = _useState14[0],
+      setBusinessSlug = _useState14[1];
+
   var categoryStateDefault = {
     loading: true,
     pagination: {
@@ -115,20 +120,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     products: []
   };
 
-  var _useState13 = (0, _react.useState)(categoryStateDefault),
-      _useState14 = _slicedToArray(_useState13, 2),
-      categoryState = _useState14[0],
-      setCategoryState = _useState14[1];
-
-  var _useState15 = (0, _react.useState)(null),
+  var _useState15 = (0, _react.useState)(categoryStateDefault),
       _useState16 = _slicedToArray(_useState15, 2),
-      errors = _useState16[0],
-      setErrors = _useState16[1];
+      categoryState = _useState16[0],
+      setCategoryState = _useState16[1];
 
-  var _useState17 = (0, _react.useState)(false),
+  var _useState17 = (0, _react.useState)(null),
       _useState18 = _slicedToArray(_useState17, 2),
-      errorQuantityProducts = _useState18[0],
-      setErrorQuantityProducts = _useState18[1];
+      errors = _useState18[0],
+      setErrors = _useState18[1];
+
+  var _useState19 = (0, _react.useState)(false),
+      _useState20 = _slicedToArray(_useState19, 2),
+      errorQuantityProducts = _useState20[0],
+      setErrorQuantityProducts = _useState20[1];
   /**
    * Change category selected
    * @param {Object} category Category object
@@ -383,7 +388,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
               requestsState.business = source;
               setRequestsState(_objectSpread({}, requestsState));
               _context3.next = 7;
-              return ordering.businesses(slug).asDashboard().get();
+              return ordering.businesses(businessSlug).asDashboard().get();
 
             case 7:
               _yield$ordering$busin2 = _context3.sent;
@@ -437,6 +442,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   (0, _react.useEffect)(function () {
     var _businessState$busine9;
 
+    if (businessState.loading) return;
+
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
     } else if (businessState === null || businessState === void 0 ? void 0 : (_businessState$busine9 = businessState.business) === null || _businessState$busine9 === void 0 ? void 0 : _businessState$busine9.categories) {
@@ -452,8 +459,10 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     getProducts(!!searchValue);
   }, [categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id]);
   (0, _react.useEffect)(function () {
-    getBusiness();
-  }, [slug]);
+    if (businessSlug) {
+      getBusiness();
+    }
+  }, [businessSlug]);
   /**
    * Cancel business request
    */
@@ -492,7 +501,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       return setProductModal(_objectSpread(_objectSpread({}, productModal), {}, {
         product: val
       }));
-    }
+    },
+    setBusinessSlug: setBusinessSlug
   })));
 };
 
