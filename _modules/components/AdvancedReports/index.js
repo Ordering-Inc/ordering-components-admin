@@ -54,7 +54,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var AdvancedReports = function AdvancedReports(props) {
   var UIComponent = props.UIComponent,
-      endpoint = props.endpoint;
+      endpoint = props.endpoint,
+      endpoint1 = props.endpoint1;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -76,6 +77,15 @@ var AdvancedReports = function AdvancedReports(props) {
       setBusinessDistanceList = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
+    content: [],
+    loading: false,
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      businessDistanceList1 = _useState4[0],
+      setBusinessDistanceList1 = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
     from: '',
     to: '',
     businessIds: null,
@@ -83,9 +93,9 @@ var AdvancedReports = function AdvancedReports(props) {
     franchises_id: null,
     driver_companies_ids: null
   }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      filterList = _useState4[0],
-      setFilterList = _useState4[1];
+      _useState6 = _slicedToArray(_useState5, 2),
+      filterList = _useState6[0],
+      setFilterList = _useState6[1];
   /**
    * Function to get Business distance list from API
    */
@@ -145,7 +155,7 @@ var AdvancedReports = function AdvancedReports(props) {
                 }));
               } else {
                 setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
-                  loading: true,
+                  loading: false,
                   error: result
                 }));
               }
@@ -173,14 +183,103 @@ var AdvancedReports = function AdvancedReports(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Function to get Business report data list from API
+   */
+
+
+  var getReportsData = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var requestOptions, params, functionFetch, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (!loading) {
+                _context2.next = 2;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 2:
+              _context2.prev = 2;
+              setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              params = '';
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.from) !== '' && (filterList === null || filterList === void 0 ? void 0 : filterList.to) !== '') params = "from=".concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.from).format('YYYY-MM-DD HH:mm:ss'), "&to=").concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.to).format('YYYY-MM-DD HH:mm:ss'));
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.businessIds) && (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.length) > 0) params = "".concat(params, "&businesses_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds));
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&drivers_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids));
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id) && (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.length) > 0) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
+              functionFetch = "".concat(ordering.root, "/reports/").concat(endpoint1, "?").concat(params);
+              _context2.next = 14;
+              return fetch(functionFetch, requestOptions);
+
+            case 14:
+              response = _context2.sent;
+              _context2.next = 17;
+              return response.json();
+
+            case 17:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (!error) {
+                setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
+                  loading: false,
+                  content: result
+                }));
+              } else {
+                setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context2.next = 26;
+              break;
+
+            case 23:
+              _context2.prev = 23;
+              _context2.t0 = _context2["catch"](2);
+              setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
+                loading: false,
+                error: _context2.t0
+              }));
+
+            case 26:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[2, 23]]);
+    }));
+
+    return function getReportsData() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     getBusinessDistanceList();
+    if (endpoint1) getReportsData();
   }, [filterList]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     filterList: filterList,
     handleChangeFilterList: setFilterList,
-    reportData: businessDistanceList
+    reportData: businessDistanceList,
+    reportData1: businessDistanceList1
   })));
 };
 
@@ -195,6 +294,11 @@ AdvancedReports.propTypes = {
    * String to send API request
    */
   endpoint: _propTypes.default.string,
+
+  /**
+   * String to send API request
+   */
+  endpoint1: _propTypes.default.string,
 
   /**
    * Components types before Checkout

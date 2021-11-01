@@ -373,7 +373,7 @@ var GoogleMaps = function GoogleMaps(props) {
           });
         }
 
-        if (isHeatMap) {
+        if (isHeatMap && !markerCluster) {
           var _heatMap = new window.google.maps.visualization.HeatmapLayer({
             data: locations.map(function (location) {
               return new window.google.maps.LatLng(location.lat, location.lng);
