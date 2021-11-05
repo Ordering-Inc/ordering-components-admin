@@ -35,7 +35,7 @@ export const AdvancedReports = (props) => {
         }
       }
       let params = ''
-      if (filterList?.from !== '' && filterList?.to !== '') params = `from=${dayjs(filterList?.from).format('YYYY-MM-DD HH:mm:ss')}&to=${dayjs(filterList?.to).format('YYYY-MM-DD HH:mm:ss')}`
+      if (filterList?.from !== '' && filterList?.to !== '') params = `from=${dayjs(filterList?.from).format('YYYY-MM-DD')} 00:00:00&to=${dayjs(filterList?.to).format('YYYY-MM-DD')} 23:59:59`
       if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses_ids=${JSON.stringify(filterList?.businessIds)}`
       if (filterList?.drivers_ids && filterList?.drivers_ids.length > 0) params = `${params}&drivers_ids=${JSON.stringify(filterList?.drivers_ids)}`
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
@@ -82,7 +82,7 @@ export const AdvancedReports = (props) => {
         }
       }
       let params = ''
-      if (filterList?.from !== '' && filterList?.to !== '') params = `from=${dayjs(filterList?.from).format('YYYY-MM-DD HH:mm:ss')}&to=${dayjs(filterList?.to).format('YYYY-MM-DD HH:mm:ss')}`
+      if (filterList?.from !== '' && filterList?.to !== '') params = `from=${dayjs(filterList?.from).format('YYYY-MM-DD')} 00:00:00&to=${dayjs(filterList?.to).format('YYYY-MM-DD')} 23:59:59`
       if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses_ids=${JSON.stringify(filterList?.businessIds)}`
       if (filterList?.drivers_ids && filterList?.drivers_ids.length > 0) params = `${params}&drivers_ids=${JSON.stringify(filterList?.drivers_ids)}`
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
