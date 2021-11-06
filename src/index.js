@@ -166,6 +166,7 @@ import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/Str
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
 import { ReportsBrandFilter } from './components/ReportsBrandFilter'
+import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
@@ -331,6 +332,7 @@ export {
   FloatingButton,
   ResetPassword,
   ReportsBrandFilter,
+  ReportsDriverGroupFilter,
   Analytics,
   UsersList,
   UserTypeFilter,
