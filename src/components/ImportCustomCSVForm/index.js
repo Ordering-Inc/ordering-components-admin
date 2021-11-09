@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Papa from 'papaparse'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
@@ -7,44 +7,85 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
- * Component to create importerJob form without UI component
+ * Component to create importer form without UI component
  */
 
-export const AddImporterJob = (props) => {
+export const ImportCustomCSVForm = (props) => {
   const {
     UIComponent
   } = props
+
   const [ordering] = useApi()
   const [session] = useSession()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-  const [fileState, setFileState] = useState({ fileName: null, fileType: null, csvFile: null, importOptions: {} })
+  const [fileState, setFileState] = useState({ fileName: null, fileType: null, delim: null })
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
+  const processCSV = (results) => {
+    const resultArr = results.data
+    const target = [] // [{key1: value1, key2: value2,}, {},,,]
+    const headerFieles = resultArr[0]
+    const valuesArray = resultArr.slice(1, resultArr.length)
+
+    valuesArray.forEach(row => {
+      if (headerFieles.length === row.length) {
+        const obj = {}
+        row.forEach((value, index) => {
+          if (headerFieles[index].indexOf('/') > -1) {
+            const nestObjKey = headerFieles[index].split('/')[0]
+            let nestObj = null
+            if (!Object.prototype.hasOwnProperty.call(obj, nestObjKey)) {
+              // if nestObjKey not exist in obj
+              nestObj = {}
+              Object.assign(obj, { [nestObjKey]: nestObj })
+            } else {
+              nestObj = obj[nestObjKey]
+            }
+            const nestObjFileldKey = headerFieles[index].split('/')[1]
+            Object.assign(nestObj, { [nestObjFileldKey]: parseInt(value) })
+          } else {
+            // check if value will be int or same.
+            const _value = headerFieles[index].indexOf('id') > -1 ? parseInt(value) : value
+            Object.assign(obj, { [headerFieles[index]]: _value })
+          }
+        })
+        target.push(obj)
+      }
+    })
+
+    let currentChanges = {}
+    currentChanges = { mapping: JSON.stringify(target[0]) }
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...currentChanges }
+    })
+  }
+
   /**
-   * Process CSV file to CreateImporterJob
-   * @param {File} file CSV file to create importer job
+   * Create Importer CSV
+   * @param {File} file CSV file to create importer
    */
 
   const handleUploadCsv = (file) => {
     if (file) {
-      const reader = new window.FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        setFileState({
-          ...fileState,
-          fileName: file.name,
-          fileType: file.type,
-          csvFile: reader.result,
-          importOptions: {}
-        })
-      }
-      reader.onerror = error => console.log(error)
+      setFileState({
+        ...fileState,
+        fileName: file.name,
+        fileType: file.type,
+        delim: ';'
+      })
+
+      Papa.parse(file, {
+        complete: function (results) {
+          processCSV(results)
+        }
+      })
     }
   }
 
   /**
- * Update import_options data
+ * Update credential data
  * @param {EventTarget} e Related HTML event
  */
   const handleChangeInput = (e, isMany) => {
@@ -61,22 +102,24 @@ export const AddImporterJob = (props) => {
         [e.target.name]: e.target.value
       }
     }
-    setFileState({
-      ...fileState,
-      importOptions: { ...fileState.importOptions, ...currentChanges }
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...currentChanges }
     })
   }
 
-  /**
- * Update import_options data
- */
+  const handleChangeSelect = (type, value) => {
+    let currentChanges = {}
+    currentChanges = { [type]: value }
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...currentChanges }
+    })
+  }
 
-  const handleCreateImporterJob = async (id) => {
+  const handleCreateImporter = async () => {
     showToast(ToastType.Info, t('LOADING', 'Loading'))
-    const data = {
-      file: fileState?.csvFile,
-      import_options: JSON.stringify(fileState?.importOptions)
-    }
+    const data = { ...formState.changes }
     try {
       setFormState({ ...formState, loading: true })
       const requestOptions = {
@@ -87,7 +130,7 @@ export const AddImporterJob = (props) => {
         },
         body: JSON.stringify(data)
       }
-      const response = await fetch(`${ordering.root}/importers/${id}/jobs`, requestOptions)
+      const response = await fetch(`${ordering.root}/importers`, requestOptions)
       const { error, result } = await response.json()
 
       if (error) {
@@ -100,7 +143,7 @@ export const AddImporterJob = (props) => {
           }
         })
       } else {
-        showToast(ToastType.Success, t('IMPORTER_JOB_SAVED', 'Importer Job Created'))
+        showToast(ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'))
         setFormState({
           loading: false,
           changes: {},
@@ -130,15 +173,16 @@ export const AddImporterJob = (props) => {
           formState={formState}
           fileState={fileState}
           handleChangeInput={handleChangeInput}
+          handleChangeSelect={handleChangeSelect}
           handleUploadCsv={handleUploadCsv}
-          handleCreateImporterJob={handleCreateImporterJob}
+          handleCreateImporter={handleCreateImporter}
         />
       )}
     </>
   )
 }
 
-AddImporterJob.propTypes = {
+ImportCustomCSVForm.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -165,7 +209,7 @@ AddImporterJob.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-AddImporterJob.defaultProps = {
+ImportCustomCSVForm.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
