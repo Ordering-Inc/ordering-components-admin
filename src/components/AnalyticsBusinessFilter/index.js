@@ -8,7 +8,8 @@ export const AnalyticsBusinessFilter = (props) => {
     filterList,
     handleChangeFilterList,
     propsToFetch,
-    onClose
+    onClose,
+    isFranchise
   } = props
 
   const [ordering] = useApi()
@@ -74,10 +75,16 @@ export const AnalyticsBusinessFilter = (props) => {
       })
       const { content: { error, result, pagination } } = await ordering.businesses().asDashboard().select(propsToFetch).get()
       if (!error) {
+        let _businessList = []
+        if (isFranchise && filterList?.franchises_id?.length > 0) {
+          _businessList = result.filter(business => filterList?.franchises_id.includes(business.franchise_id))
+        } else {
+          _businessList = [...result]
+        }
         setBusinessList({
           ...businessList,
           loading: false,
-          businesses: result,
+          businesses: _businessList,
           pagination
         })
       } else {
@@ -105,8 +112,11 @@ export const AnalyticsBusinessFilter = (props) => {
   useEffect(() => {
     if (businessList?.businesses?.length === 0) return
     const _businessIds = businessList.businesses.reduce((prev, cur) => [...prev, cur.id], [])
-    setBusinessIds([...filterList?.businessIds || _businessIds])
-    if (!filterList?.businessIds || filterList?.businessIds?.length === businessList?.businesses.length) setIsAllCheck(true)
+    const filterBusinessIds = filterList?.businessIds?.length > 0
+      ? filterList?.businessIds.filter(businessId => _businessIds.includes(businessId))
+      : _businessIds
+    setBusinessIds([...filterBusinessIds])
+    if (!filterList?.businessIds || filterBusinessIds?.length === businessList?.businesses.length) setIsAllCheck(true)
   }, [businessList?.businesses])
 
   return (
