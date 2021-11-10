@@ -58,7 +58,6 @@
     "@stripe/stripe-js": "^1.9.0",
     "dayjs": "^1.9.3",
     "ordering-api-sdk": "github:Ordering-Inc/ordering-api-sdk#release",
-    "papaparse": "^5.3.1",
     "prop-types": "^15.7.2",
     "socket.io-client": "^2.3.0"
   },
