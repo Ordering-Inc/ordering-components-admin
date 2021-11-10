@@ -5,13 +5,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ImportCustomCSVForm = void 0;
+exports.ImporterJobForm = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
-
-var _papaparse = _interopRequireDefault(require("papaparse"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
@@ -54,9 +52,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to create importer form without UI component
+ * Component to create importerJob form without UI component
  */
-var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
+var ImporterJobForm = function ImporterJobForm(props) {
   var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -81,7 +79,8 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
   var _useState3 = (0, _react.useState)({
     fileName: null,
     fileType: null,
-    delim: null
+    csvFile: null,
+    importOptions: {}
   }),
       _useState4 = _slicedToArray(_useState3, 2),
       fileState = _useState4[0],
@@ -94,72 +93,33 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
-
-  var processCSV = function processCSV(results) {
-    var resultArr = results.data;
-    var target = []; // [{key1: value1, key2: value2,}, {},,,]
-
-    var headerFieles = resultArr[0];
-    var valuesArray = resultArr.slice(1, resultArr.length);
-    valuesArray.forEach(function (row) {
-      if (headerFieles.length === row.length) {
-        var obj = {};
-        row.forEach(function (value, index) {
-          if (headerFieles[index].indexOf('/') > -1) {
-            var nestObjKey = headerFieles[index].split('/')[0];
-            var nestObj = null;
-
-            if (!Object.prototype.hasOwnProperty.call(obj, nestObjKey)) {
-              // if nestObjKey not exist in obj
-              nestObj = {};
-              Object.assign(obj, _defineProperty({}, nestObjKey, nestObj));
-            } else {
-              nestObj = obj[nestObjKey];
-            }
-
-            var nestObjFileldKey = headerFieles[index].split('/')[1];
-            Object.assign(nestObj, _defineProperty({}, nestObjFileldKey, parseInt(value)));
-          } else {
-            // check if value will be int or same.
-            var _value = headerFieles[index].indexOf('id') > -1 ? parseInt(value) : value;
-
-            Object.assign(obj, _defineProperty({}, headerFieles[index], _value));
-          }
-        });
-        target.push(obj);
-      }
-    });
-    var currentChanges = {};
-    currentChanges = {
-      mapping: JSON.stringify(target[0])
-    };
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
   /**
-   * Create Importer CSV
-   * @param {File} file CSV file to create importer
+   * Process CSV file to CreateImporterJob
+   * @param {File} file CSV file to create importer job
    */
 
 
   var handleUploadCsv = function handleUploadCsv(file) {
     if (file) {
-      setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
-        fileName: file.name,
-        fileType: file.type,
-        delim: ';'
-      }));
+      var reader = new window.FileReader();
+      reader.readAsDataURL(file);
 
-      _papaparse.default.parse(file, {
-        complete: function complete(results) {
-          processCSV(results);
-        }
-      });
+      reader.onload = function () {
+        setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
+          fileName: file.name,
+          fileType: file.type,
+          csvFile: reader.result,
+          importOptions: {}
+        }));
+      };
+
+      reader.onerror = function (error) {
+        return console.log(error);
+      };
     }
   };
   /**
-  * Update credential data
+  * Update import_options data
   * @param {EventTarget} e Related HTML event
   */
 
@@ -175,21 +135,17 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
       currentChanges = _defineProperty({}, e.target.name, e.target.value);
     }
 
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
+      importOptions: _objectSpread(_objectSpread({}, fileState.importOptions), currentChanges)
     }));
   };
+  /**
+  * Update import_options data
+  */
 
-  var handleChangeSelect = function handleChangeSelect(type, value) {
-    var currentChanges = {};
-    currentChanges = _defineProperty({}, type, value);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
 
-  var handleCreateImporter = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+  var handleCreateImporterJob = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id) {
       var data, requestOptions, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -197,7 +153,10 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
           switch (_context.prev = _context.next) {
             case 0:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              data = _objectSpread({}, formState.changes);
+              data = {
+                file: fileState === null || fileState === void 0 ? void 0 : fileState.csvFile,
+                import_options: JSON.stringify(fileState === null || fileState === void 0 ? void 0 : fileState.importOptions)
+              };
               _context.prev = 2;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
@@ -211,7 +170,7 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
                 body: JSON.stringify(data)
               };
               _context.next = 7;
-              return fetch("".concat(ordering.root, "/importers"), requestOptions);
+              return fetch("".concat(ordering.root, "/importers/").concat(id, "/jobs"), requestOptions);
 
             case 7:
               response = _context.sent;
@@ -232,7 +191,7 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
                   }
                 }));
               } else {
-                showToast(_ToastContext.ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'));
+                showToast(_ToastContext.ToastType.Success, t('IMPORTER_JOB_SAVED', 'Importer Job Created'));
                 setFormState({
                   loading: false,
                   changes: {},
@@ -265,7 +224,7 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
       }, _callee, null, [[2, 16]]);
     }));
 
-    return function handleCreateImporter() {
+    return function handleCreateImporterJob(_x) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -274,14 +233,13 @@ var ImportCustomCSVForm = function ImportCustomCSVForm(props) {
     formState: formState,
     fileState: fileState,
     handleChangeInput: handleChangeInput,
-    handleChangeSelect: handleChangeSelect,
     handleUploadCsv: handleUploadCsv,
-    handleCreateImporter: handleCreateImporter
+    handleCreateImporterJob: handleCreateImporterJob
   })));
 };
 
-exports.ImportCustomCSVForm = ImportCustomCSVForm;
-ImportCustomCSVForm.propTypes = {
+exports.ImporterJobForm = ImporterJobForm;
+ImporterJobForm.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -311,7 +269,7 @@ ImportCustomCSVForm.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ImportCustomCSVForm.defaultProps = {
+ImporterJobForm.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
