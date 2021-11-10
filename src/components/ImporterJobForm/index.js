@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import Papa from 'papaparse'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'

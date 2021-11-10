@@ -175,7 +175,6 @@ import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
 import { WebhookList } from './components/WebhookList'
-import { ImporterForm } from './components/ImporterForm/index';
 
 export {
   AddressDetails,
