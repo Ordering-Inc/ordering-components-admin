@@ -205,7 +205,8 @@ var ImporterListing = function ImporterListing(props) {
                   return importer.id !== importerId;
                 });
                 setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
-                  totalItems: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.totalPages) - 1
+                  totalPages: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.totalPages) - 1,
+                  totalItems: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.totalItems) - 1
                 }));
                 setImporterList(_objectSpread(_objectSpread({}, importerList), {}, {
                   importers: importers

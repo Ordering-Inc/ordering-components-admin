@@ -33,14 +33,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -154,14 +146,11 @@ var ImporterForm = function ImporterForm(props) {
     clearFieldForm();
   };
 
-  var removeField = function removeField(val) {
-    var _fieldList = _toConsumableArray(fieldList);
+  var removeField = function removeField(fieldKey) {
+    var _fieldList = _objectSpread({}, fieldList);
 
-    var removedFieldList = _fieldList.filter(function (field) {
-      return field.fieldName !== (val === null || val === void 0 ? void 0 : val.fieldName);
-    });
-
-    setFieldList(removedFieldList);
+    delete _fieldList[fieldKey];
+    setFieldList(_fieldList);
   };
 
   var handleChangeSelect = function handleChangeSelect(type, value) {
@@ -190,6 +179,10 @@ var ImporterForm = function ImporterForm(props) {
     clearFieldForm();
     setMappingState({});
     setFieldList({});
+    setEditState({});
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: {}
+    }));
   };
 
   var handleEditState = function handleEditState(seletedImpoter) {
@@ -375,15 +368,15 @@ var ImporterForm = function ImporterForm(props) {
     formState: formState,
     mappingState: mappingState,
     fieldList: fieldList,
+    editState: editState,
+    isEdit: isEdit,
     handleChangeInput: handleChangeInput,
     handleChangeSelect: handleChangeSelect,
     handleChangeMappingInput: handleChangeMappingInput,
     addNewField: addNewField,
     removeField: removeField,
-    isEdit: isEdit,
     clearImorterForm: clearImorterForm,
     setIsEdit: setIsEdit,
-    editState: editState,
     handleCreateImporter: handleCreateImporter,
     handleEditState: handleEditState
   })));

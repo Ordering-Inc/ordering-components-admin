@@ -13,7 +13,6 @@ export const ImporterForm = (props) => {
   const {
     UIComponent
   } = props
-
   const [ordering] = useApi()
   const [session] = useSession()
   const [, { showToast }] = useToast()
@@ -75,12 +74,10 @@ export const ImporterForm = (props) => {
     clearFieldForm()
   }
 
-  const removeField = (val) => {
-    const _fieldList = [...fieldList]
-    const removedFieldList = _fieldList.filter(function (field) {
-      return field.fieldName !== val?.fieldName
-    })
-    setFieldList(removedFieldList)
+  const removeField = (fieldKey) => {
+    const _fieldList = { ...fieldList }
+    delete _fieldList[fieldKey]
+    setFieldList(_fieldList)
   }
 
   const handleChangeSelect = (type, value) => {
@@ -110,13 +107,17 @@ export const ImporterForm = (props) => {
     clearFieldForm()
     setMappingState({})
     setFieldList({})
+    setEditState({})
+    setFormState({
+      ...formState,
+      changes: {}
+    })
   }
 
   const handleEditState = (seletedImpoter) => {
     if (seletedImpoter?.type !== 'sync_businesses') {
       handleChangeSelect('type', seletedImpoter?.type)
     }
-
     let _fieldList = {}
     _fieldList = seletedImpoter?.mapping?.fields
 
@@ -272,15 +273,15 @@ export const ImporterForm = (props) => {
           formState={formState}
           mappingState={mappingState}
           fieldList={fieldList}
+          editState={editState}
+          isEdit={isEdit}
           handleChangeInput={handleChangeInput}
           handleChangeSelect={handleChangeSelect}
           handleChangeMappingInput={handleChangeMappingInput}
           addNewField={addNewField}
           removeField={removeField}
-          isEdit={isEdit}
           clearImorterForm={clearImorterForm}
           setIsEdit={setIsEdit}
-          editState={editState}
           handleCreateImporter={handleCreateImporter}
           handleEditState={handleEditState}
         />

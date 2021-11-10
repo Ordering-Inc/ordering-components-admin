@@ -78,7 +78,8 @@ export const ImporterListing = (props) => {
         const importers = importerList.importers.filter(importer => importer.id !== importerId)
         setPaginationDetail({
           ...paginationDetail,
-          totalItems: paginationDetail?.totalPages - 1
+          totalPages: paginationDetail?.totalPages - 1,
+          totalItems: paginationDetail?.totalItems - 1
         })
         setImporterList({ ...importerList, importers })
       }
