@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const BusinessSchedule = (props) => {
   const {
@@ -9,8 +11,11 @@ export const BusinessSchedule = (props) => {
     UIComponent,
     handleSuccessBusinessScheduleUpdate
   } = props
+
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [schedule, setSchedule] = useState([])
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
@@ -198,6 +203,7 @@ export const BusinessSchedule = (props) => {
    */
   const handleUpdateBusinessClick = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business.id).save(changes, {
@@ -206,6 +212,7 @@ export const BusinessSchedule = (props) => {
       setOpenAddScheduleInex(null)
       if (!error) {
         handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
+        showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
       }
       setFormState({
         ...formState,
