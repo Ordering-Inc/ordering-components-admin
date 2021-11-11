@@ -47,7 +47,6 @@ import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
-import { BusinessCategoryCreator } from './components/BusinessCategoryCreator'
 import { Cart } from './components/Cart'
 import { Checkout } from './components/Checkout'
 import { CheckoutFieldsSetting } from './components/CheckoutFieldsSetting'
@@ -225,7 +224,6 @@ export {
   BusinessTypeForm,
   BusinessWebhooks,
   BusinessZoneGoogleMaps,
-  BusinessCategoryCreator,
   BusinessProductCreator,
   Cart,
   Checkout,
