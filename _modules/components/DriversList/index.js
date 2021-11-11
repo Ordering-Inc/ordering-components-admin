@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _WebsocketContext = require("../../contexts/WebsocketContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -24,6 +26,14 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
@@ -52,7 +62,8 @@ var DriversList = function DriversList(props) {
       UIComponent = props.UIComponent,
       propsToFetch = props.propsToFetch,
       isSearchByName = props.isSearchByName,
-      isSearchByCellphone = props.isSearchByCellphone;
+      isSearchByCellphone = props.isSearchByCellphone,
+      asDashboard = props.asDashboard;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -67,10 +78,11 @@ var DriversList = function DriversList(props) {
       _useState2 = _slicedToArray(_useState, 2),
       driverActionStatus = _useState2[0],
       setDriverActionStatus = _useState2[1];
+
+  var socket = (0, _WebsocketContext.useWebsocket)();
   /**
    * Get session
    */
-
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -206,7 +218,7 @@ var DriversList = function DriversList(props) {
   }();
   /**
    * change online state for drivers
-   * @param {Boolean} isOnline 
+   * @param {Boolean} isOnline
    */
 
 
@@ -215,7 +227,7 @@ var DriversList = function DriversList(props) {
   };
   /**
    * sub filter for drivers
-   * @param {Object} subFilter 
+   * @param {Object} subFilter
    */
 
 
@@ -392,6 +404,52 @@ var DriversList = function DriversList(props) {
       }
     };
   }, [drivers, searchValue]);
+  /**
+   * Listening driver change
+   */
+
+  (0, _react.useEffect)(function () {
+    if (session !== null && session !== void 0 && session.loading) return;
+
+    var handleUpdateDriver = function handleUpdateDriver(driver) {
+      var found = driversList.drivers.find(function (_driver) {
+        return _driver.id === driver.id;
+      });
+      var _drivers = [];
+
+      if (found) {
+        _drivers = driversList.drivers.filter(function (_driver) {
+          if (_driver.id === driver.id) {
+            console.log('ddddd');
+            Object.assign(_driver, driver);
+          }
+
+          return true;
+        });
+      } else {
+        _drivers = [].concat(_toConsumableArray(driversList.drivers), [driver]);
+      }
+
+      setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+        drivers: _drivers
+      }));
+    };
+
+    socket.on('drivers_update', handleUpdateDriver);
+    return function () {
+      socket.off('drivers_update', handleUpdateDriver);
+    };
+  }, [socket, session === null || session === void 0 ? void 0 : session.loading, driversList.drivers]);
+  (0, _react.useEffect)(function () {
+    if (!(session !== null && session !== void 0 && session.user)) return;
+    socket.join('drivers');
+    return function () {
+      socket.leave('drivers');
+    };
+  }, [socket, session === null || session === void 0 ? void 0 : session.user, asDashboard]);
+  (0, _react.useEffect)(function () {
+    getOnlineOfflineDrivers(driversList.drivers);
+  }, [driversList.drivers]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversList: driversList,
     onlineDrivers: onlineDrivers,

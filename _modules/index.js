@@ -117,12 +117,6 @@ Object.defineProperty(exports, "BusinessBrandListing", {
     return _BusinessBrandListing.BusinessBrandListing;
   }
 });
-Object.defineProperty(exports, "BusinessCategoryCreator", {
-  enumerable: true,
-  get: function get() {
-    return _BusinessCategoryCreator.BusinessCategoryCreator;
-  }
-});
 Object.defineProperty(exports, "BusinessCategoryEdit", {
   enumerable: true,
   get: function get() {
@@ -1331,8 +1325,6 @@ var _BusinessWebhooks = require("./components/BusinessWebhooks");
 var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
 var _BusinessProductCreator = require("./components/BusinessProductCreator");
-
-var _BusinessCategoryCreator = require("./components/BusinessCategoryCreator");
 
 var _Cart = require("./components/Cart");
 
