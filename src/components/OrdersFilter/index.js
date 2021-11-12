@@ -7,7 +7,6 @@ export const OrdersFilter = (props) => {
     driverGroupList
   } = props
 
-  const [singleDriverIds, setSingleDriverIds] = useState([])
   /**
    * This property is used to set in state the current value
    */
@@ -19,6 +18,7 @@ export const OrdersFilter = (props) => {
     deliveryEndDatetime: null,
     businessIds: [],
     driverIds: [],
+    driverGroupIds: [],
     cityIds: [],
     statuses: [],
     deliveryTypes: [],
@@ -131,13 +131,13 @@ export const OrdersFilter = (props) => {
    * * @param {number} driverId driver id
   */
   const handleChangeDriver = (driverId) => {
-    let _driverIds = [...singleDriverIds]
+    let _driverIds = [...filterValues.driverIds]
     if (!_driverIds.includes(driverId)) {
       _driverIds.push(driverId)
     } else {
       _driverIds = _driverIds.filter((id) => id !== driverId)
     }
-    setSingleDriverIds(_driverIds)
+    setFilterValues({ ...filterValues, driverIds: _driverIds })
   }
   /**
    * Change city
@@ -207,7 +207,6 @@ export const OrdersFilter = (props) => {
       deliveryTypes: [],
       paymethodIds: []
     })
-    setSingleDriverIds([])
   }
 
   useEffect(() => {
@@ -220,11 +219,10 @@ export const OrdersFilter = (props) => {
         }
       }
     }
-    const _driverIds = [...groupDriverIds, ...singleDriverIds]
 
-    const uniqueDriverIds = _driverIds.filter((v, i, a) => a.indexOf(v) === i)
-    setFilterValues({ ...filterValues, driverIds: uniqueDriverIds })
-  }, [filterValues.groupTypes, singleDriverIds])
+    const uniqueDriverIds = groupDriverIds.filter((v, i, a) => a.indexOf(v) === i)
+    setFilterValues({ ...filterValues, driverGroupIds: uniqueDriverIds })
+  }, [filterValues.groupTypes])
 
   return (
     <>
@@ -232,7 +230,6 @@ export const OrdersFilter = (props) => {
         <UIComponent
           {...props}
           filterValues={filterValues}
-          singleDriverIds={singleDriverIds}
           handleChangeOrderId={handleChangeOrderId}
           handleChangeGroup={handleChangeGroup}
           handleChangeDateType={handleChangeDateType}
