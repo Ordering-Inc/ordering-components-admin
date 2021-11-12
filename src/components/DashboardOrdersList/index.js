@@ -3,6 +3,7 @@ import PropTypes, { string, object, number } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
+
 export const DashboardOrdersList = (props) => {
   const {
     UIComponent,
@@ -271,6 +272,14 @@ export const DashboardOrdersList = (props) => {
           {
             attribute: 'delivery_type',
             value: filterValues.deliveryTypes
+          }
+        )
+      }
+      if (filterValues.driverGroupIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'driver_id',
+            value: filterValues.driverGroupIds
           }
         )
       }
