@@ -405,6 +405,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   });
                 }
 
+                if (filterValues.driverGroupIds.length !== 0) {
+                  filterConditons.push({
+                    attribute: 'driver_id',
+                    value: filterValues.driverGroupIds
+                  });
+                }
+
                 if (filterValues.paymethodIds.length !== 0) {
                   filterConditons.push({
                     attribute: 'paymethod_id',

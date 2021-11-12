@@ -52,17 +52,11 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var OrdersFilter = function OrdersFilter(props) {
   var UIComponent = props.UIComponent,
       driverGroupList = props.driverGroupList;
-
-  var _useState = (0, _react.useState)([]),
-      _useState2 = _slicedToArray(_useState, 2),
-      singleDriverIds = _useState2[0],
-      setSingleDriverIds = _useState2[1];
   /**
    * This property is used to set in state the current value
    */
 
-
-  var _useState3 = (0, _react.useState)({
+  var _useState = (0, _react.useState)({
     orderId: null,
     groupTypes: [],
     dateType: null,
@@ -70,14 +64,15 @@ var OrdersFilter = function OrdersFilter(props) {
     deliveryEndDatetime: null,
     businessIds: [],
     driverIds: [],
+    driverGroupIds: [],
     cityIds: [],
     statuses: [],
     deliveryTypes: [],
     paymethodIds: []
   }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      filterValues = _useState4[0],
-      setFilterValues = _useState4[1];
+      _useState2 = _slicedToArray(_useState, 2),
+      filterValues = _useState2[0],
+      setFilterValues = _useState2[1];
   /**
    * Changer order Id
    * @param {EventTarget} e Related HTML event
@@ -248,7 +243,7 @@ var OrdersFilter = function OrdersFilter(props) {
 
 
   var handleChangeDriver = function handleChangeDriver(driverId) {
-    var _driverIds = _toConsumableArray(singleDriverIds);
+    var _driverIds = _toConsumableArray(filterValues.driverIds);
 
     if (!_driverIds.includes(driverId)) {
       _driverIds.push(driverId);
@@ -258,7 +253,9 @@ var OrdersFilter = function OrdersFilter(props) {
       });
     }
 
-    setSingleDriverIds(_driverIds);
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      driverIds: _driverIds
+    }));
   };
   /**
    * Change city
@@ -362,7 +359,6 @@ var OrdersFilter = function OrdersFilter(props) {
       deliveryTypes: [],
       paymethodIds: []
     });
-    setSingleDriverIds([]);
   };
 
   (0, _react.useEffect)(function () {
@@ -404,19 +400,15 @@ var OrdersFilter = function OrdersFilter(props) {
       }
     }
 
-    var _driverIds = [].concat(groupDriverIds, _toConsumableArray(singleDriverIds));
-
-    var uniqueDriverIds = _driverIds.filter(function (v, i, a) {
+    var uniqueDriverIds = groupDriverIds.filter(function (v, i, a) {
       return a.indexOf(v) === i;
     });
-
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
-      driverIds: uniqueDriverIds
+      driverGroupIds: uniqueDriverIds
     }));
-  }, [filterValues.groupTypes, singleDriverIds]);
+  }, [filterValues.groupTypes]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     filterValues: filterValues,
-    singleDriverIds: singleDriverIds,
     handleChangeOrderId: handleChangeOrderId,
     handleChangeGroup: handleChangeGroup,
     handleChangeDateType: handleChangeDateType,
