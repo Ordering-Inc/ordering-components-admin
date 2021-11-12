@@ -156,13 +156,20 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
   var handleUpdateClick = function handleUpdateClick() {
     var _formState$changes, _formState$changes2, _formState$changes3, _formState$changes4;
 
-    var prarms = {
+    var params = {
       images: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.images,
       name: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.name,
       description: formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.description,
       price: formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.price
     };
-    editProduct(prarms);
+
+    for (var key in params) {
+      if (params[key] === null) {
+        delete params[key];
+      }
+    }
+
+    editProduct(params);
   };
   /**
    * Method to edit a product
