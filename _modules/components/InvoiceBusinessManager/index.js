@@ -19,6 +19,8 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _ConfigContext = require("../../contexts/ConfigContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -55,6 +57,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * Component to manage InvoiceBusunessManager behavior without UI component
  */
 var InvoiceBusinessManager = function InvoiceBusinessManager(props) {
+  var _configs$order_types_;
+
   var UIComponent = props.UIComponent,
       propsToFetch = props.propsToFetch;
 
@@ -71,6 +75,10 @@ var InvoiceBusinessManager = function InvoiceBusinessManager(props) {
   var _useConfig = (0, _ConfigContext.useConfig)(),
       _useConfig2 = _slicedToArray(_useConfig, 1),
       configs = _useConfig2[0].configs;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -90,7 +98,34 @@ var InvoiceBusinessManager = function InvoiceBusinessManager(props) {
       payMethodsList = _useState4[0],
       setPayMethodsList = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(null),
+  var configTypes = (configs === null || configs === void 0 ? void 0 : (_configs$order_types_ = configs.order_types_allowed) === null || _configs$order_types_ === void 0 ? void 0 : _configs$order_types_.value.split('|').map(function (value) {
+    return Number(value);
+  })) || [];
+  var defaultOrderTypes = [{
+    value: 1,
+    name: t('DELIVERY', 'Delivery'),
+    enabled: true
+  }, {
+    value: 2,
+    name: t('PICKUP', 'Pickup'),
+    enabled: true
+  }, {
+    value: 3,
+    name: t('EAT_IN', 'Eat in'),
+    enabled: true
+  }, {
+    value: 4,
+    name: t('CURBSIDE', 'Curbside'),
+    enabled: true
+  }, {
+    value: 5,
+    name: t('DRIVE_THRU', 'Drive thru'),
+    enabled: true
+  }];
+
+  var _useState5 = (0, _react.useState)(defaultOrderTypes.filter(function (type) {
+    return configTypes === null || configTypes === void 0 ? void 0 : configTypes.includes(type.value);
+  })),
       _useState6 = _slicedToArray(_useState5, 2),
       orderTypes = _useState6[0],
       setOrderTypes = _useState6[1];
