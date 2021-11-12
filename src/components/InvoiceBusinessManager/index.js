@@ -3,6 +3,7 @@ import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage InvoiceBusunessManager behavior without UI component
@@ -17,9 +18,24 @@ export const InvoiceBusinessManager = (props) => {
   const [{ token, loading }] = useSession()
   const [{ configs }] = useConfig()
 
+  const [, t] = useLanguage()
+
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], error: null })
   const [payMethodsList, setPayMethodsList] = useState({ loading: false, data: [], error: null })
-  const [orderTypes, setOrderTypes] = useState(null)
+
+  const configTypes = configs?.order_types_allowed?.value.split('|').map(value => Number(value)) || []
+  const defaultOrderTypes = [
+    { value: 1, name: t('DELIVERY', 'Delivery'), enabled: true },
+    { value: 2, name: t('PICKUP', 'Pickup'), enabled: true },
+    { value: 3, name: t('EAT_IN', 'Eat in'), enabled: true },
+    { value: 4, name: t('CURBSIDE', 'Curbside'), enabled: true },
+    { value: 5, name: t('DRIVE_THRU', 'Drive thru'), enabled: true }
+  ]
+
+  const [orderTypes, setOrderTypes] = useState(
+    defaultOrderTypes.filter(type => configTypes?.includes(type.value))
+  )
+
   const [exportInvoiceList, setExportInvoiceList] = useState({ loading: false, invoice: null, error: null })
   const [businessInvocing, setBusinessInvocing] = useState({
     type: 'charge',

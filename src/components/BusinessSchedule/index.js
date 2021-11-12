@@ -240,44 +240,21 @@ export const BusinessSchedule = (props) => {
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
-  const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
-    let _selectedCopyDays = [...selectedCopyDays]
-    const _schedule = [...schedule]
+  const handleSelectCopyTimes = (index) => {
+    setSelectedCopyDays([...selectedCopyDays, index])
+  }
 
-    if (!_selectedCopyDays.includes(index)) {
-      let conflict = false
-      for (let i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true
-        }
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
+  const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
+    const _schedule = schedule.map((option, index) => {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex]
       }
-      if (conflict) {
-        setIsConflict(true)
-        return
-      }
-      _selectedCopyDays.push(index)
-
-      for (const laps of _schedule[index].lapses) {
-        _schedule[daysOfWeekIndex].lapses.push(laps)
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
-
-      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
-        for (const deleteLaps of _schedule[index].lapses) {
-          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-            return false
-          }
-        }
-        return true
-      })
-      _schedule[daysOfWeekIndex].lapses = newLapses
-    }
-
-    setSelectedCopyDays(_selectedCopyDays)
-
+      return option
+    })
     setSchedule(_schedule)
     setFormState({
       ...formState,
@@ -415,6 +392,7 @@ export const BusinessSchedule = (props) => {
             handleChangeAddScheduleTime={handleChangeAddScheduleTime}
             openAddScheduleIndex={openAddScheduleIndex}
             setOpenAddScheduleInex={setOpenAddScheduleInex}
+            handleApplyScheduleCopyTimes={handleApplyScheduleCopyTimes}
           />
         )
       }
