@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const BusinessSchedule = (props) => {
   const {
@@ -9,8 +11,11 @@ export const BusinessSchedule = (props) => {
     UIComponent,
     handleSuccessBusinessScheduleUpdate
   } = props
+
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [schedule, setSchedule] = useState([])
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
@@ -198,6 +203,7 @@ export const BusinessSchedule = (props) => {
    */
   const handleUpdateBusinessClick = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business.id).save(changes, {
@@ -206,6 +212,7 @@ export const BusinessSchedule = (props) => {
       setOpenAddScheduleInex(null)
       if (!error) {
         handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
+        showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
       }
       setFormState({
         ...formState,
@@ -233,44 +240,21 @@ export const BusinessSchedule = (props) => {
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
-  const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
-    let _selectedCopyDays = [...selectedCopyDays]
-    const _schedule = [...schedule]
+  const handleSelectCopyTimes = (index) => {
+    setSelectedCopyDays([...selectedCopyDays, index])
+  }
 
-    if (!_selectedCopyDays.includes(index)) {
-      let conflict = false
-      for (let i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true
-        }
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
+  const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
+    const _schedule = schedule.map((option, index) => {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex]
       }
-      if (conflict) {
-        setIsConflict(true)
-        return
-      }
-      _selectedCopyDays.push(index)
-
-      for (const laps of _schedule[index].lapses) {
-        _schedule[daysOfWeekIndex].lapses.push(laps)
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
-
-      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
-        for (const deleteLaps of _schedule[index].lapses) {
-          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-            return false
-          }
-        }
-        return true
-      })
-      _schedule[daysOfWeekIndex].lapses = newLapses
-    }
-
-    setSelectedCopyDays(_selectedCopyDays)
-
+      return option
+    })
     setSchedule(_schedule)
     setFormState({
       ...formState,
@@ -408,6 +392,7 @@ export const BusinessSchedule = (props) => {
             handleChangeAddScheduleTime={handleChangeAddScheduleTime}
             openAddScheduleIndex={openAddScheduleIndex}
             setOpenAddScheduleInex={setOpenAddScheduleInex}
+            handleApplyScheduleCopyTimes={handleApplyScheduleCopyTimes}
           />
         )
       }
