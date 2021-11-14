@@ -15,14 +15,15 @@ export const BusinessCategoryEdit = (props) => {
     handleUpdateBusinessState,
     category,
     categoryId,
-    onClose
+    onClose,
+    categorySelected
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
+  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true, enabledParent: false }, result: { error: false } })
 
   useEffect(() => {
     if (!category) return
@@ -52,11 +53,19 @@ export const BusinessCategoryEdit = (props) => {
 
   /**
   * Update credential data
-  * @param {Boolean} isChecked checkbox status
+  * @param {Object} isChecked checkbox status
   */
   const handleChangeCheckBox = (isChecked) => {
-    const currentChanges = { enabled: isChecked }
-
+    let currentChanges = null
+    if (isChecked.enabled !== undefined) {
+      currentChanges = { enabled: isChecked.enabled}
+    }
+    if (isChecked.enabledParent) {
+      currentChanges = { parent_category_id: categorySelected.id}
+    } else {
+      currentChanges = { parent_category_id: null}
+    }
+    
     setFormState({
       ...formState,
       changes: { ...formState.changes, ...currentChanges }
