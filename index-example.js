@@ -25,7 +25,7 @@ Sentry.init({
     new Integrations.BrowserTracing()
   ],
   release: 'ordering-components-admin@' + process.env.npm_package_version,
-  tracesSampleRate: 1.0
+  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5
 })
 
 const wrapper = document.getElementById('app')
