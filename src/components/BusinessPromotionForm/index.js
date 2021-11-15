@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessPromotionForm = (props) => {
   const {
@@ -12,8 +14,11 @@ export const BusinessPromotionForm = (props) => {
     handleSuccessUpdate
   } = props
 
+  const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+
   const [promotionState, setPromotionState] = useState({ promotion: promotion, loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [isAddMode, setIsAddMode] = useState(false)
@@ -23,10 +28,10 @@ export const BusinessPromotionForm = (props) => {
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeInput = (e) => {
-    if (e.target.name === 'name' && (formState?.changes?.type === 2 || (!formState?.changes?.type && promotionState?.promotion?.type === 2))) {
+    if (e.target.name === 'coupon' && (formState?.changes?.type === 2 || (!formState?.changes?.type && promotionState?.promotion?.type === 2))) {
       setFormState({
         ...formState,
-        changes: { ...formState.changes, name: e.target.value.replace(/\s/g, ''), coupon: e.target.value.replace(/\s/g, '') }
+        changes: { ...formState.changes, coupon: e.target.value.replace(/\s/g, '') }
       })
     } else {
       setFormState({
@@ -74,7 +79,8 @@ export const BusinessPromotionForm = (props) => {
    */
   const handleUpdateClick = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, result: {}, loading: true })
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -93,6 +99,7 @@ export const BusinessPromotionForm = (props) => {
           promotion: content.result
         })
         setFormState({ ...formState, loading: false, changes: {} })
+        showToast(ToastType.Success, t('PROMOTION_SAVED', 'Promotion saved'))
         if (handleSuccessUpdate) {
           const _promotions = business.offers.filter(offer => {
             if (offer.id === promotion.id) {
@@ -130,7 +137,8 @@ export const BusinessPromotionForm = (props) => {
    */
   const handleAddClick = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, result: {}, loading: true })
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -143,6 +151,7 @@ export const BusinessPromotionForm = (props) => {
       const response = await fetch(`${ordering.root}/business/${business.id}/offers`, requestOptions)
       const content = await response.json()
       if (!content.error) {
+        showToast(ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'))
         handleCloseAddForm && handleCloseAddForm()
         if (handleSuccessUpdate) {
           handleSuccessUpdate({ ...business, offers: [...business.offers, content.result] })

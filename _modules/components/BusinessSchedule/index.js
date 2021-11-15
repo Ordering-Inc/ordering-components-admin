@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -24,8 +28,6 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -69,6 +71,14 @@ var BusinessSchedule = function BusinessSchedule(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -135,7 +145,7 @@ var BusinessSchedule = function BusinessSchedule(props) {
       if (i !== index) {
         var openOld = lapses[i].open.hour * 60 + lapses[i].open.minute;
         var closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute;
-        if (openNew < openOld && closeNew > closeOld) return true;
+        if (openNew <= openOld && closeNew >= closeOld) return true;
         if (openNew < openOld && closeNew > openOld) return true;
         if (openNew > openOld && closeNew < closeOld) return true;
         if (openNew < closeOld && closeNew > closeOld) return true;
@@ -319,16 +329,17 @@ var BusinessSchedule = function BusinessSchedule(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               changes = _objectSpread({}, formState.changes);
-              _context.next = 5;
+              _context.next = 6;
               return ordering.businesses(business.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 5:
+            case 6:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
@@ -337,6 +348,7 @@ var BusinessSchedule = function BusinessSchedule(props) {
 
               if (!error) {
                 handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
+                showToast(_ToastContext.ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'));
               }
 
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -347,11 +359,11 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 },
                 loading: false
               }));
-              _context.next = 17;
+              _context.next = 18;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -361,12 +373,12 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 loading: false
               }));
 
-            case 17:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
     return function handleUpdateBusinessClick() {
@@ -380,75 +392,24 @@ var BusinessSchedule = function BusinessSchedule(props) {
    */
 
 
-  var handleSelectCopyTimes = function handleSelectCopyTimes(index, daysOfWeekIndex) {
-    var _selectedCopyDays = _toConsumableArray(selectedCopyDays);
+  var handleSelectCopyTimes = function handleSelectCopyTimes(index) {
+    setSelectedCopyDays([].concat(_toConsumableArray(selectedCopyDays), [index]));
+  };
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
 
-    var _schedule = _toConsumableArray(schedule);
 
-    if (!_selectedCopyDays.includes(index)) {
-      var conflict = false;
-
-      for (var i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true;
-        }
+  var handleApplyScheduleCopyTimes = function handleApplyScheduleCopyTimes(daysOfWeekIndex) {
+    var _schedule = schedule.map(function (option, index) {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex];
       }
 
-      if (conflict) {
-        setIsConflict(true);
-        return;
-      }
+      return option;
+    });
 
-      _selectedCopyDays.push(index);
-
-      var _iterator = _createForOfIteratorHelper(_schedule[index].lapses),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var laps = _step.value;
-
-          _schedule[daysOfWeekIndex].lapses.push(laps);
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
-        return convertMinutes(a.open) - convertMinutes(b.open);
-      });
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(function (el) {
-        return el !== index;
-      });
-
-      var newLapses = _schedule[daysOfWeekIndex].lapses.filter(function (laps) {
-        var _iterator2 = _createForOfIteratorHelper(_schedule[index].lapses),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var deleteLaps = _step2.value;
-
-            if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-              return false;
-            }
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
-        }
-
-        return true;
-      });
-
-      _schedule[daysOfWeekIndex].lapses = newLapses;
-    }
-
-    setSelectedCopyDays(_selectedCopyDays);
     setSchedule(_schedule);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {
@@ -571,7 +532,8 @@ var BusinessSchedule = function BusinessSchedule(props) {
     setAddScheduleTime: setAddScheduleTime,
     handleChangeAddScheduleTime: handleChangeAddScheduleTime,
     openAddScheduleIndex: openAddScheduleIndex,
-    setOpenAddScheduleInex: setOpenAddScheduleInex
+    setOpenAddScheduleInex: setOpenAddScheduleInex,
+    handleApplyScheduleCopyTimes: handleApplyScheduleCopyTimes
   })));
 };
 

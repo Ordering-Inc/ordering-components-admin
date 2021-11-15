@@ -57,6 +57,8 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+var paymethodsNotAllowed = ['paypal_express', 'authorize'];
+
 var BusinessPaymethods = function BusinessPaymethods(props) {
   var _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, _configState$configs4, _configState$configs5;
 
@@ -124,6 +126,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
   var cleanChangesState = function cleanChangesState(values) {
     return setChangesState(_objectSpread({}, values));
+  };
+
+  var parsePaymethods = function parsePaymethods(paymethods) {
+    var _paymethods = paymethods && paymethods.filter(function (paymethod) {
+      return !paymethodsNotAllowed.includes(paymethod === null || paymethod === void 0 ? void 0 : paymethod.gateway);
+    });
+
+    return _paymethods;
   };
   /**
    * Method to get paymethods from API
@@ -216,7 +226,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
               result = _yield$response$json2.result;
               setPaymethodsList(_objectSpread(_objectSpread({}, paymethodsList), {}, {
                 loading: false,
-                paymethods: result
+                paymethods: parsePaymethods(result)
               }));
               _context2.next = 14;
               break;

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
-import PropTypes, { string } from 'prop-types'
+import PropTypes, { object, string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useConfig } from '../../contexts/ConfigContext'
 
 /**
  * Component to manage Settings List page behavior without UI component
@@ -11,13 +14,18 @@ export const SettingsList = (props) => {
     UIComponent,
     category,
     handleUpdateCategoryList,
-    categoryList
+    categoryList,
+    staticConfigs,
+    handleChangeStaic
   } = props
 
-  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
   const [configs, setConfigs] = useState(null)
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+  const [, { refreshConfigs }] = useConfig()
+  const [formState, setFormState] = useState({ changes: null, loading: false, result: { error: null }, API: false, finalResult: [] })
 
   /** Method to change checkbox status
    * @param {EventTarget} evt
@@ -82,10 +90,20 @@ export const SettingsList = (props) => {
    */
   const handleClickUpdate = () => {
     if (!formState?.changes || formState?.changes?.length === 0) return
-    setFormState({
-      ...formState,
-      API: true
+    const _changes = formState?.changes.map(item => {
+      if (item.key === 'driver_tip_options') {
+        return {
+          ...item,
+          value: transformArray(item?.value)
+        }
+      }
+      return item
     })
+    setFormState({ ...formState, changes: [..._changes], API: true })
+  }
+
+  const transformArray = (values) => {
+    return '[' + values + ']'
   }
 
   /**
@@ -96,6 +114,7 @@ export const SettingsList = (props) => {
   const saveConfig = async (id, params) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({
         ...formState,
         loading: true,
@@ -135,7 +154,7 @@ export const SettingsList = (props) => {
             API: false,
             finalResult: _configs
           })
-
+          showToast(ToastType.Success, t('SETTINGS_UPDATE', 'Settings updated'))
           if (handleUpdateCategoryList) {
             const _categories = categoryList?.categories.map(item => {
               if (item.id === category.id) {
@@ -148,13 +167,15 @@ export const SettingsList = (props) => {
             })
             handleUpdateCategoryList(_categories)
           }
+          handleChangeStaic && handleChangeStaic([..._configs])
+          refreshConfigs && refreshConfigs()
         }
       } else {
         setFormState({
           ...formState,
           loading: false,
           result: {
-            error: false,
+            error: true,
             result: result
           },
           API: false
@@ -185,6 +206,16 @@ export const SettingsList = (props) => {
   }, [category?.configs])
 
   useEffect(() => {
+    if (staticConfigs) {
+      setConfigs([...staticConfigs])
+      setFormState({
+        ...formState,
+        finalResult: [...staticConfigs]
+      })
+    }
+  }, [staticConfigs])
+
+  useEffect(() => {
     if (formState?.API && formState?.changes?.length > 0) {
       const params = { key: formState?.changes[0].key, value: formState?.changes[0].value }
       saveConfig(formState?.changes[0].id, params)
@@ -201,6 +232,8 @@ export const SettingsList = (props) => {
           handleInputChange={saveChanges}
           handleCheckBoxChange={handleCheckBoxChange}
           handleClickUpdate={handleClickUpdate}
+          formState={formState}
+          handleChangeFormState={setFormState}
         />
       )}
     </>
@@ -217,6 +250,10 @@ SettingsList.propTypes = {
   */
   category: PropTypes.object,
   /**
+   * Array of config
+   */
+  staticConfigs: PropTypes.arrayOf(object),
+  /**
   * Object for a category
   */
   categoryList: PropTypes.object,
@@ -224,6 +261,10 @@ SettingsList.propTypes = {
   * Function to set a category list
   */
   handleUpdateCategoryList: PropTypes.func,
+  /**
+   * Function to set a config
+   */
+  handleChangeStaic: PropTypes.func,
   /**
    * Array of drivers props to fetch
    */

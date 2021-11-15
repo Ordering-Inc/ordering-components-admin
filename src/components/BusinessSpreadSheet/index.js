@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessSpreadSheet = (props) => {
   const {
@@ -13,8 +14,10 @@ export const BusinessSpreadSheet = (props) => {
     categoryId,
     categorySelected
   } = props
+
   const [, t] = useLanguage()
   const [ordering] = useApi()
+  const [, { showToast }] = useToast()
   const [{ token, loading }] = useSession()
   const [formState, setFormState] = useState({ products: null, loading: false, result: { error: false } })
   const [removingWithSupr, setRemovingWithSupr] = useState(false)
@@ -191,6 +194,7 @@ export const BusinessSpreadSheet = (props) => {
   const editProducts = async (params, isPost, hotTableObj) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: isPost ? 'POST' : 'PUT',
@@ -211,9 +215,10 @@ export const BusinessSpreadSheet = (props) => {
           loading: false,
           result: {
             error: false,
-            result: isPost ? t('PRODUCT_ADD', 'Product added') : t('PRODUCT_UPDATE', 'Product updated')
+            result: isPost ? t('PRODUCT_CREATED', 'Product created') : t('PRODUCT_UPDATE', 'Product updated')
           }
         })
+        showToast(ToastType.Success, isPost ? t('PRODUCT_CREATED', 'Product created') : t('PRODUCT_UPDATE', 'Product updated'))
         getProductsByCategoryId()
       } else {
         setFormState({
@@ -296,6 +301,7 @@ export const BusinessSpreadSheet = (props) => {
   const deleteProducts = async (params) => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -316,9 +322,10 @@ export const BusinessSpreadSheet = (props) => {
           loading: false,
           result: {
             error: false,
-            result: t('PRODUCT_DELETE', 'Product deleted')
+            result: t('PRODUCT_DELETED', 'Product deleted')
           }
         })
+        showToast(ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'))
         getProductsByCategoryId()
       } else {
         setFormState({

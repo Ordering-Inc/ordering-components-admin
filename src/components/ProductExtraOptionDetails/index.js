@@ -163,11 +163,12 @@ export const ProductExtraOptionDetails = (props) => {
 
   const handleSetDefaultCondition = (respectTo) => {
     for (const item of extraState?.options) {
-      for (const subItem of item.suboptions) {
-        if (subItem.id === respectTo) {
-          setConditionalOptionId(item.id)
-          // setDefaultCondition({ option: item.id, subOption: subItem.id })
-          setConditionalSubOptionId(subItem.id)
+      if (item?.suboptions) {
+        for (const subItem of item.suboptions) {
+          if (subItem.id === respectTo) {
+            setConditionalOptionId(item.id)
+            setConditionalSubOptionId(subItem.id)
+          }
         }
       }
     }

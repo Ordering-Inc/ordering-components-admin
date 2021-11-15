@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -66,13 +70,20 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
   var _useState = (0, _react.useState)({
     changes: {},
     loading: false,
     result: {
       error: false
-    },
-    status: null
+    }
   }),
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
@@ -136,13 +147,59 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
     setIsEditMode(true);
   };
   /**
-   * Method to edit a category
+   * Method to handle drag start
    */
 
 
-  var editCategory = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _categories;
+  var handleDragStart = function handleDragStart(event) {
+    event.dataTransfer.setData('transferCategoryId', category === null || category === void 0 ? void 0 : category.id);
+    var ghostEle = document.createElement('div');
+    ghostEle.classList.add('ghostDragging');
+    ghostEle.innerHTML = category.name;
+    document.body.appendChild(ghostEle);
+    event.dataTransfer.setDragImage(ghostEle, 0, 0);
+  };
+  /**
+   * Method to handle drag over
+   */
+
+
+  var handleDragOver = function handleDragOver(event) {
+    event.preventDefault();
+  };
+  /**
+   * Method to handle drag drop
+   */
+
+
+  var handleDrop = function handleDrop(event) {
+    event.preventDefault();
+    var transferCategoryId = parseInt(event.dataTransfer.getData('transferCategoryId'));
+    var transferCategory = business === null || business === void 0 ? void 0 : business.categories.find(function (_category) {
+      return _category.id === transferCategoryId;
+    });
+    var transferCategoryRank = transferCategory === null || transferCategory === void 0 ? void 0 : transferCategory.rank;
+    var dropCategoryRank = category === null || category === void 0 ? void 0 : category.rank;
+    var updatedCategories = business === null || business === void 0 ? void 0 : business.categories.filter(function (_category) {
+      if (_category.id === transferCategoryId) _category.rank = dropCategoryRank;
+      if (_category.id === category.id) _category.rank = transferCategoryRank;
+      return true;
+    });
+    handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+      categories: updatedCategories
+    }));
+    handleChangeCategoryRank(transferCategoryId, {
+      rank: dropCategoryRank
+    });
+  };
+  /**
+   * Method to change the rank of transfer category
+   */
+
+
+  var handleChangeCategoryRank = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(transferCategoryId, params) {
+      var _yield$ordering$busin, content;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -157,17 +214,90 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
             case 2:
               _context.prev = 2;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               _context.next = 6;
-              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).save(params);
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(transferCategoryId).save(params);
 
             case 6:
               _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
+              content = _yield$ordering$busin.content;
+
+              if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
+              }
+
+              _context.next = 14;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                result: {
+                  error: true,
+                  result: _context.t0
+                }
+              }));
+
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[2, 11]]);
+    }));
+
+    return function handleChangeCategoryRank(_x, _x2) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to handle drag end
+   */
+
+
+  var handleDragEnd = function handleDragEnd() {
+    var elements = document.getElementsByClassName('ghostDragging');
+
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0]);
+    }
+  };
+  /**
+   * Method to edit a category
+   */
+
+
+  var editCategory = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(params) {
+      var _yield$ordering$busin2, _yield$ordering$busin3, error, result, _categories;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (!loading) {
+                _context2.next = 2;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 2:
+              _context2.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context2.next = 7;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).save(params);
+
+            case 7:
+              _yield$ordering$busin2 = _context2.sent;
+              _yield$ordering$busin3 = _yield$ordering$busin2.content;
+              error = _yield$ordering$busin3.error;
+              result = _yield$ordering$busin3.result;
 
               if (!error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -175,8 +305,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   result: {
                     error: false,
                     result: result
-                  },
-                  status: 'update'
+                  }
                 }));
                 setIsEditMode(false);
 
@@ -192,6 +321,8 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                     categories: _categories
                   }));
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -202,30 +333,30 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }));
               }
 
-              _context.next = 16;
+              _context2.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
-              _context.t0 = _context["catch"](2);
+            case 14:
+              _context2.prev = 14;
+              _context2.t0 = _context2["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 result: {
                   error: true,
-                  result: _context.t0
+                  result: _context2.t0
                 }
               }));
 
-            case 16:
+            case 17:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, null, [[2, 13]]);
+      }, _callee2, null, [[2, 14]]);
     }));
 
-    return function editCategory(_x) {
-      return _ref.apply(this, arguments);
+    return function editCategory(_x3) {
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -234,33 +365,34 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
 
   var deleteCategory = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories, filterItem, index;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var _yield$ordering$busin4, _yield$ordering$busin5, error, result, _categories, filterItem, index;
 
-      return _regenerator.default.wrap(function _callee2$(_context2) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               if (!loading) {
-                _context2.next = 2;
+                _context3.next = 2;
                 break;
               }
 
-              return _context2.abrupt("return");
+              return _context3.abrupt("return");
 
             case 2:
-              _context2.prev = 2;
+              _context3.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context2.next = 6;
+              _context3.next = 7;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(category.id)).delete();
 
-            case 6:
-              _yield$ordering$busin3 = _context2.sent;
-              _yield$ordering$busin4 = _yield$ordering$busin3.content;
-              error = _yield$ordering$busin4.error;
-              result = _yield$ordering$busin4.result;
+            case 7:
+              _yield$ordering$busin4 = _context3.sent;
+              _yield$ordering$busin5 = _yield$ordering$busin4.content;
+              error = _yield$ordering$busin5.error;
+              result = _yield$ordering$busin5.result;
 
               if (!error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -268,8 +400,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   result: {
                     error: false,
                     result: result
-                  },
-                  status: 'delete'
+                  }
                 }));
 
                 if (handleUpdateBusinessState) {
@@ -286,6 +417,8 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                   }));
                   if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -296,30 +429,30 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }));
               }
 
-              _context2.next = 16;
+              _context3.next = 17;
               break;
 
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](2);
+            case 14:
+              _context3.prev = 14;
+              _context3.t0 = _context3["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 result: {
                   error: true,
-                  result: _context2.t0
+                  result: _context3.t0
                 }
               }));
 
-            case 16:
+            case 17:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, null, [[2, 13]]);
+      }, _callee3, null, [[2, 14]]);
     }));
 
     return function deleteCategory() {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -337,7 +470,11 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
     handleUpdateClick: handleUpdateClick,
     deleteCategory: deleteCategory,
     handleInputChange: handleInputChange,
-    isEditMode: isEditMode
+    isEditMode: isEditMode,
+    handleDragStart: handleDragStart,
+    handleDragOver: handleDragOver,
+    handleDrop: handleDrop,
+    handleDragEnd: handleDragEnd
   })));
 };
 

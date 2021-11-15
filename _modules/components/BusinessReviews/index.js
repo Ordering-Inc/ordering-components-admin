@@ -15,6 +15,12 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _SessionContext = require("../../contexts/SessionContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -54,6 +60,18 @@ var BusinessReviews = function BusinessReviews(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var requestsState = {};
   /**
    * businessReviewsList, this must be contain a reviews, loading and error to send UIComponent
@@ -76,6 +94,14 @@ var BusinessReviews = function BusinessReviews(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       reviewsList = _useState4[0],
       setReviewsList = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      actionState = _useState6[0],
+      setActionState = _useState6[1];
   /**
    * Method to change filter value for business reviews
    * @param {Number} val
@@ -151,6 +177,83 @@ var BusinessReviews = function BusinessReviews(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Method to change the enabled of the review
+   * @param {boolean} enabled
+   */
+
+
+  var handleChangeReviewEnabled = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(reviewId, enabled) {
+      var requestOptions, response, content, _reviews;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify({
+                  enabled: enabled
+                })
+              };
+              _context2.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/reviews/").concat(reviewId), requestOptions);
+
+            case 6:
+              response = _context2.sent;
+              _context2.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context2.sent;
+
+              if (!content.error) {
+                _reviews = businessReviewsList.reviews.filter(function (review) {
+                  if (review.id === reviewId) {
+                    Object.assign(review, content.result);
+                  }
+
+                  return true;
+                });
+                setBusinessReviewsList(_objectSpread(_objectSpread({}, businessReviewsList), {}, {
+                  reviews: _reviews
+                }));
+                showToast(_ToastContext.ToastType.Success, t('REVIEW_UPDATED', 'Review updated'));
+              }
+
+              _context2.next = 16;
+              break;
+
+            case 13:
+              _context2.prev = 13;
+              _context2.t0 = _context2["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context2.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 13]]);
+    }));
+
+    return function handleChangeReviewEnabled(_x, _x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (reviews) {
@@ -170,10 +273,12 @@ var BusinessReviews = function BusinessReviews(props) {
         requestsState.reviews.cancel();
       }
     };
-  }, []);
+  }, [businessId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     reviewsList: businessReviewsList,
-    handleClickOption: onChangeOption
+    actionState: actionState,
+    handleClickOption: onChangeOption,
+    handleChangeReviewEnabled: handleChangeReviewEnabled
   })));
 };
 

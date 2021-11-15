@@ -26,7 +26,7 @@ export const BusinessZoneGoogleMaps = (props) => {
   const [polygonZone, setPolygonZone] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
   const [drawingManager, setDrawingManager] = useState(null)
-  const center = { lat: location?.lat, lng: location?.lng }
+  const center = location ? { lat: location?.lat, lng: location?.lng } : mapControls?.defaultPosition
   const [googleReady, setGoogleReady] = useState(false)
 
   /**
@@ -157,10 +157,12 @@ export const BusinessZoneGoogleMaps = (props) => {
         },
         circleOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: true
         },
         polygonOptions: {
           ...fillStyle,
+          clickable: false,
           draggable: false
         }
       })
@@ -173,7 +175,7 @@ export const BusinessZoneGoogleMaps = (props) => {
    * Fit map
    */
   useEffect(() => {
-    if (!googleReady) return
+    if (!googleReady || !googleMap) return
     const bounds = new window.google.maps.LatLngBounds()
     if (circleZone) {
       bounds.union(circleZone.getBounds())
@@ -185,7 +187,7 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       googleMap.fitBounds(bounds)
     }
-  }, [googleReady, data, type, center, googleMap, circleZone, polygonZone])
+  }, [googleReady, data, type, googleMap, circleZone, polygonZone])
 
   useEffect(() => {
     if (googleReady) {
@@ -199,7 +201,7 @@ export const BusinessZoneGoogleMaps = (props) => {
   useEffect(() => {
     if (googleReady) {
       const map = new window.google.maps.Map(divRef.current, {
-        zoom: location.zoom ?? mapControls.defaultZoom,
+        zoom: location?.zoom ?? mapControls.defaultZoom,
         center,
         zoomControl: mapControls?.zoomControl,
         streetViewControl: mapControls?.streetViewControl,
@@ -229,7 +231,7 @@ export const BusinessZoneGoogleMaps = (props) => {
         })
         setInfoWindow(_infoWindow)
 
-        if (type === 1) {
+        if (type === 1 && data?.center) {
           const circle = new window.google.maps.Circle({
             ...fillStyle,
             draggable: true,
@@ -240,7 +242,7 @@ export const BusinessZoneGoogleMaps = (props) => {
           setCircleZone(circle)
           _infoWindow.open(map)
         }
-        if (type === 2) {
+        if (type === 2 && Array.isArray(data)) {
           const polygon = new window.google.maps.Polygon({
             ...fillStyle,
             draggable: false,
@@ -249,25 +251,29 @@ export const BusinessZoneGoogleMaps = (props) => {
           })
           setPolygonZone(polygon)
         }
-      } else {
-        const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: true,
-          drawingControlOptions: {
-            position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: [window.google.maps.drawing.OverlayType.POLYGON]
-          },
-          circleOptions: {
-            ...fillStyle,
-            draggable: true
-          },
-          polygonOptions: {
-            ...fillStyle,
-            draggable: false
-          }
-        })
-        setDrawingManager(_drawingManager)
-        _drawingManager.setMap(map)
       }
+
+      const _drawingManager = new window.google.maps.drawing.DrawingManager({
+        drawingControl: true,
+        drawingControlOptions: {
+          position: window.google.maps.ControlPosition.TOP_CENTER,
+          drawingModes: type === 1
+            ? [window.google.maps.drawing.OverlayType.CIRCLE]
+            : [window.google.maps.drawing.OverlayType.POLYGON]
+        },
+        circleOptions: {
+          ...fillStyle,
+          clickable: false,
+          draggable: true
+        },
+        polygonOptions: {
+          ...fillStyle,
+          clickable: false,
+          draggable: false
+        }
+      })
+      setDrawingManager(_drawingManager)
+      _drawingManager.setMap(map)
     }
   }, [googleReady])
 

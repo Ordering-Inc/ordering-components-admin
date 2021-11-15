@@ -17,6 +17,12 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ConfigContext = require("../../contexts/ConfigContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -62,25 +68,14 @@ var SettingsList = function SettingsList(props) {
   var UIComponent = props.UIComponent,
       category = props.category,
       handleUpdateCategoryList = props.handleUpdateCategoryList,
-      categoryList = props.categoryList;
+      categoryList = props.categoryList,
+      staticConfigs = props.staticConfigs,
+      handleChangeStaic = props.handleChangeStaic;
 
-  var _useState = (0, _react.useState)({
-    changes: null,
-    loading: false,
-    result: {
-      error: null
-    },
-    API: false,
-    finalResult: []
-  }),
+  var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
-      formState = _useState2[0],
-      setFormState = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(null),
-      _useState4 = _slicedToArray(_useState3, 2),
-      configs = _useState4[0],
-      setConfigs = _useState4[1];
+      configs = _useState2[0],
+      setConfigs = _useState2[1];
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -89,6 +84,31 @@ var SettingsList = function SettingsList(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useConfig = (0, _ConfigContext.useConfig)(),
+      _useConfig2 = _slicedToArray(_useConfig, 2),
+      refreshConfigs = _useConfig2[1].refreshConfigs;
+
+  var _useState3 = (0, _react.useState)({
+    changes: null,
+    loading: false,
+    result: {
+      error: null
+    },
+    API: false,
+    finalResult: []
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      formState = _useState4[0],
+      setFormState = _useState4[1];
   /** Method to change checkbox status
    * @param {EventTarget} evt
    * @param {Boolean} index
@@ -176,9 +196,25 @@ var SettingsList = function SettingsList(props) {
     var _formState$changes2;
 
     if (!(formState === null || formState === void 0 ? void 0 : formState.changes) || (formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.length) === 0) return;
+
+    var _changes = formState === null || formState === void 0 ? void 0 : formState.changes.map(function (item) {
+      if (item.key === 'driver_tip_options') {
+        return _objectSpread(_objectSpread({}, item), {}, {
+          value: transformArray(item === null || item === void 0 ? void 0 : item.value)
+        });
+      }
+
+      return item;
+    });
+
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _toConsumableArray(_changes),
       API: true
     }));
+  };
+
+  var transformArray = function transformArray(values) {
+    return '[' + values + ']';
   };
   /**
    * Method to update settings items
@@ -204,14 +240,15 @@ var SettingsList = function SettingsList(props) {
 
             case 2:
               _context.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true,
                 API: false
               }));
-              _context.next = 6;
+              _context.next = 7;
               return ordering.configs(id).save(params);
 
-            case 6:
+            case 7:
               _yield$ordering$confi = _context.sent;
               _yield$ordering$confi2 = _yield$ordering$confi.content;
               error = _yield$ordering$confi2.error;
@@ -253,6 +290,7 @@ var SettingsList = function SettingsList(props) {
                     API: false,
                     finalResult: _configs
                   });
+                  showToast(_ToastContext.ToastType.Success, t('SETTINGS_UPDATE', 'Settings updated'));
 
                   if (handleUpdateCategoryList) {
                     _categories = categoryList === null || categoryList === void 0 ? void 0 : categoryList.categories.map(function (item) {
@@ -266,23 +304,26 @@ var SettingsList = function SettingsList(props) {
                     });
                     handleUpdateCategoryList(_categories);
                   }
+
+                  handleChangeStaic && handleChangeStaic(_toConsumableArray(_configs));
+                  refreshConfigs && refreshConfigs();
                 }
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   result: {
-                    error: false,
+                    error: true,
                     result: result
                   },
                   API: false
                 }));
               }
 
-              _context.next = 16;
+              _context.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -293,12 +334,12 @@ var SettingsList = function SettingsList(props) {
                 API: false
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 13]]);
+      }, _callee, null, [[2, 14]]);
     }));
 
     return function saveConfig(_x, _x2) {
@@ -317,6 +358,14 @@ var SettingsList = function SettingsList(props) {
     }
   }, [category === null || category === void 0 ? void 0 : category.configs]);
   (0, _react.useEffect)(function () {
+    if (staticConfigs) {
+      setConfigs(_toConsumableArray(staticConfigs));
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        finalResult: _toConsumableArray(staticConfigs)
+      }));
+    }
+  }, [staticConfigs]);
+  (0, _react.useEffect)(function () {
     var _formState$changes3;
 
     if ((formState === null || formState === void 0 ? void 0 : formState.API) && (formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.length) > 0) {
@@ -332,7 +381,9 @@ var SettingsList = function SettingsList(props) {
     configs: configs,
     handleInputChange: saveChanges,
     handleCheckBoxChange: handleCheckBoxChange,
-    handleClickUpdate: handleClickUpdate
+    handleClickUpdate: handleClickUpdate,
+    formState: formState,
+    handleChangeFormState: setFormState
   })));
 };
 
@@ -349,6 +400,11 @@ SettingsList.propTypes = {
   category: _propTypes.default.object,
 
   /**
+   * Array of config
+   */
+  staticConfigs: _propTypes.default.arrayOf(_propTypes.object),
+
+  /**
   * Object for a category
   */
   categoryList: _propTypes.default.object,
@@ -357,6 +413,11 @@ SettingsList.propTypes = {
   * Function to set a category list
   */
   handleUpdateCategoryList: _propTypes.default.func,
+
+  /**
+   * Function to set a config
+   */
+  handleChangeStaic: _propTypes.default.func,
 
   /**
    * Array of drivers props to fetch

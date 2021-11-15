@@ -65,10 +65,6 @@ var AnalyticsDriversFilter = function AnalyticsDriversFilter(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
-  /**
-   * This state save the user info from API
-   */
-
 
   var _useState = (0, _react.useState)({
     loading: true,

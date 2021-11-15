@@ -528,6 +528,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,
     pagination: pagination,
+    searchValue: searchValue,
     onSearch: setSearchValue,
     selectedBusinessActiveState: selectedBusinessActiveState,
     loadMoreBusinesses: loadMoreBusinesses,
@@ -573,7 +574,7 @@ DashboardBusinessList.propTypes = {
 DashboardBusinessList.defaultProps = {
   initialPageSize: 10,
   loadMorePageSize: 10,
-  propsToFetch: ['id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'food', 'groceries', 'header', 'laundry', 'logo', 'name', 'pickup_time', 'slug'],
+  propsToFetch: ['id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'reviews'],
   paginationSettings: {
     initialPage: 1,
     pageSize: 10,

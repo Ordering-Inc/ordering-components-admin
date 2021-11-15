@@ -373,7 +373,7 @@ var GoogleMaps = function GoogleMaps(props) {
           });
         }
 
-        if (isHeatMap) {
+        if (isHeatMap && !markerCluster) {
           var _heatMap = new window.google.maps.visualization.HeatmapLayer({
             data: locations.map(function (location) {
               return new window.google.maps.LatLng(location.lat, location.lng);
@@ -417,7 +417,7 @@ var GoogleMaps = function GoogleMaps(props) {
         if (googleReady) {
           var driverLocation = locations[0];
           var newLocation = new window.google.maps.LatLng(driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lat, driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lng);
-          markers[0].setPosition(newLocation);
+          if (markers[0]) markers[0].setPosition(newLocation);
           markers.forEach(function (marker) {
             return boundMap.extend(marker.position);
           });

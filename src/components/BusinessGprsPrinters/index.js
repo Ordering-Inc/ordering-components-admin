@@ -3,7 +3,10 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
-export const BusinessBrands = (props) => {
+/**
+ * Component to manage BusinessGprsPrinters behavior without UI component
+ */
+export const BusinessGprsPrinters = (props) => {
   const {
     UIComponent
   } = props
@@ -11,22 +14,15 @@ export const BusinessBrands = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  const [brandList, setBrandList] = useState({ loading: false, brands: [], error: null })
+  const [printersListState, setPrintersListState] = useState({ loading: false, printers: [], error: null })
 
   /**
-   * Method to update brand list
+   * Method to get printer list
    */
-  const handleUpdateBrandList = (brands) => {
-    setBrandList({ ...brandList, brands: brands })
-  }
-
-  /**
-   * Method to get brand list
-   */
-  const getBrands = async () => {
+  const getPrinters = async () => {
     if (loading) return
     try {
-      setBrandList({ ...brandList, loading: true })
+      setPrintersListState({ ...printersListState, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -34,26 +30,26 @@ export const BusinessBrands = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = `${ordering.root}/franchises`
+      const functionFetch = `${ordering.root}/printers`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setBrandList({
-          ...brandList,
+        setPrintersListState({
+          ...printersListState,
           loading: false,
-          brands: result
+          printers: result
         })
       } else {
-        setBrandList({
-          ...brandList,
+        setPrintersListState({
+          ...printersListState,
           loading: false,
           error: result
         })
       }
     } catch (err) {
-      setBrandList({
-        ...brandList,
+      setPrintersListState({
+        ...printersListState,
         loading: false,
         error: err
       })
@@ -61,7 +57,7 @@ export const BusinessBrands = (props) => {
   }
 
   useEffect(() => {
-    getBrands()
+    getPrinters()
   }, [])
 
   return (
@@ -69,15 +65,14 @@ export const BusinessBrands = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          brandList={brandList}
-          handleUpdateBrandList={handleUpdateBrandList}
+          printersListState={printersListState}
         />
       )}
     </>
   )
 }
 
-BusinessBrands.propTypes = {
+BusinessGprsPrinters.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -104,7 +99,7 @@ BusinessBrands.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-BusinessBrands.defaultProps = {
+BusinessGprsPrinters.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

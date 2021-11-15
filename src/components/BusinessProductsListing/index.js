@@ -8,6 +8,7 @@ export const BusinessProductsListing = (props) => {
     slug,
     categoryId,
     productId,
+    isAllCategoryProducts,
     isInitialRender,
     ordering,
     UIComponent
@@ -19,6 +20,7 @@ export const BusinessProductsListing = (props) => {
   const [categoriesState, setCategoriesState] = useState({})
   const [requestsState, setRequestsState] = useState({})
   const [productModal, setProductModal] = useState({ product: null, loading: false, error: null })
+  const [businessSlug, setBusinessSlug] = useState(slug)
 
   const categoryStateDefault = {
     loading: true,
@@ -218,7 +220,7 @@ export const BusinessProductsListing = (props) => {
       requestsState.business = source
       setRequestsState({ ...requestsState })
 
-      const { content: { result } } = await ordering.businesses(slug).asDashboard().get()
+      const { content: { result } } = await ordering.businesses(businessSlug).asDashboard().get()
 
       if (!result?.categories || result?.categories?.length === 0) {
         setErrorQuantityProducts(true)
@@ -251,7 +253,8 @@ export const BusinessProductsListing = (props) => {
   }
 
   useEffect(() => {
-    if (!businessState.loading && categorySelected) {
+    if (businessState.loading) return
+    if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true)
     } else if (businessState?.business?.categories) {
       setCategorySelected(businessState?.business?.categories[0])
@@ -267,8 +270,10 @@ export const BusinessProductsListing = (props) => {
   }, [categorySelected?.id])
 
   useEffect(() => {
-    getBusiness()
-  }, [slug])
+    if (businessSlug) {
+      getBusiness()
+    }
+  }, [businessSlug])
 
   /**
    * Cancel business request
@@ -309,6 +314,7 @@ export const BusinessProductsListing = (props) => {
           setBusinessState={setBusinessState}
           handleUpdateBusinessState={handleUpdateBusinessState}
           updateProductModal={(val) => setProductModal({ ...productModal, product: val })}
+          setBusinessSlug={setBusinessSlug}
         />
       )}
     </>
@@ -340,4 +346,8 @@ BusinessProductsListing.propTypes = {
 }
 
 BusinessProductsListing.defaultProps = {
+  beforeComponents: [],
+  afterComponents: [],
+  beforeElements: [],
+  afterElements: []
 }

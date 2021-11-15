@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useConfig } from '../../contexts/ConfigContext'
 
 /**
  * Component to manage business form details behavior without UI component
@@ -16,8 +17,14 @@ export const BusinessFormDetails = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [{ configs }] = useConfig()
+
   const [businessState, setBusinessState] = useState({ loading: false, business: null, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [addressChange, setAddressChange] = useState(null)
+  let timeout = null
+
+  const googleMapsApiKey = configs?.google_maps_api_key?.value
 
   /**
    * Clean formState
@@ -172,6 +179,55 @@ export const BusinessFormDetails = (props) => {
     reader.onerror = error => console.log(error)
   }
 
+  const getTimeZone = async (lat, lng) => {
+    const date = new Date()
+    const timestamp = Math.floor(date.getTime() / 1000)
+    const url = `https://maps.googleapis.com/maps/api/timezone/json?location=${lat},${lng}&timestamp=${timestamp}&key=${googleMapsApiKey}`
+    const response = await fetch(url, {
+      method: 'GET'
+    })
+    const result = await response.json()
+    return result?.timeZoneId
+  }
+
+  const handleChangeAddress = async (address) => {
+    const timezone = await getTimeZone(address?.location?.lat, address?.location?.lng)
+    setAddressChange({
+      address: address?.address,
+      location: { ...address?.location, zipcode: address?.zipcode ? address.zipcode : -1, zoom: 15 },
+      timezone: timezone
+    })
+  }
+
+  const handleChangeCenter = (address) => {
+    let timezone
+
+    clearTimeout(timeout)
+    timeout = setTimeout(async () => {
+      timezone = await getTimeZone(address?.lat(), address?.lng())
+      setAddressChange({
+        location: {
+          lat: address?.lat(),
+          lng: address?.lng(),
+          zoom: 15,
+          zipcode: -1
+        },
+        timezone: timezone
+      })
+    }, 200)
+  }
+
+  useEffect(() => {
+    if (!addressChange) return
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState?.changes,
+        ...addressChange
+      }
+    })
+  }, [addressChange])
+
   useEffect(() => {
     if (!business) return
     setBusinessState({ ...businessState, business: business })
@@ -190,6 +246,8 @@ export const BusinessFormDetails = (props) => {
           handleButtonUpdateClick={handleUpdateClick}
           handlechangeImage={handlechangeImage}
           handleAddBusiness={handleAddBusiness}
+          handleChangeAddress={handleChangeAddress}
+          handleChangeCenter={handleChangeCenter}
         />
       )}
     </>

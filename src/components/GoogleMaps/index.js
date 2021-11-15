@@ -251,7 +251,7 @@ export const GoogleMaps = (props) => {
           })
         }
 
-        if (isHeatMap) {
+        if (isHeatMap && !markerCluster) {
           const _heatMap = new window.google.maps.visualization.HeatmapLayer({
             data: locations.map(location => {
               return new window.google.maps.LatLng(location.lat, location.lng)
@@ -295,7 +295,7 @@ export const GoogleMaps = (props) => {
         if (googleReady) {
           const driverLocation = locations[0]
           const newLocation = new window.google.maps.LatLng(driverLocation?.lat, driverLocation?.lng)
-          markers[0].setPosition(newLocation)
+          if (markers[0]) markers[0].setPosition(newLocation)
           markers.forEach(marker => boundMap.extend(marker.position))
           googleMap.fitBounds(boundMap)
         }

@@ -4,6 +4,8 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
 
+const paymethodsNotAllowed = ['paypal_express', 'authorize']
+
 export const BusinessPaymethods = (props) => {
   const {
     business,
@@ -30,6 +32,11 @@ export const BusinessPaymethods = (props) => {
    */
   const cleanChangesState = (values) => setChangesState({ ...values })
 
+  const parsePaymethods = (paymethods) => {
+    const _paymethods = paymethods && paymethods.filter(paymethod => !paymethodsNotAllowed.includes(paymethod?.gateway))
+    return _paymethods
+  }
+
   /**
    * Method to get paymethods from API
    */
@@ -50,7 +57,7 @@ export const BusinessPaymethods = (props) => {
     try {
       const response = await fetch(`${ordering.root}/paymethods?where=[{%22attribute%22:%22enabled%22,%22value%22:true}]`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } })
       const { result } = await response.json()
-      setPaymethodsList({ ...paymethodsList, loading: false, paymethods: result })
+      setPaymethodsList({ ...paymethodsList, loading: false, paymethods: parsePaymethods(result) })
     } catch (err) {
       setPaymethodsList({ ...paymethodsList, loading: false, error: err.message })
     }

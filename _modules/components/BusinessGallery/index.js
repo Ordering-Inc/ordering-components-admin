@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -49,6 +53,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessGallery = function BusinessGallery(props) {
   var business = props.business,
+      isVideoGallery = props.isVideoGallery,
+      isImageGallery = props.isImageGallery,
       UIComponent = props.UIComponent,
       handleSucessAddBusinessGallery = props.handleSucessAddBusinessGallery,
       handleSucessDeleteBusinessGallery = props.handleSucessDeleteBusinessGallery;
@@ -60,6 +66,14 @@ var BusinessGallery = function BusinessGallery(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -141,6 +155,7 @@ var BusinessGallery = function BusinessGallery(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -152,15 +167,15 @@ var BusinessGallery = function BusinessGallery(props) {
                 },
                 body: JSON.stringify(formState.changes)
               };
-              _context.next = 5;
+              _context.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/gallery"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
@@ -169,16 +184,24 @@ var BusinessGallery = function BusinessGallery(props) {
               }));
 
               if (!content.error) {
+                if (isVideoGallery) {
+                  showToast(_ToastContext.ToastType.Success, t('GALLERY_VIDEO_ADDED'));
+                }
+
+                if (isImageGallery) {
+                  showToast(_ToastContext.ToastType.Success, t('GALLERY_IMAGE_ADDED'));
+                }
+
                 if (handleSucessAddBusinessGallery) {
                   handleSucessAddBusinessGallery(content.result);
                 }
               }
 
-              _context.next = 16;
+              _context.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -188,12 +211,12 @@ var BusinessGallery = function BusinessGallery(props) {
                 loading: false
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function handleUpdateBusinessGallery() {
@@ -213,6 +236,7 @@ var BusinessGallery = function BusinessGallery(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -223,29 +247,30 @@ var BusinessGallery = function BusinessGallery(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context2.next = 5;
+              _context2.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/gallery/").concat(id, "?business_id=").concat(business.id), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false
               }));
 
               if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('GALLERY_ITEM_DELETED'));
                 handleSucessDeleteBusinessGallery && handleSucessDeleteBusinessGallery(id);
               }
 
-              _context2.next = 16;
+              _context2.next = 17;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 14:
+              _context2.prev = 14;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -255,12 +280,12 @@ var BusinessGallery = function BusinessGallery(props) {
                 loading: false
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 14]]);
     }));
 
     return function handleDeleteBusinessGallery(_x) {

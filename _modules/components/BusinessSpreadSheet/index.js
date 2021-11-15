@@ -13,11 +13,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _ApiContext = require("../../contexts/ApiContext");
-
 var _SessionContext = require("../../contexts/SessionContext");
 
+var _ApiContext = require("../../contexts/ApiContext");
+
 var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
@@ -66,6 +68,10 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -310,6 +316,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
 
             case 2:
               _context.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -324,15 +331,15 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 })
               };
               functionFetch = "".concat(ordering.root, "/bulks/products");
-              _context.next = 8;
+              _context.next = 9;
               return fetch(functionFetch, requestOptions);
 
-            case 8:
+            case 9:
               response = _context.sent;
-              _context.next = 11;
+              _context.next = 12;
               return response.json();
 
-            case 11:
+            case 12:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -342,9 +349,10 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                   loading: false,
                   result: {
                     error: false,
-                    result: isPost ? t('PRODUCT_ADD', 'Product added') : t('PRODUCT_UPDATE', 'Product updated')
+                    result: isPost ? t('PRODUCT_CREATED', 'Product created') : t('PRODUCT_UPDATE', 'Product updated')
                   }
                 }));
+                showToast(_ToastContext.ToastType.Success, isPost ? t('PRODUCT_CREATED', 'Product created') : t('PRODUCT_UPDATE', 'Product updated'));
                 getProductsByCategoryId();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -356,11 +364,11 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 21;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -370,12 +378,12 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 loading: false
               }));
 
-            case 20:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 18]]);
     }));
 
     return function editProducts(_x, _x2, _x3) {
@@ -496,6 +504,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
 
             case 2:
               _context3.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -510,15 +519,15 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 })
               };
               functionFetch = "".concat(ordering.root, "/bulks/products");
-              _context3.next = 8;
+              _context3.next = 9;
               return fetch(functionFetch, requestOptions);
 
-            case 8:
+            case 9:
               response = _context3.sent;
-              _context3.next = 11;
+              _context3.next = 12;
               return response.json();
 
-            case 11:
+            case 12:
               _yield$response$json2 = _context3.sent;
               error = _yield$response$json2.error;
               result = _yield$response$json2.result;
@@ -528,9 +537,10 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                   loading: false,
                   result: {
                     error: false,
-                    result: t('PRODUCT_DELETE', 'Product deleted')
+                    result: t('PRODUCT_DELETED', 'Product deleted')
                   }
                 }));
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'));
                 getProductsByCategoryId();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -542,11 +552,11 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 }));
               }
 
-              _context3.next = 20;
+              _context3.next = 21;
               break;
 
-            case 17:
-              _context3.prev = 17;
+            case 18:
+              _context3.prev = 18;
               _context3.t0 = _context3["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -556,12 +566,12 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 loading: false
               }));
 
-            case 20:
+            case 21:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[2, 17]]);
+      }, _callee3, null, [[2, 18]]);
     }));
 
     return function deleteProducts(_x4) {

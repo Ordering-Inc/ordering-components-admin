@@ -60,7 +60,8 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       filterList = props.filterList,
       handleChangeFilterList = props.handleChangeFilterList,
       propsToFetch = props.propsToFetch,
-      onClose = props.onClose;
+      onClose = props.onClose,
+      isFranchise = props.isFranchise;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -167,7 +168,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination;
+      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination, _filterList$franchise, _businessList;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -188,9 +189,19 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
               pagination = _yield$ordering$busin2.pagination;
 
               if (!error) {
+                _businessList = [];
+
+                if (isFranchise && (filterList === null || filterList === void 0 ? void 0 : (_filterList$franchise = filterList.franchises_id) === null || _filterList$franchise === void 0 ? void 0 : _filterList$franchise.length) > 0) {
+                  _businessList = result.filter(function (business) {
+                    return filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.includes(business.franchise_id);
+                  });
+                } else {
+                  _businessList = _toConsumableArray(result);
+                }
+
                 setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                   loading: false,
-                  businesses: result,
+                  businesses: _businessList,
                   pagination: pagination
                 }));
               } else {
@@ -230,33 +241,19 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     return controller.abort();
   }, []);
   (0, _react.useEffect)(function () {
-    var _businessList$busines;
+    var _businessList$busines, _filterList$businessI;
 
-    if ((businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.length) > 0) {
-      var _businessIds = [];
+    if ((businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.length) === 0) return;
 
-      var _iterator2 = _createForOfIteratorHelper(businessList.businesses),
-          _step2;
+    var _businessIds = businessList.businesses.reduce(function (prev, cur) {
+      return [].concat(_toConsumableArray(prev), [cur.id]);
+    }, []);
 
-      try {
-        for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-          var business = _step2.value;
-
-          _businessIds.push(business.id);
-        }
-      } catch (err) {
-        _iterator2.e(err);
-      } finally {
-        _iterator2.f();
-      }
-
-      if (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds) {
-        setBusinessIds(_toConsumableArray(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds));
-      } else {
-        setBusinessIds(_businessIds);
-        setIsAllCheck(true);
-      }
-    }
+    var filterBusinessIds = (filterList === null || filterList === void 0 ? void 0 : (_filterList$businessI = filterList.businessIds) === null || _filterList$businessI === void 0 ? void 0 : _filterList$businessI.length) > 0 ? filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.filter(function (businessId) {
+      return _businessIds.includes(businessId);
+    }) : _businessIds;
+    setBusinessIds(_toConsumableArray(filterBusinessIds));
+    if (!(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds) || (filterBusinessIds === null || filterBusinessIds === void 0 ? void 0 : filterBusinessIds.length) === (businessList === null || businessList === void 0 ? void 0 : businessList.businesses.length)) setIsAllCheck(true);
   }, [businessList === null || businessList === void 0 ? void 0 : businessList.businesses]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,

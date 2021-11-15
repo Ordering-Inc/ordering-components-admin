@@ -2,15 +2,21 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
-export const BusinessBrandForm = (props) => {
+export const BusinessType = (props) => {
   const {
     UIComponent,
-    handleSuccessAddBusinessBrand
+    businessType,
+    setBusinessTypes,
+    businessTypes
   } = props
 
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
 
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
@@ -19,6 +25,7 @@ export const BusinessBrandForm = (props) => {
    */
   const handleUpdateClick = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -28,7 +35,7 @@ export const BusinessBrandForm = (props) => {
         },
         body: JSON.stringify(formState.changes)
       }
-      const response = await fetch(`${ordering.root}/franchises`, requestOptions)
+      const response = await fetch(`${ordering.root}/business_types/${businessType.id}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
         setFormState({
@@ -37,9 +44,64 @@ export const BusinessBrandForm = (props) => {
           result: content,
           loading: false
         })
-        if (handleSuccessAddBusinessBrand) {
-          handleSuccessAddBusinessBrand(content.result)
+        const _businessTypes = businessTypes?.map(type => {
+          if (type.id === content?.result.id) {
+            return {
+              ...type,
+              name: content?.result?.name,
+              image: content?.result?.image
+            }
+          }
+          return type
+        })
+        setBusinessTypes && setBusinessTypes(_businessTypes)
+        showToast(ToastType.Success, t('BUSINESS_TYPE_UPDATED', 'Business type updated'))
+      } else {
+        setFormState({
+          ...formState,
+          changes: formState.changes,
+          result: content,
+          loading: false
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: err.message
+        },
+        loading: false
+      })
+    }
+  }
+
+  /**
+   * fuction to delete a businessType
+   */
+  const deleteBusinessType = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
         }
+      }
+      const response = await fetch(`${ordering.root}/business_types/${businessType.id}`, requestOptions)
+      const content = await response.json()
+      if (!content?.error) {
+        setFormState({
+          ...formState,
+          changes: {},
+          result: content,
+          loading: false
+        })
+        const _businessTypes = businessTypes.filter(type => type.id !== businessType?.id)
+        setBusinessTypes && setBusinessTypes(_businessTypes)
+        showToast(ToastType.Success, t('BUSINESS_TYPE_DELETED', 'Business type deleted'))
       } else {
         setFormState({
           ...formState,
@@ -76,8 +138,8 @@ export const BusinessBrandForm = (props) => {
   }
 
   /**
-   * Update business brand logo data
-   * @param {File} file Image to change business brand logo
+   * Update business type image data
+   * @param {File} file Image to change business type image
    */
   const handlechangeImage = (file) => {
     const reader = new window.FileReader()
@@ -87,7 +149,7 @@ export const BusinessBrandForm = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          logo: reader.result
+          image: reader.result
         }
       })
     }
@@ -99,21 +161,30 @@ export const BusinessBrandForm = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          formState={formState}
+          businessTypeFormState={formState}
           handleUpdateClick={handleUpdateClick}
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
+          deleteBusinessType={deleteBusinessType}
         />
       )}
     </>
   )
 }
 
-BusinessBrandForm.propTypes = {
+BusinessType.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
+  /**
+   * Array that contains business types to filter
+   */
+  businessTypes: PropTypes.arrayOf(PropTypes.object),
+  /**
+   * Default business type to show
+   */
+  defaultBusinessType: PropTypes.string,
   /**
    * Components types before business type filter
    * Array of type components, the parent props will pass to these components
@@ -136,7 +207,7 @@ BusinessBrandForm.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-BusinessBrandForm.defaultProps = {
+BusinessType.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
