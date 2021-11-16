@@ -21,15 +21,15 @@ var _WebsocketContext = require("../../contexts/WebsocketContext");
 
 var _EventContext = require("../../contexts/EventContext");
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -43,7 +43,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -55,15 +55,14 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var OrdersManage = function OrdersManage(props) {
   var UIComponent = props.UIComponent,
       statusGroup = props.statusGroup,
-      driversPropsToFetch = props.driversPropsToFetch,
-      businessesPropsToFetch = props.businessesPropsToFetch;
+      driversPropsToFetch = props.driversPropsToFetch;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -179,29 +178,38 @@ var OrdersManage = function OrdersManage(props) {
       businessesList = _useState24[0],
       setBusinessesList = _useState24[1];
   /**
-   * Object to save selected order ids
+   * Array to save the cities
    */
 
 
   var _useState25 = (0, _react.useState)([]),
       _useState26 = _slicedToArray(_useState25, 2),
-      selectedOrderIds = _useState26[0],
-      setSelectedOrderIds = _useState26[1];
+      citiesList = _useState26[0],
+      setCitiesList = _useState26[1];
+  /**
+   * Object to save selected order ids
+   */
+
+
+  var _useState27 = (0, _react.useState)([]),
+      _useState28 = _slicedToArray(_useState27, 2),
+      selectedOrderIds = _useState28[0],
+      setSelectedOrderIds = _useState28[1];
   /**
    * Object to save order substatuses
    */
 
 
-  var _useState27 = (0, _react.useState)({
+  var _useState29 = (0, _react.useState)({
     pending: [0, 13],
     inProgress: [7, 8, 4, 9, 3, 14, 18, 19, 20, 21],
     completed: [1, 11, 15],
     cancelled: [2, 5, 6, 10, 12, 16, 17],
     all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
   }),
-      _useState28 = _slicedToArray(_useState27, 2),
-      selectedSubOrderStatus = _useState28[0],
-      setSelectedSubOrderStatus = _useState28[1];
+      _useState30 = _slicedToArray(_useState29, 2),
+      selectedSubOrderStatus = _useState30[0],
+      setSelectedSubOrderStatus = _useState30[1];
   /**
    * Save ids of orders selected
    * @param {string} orderId order id
@@ -430,20 +438,69 @@ var OrdersManage = function OrdersManage(props) {
     };
   }();
   /**
-   * Method to get driver group from API
+   * Method to get drivers from API
    */
 
 
-  var getDriverGroup = /*#__PURE__*/function () {
+  var getDrivers = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var requestOptions, where, response, _yield$response$json2, result;
+      var source, _yield$ordering$setAc2, result;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
-              setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
+              source = {};
+              requestsState.drivers = source;
+              _context3.next = 5;
+              return ordering.setAccessToken(token).users().select(driversPropsToFetch).where([{
+                attribute: 'level',
+                value: [4]
+              }]).get({
+                cancelToken: source
+              });
+
+            case 5:
+              _yield$ordering$setAc2 = _context3.sent;
+              result = _yield$ordering$setAc2.content.result;
+              setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+                loading: false,
+                drivers: result
+              }));
+              _context3.next = 13;
+              break;
+
+            case 10:
+              _context3.prev = 10;
+              _context3.t0 = _context3["catch"](0);
+              setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+                loading: false,
+                error: _context3.t0.message
+              }));
+
+            case 13:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 10]]);
+    }));
+
+    return function getDrivers() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
+  var getControlsOrders = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -453,212 +510,65 @@ var OrdersManage = function OrdersManage(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              where = [{
-                attribute: 'enabled',
-                value: {
-                  condition: '=',
-                  value: true
-                }
-              }];
-              _context3.next = 6;
-              return fetch("".concat(ordering.root, "/drivergroups?params=id,name,drivers&where=").concat(JSON.stringify(where)), requestOptions);
+              _context4.next = 5;
+              return fetch("".concat(ordering.root, "/controls/orders"), requestOptions);
 
-            case 6:
-              response = _context3.sent;
-              _context3.next = 9;
+            case 5:
+              response = _context4.sent;
+              _context4.next = 8;
               return response.json();
 
-            case 9:
-              _yield$response$json2 = _context3.sent;
-              result = _yield$response$json2.result;
-              setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
-                loading: false,
-                groups: result
-              }));
-              _context3.next = 17;
+            case 8:
+              content = _context4.sent;
+
+              if (!content.error) {
+                setCitiesList(content.result.cities);
+                setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
+                  loading: false,
+                  groups: content.result.driver_groups
+                }));
+                setPaymethodsList(_objectSpread(_objectSpread({}, paymethodsList), {}, {
+                  loading: false,
+                  paymethods: content.result.paymethods
+                }));
+                setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
+                  loading: false,
+                  businesses: content.result.businesses
+                }));
+
+                if ((user === null || user === void 0 ? void 0 : user.level) !== 0 && (user === null || user === void 0 ? void 0 : user.level) !== 2) {
+                  setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+                    drivers: content.result.drivers
+                  }));
+                }
+              } else {
+                setActionStatus({
+                  loading: false,
+                  error: content === null || content === void 0 ? void 0 : content.result
+                });
+              }
+
+              _context4.next = 15;
               break;
 
-            case 14:
-              _context3.prev = 14;
-              _context3.t0 = _context3["catch"](0);
-              setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
+            case 12:
+              _context4.prev = 12;
+              _context4.t0 = _context4["catch"](0);
+              setActionStatus({
                 loading: false,
-                error: _context3.t0.message
-              }));
-
-            case 17:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 14]]);
-    }));
-
-    return function getDriverGroup() {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get paymethods from API
-   */
-
-
-  var getPaymethods = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
-      var response, _yield$response$json3, result;
-
-      return _regenerator.default.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
-              return fetch("".concat(ordering.root, "/paymethods?params=id,name&where=[{%22attribute%22:%22enabled%22,%22value%22:true}]"), {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
+                error: [_context4.t0.message]
               });
 
-            case 3:
-              response = _context4.sent;
-              _context4.next = 6;
-              return response.json();
-
-            case 6:
-              _yield$response$json3 = _context4.sent;
-              result = _yield$response$json3.result;
-              setPaymethodsList(_objectSpread(_objectSpread({}, paymethodsList), {}, {
-                loading: false,
-                paymethods: result
-              }));
-              _context4.next = 14;
-              break;
-
-            case 11:
-              _context4.prev = 11;
-              _context4.t0 = _context4["catch"](0);
-              setPaymethodsList(_objectSpread(_objectSpread({}, paymethodsList), {}, {
-                loading: false,
-                error: _context4.t0.message
-              }));
-
-            case 14:
+            case 15:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 11]]);
+      }, _callee4, null, [[0, 12]]);
     }));
 
-    return function getPaymethods() {
+    return function getControlsOrders() {
       return _ref4.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get businesses from API
-   */
-
-
-  var getBusinesses = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
-      var source, _yield$ordering$setAc2, result;
-
-      return _regenerator.default.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.prev = 0;
-              source = {};
-              requestsState.business = source;
-              _context5.next = 5;
-              return ordering.setAccessToken(token).businesses().asDashboard().select(businessesPropsToFetch).get({
-                cancelToken: source
-              });
-
-            case 5:
-              _yield$ordering$setAc2 = _context5.sent;
-              result = _yield$ordering$setAc2.content.result;
-              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
-                loading: false,
-                businesses: result
-              }));
-              _context5.next = 13;
-              break;
-
-            case 10:
-              _context5.prev = 10;
-              _context5.t0 = _context5["catch"](0);
-              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
-                loading: false,
-                error: _context5.t0.message
-              }));
-
-            case 13:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, null, [[0, 10]]);
-    }));
-
-    return function getBusinesses() {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get drivers from API
-   */
-
-
-  var getDrivers = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
-      var source, _yield$ordering$setAc3, result;
-
-      return _regenerator.default.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              source = {};
-              requestsState.drivers = source;
-              _context6.next = 5;
-              return ordering.setAccessToken(token).users().select(driversPropsToFetch).where([{
-                attribute: 'level',
-                value: [4]
-              }]).get({
-                cancelToken: source
-              });
-
-            case 5:
-              _yield$ordering$setAc3 = _context6.sent;
-              result = _yield$ordering$setAc3.content.result;
-              setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
-                loading: false,
-                drivers: result
-              }));
-              _context6.next = 13;
-              break;
-
-            case 10:
-              _context6.prev = 10;
-              _context6.t0 = _context6["catch"](0);
-              setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
-                loading: false,
-                error: _context6.t0.message
-              }));
-
-            case 13:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6, null, [[0, 10]]);
-    }));
-
-    return function getDrivers() {
-      return _ref6.apply(this, arguments);
     };
   }();
   /**
@@ -763,22 +673,26 @@ var OrdersManage = function OrdersManage(props) {
     deleteOrder(selectedOrderIds[0]);
   }, [selectedOrderIds, startMulitOrderDelete]);
   (0, _react.useEffect)(function () {
-    getDriverGroup();
-    getDrivers();
-    getPaymethods();
-    getBusinesses();
+    if (loading) return;
+
+    if ((user === null || user === void 0 ? void 0 : user.level) === 0 || (user === null || user === void 0 ? void 0 : user.level) === 2) {
+      getDrivers();
+    }
+
+    getControlsOrders();
     return function () {
       if (requestsState.drivers) {
         requestsState.drivers.cancel();
       }
     };
-  }, []);
+  }, [user, loading]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     searchValue: searchValue,
     driverGroupList: driverGroupList,
     driversList: driversList,
     paymethodsList: paymethodsList,
     businessesList: businessesList,
+    citiesList: citiesList,
     ordersStatusGroup: ordersStatusGroup,
     filterValues: filterValues,
     multiOrderUpdateStatus: updateStatus,
@@ -832,7 +746,6 @@ OrdersManage.propTypes = {
 };
 OrdersManage.defaultProps = {
   driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
-  businessesPropsToFetch: ['id', 'name', 'logo', 'food', 'laundry', 'alcohol', 'groceries'],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
