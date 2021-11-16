@@ -8,8 +8,7 @@ export const OrdersManage = (props) => {
   const {
     UIComponent,
     statusGroup,
-    driversPropsToFetch,
-    businessesPropsToFetch
+    driversPropsToFetch
   } = props
 
   const [ordering] = useApi()
@@ -42,6 +41,10 @@ export const OrdersManage = (props) => {
    * Object to save businesses
    */
   const [businessesList, setBusinessesList] = useState({ businesses: [], loading: true, error: null })
+  /**
+   * Array to save the cities
+   */
+  const [citiesList, setCitiesList] = useState([])
 
   /**
    * Object to save selected order ids
@@ -180,57 +183,6 @@ export const OrdersManage = (props) => {
   }
 
   /**
-   * Method to get driver group from API
-   */
-  const getDriverGroup = async () => {
-    try {
-      setDriverGroupList({ ...driverGroupList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const where = [{ attribute: 'enabled', value: { condition: '=', value: true } }]
-      const response = await fetch(`${ordering.root}/drivergroups?params=id,name,drivers&where=${JSON.stringify(where)}`, requestOptions)
-      const { result } = await response.json()
-      setDriverGroupList({ ...driverGroupList, loading: false, groups: result })
-    } catch (err) {
-      setDriverGroupList({ ...driverGroupList, loading: false, error: err.message })
-    }
-  }
-  /**
-   * Method to get paymethods from API
-   */
-  const getPaymethods = async () => {
-    try {
-      const response = await fetch(`${ordering.root}/paymethods?params=id,name&where=[{%22attribute%22:%22enabled%22,%22value%22:true}]`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } })
-      const { result } = await response.json()
-      setPaymethodsList({ ...paymethodsList, loading: false, paymethods: result })
-    } catch (err) {
-      setPaymethodsList({ ...paymethodsList, loading: false, error: err.message })
-    }
-  }
-  /**
-   * Method to get businesses from API
-   */
-  const getBusinesses = async () => {
-    try {
-      const source = {}
-      requestsState.business = source
-      const { content: { result } } = await ordering
-        .setAccessToken(token)
-        .businesses()
-        .asDashboard()
-        .select(businessesPropsToFetch)
-        .get({ cancelToken: source })
-      setBusinessesList({ ...businessesList, loading: false, businesses: result })
-    } catch (err) {
-      setBusinessesList({ ...businessesList, loading: false, error: err.message })
-    }
-  }
-  /**
    * Method to get drivers from API
    */
   const getDrivers = async () => {
@@ -256,6 +208,49 @@ export const OrdersManage = (props) => {
         loading: false,
         error: err.message
       })
+    }
+  }
+
+  const getControlsOrders = async () => {
+    try {
+      setActionStatus({ ...actionStatus, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/controls/orders`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setCitiesList(content.result.cities)
+        setDriverGroupList({
+          ...driverGroupList,
+          loading: false,
+          groups: content.result.driver_groups
+        })
+        setPaymethodsList({
+          ...paymethodsList,
+          loading: false,
+          paymethods: content.result.paymethods
+        })
+        setBusinessesList({
+          ...businessesList,
+          loading: false,
+          businesses: content.result.businesses
+        })
+        if (user?.level !== 0 && user?.level !== 2) {
+          setDriversList({
+            ...driversList,
+            drivers: content.result.drivers
+          })
+        }
+      } else {
+        setActionStatus({ loading: false, error: content?.result })
+      }
+    } catch (err) {
+      setActionStatus({ loading: false, error: [err.message] })
     }
   }
 
@@ -345,17 +340,18 @@ export const OrdersManage = (props) => {
   }, [selectedOrderIds, startMulitOrderDelete])
 
   useEffect(() => {
-    getDriverGroup()
-    getDrivers()
-    getPaymethods()
-    getBusinesses()
+    if (loading) return
+    if (user?.level === 0 || user?.level === 2) {
+      getDrivers()
+    }
+    getControlsOrders()
 
     return () => {
       if (requestsState.drivers) {
         requestsState.drivers.cancel()
       }
     }
-  }, [])
+  }, [user, loading])
 
   return (
     <>
@@ -367,6 +363,7 @@ export const OrdersManage = (props) => {
           driversList={driversList}
           paymethodsList={paymethodsList}
           businessesList={businessesList}
+          citiesList={citiesList}
           ordersStatusGroup={ordersStatusGroup}
           filterValues={filterValues}
           multiOrderUpdateStatus={updateStatus}
@@ -419,7 +416,6 @@ OrdersManage.propTypes = {
 
 OrdersManage.defaultProps = {
   driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
-  businessesPropsToFetch: ['id', 'name', 'logo', 'food', 'laundry', 'alcohol', 'groceries'],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
