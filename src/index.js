@@ -62,6 +62,7 @@ import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
 import { DriversGroupOrders } from './components/DriversGroupOrders'
 import { DriversGroupsList } from './components/DriversGroupsList'
+import { DriversGroupLogs } from './components/DriversGroupLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
@@ -244,6 +245,7 @@ export {
   DriversGroupAutoassign,
   DriversGroupOrders,
   DriversGroupsList,
+  DriversGroupLogs,
   ExamineClick,
   ExportCSV,
   FacebookLoginButton,
