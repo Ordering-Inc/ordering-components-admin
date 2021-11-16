@@ -16,7 +16,8 @@ export const BusinessCategoryEdit = (props) => {
     category,
     categoryId,
     onClose,
-    categorySelected
+    categorySelected,
+    setCategorySelected
   } = props
 
   const [{ loading }] = useSession()
@@ -104,7 +105,13 @@ export const BusinessCategoryEdit = (props) => {
           ...formState,
           loading: true
         })
-        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(formState.changes)
+        const changes = { ...formState.changes }
+        for (const key in changes) {
+          if (changes[key] === null) {
+            delete changes[key]
+          }
+        }
+        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(changes)
         if (!content.error) {
           setFormState({
             ...formState,
@@ -115,6 +122,7 @@ export const BusinessCategoryEdit = (props) => {
             },
             loading: false
           })
+          setCategorySelected(content.result)
           if (handleUpdateBusinessState) {
             const _categories = businessState.business.categories.map(item => {
               if (item.id === parseInt(id)) {
