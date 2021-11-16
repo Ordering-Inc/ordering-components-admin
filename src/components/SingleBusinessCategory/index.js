@@ -36,8 +36,14 @@ export const SingleBusinessCategory = (props) => {
       name: formState?.changes?.name,
       image: formState?.changes?.image
     }
+    for (const key in params) {
+      if (params[key] === null) {
+        delete params[key]
+      }
+    }
     editCategory(params)
   }
+
   /**
  * Update category photo data
  * @param {File} file Image to change category photo
