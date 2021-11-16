@@ -108,6 +108,13 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       name: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.name,
       image: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.image
     };
+
+    for (var key in params) {
+      if (params[key] === null) {
+        delete params[key];
+      }
+    }
+
     editCategory(params);
   };
   /**

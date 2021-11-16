@@ -172,14 +172,14 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var id, _yield$ordering$busin, content, _categories, _business;
+      var id, changes, key, _yield$ordering$busin, content, _categories, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               if (!category) {
-                _context.next = 19;
+                _context.next = 21;
                 break;
               }
 
@@ -198,10 +198,18 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 9;
-              return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(formState.changes);
+              changes = _objectSpread({}, formState.changes);
 
-            case 9:
+              for (key in changes) {
+                if (changes[key] === null) {
+                  delete changes[key];
+                }
+              }
+
+              _context.next = 11;
+              return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(changes);
+
+            case 11:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
@@ -244,11 +252,11 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 }));
               }
 
-              _context.next = 17;
+              _context.next = 19;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 16:
+              _context.prev = 16;
               _context.t0 = _context["catch"](4);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -258,19 +266,19 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 loading: false
               }));
 
-            case 17:
-              _context.next = 20;
+            case 19:
+              _context.next = 22;
               break;
 
-            case 19:
+            case 21:
               createBusinessCategory();
 
-            case 20:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[4, 14]]);
+      }, _callee, null, [[4, 16]]);
     }));
 
     return function handleUpdateClick() {
