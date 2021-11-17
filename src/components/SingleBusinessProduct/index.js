@@ -69,13 +69,18 @@ export const SingleBusinessProduct = (props) => {
    * @param {String} value
    */
   const handleUpdateClick = () => {
-    const prarms = {
+    const params = {
       images: formState?.changes?.images,
       name: formState?.changes?.name,
       description: formState?.changes?.description,
       price: formState?.changes?.price
     }
-    editProduct(prarms)
+    for (const key in params) {
+      if (params[key] === null) {
+        delete params[key]
+      }
+    }
+    editProduct(params)
   }
 
   /**

@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 
-export const AnalyticsBusinessFilter = (props) => {
+export const ReportsDriverFilter = (props) => {
   const {
     UIComponent,
     filterList,
     handleChangeFilterList,
     propsToFetch,
-    onClose,
-    isFranchise
+    onClose
   } = props
 
   const [ordering] = useApi()
@@ -17,25 +16,25 @@ export const AnalyticsBusinessFilter = (props) => {
   /**
    * This state save the business type info from API
    */
-  const [businessList, setBusinessList] = useState({ loading: true, error: null, businesses: [], pagination: null })
-  const [businessIds, setBusinessIds] = useState(null)
+  const [driverList, setDriverList] = useState({ loading: true, error: null, drivers: [], pagination: null })
+  const [driverIds, setDriverIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
 
   /**
    * Method to change business id
    * @param {number} id
    */
-  const handleChangeBusinessId = (id) => {
-    const found = businessIds?.find(businessId => businessId === id)
+  const handleChangeDriverId = (id) => {
+    const found = driverIds?.find(driverId => driverId === id)
     if (found) {
-      const _businessIds = businessIds?.filter(businessId => businessId !== id)
-      setBusinessIds(_businessIds)
+      const _driverIds = driverIds?.filter(driverId => driverId !== id)
+      setDriverIds(_driverIds)
       setIsAllCheck(false)
     } else {
-      const _businessIds = businessIds ? [...businessIds] : []
-      _businessIds.push(id)
-      if (_businessIds.length === businessList?.businesses.length) setIsAllCheck(true)
-      setBusinessIds(_businessIds)
+      const _driverIds = driverIds ? [...driverIds] : []
+      _driverIds.push(id)
+      if (_driverIds.length === driverList?.drivers.length) setIsAllCheck(true)
+      setDriverIds(_driverIds)
     }
   }
 
@@ -43,8 +42,8 @@ export const AnalyticsBusinessFilter = (props) => {
    * Method to change filter list
    */
   const handleClickFilterButton = () => {
-    const _businessIds = businessIds ? [...businessIds] : null
-    handleChangeFilterList({ ...filterList, businessIds: _businessIds })
+    const _driverIds = driverIds ? [...driverIds] : null
+    handleChangeFilterList({ ...filterList, drivers_ids: _driverIds })
     onClose && onClose()
   }
 
@@ -53,50 +52,46 @@ export const AnalyticsBusinessFilter = (props) => {
    */
   const handleChangeAllCheck = () => {
     if (isAllCheck) {
-      setBusinessIds(null)
+      setDriverIds(null)
     } else {
-      const _businessIds = []
-      for (const business of businessList.businesses) {
-        _businessIds.push(business.id)
+      const _driverIds = []
+      for (const driver of driverList.drivers) {
+        _driverIds.push(driver.id)
       }
-      setBusinessIds(_businessIds)
+      setDriverIds(_driverIds)
     }
     setIsAllCheck(!isAllCheck)
   }
 
   /**
-   * Method to get business types from API
+   * Method to get driver list from API
    */
-  const getBusinessTypes = async () => {
+
+  const getDrivers = async () => {
     try {
-      setBusinessList({
-        ...businessList,
+      setDriverList({
+        ...driverList,
         loading: true
       })
-      const { content: { error, result, pagination } } = await ordering.businesses().asDashboard().select(propsToFetch).get()
+      const where = [{ attribute: 'level', value: '4' }]
+      const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
       if (!error) {
-        let _businessList = []
-        if (isFranchise && filterList?.franchises_id?.length > 0) {
-          _businessList = result.filter(business => filterList?.franchises_id.includes(business.franchise_id))
-        } else {
-          _businessList = [...result]
-        }
-        setBusinessList({
-          ...businessList,
+        setDriverList({
+          ...driverList,
           loading: false,
-          businesses: _businessList,
+          drivers: result,
           pagination
         })
       } else {
-        setBusinessList({
-          ...businessList,
+        setDriverList({
+          ...driverList,
           loading: false,
           error: result
         })
       }
     } catch (error) {
-      setBusinessList({
-        ...businessList,
+      setDriverList({
+        ...driverList,
         loading: false,
         error: [error || error?.toString() || error?.message]
       })
@@ -105,28 +100,25 @@ export const AnalyticsBusinessFilter = (props) => {
 
   useEffect(() => {
     const controller = new AbortController()
-    getBusinessTypes()
+    getDrivers()
     return controller.abort()
   }, [])
 
   useEffect(() => {
-    if (businessList?.businesses?.length === 0) return
-    const _businessIds = businessList.businesses.reduce((prev, cur) => [...prev, cur.id], [])
-    const filterBusinessIds = filterList?.businessIds?.length > 0
-      ? filterList?.businessIds.filter(businessId => _businessIds.includes(businessId))
-      : _businessIds
-    setBusinessIds([...filterBusinessIds])
-    if (!filterList?.businessIds || filterBusinessIds?.length === businessList?.businesses.length) setIsAllCheck(true)
-  }, [businessList?.businesses])
+    if (driverList?.drivers?.length === 0) return
+    const _driverIds = driverList?.drivers.reduce((prev, cur) => [...prev, cur.id], [])
+    setDriverIds([...filterList?.drivers_ids || _driverIds])
+    if (!filterList?.drivers_ids || filterList?.drivers_ids?.length === driverList?.drivers.length) setIsAllCheck(true)
+  }, [driverList?.drivers])
 
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
-          businessList={businessList}
-          businessIds={businessIds}
-          handleChangeBusinessId={handleChangeBusinessId}
+          driverList={driverList}
+          driverIds={driverIds}
+          handleChangeDriverId={handleChangeDriverId}
           handleClickFilterButton={handleClickFilterButton}
           isAllCheck={isAllCheck}
           handleChangeAllCheck={handleChangeAllCheck}
@@ -136,7 +128,7 @@ export const AnalyticsBusinessFilter = (props) => {
   )
 }
 
-AnalyticsBusinessFilter.propTypes = {
+ReportsDriverFilter.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -179,10 +171,15 @@ AnalyticsBusinessFilter.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-AnalyticsBusinessFilter.defaultProps = {
+ReportsDriverFilter.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
+  propsToFetch: [
+    'name', 'lastname', 'email', 'phone', 'photo', 'cellphone',
+    'country_phone_code', 'city_id', 'city', 'address', 'addresses',
+    'address_notes', 'dropdown_option_id', 'dropdown_option', 'location',
+    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'
+  ]
 }
