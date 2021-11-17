@@ -29,15 +29,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -103,10 +103,17 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       productModal = _useState12[0],
       setProductModal = _useState12[1];
 
-  var _useState13 = (0, _react.useState)(slug),
+  var _useState13 = (0, _react.useState)({
+    values: []
+  }),
       _useState14 = _slicedToArray(_useState13, 2),
-      businessSlug = _useState14[0],
-      setBusinessSlug = _useState14[1];
+      openCategories = _useState14[0],
+      setOpenCategories = _useState14[1];
+
+  var _useState15 = (0, _react.useState)(slug),
+      _useState16 = _slicedToArray(_useState15, 2),
+      businessSlug = _useState16[0],
+      setBusinessSlug = _useState16[1];
 
   var categoryStateDefault = {
     loading: true,
@@ -120,20 +127,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     products: []
   };
 
-  var _useState15 = (0, _react.useState)(categoryStateDefault),
-      _useState16 = _slicedToArray(_useState15, 2),
-      categoryState = _useState16[0],
-      setCategoryState = _useState16[1];
-
-  var _useState17 = (0, _react.useState)(null),
+  var _useState17 = (0, _react.useState)(categoryStateDefault),
       _useState18 = _slicedToArray(_useState17, 2),
-      errors = _useState18[0],
-      setErrors = _useState18[1];
+      categoryState = _useState18[0],
+      setCategoryState = _useState18[1];
 
-  var _useState19 = (0, _react.useState)(false),
+  var _useState19 = (0, _react.useState)(null),
       _useState20 = _slicedToArray(_useState19, 2),
-      errorQuantityProducts = _useState20[0],
-      setErrorQuantityProducts = _useState20[1];
+      errors = _useState20[0],
+      setErrors = _useState20[1];
+
+  var _useState21 = (0, _react.useState)(false),
+      _useState22 = _slicedToArray(_useState21, 2),
+      errorQuantityProducts = _useState22[0],
+      setErrorQuantityProducts = _useState22[1];
   /**
    * Change category selected
    * @param {Object} category Category object
@@ -141,8 +148,35 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
 
   var handleChangeCategory = function handleChangeCategory(e, category) {
-    var isInvalid = e.target.closest('.business_enable_control') || e.target.closest('.business_actions');
+    var _e$target, _e$target2, _category$subcategori;
+
+    var isInvalid = (e === null || e === void 0 ? void 0 : (_e$target = e.target) === null || _e$target === void 0 ? void 0 : _e$target.closest) && ((e === null || e === void 0 ? void 0 : (_e$target2 = e.target) === null || _e$target2 === void 0 ? void 0 : _e$target2.closest('.business_enable_control')) || e.target.closest('.business_actions'));
     if (isInvalid || (category === null || category === void 0 ? void 0 : category.id) === (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id)) return;
+
+    if (category !== null && category !== void 0 && (_category$subcategori = category.subcategories) !== null && _category$subcategori !== void 0 && _category$subcategori.length) {
+      if (!(category !== null && category !== void 0 && category.parent_category_id)) {
+        openCategories.values = [];
+      }
+
+      if (openCategories.values.includes(category.id)) {
+        openCategories.values = openCategories.values.filter(function (categoryId) {
+          return categoryId !== category.id;
+        });
+      } else {
+        openCategories.values.push(category.id);
+      }
+
+      setOpenCategories(_objectSpread(_objectSpread({}, openCategories), {}, {
+        values: openCategories.values
+      }));
+    }
+
+    if ((category === null || category === void 0 ? void 0 : category.id) === null) {
+      setOpenCategories(_objectSpread(_objectSpread({}, openCategories), {}, {
+        values: []
+      }));
+    }
+
     setCategorySelected(category);
   };
   /**
@@ -164,7 +198,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch) {
       var _businessState$busine;
 
-      var _categoryState, _businessState$busine2, _businessState$busine3, _businessState$busine4, _businessState$busine5, productsFiltered, _businessState$busine6, _businessState$busine7, _productsFiltered, categoryKey, categoryState, pagination, parameters, where, searchConditions, functionFetch, source, productEndpoint, _yield$productEndpoin, _yield$productEndpoin2, error, result, _pagination, newcategoryState;
+      var _categoryState, _businessState$busine2, _businessState$busine3, _businessState$busine4, _businessState$busine5, productsFiltered, _categorySelected$pro, _businessState$busine6, _businessState$busine7, _productsFiltered, categoryKey, categoryState, pagination, parameters, where, searchConditions, functionFetch, source, productEndpoint, _yield$productEndpoin, _yield$productEndpoin2, error, result, _pagination, newcategoryState;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -185,6 +219,13 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 })) === null || _businessState$busine4 === void 0 ? void 0 : (_businessState$busine5 = _businessState$busine4.products) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.filter(function (product) {
                   return isMatchSearch(product.name, product.description);
                 });
+
+                if (!productsFiltered) {
+                  productsFiltered = categorySelected === null || categorySelected === void 0 ? void 0 : (_categorySelected$pro = categorySelected.products) === null || _categorySelected$pro === void 0 ? void 0 : _categorySelected$pro.filter(function (product) {
+                    return isMatchSearch(product.name, product.description);
+                  });
+                }
+
                 _categoryState.products = productsFiltered || [];
               } else {
                 _productsFiltered = businessState === null || businessState === void 0 ? void 0 : (_businessState$busine6 = businessState.business) === null || _businessState$busine6 === void 0 ? void 0 : (_businessState$busine7 = _businessState$busine6.categories) === null || _businessState$busine7 === void 0 ? void 0 : _businessState$busine7.reduce(function (products, category) {
@@ -502,6 +543,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
         product: val
       }));
     },
+    openCategories: openCategories.values,
+    setOpenCategories: setOpenCategories,
     setBusinessSlug: setBusinessSlug
   })));
 };
