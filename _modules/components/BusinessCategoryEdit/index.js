@@ -68,7 +68,9 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
       handleUpdateBusinessState = props.handleUpdateBusinessState,
       category = props.category,
       categoryId = props.categoryId,
-      onClose = props.onClose;
+      onClose = props.onClose,
+      categorySelected = props.categorySelected,
+      setCategorySelected = props.setCategorySelected;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -89,7 +91,8 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   var _useState = (0, _react.useState)({
     loading: false,
     changes: {
-      enabled: true
+      enabled: true,
+      enabledParent: false
     },
     result: {
       error: false
@@ -131,14 +134,29 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
   };
   /**
   * Update credential data
-  * @param {Boolean} isChecked checkbox status
+  * @param {Object} isChecked checkbox status
   */
 
 
   var handleChangeCheckBox = function handleChangeCheckBox(isChecked) {
-    var currentChanges = {
-      enabled: isChecked
-    };
+    var currentChanges = null;
+
+    if (isChecked.enabled !== undefined) {
+      currentChanges = {
+        enabled: isChecked.enabled
+      };
+    }
+
+    if (isChecked.enabledParent) {
+      currentChanges = {
+        parent_category_id: categorySelected.id
+      };
+    } else {
+      currentChanges = {
+        parent_category_id: null
+      };
+    }
+
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
     }));
@@ -222,6 +240,7 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                   },
                   loading: false
                 }));
+                setCategorySelected(content.result);
 
                 if (handleUpdateBusinessState) {
                   _categories = businessState.business.categories.map(function (item) {
