@@ -20,6 +20,7 @@ export const BusinessProductsListing = (props) => {
   const [categoriesState, setCategoriesState] = useState({})
   const [requestsState, setRequestsState] = useState({})
   const [productModal, setProductModal] = useState({ product: null, loading: false, error: null })
+  const [openCategories, setOpenCategories] = useState({ values: [] })
   const [businessSlug, setBusinessSlug] = useState(slug)
 
   const categoryStateDefault = {
@@ -37,8 +38,25 @@ export const BusinessProductsListing = (props) => {
    * @param {Object} category Category object
    */
   const handleChangeCategory = (e, category) => {
-    const isInvalid = e.target.closest('.business_enable_control') || e.target.closest('.business_actions')
+    const isInvalid = e?.target?.closest && (e?.target?.closest('.business_enable_control') || e.target.closest('.business_actions'))
     if (isInvalid || category?.id === categorySelected?.id) return
+    if (category?.subcategories?.length) {
+      if (!category?.parent_category_id) {
+        openCategories.values = []
+      }
+      if (openCategories.values.includes(category.id)) {
+        openCategories.values = openCategories.values.filter(categoryId => categoryId !== category.id)
+      } else {
+        openCategories.values.push(category.id)
+      }
+      setOpenCategories({
+        ...openCategories,
+        values: openCategories.values
+      })
+    }
+    if (category?.id === null) {
+      setOpenCategories({ ...openCategories, values: [] })
+    }
     setCategorySelected(category)
   }
 
@@ -63,11 +81,16 @@ export const BusinessProductsListing = (props) => {
         loading: false
       }
       if (categorySelected) {
-        const productsFiltered = businessState?.business?.categories?.find(
+        let productsFiltered = businessState?.business?.categories?.find(
           category => category.id === categorySelected.id
         )?.products?.filter(
           product => isMatchSearch(product.name, product.description)
         )
+        if (!productsFiltered) {
+          productsFiltered = categorySelected?.products?.filter(
+            product => isMatchSearch(product.name, product.description)
+          )
+        }
         categoryState.products = productsFiltered || []
       } else {
         const productsFiltered = businessState?.business?.categories?.reduce(
@@ -314,6 +337,8 @@ export const BusinessProductsListing = (props) => {
           setBusinessState={setBusinessState}
           handleUpdateBusinessState={handleUpdateBusinessState}
           updateProductModal={(val) => setProductModal({ ...productModal, product: val })}
+          openCategories={openCategories.values}
+          setOpenCategories={setOpenCategories}
           setBusinessSlug={setBusinessSlug}
         />
       )}
