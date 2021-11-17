@@ -80,11 +80,16 @@ export const BusinessProductsListing = (props) => {
         loading: false
       }
       if (categorySelected) {
-        const productsFiltered = businessState?.business?.categories?.find(
+        let productsFiltered = businessState?.business?.categories?.find(
           category => category.id === categorySelected.id
         )?.products?.filter(
           product => isMatchSearch(product.name, product.description)
         )
+        if (!productsFiltered) {
+          productsFiltered = categorySelected?.products?.filter(
+            product => isMatchSearch(product.name, product.description)
+          )
+        }
         categoryState.products = productsFiltered || []
       } else {
         const productsFiltered = businessState?.business?.categories?.reduce(
@@ -329,6 +334,7 @@ export const BusinessProductsListing = (props) => {
           handleUpdateBusinessState={handleUpdateBusinessState}
           updateProductModal={(val) => setProductModal({ ...productModal, product: val })}
           openCategories={openCategories.values}
+          setOpenCategories={setOpenCategories}
         />
       )}
     </>
