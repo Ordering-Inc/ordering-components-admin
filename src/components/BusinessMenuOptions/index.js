@@ -61,71 +61,6 @@ export const BusinessMenuOptions = (props) => {
   }
 
   /**
-   * Method to control category selection
-   * @param {*} categoryId category id
-   */
-  const handleClickCategory = (categoryId) => {
-    const businessCategoryProducts = business.categories.find(category => category.id === categoryId).products
-    const businessCategoryProductsIds = businessCategoryProducts.reduce((ids, product) => [...ids, product.id], [])
-    let _selectedProductsIds = [...selectedProductsIds]
-    if (businessCategoryProductsIds.every(elem => selectedProductsIds.includes(elem))) {
-      _selectedProductsIds = _selectedProductsIds.filter(el => !businessCategoryProductsIds.includes(el))
-    } else if (businessCategoryProductsIds.some(elem => selectedProductsIds.includes(elem))) {
-      _selectedProductsIds = [...selectedProductsIds, ...businessCategoryProductsIds]
-      _selectedProductsIds = [...new Set(_selectedProductsIds)]
-    } else {
-      _selectedProductsIds = [...selectedProductsIds, ...businessCategoryProductsIds]
-    }
-    setSelectedProductsIds(_selectedProductsIds)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        products: JSON.stringify(_selectedProductsIds)
-      }
-    })
-  }
-
-  /**
-   * Method to control category selection
-   * @param {Number} categoryId category id
-   */
-  const handleCheckCategory = (categoryId) => {
-    const businessCategoryProducts = business.categories.find(category => category.id === categoryId).products
-    const businessCategoryProductsIds = businessCategoryProducts.reduce((ids, product) => [...ids, product.id], [])
-    let result
-    if (businessCategoryProductsIds.every(elem => selectedProductsIds.includes(elem))) {
-      result = 'all'
-    } else if (businessCategoryProductsIds.some(elem => selectedProductsIds.includes(elem))) {
-      result = 'some'
-    } else {
-      result = 'nothing'
-    }
-    return result
-  }
-
-  /**
-   * Method to control prodcut selection
-   * @param {Number} productId product id
-   */
-  const handleCheckProduct = (productId) => {
-    let _selectedProductsIds = [...selectedProductsIds]
-    if (_selectedProductsIds.includes(productId)) {
-      _selectedProductsIds = _selectedProductsIds.filter(id => id !== productId)
-    } else {
-      _selectedProductsIds.push(productId)
-    }
-    setSelectedProductsIds(_selectedProductsIds)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        products: JSON.stringify(_selectedProductsIds)
-      }
-    })
-  }
-
-  /**
    * Method to control the business schedule time enable state
    * @param {Number} daysOfWeekIndex index of week days
    */
@@ -418,7 +353,6 @@ export const BusinessMenuOptions = (props) => {
       })
 
       if (!content.error) {
-        props.onClose() && props.onClose()
         const _business = { ...business }
         _business.menus.filter(menu => {
           if (menu.id === content.result.id) {
@@ -538,6 +472,16 @@ export const BusinessMenuOptions = (props) => {
   }
 
   useEffect(() => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        products: JSON.stringify(selectedProductsIds)
+      }
+    })
+  }, [selectedProductsIds])
+
+  useEffect(() => {
     setFormState({ ...formState, changes: {} })
     setBusinessMenuState({ ...businessMenuState, menu: menu || {} })
     setOrderTypeSate({
@@ -580,11 +524,9 @@ export const BusinessMenuOptions = (props) => {
             businessMenuState={businessMenuState}
             formState={formState}
             selectedProductsIds={selectedProductsIds}
+            setSelectedProductsIds={setSelectedProductsIds}
             handleChangeInput={handleChangeInput}
             handleCheckOrderType={handleCheckOrderType}
-            handleCheckCategory={handleCheckCategory}
-            handleClickCategory={handleClickCategory}
-            handleCheckProduct={handleCheckProduct}
             handleUpdateBusinessMenuOption={handleUpdateBusinessMenuOption}
             handleAddBusinessMenuOption={handleAddBusinessMenuOption}
             scheduleTimes={schedule}
