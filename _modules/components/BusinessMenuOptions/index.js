@@ -166,97 +166,6 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     setOrderTypeSate(_objectSpread(_objectSpread({}, orderTypeState), {}, _defineProperty({}, orderType, !orderTypeState[orderType])));
   };
   /**
-   * Method to control category selection
-   * @param {*} categoryId category id
-   */
-
-
-  var handleClickCategory = function handleClickCategory(categoryId) {
-    var businessCategoryProducts = business.categories.find(function (category) {
-      return category.id === categoryId;
-    }).products;
-    var businessCategoryProductsIds = businessCategoryProducts.reduce(function (ids, product) {
-      return [].concat(_toConsumableArray(ids), [product.id]);
-    }, []);
-
-    var _selectedProductsIds = _toConsumableArray(selectedProductsIds);
-
-    if (businessCategoryProductsIds.every(function (elem) {
-      return selectedProductsIds.includes(elem);
-    })) {
-      _selectedProductsIds = _selectedProductsIds.filter(function (el) {
-        return !businessCategoryProductsIds.includes(el);
-      });
-    } else if (businessCategoryProductsIds.some(function (elem) {
-      return selectedProductsIds.includes(elem);
-    })) {
-      _selectedProductsIds = [].concat(_toConsumableArray(selectedProductsIds), _toConsumableArray(businessCategoryProductsIds));
-      _selectedProductsIds = _toConsumableArray(new Set(_selectedProductsIds));
-    } else {
-      _selectedProductsIds = [].concat(_toConsumableArray(selectedProductsIds), _toConsumableArray(businessCategoryProductsIds));
-    }
-
-    setSelectedProductsIds(_selectedProductsIds);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        products: JSON.stringify(_selectedProductsIds)
-      })
-    }));
-  };
-  /**
-   * Method to control category selection
-   * @param {Number} categoryId category id
-   */
-
-
-  var handleCheckCategory = function handleCheckCategory(categoryId) {
-    var businessCategoryProducts = business.categories.find(function (category) {
-      return category.id === categoryId;
-    }).products;
-    var businessCategoryProductsIds = businessCategoryProducts.reduce(function (ids, product) {
-      return [].concat(_toConsumableArray(ids), [product.id]);
-    }, []);
-    var result;
-
-    if (businessCategoryProductsIds.every(function (elem) {
-      return selectedProductsIds.includes(elem);
-    })) {
-      result = 'all';
-    } else if (businessCategoryProductsIds.some(function (elem) {
-      return selectedProductsIds.includes(elem);
-    })) {
-      result = 'some';
-    } else {
-      result = 'nothing';
-    }
-
-    return result;
-  };
-  /**
-   * Method to control prodcut selection
-   * @param {Number} productId product id
-   */
-
-
-  var handleCheckProduct = function handleCheckProduct(productId) {
-    var _selectedProductsIds = _toConsumableArray(selectedProductsIds);
-
-    if (_selectedProductsIds.includes(productId)) {
-      _selectedProductsIds = _selectedProductsIds.filter(function (id) {
-        return id !== productId;
-      });
-    } else {
-      _selectedProductsIds.push(productId);
-    }
-
-    setSelectedProductsIds(_selectedProductsIds);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        products: JSON.stringify(_selectedProductsIds)
-      })
-    }));
-  };
-  /**
    * Method to control the business schedule time enable state
    * @param {Number} daysOfWeekIndex index of week days
    */
@@ -576,7 +485,6 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               }));
 
               if (!content.error) {
-                props.onClose() && props.onClose();
                 _business = _objectSpread({}, business);
 
                 _business.menus.filter(function (menu) {
@@ -805,6 +713,13 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        products: JSON.stringify(selectedProductsIds)
+      })
+    }));
+  }, [selectedProductsIds]);
+  (0, _react.useEffect)(function () {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {}
     }));
     setBusinessMenuState(_objectSpread(_objectSpread({}, businessMenuState), {}, {
@@ -925,11 +840,9 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     businessMenuState: businessMenuState,
     formState: formState,
     selectedProductsIds: selectedProductsIds,
+    setSelectedProductsIds: setSelectedProductsIds,
     handleChangeInput: handleChangeInput,
     handleCheckOrderType: handleCheckOrderType,
-    handleCheckCategory: handleCheckCategory,
-    handleClickCategory: handleClickCategory,
-    handleCheckProduct: handleCheckProduct,
     handleUpdateBusinessMenuOption: handleUpdateBusinessMenuOption,
     handleAddBusinessMenuOption: handleAddBusinessMenuOption,
     scheduleTimes: schedule,
