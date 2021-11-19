@@ -18,7 +18,18 @@ export const AdvancedReports = (props) => {
   const [{ token, loading }] = useSession()
   const [businessDistanceList, setBusinessDistanceList] = useState({ content: [], loading: false, error: null })
   const [businessDistanceList1, setBusinessDistanceList1] = useState({ content: [], loading: false, error: null })
-  const [filterList, setFilterList] = useState({ from: '', to: '', businessIds: null, drivers_ids: null, franchises_id: null, driver_companies_ids: null, driver_groups_ids: null })
+  const [filterList, setFilterList] = useState(
+    {
+      from: '',
+      to: '',
+      businessIds: null,
+      drivers_ids: null,
+      franchises_id: null,
+      driver_companies_ids: null,
+      driver_groups_ids: null,
+      delivery_types_ids: null
+    }
+  )
 
   /**
    * Function to get Business distance list from API
@@ -41,6 +52,7 @@ export const AdvancedReports = (props) => {
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
       if (filterList?.driver_companies_ids && filterList?.driver_companies_ids.length > 0) params = `${params}&driver_companies_ids=${JSON.stringify(filterList?.driver_companies_ids)}`
       if (filterList?.driver_groups_ids && filterList?.driver_groups_ids.length > 0) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
+      if (filterList?.delivery_types_ids && filterList?.delivery_types_ids.length > 0) params = `${params}&delivery_types_ids=${JSON.stringify(filterList?.delivery_types_ids)}`
 
       const functionFetch = `${ordering.root}/reports/${endpoint}?${params}`
 
@@ -88,6 +100,7 @@ export const AdvancedReports = (props) => {
       if (filterList?.drivers_ids && filterList?.drivers_ids.length > 0) params = `${params}&drivers_ids=${JSON.stringify(filterList?.drivers_ids)}`
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
       if (filterList?.driver_companies_ids && filterList?.drivers_ids.length > 0) params = `${params}&driver_companies_ids=${JSON.stringify(filterList?.driver_companies_ids)}`
+      if (filterList?.delivery_types_ids && filterList?.delivery_types_ids.length > 0) params = `${params}&delivery_types_ids=${JSON.stringify(filterList?.delivery_types_ids)}`
 
       const functionFetch = `${ordering.root}/reports/${endpoint1}?${params}`
 
