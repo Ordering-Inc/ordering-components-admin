@@ -9,7 +9,8 @@ export const AnalyticsBusinessFilter = (props) => {
     handleChangeFilterList,
     propsToFetch,
     onClose,
-    isFranchise
+    isFranchise,
+    isSearchByName
   } = props
 
   const [ordering] = useApi()
@@ -20,6 +21,8 @@ export const AnalyticsBusinessFilter = (props) => {
   const [businessList, setBusinessList] = useState({ loading: true, error: null, businesses: [], pagination: null })
   const [businessIds, setBusinessIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
+  const [searchValue, setSearchValue] = useState(null)
+  const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
    * Method to change business id
@@ -73,7 +76,37 @@ export const AnalyticsBusinessFilter = (props) => {
         ...businessList,
         loading: true
       })
-      const { content: { error, result, pagination } } = await ordering.businesses().asDashboard().select(propsToFetch).get()
+      let where = null
+      const conditions = []
+      if (searchValue) {
+        const searchConditions = []
+        const isSpecialCharacter = rex.test(searchValue)
+        if (isSearchByName) {
+          searchConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
+      }
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const fetchEndpoint = where
+        ? ordering.businesses().asDashboard().select(propsToFetch).where(where)
+        : ordering.businesses().asDashboard().select(propsToFetch)
+      const { content: { error, result, pagination } } = await fetchEndpoint.get()
       if (!error) {
         let _businessList = []
         if (isFranchise && filterList?.franchises_id?.length > 0) {
@@ -107,7 +140,7 @@ export const AnalyticsBusinessFilter = (props) => {
     const controller = new AbortController()
     getBusinessTypes()
     return controller.abort()
-  }, [])
+  }, [searchValue])
 
   useEffect(() => {
     if (businessList?.businesses?.length === 0) return
@@ -130,6 +163,8 @@ export const AnalyticsBusinessFilter = (props) => {
           handleClickFilterButton={handleClickFilterButton}
           isAllCheck={isAllCheck}
           handleChangeAllCheck={handleChangeAllCheck}
+          searchValue={searchValue}
+          onSearch={setSearchValue}
         />
       )}
     </>
