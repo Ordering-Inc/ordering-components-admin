@@ -25,8 +25,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _createForOfIteratorHelper(o, allowArrayLike) { var it; if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
-
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -178,7 +176,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     setSchedule(_schedule);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        schedule: JSON.stringify(_schedule)
+        schedule: _schedule
       })
     }));
   };
@@ -447,7 +445,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleUpdateBusinessMenuOption = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content, _business;
+      var changes, key, requestOptions, response, content, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -457,23 +455,29 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
+              changes = {};
+
+              for (key in formState === null || formState === void 0 ? void 0 : formState.changes) {
+                changes[key] = JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes[key]);
+              }
+
               requestOptions = {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
+                body: JSON.stringify(changes)
               };
-              _context.next = 5;
+              _context.next = 7;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menu === null || menu === void 0 ? void 0 : menu.id), requestOptions);
 
-            case 5:
+            case 7:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 10;
               return response.json();
 
-            case 8:
+            case 10:
               content = _context.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
@@ -498,11 +502,11 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
               }
 
-              _context.next = 16;
+              _context.next = 18;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -512,12 +516,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 }
               }));
 
-            case 16:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
     return function handleUpdateBusinessMenuOption() {
@@ -531,7 +535,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleAddBusinessMenuOption = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _formState$changes, changes, requestOptions, response, content, _business, _menu, products;
+      var changes, key, requestOptions, response, content, _business, _menu, products;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -541,17 +545,10 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              changes = _objectSpread({}, formState.changes);
+              changes = {};
 
-              if (!((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.schedule)) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-                    schedule: JSON.stringify(schedule)
-                  })
-                }));
-                changes = _objectSpread(_objectSpread({}, changes), {}, {
-                  schedule: JSON.stringify(schedule)
-                });
+              for (key in formState === null || formState === void 0 ? void 0 : formState.changes) {
+                changes[key] = JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes[key]);
               }
 
               requestOptions = {
@@ -634,87 +631,36 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
    */
 
 
-  var handleSelectCopyTimes = function handleSelectCopyTimes(index, daysOfWeekIndex) {
-    var _selectedCopyDays = _toConsumableArray(selectedCopyDays);
+  var handleSelectCopyTimes = function handleSelectCopyTimes(index) {
+    setSelectedCopyDays([].concat(_toConsumableArray(selectedCopyDays), [index]));
+  };
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
 
-    var _schedule = _toConsumableArray(schedule);
 
-    if (!_selectedCopyDays.includes(index)) {
-      var conflict = false;
-
-      for (var i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true;
-        }
+  var handleApplyScheduleCopyTimes = function handleApplyScheduleCopyTimes(daysOfWeekIndex) {
+    var _schedule = schedule.map(function (option, index) {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex];
       }
 
-      if (conflict) {
-        setIsConflict(true);
-        return;
-      }
+      return option;
+    });
 
-      _selectedCopyDays.push(index);
-
-      var _iterator = _createForOfIteratorHelper(_schedule[index].lapses),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var laps = _step.value;
-
-          _schedule[daysOfWeekIndex].lapses.push(laps);
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
-        return convertMinutes(a.open) - convertMinutes(b.open);
-      });
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(function (el) {
-        return el !== index;
-      });
-
-      var newLapses = _schedule[daysOfWeekIndex].lapses.filter(function (laps) {
-        var _iterator2 = _createForOfIteratorHelper(_schedule[index].lapses),
-            _step2;
-
-        try {
-          for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-            var deleteLaps = _step2.value;
-
-            if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-              return false;
-            }
-          }
-        } catch (err) {
-          _iterator2.e(err);
-        } finally {
-          _iterator2.f();
-        }
-
-        return true;
-      });
-
-      _schedule[daysOfWeekIndex].lapses = newLapses;
-    }
-
-    setSelectedCopyDays(_selectedCopyDays);
     setSchedule(_schedule);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        schedule: JSON.stringify(_schedule)
-      }
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        schedule: _schedule
+      })
     }));
   };
 
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        products: JSON.stringify(selectedProductsIds)
+        products: selectedProductsIds
       })
     }));
   }, [selectedProductsIds]);
@@ -859,7 +805,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     setIsConflict: setIsConflict,
     selectedCopyDays: selectedCopyDays,
     cleanSelectedCopyDays: cleanSelectedCopyDays,
-    handleSelectCopyTimes: handleSelectCopyTimes
+    handleSelectCopyTimes: handleSelectCopyTimes,
+    handleApplyScheduleCopyTimes: handleApplyScheduleCopyTimes
   })));
 };
 
