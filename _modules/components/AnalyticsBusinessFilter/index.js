@@ -61,7 +61,8 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       handleChangeFilterList = props.handleChangeFilterList,
       propsToFetch = props.propsToFetch,
       onClose = props.onClose,
-      isFranchise = props.isFranchise;
+      isFranchise = props.isFranchise,
+      isSearchByName = props.isSearchByName;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -90,11 +91,17 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       isAllCheck = _useState6[0],
       setIsAllCheck = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      searchValue = _useState8[0],
+      setSearchValue = _useState8[1];
+
+  var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
    * Method to change business id
    * @param {number} id
    */
-
 
   var handleChangeBusinessId = function handleChangeBusinessId(id) {
     var found = businessIds === null || businessIds === void 0 ? void 0 : businessIds.find(function (businessId) {
@@ -168,7 +175,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, pagination, _filterList$franchise, _businessList;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -178,15 +185,46 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses().asDashboard().select(propsToFetch).get();
+              where = null;
+              conditions = [];
 
-            case 4:
-              _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
-              pagination = _yield$ordering$busin2.pagination;
+              if (searchValue) {
+                searchConditions = [];
+                isSpecialCharacter = rex.test(searchValue);
+
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
+              fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
+              _context.next = 9;
+              return fetchEndpoint.get();
+
+            case 9:
+              _yield$fetchEndpoint$ = _context.sent;
+              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
+              error = _yield$fetchEndpoint$2.error;
+              result = _yield$fetchEndpoint$2.result;
+              pagination = _yield$fetchEndpoint$2.pagination;
 
               if (!error) {
                 _businessList = [];
@@ -211,23 +249,23 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 20;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
                 error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 15:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
     return function getBusinessTypes() {
@@ -239,7 +277,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     var controller = new AbortController();
     getBusinessTypes();
     return controller.abort();
-  }, []);
+  }, [searchValue]);
   (0, _react.useEffect)(function () {
     var _businessList$busines, _filterList$businessI;
 
@@ -261,7 +299,9 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     handleChangeBusinessId: handleChangeBusinessId,
     handleClickFilterButton: handleClickFilterButton,
     isAllCheck: isAllCheck,
-    handleChangeAllCheck: handleChangeAllCheck
+    handleChangeAllCheck: handleChangeAllCheck,
+    searchValue: searchValue,
+    onSearch: setSearchValue
   })));
 };
 

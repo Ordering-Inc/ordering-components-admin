@@ -66,7 +66,9 @@ var GoogleMaps = function GoogleMaps(props) {
       isHeat = props.isHeat,
       markerIcon = props.markerIcon,
       isFitCenter = props.isFitCenter,
-      handleChangeCenter = props.handleChangeCenter;
+      handleChangeCenter = props.handleChangeCenter,
+      data = props.data,
+      fillStyle = props.fillStyle;
 
   var _useUtils = (0, _UtilsContext.useUtils)(),
       _useUtils2 = _slicedToArray(_useUtils, 1),
@@ -349,6 +351,31 @@ var GoogleMaps = function GoogleMaps(props) {
           draggable: !!(mapControls !== null && mapControls !== void 0 && mapControls.isMarkerDraggable)
         });
         setGoogleMapMarker(marker);
+      }
+
+      if (data) {
+        data.forEach(function (zone) {
+          var _zone$data;
+
+          if (zone.type === 1 && zone !== null && zone !== void 0 && (_zone$data = zone.data) !== null && _zone$data !== void 0 && _zone$data.center) {
+            var circle = new window.google.maps.Circle(_objectSpread(_objectSpread({}, fillStyle), {}, {
+              draggable: false,
+              map: map,
+              center: zone.data.center,
+              radius: zone.data.radio
+            }));
+            console.log(circle);
+          }
+
+          if (zone.type === 2 && Array.isArray(zone.data)) {
+            var polygon = new window.google.maps.Polygon(_objectSpread(_objectSpread({}, fillStyle), {}, {
+              draggable: false,
+              map: map,
+              paths: zone.data
+            }));
+            console.log(polygon);
+          }
+        });
       }
     }
   }, [googleReady]);

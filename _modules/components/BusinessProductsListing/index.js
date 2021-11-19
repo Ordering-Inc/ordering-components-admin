@@ -115,6 +115,11 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       businessSlug = _useState16[0],
       setBusinessSlug = _useState16[1];
 
+  var _useState17 = (0, _react.useState)(false),
+      _useState18 = _slicedToArray(_useState17, 2),
+      isUpdateMode = _useState18[0],
+      setIsUpdateMode = _useState18[1];
+
   var categoryStateDefault = {
     loading: true,
     pagination: {
@@ -127,20 +132,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     products: []
   };
 
-  var _useState17 = (0, _react.useState)(categoryStateDefault),
-      _useState18 = _slicedToArray(_useState17, 2),
-      categoryState = _useState18[0],
-      setCategoryState = _useState18[1];
-
-  var _useState19 = (0, _react.useState)(null),
+  var _useState19 = (0, _react.useState)(categoryStateDefault),
       _useState20 = _slicedToArray(_useState19, 2),
-      errors = _useState20[0],
-      setErrors = _useState20[1];
+      categoryState = _useState20[0],
+      setCategoryState = _useState20[1];
 
-  var _useState21 = (0, _react.useState)(false),
+  var _useState21 = (0, _react.useState)(null),
       _useState22 = _slicedToArray(_useState21, 2),
-      errorQuantityProducts = _useState22[0],
-      setErrorQuantityProducts = _useState22[1];
+      errors = _useState22[0],
+      setErrors = _useState22[1];
+
+  var _useState23 = (0, _react.useState)(false),
+      _useState24 = _slicedToArray(_useState23, 2),
+      errorQuantityProducts = _useState24[0],
+      setErrorQuantityProducts = _useState24[1];
   /**
    * Change category selected
    * @param {Object} category Category object
@@ -472,6 +477,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
 
   var handleUpdateBusinessState = function handleUpdateBusinessState(result) {
+    setIsUpdateMode(true);
+
     var business = _objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business);
 
     Object.assign(business, result);
@@ -479,11 +486,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       business: business
     }));
   };
+  /**
+   * Method to update the category state
+   */
+
+
+  var handleUpdateCategoryState = function handleUpdateCategoryState(updatedCategory) {
+    setCategoryState(updatedCategory);
+  };
 
   (0, _react.useEffect)(function () {
     var _businessState$busine9;
 
-    if (businessState.loading) return;
+    if (businessState.loading || isUpdateMode) return;
+    console.log('business');
 
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
@@ -492,7 +508,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
       setCategorySelected(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine10 = businessState.business) === null || _businessState$busine10 === void 0 ? void 0 : _businessState$busine10.categories[0]);
     }
-  }, [businessState]);
+  }, [businessState, isUpdateMode]);
   (0, _react.useEffect)(function () {
     if (searchValue !== null) getProducts(!!searchValue);
   }, [searchValue]);
@@ -545,7 +561,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     },
     openCategories: openCategories.values,
     setOpenCategories: setOpenCategories,
-    setBusinessSlug: setBusinessSlug
+    setBusinessSlug: setBusinessSlug,
+    handleUpdateCategoryState: handleUpdateCategoryState
   })));
 };
 
