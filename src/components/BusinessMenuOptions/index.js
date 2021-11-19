@@ -72,7 +72,7 @@ export const BusinessMenuOptions = (props) => {
       ...formState,
       changes: {
         ...formState.changes,
-        schedule: JSON.stringify(_schedule)
+        schedule: _schedule
       }
     })
   }
@@ -331,13 +331,17 @@ export const BusinessMenuOptions = (props) => {
   const handleUpdateBusinessMenuOption = async () => {
     try {
       setFormState({ ...formState, loading: true })
+      const changes = {}
+      for (const key in formState?.changes) {
+        changes[key] = JSON.stringify(formState?.changes[key])
+      }
       const requestOptions = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState?.changes)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/business/${business.id}/menus/${menu?.id}`, requestOptions)
       const content = await response.json()
@@ -373,16 +377,9 @@ export const BusinessMenuOptions = (props) => {
   const handleAddBusinessMenuOption = async () => {
     try {
       setFormState({ ...formState, loading: true })
-      let changes = { ...formState.changes }
-      if (!formState.changes?.schedule) {
-        setFormState({
-          ...formState,
-          changes: {
-            ...formState.changes,
-            schedule: JSON.stringify(schedule)
-          }
-        })
-        changes = { ...changes, schedule: JSON.stringify(schedule) }
+      const changes = {}
+      for (const key in formState?.changes) {
+        changes[key] = JSON.stringify(formState?.changes[key])
       }
       const requestOptions = {
         method: 'POST',
@@ -424,49 +421,27 @@ export const BusinessMenuOptions = (props) => {
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
-  const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
-    let _selectedCopyDays = [...selectedCopyDays]
-    const _schedule = [...schedule]
+  const handleSelectCopyTimes = (index) => {
+    setSelectedCopyDays([...selectedCopyDays, index])
+  }
 
-    if (!_selectedCopyDays.includes(index)) {
-      let conflict = false
-      for (let i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true
-        }
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
+  const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
+    const _schedule = schedule.map((option, index) => {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex]
       }
-      if (conflict) {
-        setIsConflict(true)
-        return
-      }
-      _selectedCopyDays.push(index)
-
-      for (const laps of _schedule[index].lapses) {
-        _schedule[daysOfWeekIndex].lapses.push(laps)
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
-
-      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
-        for (const deleteLaps of _schedule[index].lapses) {
-          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-            return false
-          }
-        }
-        return true
-      })
-      _schedule[daysOfWeekIndex].lapses = newLapses
-    }
-
-    setSelectedCopyDays(_selectedCopyDays)
-
+      return option
+    })
     setSchedule(_schedule)
     setFormState({
       ...formState,
       changes: {
-        schedule: JSON.stringify(_schedule)
+        ...formState.changes,
+        schedule: _schedule
       }
     })
   }
@@ -476,7 +451,7 @@ export const BusinessMenuOptions = (props) => {
       ...formState,
       changes: {
         ...formState.changes,
-        products: JSON.stringify(selectedProductsIds)
+        products: selectedProductsIds
       }
     })
   }, [selectedProductsIds])
@@ -544,6 +519,7 @@ export const BusinessMenuOptions = (props) => {
             selectedCopyDays={selectedCopyDays}
             cleanSelectedCopyDays={cleanSelectedCopyDays}
             handleSelectCopyTimes={handleSelectCopyTimes}
+            handleApplyScheduleCopyTimes={handleApplyScheduleCopyTimes}
           />
         )
       }

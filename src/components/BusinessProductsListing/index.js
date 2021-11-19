@@ -22,6 +22,7 @@ export const BusinessProductsListing = (props) => {
   const [productModal, setProductModal] = useState({ product: null, loading: false, error: null })
   const [openCategories, setOpenCategories] = useState({ values: [] })
   const [businessSlug, setBusinessSlug] = useState(slug)
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
 
   const categoryStateDefault = {
     loading: true,
@@ -267,6 +268,7 @@ export const BusinessProductsListing = (props) => {
    * Method to update the business
    */
   const handleUpdateBusinessState = (result) => {
+    setIsUpdateMode(true)
     const business = { ...businessState?.business }
     Object.assign(business, result)
     setBusinessState({
@@ -275,14 +277,22 @@ export const BusinessProductsListing = (props) => {
     })
   }
 
+  /**
+   * Method to update the category state
+   */
+  const handleUpdateCategoryState = (updatedCategory) => {
+    setCategoryState(updatedCategory)
+  }
+
   useEffect(() => {
-    if (businessState.loading) return
+    if (businessState.loading || isUpdateMode) return
+    console.log('business')
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true)
     } else if (businessState?.business?.categories) {
       setCategorySelected(businessState?.business?.categories[0])
     }
-  }, [businessState])
+  }, [businessState, isUpdateMode])
 
   useEffect(() => {
     if (searchValue !== null) getProducts(!!searchValue)
@@ -340,6 +350,7 @@ export const BusinessProductsListing = (props) => {
           openCategories={openCategories.values}
           setOpenCategories={setOpenCategories}
           setBusinessSlug={setBusinessSlug}
+          handleUpdateCategoryState={handleUpdateCategoryState}
         />
       )}
     </>
