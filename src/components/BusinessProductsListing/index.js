@@ -41,6 +41,7 @@ export const BusinessProductsListing = (props) => {
   const handleChangeCategory = (e, category) => {
     const isInvalid = e?.target?.closest && (e?.target?.closest('.business_enable_control') || e.target.closest('.business_actions'))
     if (isInvalid || category?.id === categorySelected?.id) return
+    setIsUpdateMode(false)
     if (category?.subcategories?.length) {
       if (!category?.parent_category_id) {
         openCategories.values = []
@@ -127,7 +128,9 @@ export const BusinessProductsListing = (props) => {
       return
     }
 
-    setCategoryState({ ...categoryState, loading: true })
+    if (!isUpdateMode) {
+      setCategoryState({ ...categoryState, loading: true })
+    }
 
     const parameters = {
       page: newFetch ? 1 : pagination.currentPage + 1,
@@ -285,14 +288,13 @@ export const BusinessProductsListing = (props) => {
   }
 
   useEffect(() => {
-    if (businessState.loading || isUpdateMode) return
-    console.log('business')
+    if (businessState.loading) return
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true)
     } else if (businessState?.business?.categories) {
       setCategorySelected(businessState?.business?.categories[0])
     }
-  }, [businessState, isUpdateMode])
+  }, [businessState])
 
   useEffect(() => {
     if (searchValue !== null) getProducts(!!searchValue)
