@@ -8,7 +8,8 @@ export const ReportsDriverFilter = (props) => {
     filterList,
     handleChangeFilterList,
     propsToFetch,
-    onClose
+    onClose,
+    isSearchByName
   } = props
 
   const [ordering] = useApi()
@@ -19,6 +20,8 @@ export const ReportsDriverFilter = (props) => {
   const [driverList, setDriverList] = useState({ loading: true, error: null, drivers: [], pagination: null })
   const [driverIds, setDriverIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
+  const [searchValue, setSearchValue] = useState(null)
+  const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
    * Method to change business id
@@ -73,8 +76,39 @@ export const ReportsDriverFilter = (props) => {
         ...driverList,
         loading: true
       })
-      const where = [{ attribute: 'level', value: '4' }]
-      const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
+      let where = null
+      const conditions = [{ attribute: 'level', value: '4' }]
+      if (searchValue) {
+        const searchConditions = []
+        const isSpecialCharacter = rex.test(searchValue)
+        if (isSearchByName) {
+          searchConditions.push(
+            {
+              attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
+      }
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const fetchEndpoint = where
+        ? ordering.users().asDashboard().select(propsToFetch).where(where)
+        : ordering.users().asDashboard().select(propsToFetch)
+      const { content: { error, result, pagination } } = await fetchEndpoint.get()
+      // const where = [{ attribute: 'level', value: '4' }]
+      // const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
       if (!error) {
         setDriverList({
           ...driverList,
@@ -102,7 +136,7 @@ export const ReportsDriverFilter = (props) => {
     const controller = new AbortController()
     getDrivers()
     return controller.abort()
-  }, [])
+  }, [searchValue])
 
   useEffect(() => {
     if (driverList?.drivers?.length === 0) return
@@ -118,6 +152,8 @@ export const ReportsDriverFilter = (props) => {
           {...props}
           driverList={driverList}
           driverIds={driverIds}
+          searchValue={searchValue}
+          onSearch={setSearchValue}
           handleChangeDriverId={handleChangeDriverId}
           handleClickFilterButton={handleClickFilterButton}
           isAllCheck={isAllCheck}

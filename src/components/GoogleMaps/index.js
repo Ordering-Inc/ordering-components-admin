@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { WrapperGoogleMaps } from '../WrapperGoogleMaps'
-
 import { useEvent } from '../../contexts/EventContext'
 import { useUtils } from '../../contexts/UtilsContext'
 
@@ -21,7 +20,9 @@ export const GoogleMaps = (props) => {
     isHeat,
     markerIcon,
     isFitCenter,
-    handleChangeCenter
+    handleChangeCenter,
+    data,
+    fillStyle
   } = props
 
   const [{ optimizeImage }] = useUtils()
@@ -224,6 +225,30 @@ export const GoogleMaps = (props) => {
           draggable: !!mapControls?.isMarkerDraggable
         })
         setGoogleMapMarker(marker)
+      }
+
+      if (data) {
+        data.forEach(zone => {
+          if (zone.type === 1 && zone?.data?.center) {
+            const circle = new window.google.maps.Circle({
+              ...fillStyle,
+              draggable: false,
+              map: map,
+              center: zone.data.center,
+              radius: zone.data.radio
+            })
+            console.log(circle)
+          }
+          if (zone.type === 2 && Array.isArray(zone.data)) {
+            const polygon = new window.google.maps.Polygon({
+              ...fillStyle,
+              draggable: false,
+              map: map,
+              paths: zone.data
+            })
+            console.log(polygon)
+          }
+        })
       }
     }
   }, [googleReady])
