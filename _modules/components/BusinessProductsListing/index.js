@@ -157,6 +157,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
     var isInvalid = (e === null || e === void 0 ? void 0 : (_e$target = e.target) === null || _e$target === void 0 ? void 0 : _e$target.closest) && ((e === null || e === void 0 ? void 0 : (_e$target2 = e.target) === null || _e$target2 === void 0 ? void 0 : _e$target2.closest('.business_enable_control')) || e.target.closest('.business_actions'));
     if (isInvalid || (category === null || category === void 0 ? void 0 : category.id) === (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id)) return;
+    setIsUpdateMode(false);
 
     if (category === null || category === void 0 ? void 0 : (_category$subcategori = category.subcategories) === null || _category$subcategori === void 0 ? void 0 : _category$subcategori.length) {
       if (!(category === null || category === void 0 ? void 0 : category.parent_category_id)) {
@@ -264,9 +265,12 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
               return _context.abrupt("return");
 
             case 11:
-              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                loading: true
-              }));
+              if (!isUpdateMode) {
+                setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+                  loading: true
+                }));
+              }
+
               parameters = {
                 page: newFetch ? 1 : pagination.currentPage + 1,
                 page_size: pagination.pageSize
@@ -498,8 +502,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   (0, _react.useEffect)(function () {
     var _businessState$busine9;
 
-    if (businessState.loading || isUpdateMode) return;
-    console.log('business');
+    if (businessState.loading) return;
 
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
@@ -508,7 +511,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
       setCategorySelected(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine10 = businessState.business) === null || _businessState$busine10 === void 0 ? void 0 : _businessState$busine10.categories[0]);
     }
-  }, [businessState, isUpdateMode]);
+  }, [businessState]);
   (0, _react.useEffect)(function () {
     if (searchValue !== null) getProducts(!!searchValue);
   }, [searchValue]);
