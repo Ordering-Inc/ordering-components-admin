@@ -83,11 +83,19 @@ export const BusinessProductsListing = (props) => {
         loading: false
       }
       if (categorySelected) {
-        let productsFiltered = businessState?.business?.categories?.find(
-          category => category.id === categorySelected.id
-        )?.products?.filter(
+        let categoryFiltered
+        const _categories = [...businessState?.business?.categories]
+        _categories.forEach(function iterate (category) {
+          if (category.id === categorySelected.id) {
+            categoryFiltered = category
+          }
+          Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+        })
+
+        let productsFiltered = categoryFiltered?.products?.filter(
           product => isMatchSearch(product.name, product.description)
         )
+
         if (!productsFiltered) {
           productsFiltered = categorySelected?.products?.filter(
             product => isMatchSearch(product.name, product.description)
