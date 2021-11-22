@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessMenuOptions = (props) => {
   const {
@@ -12,6 +14,9 @@ export const BusinessMenuOptions = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
+
   const [businessMenuState, setBusinessMenuState] = useState({ loading: false, error: null, menu: menu || {} })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [orderTypeState, setOrderTypeSate] = useState({})
@@ -330,6 +335,7 @@ export const BusinessMenuOptions = (props) => {
    */
   const handleUpdateBusinessMenuOption = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = {}
       for (const key in formState?.changes) {
@@ -365,6 +371,7 @@ export const BusinessMenuOptions = (props) => {
           return true
         })
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
+        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
