@@ -29,6 +29,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -317,13 +325,18 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 setIsEditMode(false);
 
                 if (handleUpdateBusinessState) {
-                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
-                    if (item.id === category.id) {
-                      return _objectSpread(_objectSpread({}, item), params);
+                  _categories = _toConsumableArray(business.categories);
+
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === result.id) {
+                      category.name = result === null || result === void 0 ? void 0 : result.name;
+                      category.enabled = result === null || result === void 0 ? void 0 : result.enabled;
+                      category.image = result === null || result === void 0 ? void 0 : result.image;
                     }
 
-                    return item;
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                   });
+
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
                   }));

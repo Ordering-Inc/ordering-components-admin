@@ -243,19 +243,20 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 setCategorySelected(content.result);
 
                 if (handleUpdateBusinessState) {
-                  _categories = businessState.business.categories.map(function (item) {
-                    if (item.id === parseInt(id)) {
+                  _categories = _toConsumableArray(businessState.business.categories);
+
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id)) {
                       var _content$result, _content$result2, _content$result3;
 
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        name: content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name,
-                        enabled: content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled,
-                        image: content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image
-                      });
+                      category.name = content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name;
+                      category.enabled = content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled;
+                      category.image = content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image;
                     }
 
-                    return item;
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                   });
+
                   _business = _objectSpread(_objectSpread({}, businessState.business), {}, {
                     categories: _categories
                   });
