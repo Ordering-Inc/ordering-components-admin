@@ -59,14 +59,14 @@ export const BusinessCategoryEdit = (props) => {
   const handleChangeCheckBox = (isChecked) => {
     let currentChanges = null
     if (isChecked.enabled !== undefined) {
-      currentChanges = { enabled: isChecked.enabled}
+      currentChanges = { enabled: isChecked.enabled }
     }
     if (isChecked.enabledParent) {
-      currentChanges = { parent_category_id: categorySelected.id}
+      currentChanges = { parent_category_id: categorySelected.id }
     } else {
-      currentChanges = { parent_category_id: null}
+      currentChanges = { parent_category_id: null }
     }
-    
+
     setFormState({
       ...formState,
       changes: { ...formState.changes, ...currentChanges }
@@ -124,17 +124,16 @@ export const BusinessCategoryEdit = (props) => {
           })
           setCategorySelected(content.result)
           if (handleUpdateBusinessState) {
-            const _categories = businessState.business.categories.map(item => {
-              if (item.id === parseInt(id)) {
-                return {
-                  ...item,
-                  name: content?.result?.name,
-                  enabled: content?.result?.enabled,
-                  image: content?.result?.image
-                }
+            const _categories = [...businessState.business.categories]
+            _categories.forEach(function iterate (category) {
+              if (category.id === content?.result.id) {
+                category.name = content?.result?.name
+                category.enabled = content?.result?.enabled
+                category.image = content?.result?.image
               }
-              return item
+              Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
+
             const _business = { ...businessState.business, categories: _categories }
             handleUpdateBusinessState(_business)
           }
