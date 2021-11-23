@@ -8,7 +8,7 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 /**
  * Component to manage Checkout page behavior without UI component
  */
-export const SingleBusinessProduct = (props) => {
+ export const SingleBusinessProduct = (props) => {
   const {
     UIComponent,
     business,
@@ -69,18 +69,13 @@ export const SingleBusinessProduct = (props) => {
    * @param {String} value
    */
   const handleUpdateClick = () => {
-    const params = {
+    const prarms = {
       images: formState?.changes?.images,
       name: formState?.changes?.name,
       description: formState?.changes?.description,
       price: formState?.changes?.price
     }
-    for (const key in params) {
-      if (params[key] === null) {
-        delete params[key]
-      }
-    }
-    editProduct(params)
+    editProduct(prarms)
   }
 
   /**
