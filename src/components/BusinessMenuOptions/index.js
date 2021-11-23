@@ -212,98 +212,46 @@ export const BusinessMenuOptions = (props) => {
 
   /**
    * Update schedule time
-   * @param {Number} daysOfWeekIndex index of week days
    * @param {Boolean} isOpen open time if true, else close time
    * @param {Boolean} isHour hour if true, else minute
    * @param {String} value changed value
    */
-  const handleChangeAddScheduleTime = (daysOfWeekIndex, isOpen, isHour, value) => {
-    const _schedule = [...schedule]
-    let conflict
-
+  const handleChangeAddScheduleTime = (isOpen, isHour, value) => {
     if (isOpen) {
       if (isHour) {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: { hour: parseInt(value), minute: addScheduleTime.open.minute },
-            close: addScheduleTime.close
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            open: {
-              ...addScheduleTime.open,
-              hour: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: {
+            ...addScheduleTime.open,
+            hour: parseInt(value)
+          }
+        })
       } else {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: { hour: addScheduleTime.open.hour, minute: parseInt(value) },
-            close: addScheduleTime.close
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            open: {
-              ...addScheduleTime.open,
-              minute: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: {
+            ...addScheduleTime.open,
+            minute: parseInt(value)
+          }
+        })
       }
     } else {
       if (isHour) {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: addScheduleTime.open,
-            close: { hour: parseInt(value), minute: addScheduleTime.close.minute }
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            close: {
-              ...addScheduleTime.close,
-              hour: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: {
+            ...addScheduleTime.close,
+            hour: parseInt(value)
+          }
+        })
       } else {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: addScheduleTime.open,
-            close: { hour: addScheduleTime.close.hour, minute: parseInt(value) }
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            close: {
-              ...addScheduleTime.close,
-              minute: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: {
+            ...addScheduleTime.close,
+            minute: parseInt(value)
+          }
+        })
       }
     }
   }
