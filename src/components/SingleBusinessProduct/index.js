@@ -8,7 +8,7 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 /**
  * Component to manage Checkout page behavior without UI component
  */
-export const SingleBusinessProduct = (props) => {
+ export const SingleBusinessProduct = (props) => {
   const {
     UIComponent,
     business,
@@ -69,18 +69,13 @@ export const SingleBusinessProduct = (props) => {
    * @param {String} value
    */
   const handleUpdateClick = () => {
-    const params = {
+    const prarms = {
       images: formState?.changes?.images,
       name: formState?.changes?.name,
       description: formState?.changes?.description,
       price: formState?.changes?.price
     }
-    for (const key in params) {
-      if (params[key] === null) {
-        delete params[key]
-      }
-    }
-    editProduct(params)
+    editProduct(prarms)
   }
 
   /**
@@ -209,6 +204,77 @@ export const SingleBusinessProduct = (props) => {
     }
   }
 
+  const handleDrag = (event) => {
+    event.dataTransfer.setData('transferProductId', product?.id)
+    const ghostEle = document.createElement('div')
+    ghostEle.classList.add('ghostDragging')
+    ghostEle.innerHTML = product?.name
+    document.body.appendChild(ghostEle)
+    event.dataTransfer.setDragImage(ghostEle, 0, 0)
+  }
+
+  const handleDragOver = (event) => {
+    event.preventDefault()
+  }
+
+  const handleDrop = (event) => {
+    event.preventDefault()
+    const transferProductId = parseInt(event.dataTransfer.getData('transferProductId'))
+    const _categories = business?.categories.map(item => {
+      if (item.id === product?.category_id) {
+        const transferProduct = item.products.find(_product => _product.id === transferProductId)
+        const updatedProducts = []
+        let counter
+        for (let i = 0; i < item.products.length; i++) {
+          if (item.products[i].id === product?.id) {
+            counter = i
+          }
+          if (item.products[i].id !== transferProductId) {
+            updatedProducts.push(item.products[i])
+          }
+        }
+        updatedProducts.splice(counter, 0, transferProduct)
+        if (Array.isArray(updatedProducts)) {
+          for (const i in updatedProducts) {
+            updatedProducts[i].rank = parseInt(i)
+          }
+        }
+        return {
+          ...item,
+          products: updatedProducts
+        }
+      }
+      return item
+    })
+    handleUpdateBusinessState({ ...business, categories: _categories })
+
+    const needUpdataCategory = _categories.find(c => c.id === product?.category_id)
+    handleUpdateCategoryWithProductRank(needUpdataCategory.id, { products: needUpdataCategory?.products })
+  }
+
+  /**
+   * Update category with products rank of transfer product
+  */
+  const handleUpdateCategoryWithProductRank = async (categoryId, params) => {
+    if (loading) return
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const { content } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(categoryId)).save(params)
+      if (!content.error) {
+        showToast(ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'))
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
+      })
+    }
+  }
+
   useEffect(() => {
     if (product) {
       setFormState({
@@ -230,6 +296,9 @@ export const SingleBusinessProduct = (props) => {
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           isEditMode={isEditMode}
+          handleDrag={handleDrag}
+          handleDragOver={handleDragOver}
+          handleDrop={handleDrop}
         />
       )}
     </>
