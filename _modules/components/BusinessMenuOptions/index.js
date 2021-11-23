@@ -332,93 +332,40 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
   };
   /**
    * Update schedule time
-   * @param {Number} daysOfWeekIndex index of week days
    * @param {Boolean} isOpen open time if true, else close time
    * @param {Boolean} isHour hour if true, else minute
    * @param {String} value changed value
    */
 
 
-  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(daysOfWeekIndex, isOpen, isHour, value) {
-    var _schedule = _toConsumableArray(schedule);
-
-    var conflict;
-
+  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(isOpen, isHour, value) {
     if (isOpen) {
       if (isHour) {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: {
-            hour: parseInt(value),
-            minute: addScheduleTime.open.minute
-          },
-          close: addScheduleTime.close
-        }, null);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-            open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
-              hour: parseInt(value)
-            })
-          }));
-        }
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
+            hour: parseInt(value)
+          })
+        }));
       } else {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: {
-            hour: addScheduleTime.open.hour,
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
             minute: parseInt(value)
-          },
-          close: addScheduleTime.close
-        }, null);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-            open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
-              minute: parseInt(value)
-            })
-          }));
-        }
+          })
+        }));
       }
     } else {
       if (isHour) {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: addScheduleTime.open,
-          close: {
-            hour: parseInt(value),
-            minute: addScheduleTime.close.minute
-          }
-        }, null);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-            close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
-              hour: parseInt(value)
-            })
-          }));
-        }
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
+            hour: parseInt(value)
+          })
+        }));
       } else {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: addScheduleTime.open,
-          close: {
-            hour: addScheduleTime.close.hour,
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
             minute: parseInt(value)
-          }
-        }, null);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-            close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
-              minute: parseInt(value)
-            })
-          }));
-        }
+          })
+        }));
       }
     }
   };
