@@ -16,7 +16,6 @@ export const DriversCompaniesList = (props) => {
   const [, t] = useLanguage()
 
   const [driversCompaniesState, setDriversCompaniesState] = useState({ companies: [], loading: false, error: null })
-  const [changesState, setChangesState] = useState({})
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [openDetails, setOpenDetails] = useState(false)
   const [selectedCompanyList, setSelectedCompanyList] = useState([])
@@ -73,69 +72,8 @@ export const DriversCompaniesList = (props) => {
         })
         setDriversCompaniesState({ ...driversCompaniesState, companies: companies })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-        setChangesState({})
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
-      }
-    } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
-    }
-  }
-
-  /**
-   * Method to add new drivers company from API
-   */
-  const handleAddDriversCompany = async () => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
-
-      const schedule = []
-      for (var i = 0; i < 7; i++) {
-        schedule.push({
-          enabled: true,
-          lapses: [
-            {
-              open: {
-                hour: 0,
-                minute: 0
-              },
-              close: {
-                hour: 23,
-                minute: 59
-              }
-            }
-          ]
-        })
-      }
-      const extraAttributes = {
-        enabled: true,
-        priority: '0',
-        fixed_cost_per_km: 0,
-        fixed_cost_delivery: 0,
-        percentage_cost_per_order_subtotal: 0,
-        schedule: JSON.stringify(schedule)
-      }
-      const changes = { ...changesState, ...extraAttributes }
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(changes)
-      }
-      const response = await fetch(`${ordering.root}/driver_companies`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setActionState({ ...actionState, loading: false })
-        const companies = [...driversCompaniesState.companies, content.result]
-        setDriversCompaniesState({ ...driversCompaniesState, companies: companies })
-        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-        setChangesState({})
-        setOpenDetails(false)
-      } else {
-        setActionState({ loading: false, error: content.result })
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
@@ -200,13 +138,6 @@ export const DriversCompaniesList = (props) => {
     }
   }
 
-  const handleChangesState = (key, val) => {
-    setChangesState({
-      ...changesState,
-      [key]: val
-    })
-  }
-
   useEffect(() => {
     if (!startSeveralDeleteStart || selectedCompanyList.length === 0) return
     handleDeleteDriversCompany(selectedCompanyList[0])
@@ -223,15 +154,12 @@ export const DriversCompaniesList = (props) => {
           <UIComponent
             {...props}
             driversCompaniesState={driversCompaniesState}
-            changesState={changesState}
+            setDriversCompaniesState={setDriversCompaniesState}
             actionState={actionState}
             openDetails={openDetails}
             setOpenDetails={setOpenDetails}
-            cleanChagesState={() => setChangesState({})}
-            handleChangesState={handleChangesState}
             handleUpdateDriversCompany={handleUpdateDriversCompany}
             handleDeleteDriversCompany={handleDeleteDriversCompany}
-            handleAddDriversCompany={handleAddDriversCompany}
             handleSelectCompany={handleSelectCompany}
             selectedCompanyList={selectedCompanyList}
             handleAllSelectCompany={handleAllSelectCompany}
