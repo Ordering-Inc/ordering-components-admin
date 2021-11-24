@@ -86,24 +86,19 @@ var LanguageManager = function LanguageManager(props) {
 
   var _useState3 = (0, _react.useState)(null),
       _useState4 = _slicedToArray(_useState3, 2),
-      mainTransList = _useState4[0],
-      setMainTransList = _useState4[1];
+      searchValue = _useState4[0],
+      setSearchValue = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      searchValue = _useState6[0],
-      setSearchValue = _useState6[1];
-
-  var _useState7 = (0, _react.useState)({
+  var _useState5 = (0, _react.useState)({
     loading: false,
     changes: {},
     result: {
       error: null
     }
   }),
-      _useState8 = _slicedToArray(_useState7, 2),
-      formState = _useState8[0],
-      setFormState = _useState8[1];
+      _useState6 = _slicedToArray(_useState5, 2),
+      formState = _useState6[0],
+      setFormState = _useState6[1];
   /**
    * Method to update translation text
    * @param {number} id translation id
@@ -282,63 +277,9 @@ var LanguageManager = function LanguageManager(props) {
       updateTranslation();
     }
   }, [formState === null || formState === void 0 ? void 0 : formState.changes]);
-  (0, _react.useEffect)(function () {
-    var _translationList$tran;
-
-    if ((translationList === null || translationList === void 0 ? void 0 : (_translationList$tran = translationList.translations) === null || _translationList$tran === void 0 ? void 0 : _translationList$tran.length) > 0) {
-      var main = [];
-
-      for (var i = 0; i < (translationList === null || translationList === void 0 ? void 0 : translationList.translations.length); i++) {
-        switch (translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key) {
-          case 'BUSINESS_TYPE_FOOD':
-            main.push({
-              i: 1,
-              id: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].id,
-              name: 'TYPE_FOOD_WEB_APP',
-              key: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key,
-              text: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].text
-            });
-            break;
-
-          case 'BUSINESS_TYPE_ALCOHOL':
-            main.push({
-              i: 2,
-              id: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].id,
-              name: 'TYPE_ALCOHOL_WEB_APP',
-              key: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key,
-              text: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].text
-            });
-            break;
-
-          case 'BUSINESS_TYPE_LAUNDRY':
-            main.push({
-              i: 3,
-              id: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].id,
-              name: 'TYPE_LAUNDRY_WEB_APP',
-              key: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key,
-              text: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].text
-            });
-            break;
-
-          case 'BUSINESS_TYPE_GROCERIES':
-            main.push({
-              i: 4,
-              id: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].id,
-              name: 'TYPE_GROCERIES_WEB_APP',
-              key: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].key,
-              text: translationList === null || translationList === void 0 ? void 0 : translationList.translations[i].text
-            });
-            break;
-        }
-      }
-
-      setMainTransList(main);
-    }
-  }, [translationList === null || translationList === void 0 ? void 0 : translationList.translations]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     translationList: translationList,
     handleUpdateTranslationList: handleUpdateTranslationList,
-    mainTransList: mainTransList,
     searchValue: searchValue,
     onSearch: setSearchValue,
     handleChangeText: handleChangeText,

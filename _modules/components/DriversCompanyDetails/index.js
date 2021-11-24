@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CheckoutFieldsSetting = void 0;
+exports.DriversCompanyDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,9 +13,9 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _SessionContext = require("../../contexts/SessionContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _SessionContext = require("../../contexts/SessionContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
 
@@ -28,6 +28,14 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -51,8 +59,11 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
-  var UIComponent = props.UIComponent;
+var DriversCompanyDetails = function DriversCompanyDetails(props) {
+  var UIComponent = props.UIComponent,
+      driversCompaniesState = props.driversCompaniesState,
+      setDriversCompaniesState = props.setDriversCompaniesState,
+      driversCompany = props.driversCompany;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -70,16 +81,10 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
-  var hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes'];
-
-  var _useState = (0, _react.useState)({
-    fields: [],
-    loading: false,
-    error: null
-  }),
+  var _useState = (0, _react.useState)({}),
       _useState2 = _slicedToArray(_useState, 2),
-      checkoutFieldsState = _useState2[0],
-      setCheckoutFieldsState = _useState2[1];
+      changesState = _useState2[0],
+      setChangesState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
@@ -89,95 +94,103 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       actionState = _useState4[0],
       setActionState = _useState4[1];
   /**
-   * Method to get the checkout fields from API
+   * Method to update the selected drivers company from API
+   * @param {Number} driverCompanyId
    */
 
 
-  var getCheckoutFields = /*#__PURE__*/function () {
+  var handleUpdateDriversCompany = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content, checkoutFields, orderValidationFields, validationF;
+      var _changes, requestOptions, response, content, companies;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              _changes = _objectSpread({}, changesState);
+
+              if (_changes === null || _changes === void 0 ? void 0 : _changes.schedule) {
+                _changes.schedule = JSON.stringify(_changes === null || _changes === void 0 ? void 0 : _changes.schedule);
+              }
+
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(_changes)
               };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/checkoutfields"), requestOptions);
-
-            case 5:
-              response = _context.sent;
               _context.next = 8;
-              return response.json();
+              return fetch("".concat(ordering.root, "/driver_companies/").concat(driversCompany === null || driversCompany === void 0 ? void 0 : driversCompany.id), requestOptions);
 
             case 8:
+              response = _context.sent;
+              _context.next = 11;
+              return response.json();
+
+            case 11:
               content = _context.sent;
 
               if (!content.error) {
-                checkoutFields = content.result.filter(function (field) {
-                  return !hideSettingList.includes(field.code);
-                });
-                orderValidationFields = ['name', 'middle_name', 'lastname', 'second_lastname', 'email', 'mobile_phone', 'city_dropdown_option', 'address', 'zipcode', 'address_notes', 'coupon', 'driver_tip'];
-                validationF = [];
-                orderValidationFields.forEach(function (field) {
-                  var sort = checkoutFields.findIndex(function (validationfields) {
-                    return validationfields.code === field;
-                  });
-
-                  if (sort !== -1) {
-                    var item = checkoutFields[sort];
-                    checkoutFields.splice(sort, 1);
-                    validationF.push(item);
-                  }
-                });
-                setCheckoutFieldsState({
-                  fields: validationF,
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
+                }));
+                companies = driversCompaniesState.companies.filter(function (company) {
+                  if (company.id === (driversCompany === null || driversCompany === void 0 ? void 0 : driversCompany.id)) {
+                    Object.assign(company, content.result);
+                  }
+
+                  return true;
                 });
+                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+                  companies: companies
+                }));
+                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                setChangesState({});
+              } else {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
               }
 
-              _context.next = 15;
+              _context.next = 18;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
-              setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context.t0.message]
-              }));
+              });
 
-            case 15:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
-    return function getCheckoutFields() {
+    return function handleUpdateDriversCompany() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to update the checkout fields setting from API
-   * @param {Number} fieldId selected field id
-   * @param {Object} changes changes
+   * Method to add new drivers company from API
    */
 
 
-  var handleChangeCheckoutFieldSetting = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(fieldId, changes) {
-      var requestOptions, response, content, fields;
+  var handleAddDriversCompany = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var schedule, i, extraAttributes, changes, requestOptions, response, content, companies;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -187,41 +200,64 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              schedule = [];
+
+              for (i = 0; i < 7; i++) {
+                schedule.push({
+                  enabled: true,
+                  lapses: [{
+                    open: {
+                      hour: 0,
+                      minute: 0
+                    },
+                    close: {
+                      hour: 23,
+                      minute: 45
+                    }
+                  }]
+                });
+              }
+
+              extraAttributes = {
+                enabled: true,
+                priority: '0',
+                fixed_cost_per_km: 0,
+                fixed_cost_delivery: 0,
+                percentage_cost_per_order_subtotal: 0
+              };
+              changes = _objectSpread(_objectSpread(_objectSpread({}, changesState), extraAttributes), {}, {
+                schedule: (changesState === null || changesState === void 0 ? void 0 : changesState.schedule) ? JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.schedule) : JSON.stringify(schedule)
+              });
               requestOptions = {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
                 body: JSON.stringify(changes)
               };
-              _context2.next = 6;
-              return fetch("".concat(ordering.root, "/checkoutfields/").concat(fieldId), requestOptions);
+              _context2.next = 10;
+              return fetch("".concat(ordering.root, "/driver_companies"), requestOptions);
 
-            case 6:
+            case 10:
               response = _context2.sent;
-              _context2.next = 9;
+              _context2.next = 13;
               return response.json();
 
-            case 9:
+            case 13:
               content = _context2.sent;
 
               if (!content.error) {
-                setActionState({
-                  loading: false,
-                  error: null
-                });
-                showToast(_ToastContext.ToastType.Success, t('FIELD_SAVED', 'Field saved'));
-                fields = checkoutFieldsState.fields.filter(function (field) {
-                  if (field.id === fieldId) {
-                    Object.assign(field, content.result);
-                  }
-
-                  return true;
-                });
-                setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
-                  fields: fields
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
                 }));
+                companies = [].concat(_toConsumableArray(driversCompaniesState.companies), [content.result]);
+                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+                  companies: companies
+                }));
+                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                setChangesState({});
+                props.onClose && props.onClose();
               } else {
                 setActionState({
                   loading: false,
@@ -229,71 +265,90 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
                 });
               }
 
-              _context2.next = 16;
+              _context2.next = 20;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 17:
+              _context2.prev = 17;
               _context2.t0 = _context2["catch"](0);
               setActionState({
                 loading: false,
                 error: [_context2.t0.message]
               });
 
-            case 16:
+            case 20:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 17]]);
     }));
 
-    return function handleChangeCheckoutFieldSetting(_x, _x2) {
+    return function handleAddDriversCompany() {
       return _ref2.apply(this, arguments);
     };
   }();
 
-  (0, _react.useEffect)(function () {
-    getCheckoutFields();
-  }, []);
+  var handleChangesState = function handleChangesState(key, val) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, key, val)));
+  };
+
+  var handleChangeScheduleState = function handleChangeScheduleState(scheduleChanges) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      schedule: scheduleChanges
+    }));
+  };
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    checkoutFieldsState: checkoutFieldsState,
-    handleChangeCheckoutFieldSetting: handleChangeCheckoutFieldSetting
+    cleanChagesState: function cleanChagesState() {
+      return setChangesState({});
+    },
+    changesState: changesState,
+    actionState: actionState,
+    cleanActionState: function cleanActionState() {
+      return setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+        error: null
+      }));
+    },
+    handleChangesState: handleChangesState,
+    handleUpdateDriversCompany: handleUpdateDriversCompany,
+    handleAddDriversCompany: handleAddDriversCompany,
+    handleChangeScheduleState: handleChangeScheduleState
   })));
 };
 
-exports.CheckoutFieldsSetting = CheckoutFieldsSetting;
-CheckoutFieldsSetting.propTypes = {
+exports.DriversCompanyDetails = DriversCompanyDetails;
+DriversCompanyDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before checkout fields
+   * Components types before drivers company details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after checkout fields
+   * Components types after drivers company details
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before checkout fields
+   * Elements before drivers company details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after checkout fields
+   * Elements after drivers company details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CheckoutFieldsSetting.defaultProps = {
+DriversCompanyDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

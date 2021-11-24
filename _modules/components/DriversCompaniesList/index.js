@@ -87,33 +87,28 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
       driversCompaniesState = _useState2[0],
       setDriversCompaniesState = _useState2[1];
 
-  var _useState3 = (0, _react.useState)({}),
-      _useState4 = _slicedToArray(_useState3, 2),
-      changesState = _useState4[0],
-      setChangesState = _useState4[1];
-
-  var _useState5 = (0, _react.useState)({
+  var _useState3 = (0, _react.useState)({
     loading: false,
     error: null
   }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      actionState = _useState6[0],
-      setActionState = _useState6[1];
+      openDetails = _useState6[0],
+      setOpenDetails = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(false),
+  var _useState7 = (0, _react.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      openDetails = _useState8[0],
-      setOpenDetails = _useState8[1];
+      selectedCompanyList = _useState8[0],
+      setSelectedCompanyList = _useState8[1];
 
-  var _useState9 = (0, _react.useState)([]),
+  var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      selectedCompanyList = _useState10[0],
-      setSelectedCompanyList = _useState10[1];
-
-  var _useState11 = (0, _react.useState)(false),
-      _useState12 = _slicedToArray(_useState11, 2),
-      startSeveralDeleteStart = _useState12[0],
-      setStartSeveralDeleteStart = _useState12[1];
+      startSeveralDeleteStart = _useState10[0],
+      setStartSeveralDeleteStart = _useState10[1];
   /**
    * Method to get the drivers companies from API
    */
@@ -230,7 +225,6 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
                   companies: companies
                 }));
                 showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
-                setChangesState({});
               } else {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false,
@@ -262,123 +256,19 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
     };
   }();
   /**
-   * Method to add new drivers company from API
-   */
-
-
-  var handleAddDriversCompany = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var schedule, i, extraAttributes, changes, requestOptions, response, content, companies;
-      return _regenerator.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              schedule = [];
-
-              for (i = 0; i < 7; i++) {
-                schedule.push({
-                  enabled: true,
-                  lapses: [{
-                    open: {
-                      hour: 0,
-                      minute: 0
-                    },
-                    close: {
-                      hour: 23,
-                      minute: 59
-                    }
-                  }]
-                });
-              }
-
-              extraAttributes = {
-                enabled: true,
-                priority: '0',
-                fixed_cost_per_km: 0,
-                fixed_cost_delivery: 0,
-                percentage_cost_per_order_subtotal: 0,
-                schedule: JSON.stringify(schedule)
-              };
-              changes = _objectSpread(_objectSpread({}, changesState), extraAttributes);
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
-              };
-              _context3.next = 10;
-              return fetch("".concat(ordering.root, "/driver_companies"), requestOptions);
-
-            case 10:
-              response = _context3.sent;
-              _context3.next = 13;
-              return response.json();
-
-            case 13:
-              content = _context3.sent;
-
-              if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
-                companies = [].concat(_toConsumableArray(driversCompaniesState.companies), [content.result]);
-                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
-                  companies: companies
-                }));
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
-                setChangesState({});
-                setOpenDetails(false);
-              } else {
-                setActionState({
-                  loading: false,
-                  error: content.result
-                });
-              }
-
-              _context3.next = 20;
-              break;
-
-            case 17:
-              _context3.prev = 17;
-              _context3.t0 = _context3["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context3.t0.message]
-              });
-
-            case 20:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 17]]);
-    }));
-
-    return function handleAddDriversCompany() {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
    * Method to delete the selected drivers company from API
    * @param {Number} driverCompanyId
    */
 
 
   var handleDeleteDriversCompany = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(driverCompanyId) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(driverCompanyId) {
       var requestOptions, response, content, companies, companyList;
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context4.prev = 0;
+              _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
@@ -390,16 +280,16 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context4.next = 6;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/driver_companies/").concat(driverCompanyId), requestOptions);
 
             case 6:
-              response = _context4.sent;
-              _context4.next = 9;
+              response = _context3.sent;
+              _context3.next = 9;
               return response.json();
 
             case 9:
-              content = _context4.sent;
+              content = _context3.sent;
 
               if (!content.error) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
@@ -431,27 +321,27 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
                 setStartSeveralDeleteStart(false);
               }
 
-              _context4.next = 16;
+              _context3.next = 16;
               break;
 
             case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](0);
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
               setActionState({
                 loading: false,
-                error: [_context4.t0.message]
+                error: [_context3.t0.message]
               });
 
             case 16:
             case "end":
-              return _context4.stop();
+              return _context3.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
     return function handleDeleteDriversCompany(_x3) {
-      return _ref4.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -481,10 +371,6 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
     }
   };
 
-  var handleChangesState = function handleChangesState(key, val) {
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, key, val)));
-  };
-
   (0, _react.useEffect)(function () {
     if (!startSeveralDeleteStart || selectedCompanyList.length === 0) return;
     handleDeleteDriversCompany(selectedCompanyList[0]);
@@ -494,17 +380,12 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversCompaniesState: driversCompaniesState,
-    changesState: changesState,
+    setDriversCompaniesState: setDriversCompaniesState,
     actionState: actionState,
     openDetails: openDetails,
     setOpenDetails: setOpenDetails,
-    cleanChagesState: function cleanChagesState() {
-      return setChangesState({});
-    },
-    handleChangesState: handleChangesState,
     handleUpdateDriversCompany: handleUpdateDriversCompany,
     handleDeleteDriversCompany: handleDeleteDriversCompany,
-    handleAddDriversCompany: handleAddDriversCompany,
     handleSelectCompany: handleSelectCompany,
     selectedCompanyList: selectedCompanyList,
     handleAllSelectCompany: handleAllSelectCompany,
