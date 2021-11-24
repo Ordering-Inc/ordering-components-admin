@@ -19,7 +19,6 @@ export const LanguageManager = (props) => {
   const [, { showToast }] = useToast()
 
   const [translationList, setTranslationList] = useState({ loading: false, translations: [], result: { error: null } })
-  const [mainTransList, setMainTransList] = useState(null)
   const [searchValue, setSearchValue] = useState(null)
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: null } })
 
@@ -128,53 +127,6 @@ export const LanguageManager = (props) => {
     }
   }, [formState?.changes])
 
-  useEffect(() => {
-    if (translationList?.translations?.length > 0) {
-      const main = []
-      for (let i = 0; i < translationList?.translations.length; i++) {
-        switch (translationList?.translations[i].key) {
-          case 'BUSINESS_TYPE_FOOD':
-            main.push({
-              i: 1,
-              id: translationList?.translations[i].id,
-              name: 'TYPE_FOOD_WEB_APP',
-              key: translationList?.translations[i].key,
-              text: translationList?.translations[i].text
-            })
-            break
-          case 'BUSINESS_TYPE_ALCOHOL':
-            main.push({
-              i: 2,
-              id: translationList?.translations[i].id,
-              name: 'TYPE_ALCOHOL_WEB_APP',
-              key: translationList?.translations[i].key,
-              text: translationList?.translations[i].text
-            })
-            break
-          case 'BUSINESS_TYPE_LAUNDRY':
-            main.push({
-              i: 3,
-              id: translationList?.translations[i].id,
-              name: 'TYPE_LAUNDRY_WEB_APP',
-              key: translationList?.translations[i].key,
-              text: translationList?.translations[i].text
-            })
-            break
-          case 'BUSINESS_TYPE_GROCERIES':
-            main.push({
-              i: 4,
-              id: translationList?.translations[i].id,
-              name: 'TYPE_GROCERIES_WEB_APP',
-              key: translationList?.translations[i].key,
-              text: translationList?.translations[i].text
-            })
-            break
-        }
-      }
-      setMainTransList(main)
-    }
-  }, [translationList?.translations])
-
   return (
     <>
       {UIComponent && (
@@ -182,7 +134,6 @@ export const LanguageManager = (props) => {
           {...props}
           translationList={translationList}
           handleUpdateTranslationList={handleUpdateTranslationList}
-          mainTransList={mainTransList}
           searchValue={searchValue}
           onSearch={setSearchValue}
           handleChangeText={handleChangeText}
