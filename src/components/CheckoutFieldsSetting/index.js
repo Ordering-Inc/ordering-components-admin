@@ -15,6 +15,8 @@ export const CheckoutFieldsSetting = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
+  const hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes']
+
   const [checkoutFieldsState, setCheckoutFieldsState] = useState({ fields: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
@@ -34,7 +36,20 @@ export const CheckoutFieldsSetting = (props) => {
       const response = await fetch(`${ordering.root}/checkoutfields`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setCheckoutFieldsState({ fields: content.result, loading: false })
+        const checkoutFields = content.result.filter(field => !hideSettingList.includes(field.code))
+        const orderValidationFields = ['name', 'middle_name', 'lastname', 'second_lastname', 'email', 'mobile_phone', 'city_dropdown_option', 'address', 'zipcode', 'address_notes', 'coupon', 'driver_tip']
+        const validationF = []
+        orderValidationFields.forEach(field => {
+          const sort = checkoutFields.findIndex(validationfields => {
+            return validationfields.code === field
+          })
+          if (sort !== -1) {
+            const item = checkoutFields[sort]
+            checkoutFields.splice(sort, 1)
+            validationF.push(item)
+          }
+        })
+        setCheckoutFieldsState({ fields: validationF, loading: false })
       }
     } catch (err) {
       setCheckoutFieldsState({ ...checkoutFieldsState, loading: false, error: [err.message] })
