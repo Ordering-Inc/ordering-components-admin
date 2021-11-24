@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Settings = void 0;
+exports.DriversCompanyDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,9 +13,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _ApiContext = require("../../contexts/ApiContext");
+
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _ApiContext = require("../../contexts/ApiContext");
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -33,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -55,178 +59,185 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var categoryHideList = ['cloudinary', 'tookan', 'apple_login', 'order_messages', 'others', 'location', 'twilio'];
-var configHideList = ['search_by_address', 'distance_unit_km', 'google_login_client_id', 'pickup', 'orders_metafields_strategy', 'order_validate', 'time_format', 'driver_close_distance', 'lazy_load_products_when_necessary'];
-/**
- * Component to manage Settings page behavior without UI component
- */
-
-var Settings = function Settings(props) {
+var DriversCompanyDetails = function DriversCompanyDetails(props) {
   var UIComponent = props.UIComponent,
-      settingsType = props.settingsType;
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      driversCompaniesState = props.driversCompaniesState,
+      setDriversCompaniesState = props.setDriversCompaniesState,
+      driversCompany = props.driversCompany;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var _useState = (0, _react.useState)({
-    categories: [],
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useState = (0, _react.useState)({}),
+      _useState2 = _slicedToArray(_useState, 2),
+      changesState = _useState2[0],
+      setChangesState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
     loading: false,
     error: null
   }),
-      _useState2 = _slicedToArray(_useState, 2),
-      categoryList = _useState2[0],
-      setCategoryList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      isUpdateConfig = _useState4[0],
-      setIsUpdateConfig = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      parentId = _useState6[0],
-      setParentId = _useState6[1];
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to update the category
+   * Method to update the selected drivers company from API
+   * @param {Number} driverCompanyId
    */
 
 
-  var handleUpdateCategoryList = function handleUpdateCategoryList(categories) {
-    setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-      categories: categories
-    }));
-    setIsUpdateConfig(true);
-  };
-  /**
-   * Method to get parent categoryid
-   */
-
-
-  var getParentCategory = /*#__PURE__*/function () {
+  var handleUpdateDriversCompany = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
+      var _changes, requestOptions, response, content, companies;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
-              _context.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              _changes = _objectSpread({}, changesState);
+
+              if (_changes !== null && _changes !== void 0 && _changes.schedule) {
+                _changes.schedule = JSON.stringify(_changes === null || _changes === void 0 ? void 0 : _changes.schedule);
+              }
+
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(_changes)
               };
-              filterConditons = [];
-              filterConditons.push({
-                attribute: 'key',
-                value: settingsType
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?where=").concat(JSON.stringify(filterConditons));
-              _context.next = 10;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 8;
+              return fetch("".concat(ordering.root, "/driver_companies/").concat(driversCompany === null || driversCompany === void 0 ? void 0 : driversCompany.id), requestOptions);
 
-            case 10:
+            case 8:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 11;
               return response.json();
 
-            case 13:
-              _yield$response$json = _context.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
+            case 11:
+              content = _context.sent;
 
-              if (!error && result.length > 0) {
-                setParentId(result[0].id);
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
+                companies = driversCompaniesState.companies.filter(function (company) {
+                  if (company.id === (driversCompany === null || driversCompany === void 0 ? void 0 : driversCompany.id)) {
+                    Object.assign(company, content.result);
+                  }
+
+                  return true;
+                });
+                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+                  companies: companies
+                }));
+                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                setChangesState({});
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false,
-                  error: result
+                  error: content.result
                 }));
               }
 
-              _context.next = 22;
+              _context.next = 18;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context["catch"](0);
+              setActionState({
                 loading: false,
-                error: _context.t0
-              }));
+                error: [_context.t0.message]
+              });
 
-            case 22:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
-    return function getParentCategory() {
+    return function handleUpdateDriversCompany() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to get Configration List
+   * Method to add new drivers company from API
    */
 
 
-  var getCagegories = /*#__PURE__*/function () {
+  var handleAddDriversCompany = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json2, error, result, _result;
-
+      var schedule, i, extraAttributes, changes, requestOptions, response, content, companies;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (!loading) {
-                _context2.next = 2;
-                break;
-              }
-
-              return _context2.abrupt("return");
-
-            case 2:
-              _context2.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              schedule = [];
+
+              for (i = 0; i < 7; i++) {
+                schedule.push({
+                  enabled: true,
+                  lapses: [{
+                    open: {
+                      hour: 0,
+                      minute: 0
+                    },
+                    close: {
+                      hour: 23,
+                      minute: 45
+                    }
+                  }]
+                });
+              }
+
+              extraAttributes = {
+                enabled: true,
+                priority: '0',
+                fixed_cost_per_km: 0,
+                fixed_cost_delivery: 0,
+                percentage_cost_per_order_subtotal: 0
+              };
+              changes = _objectSpread(_objectSpread(_objectSpread({}, changesState), extraAttributes), {}, {
+                schedule: changesState !== null && changesState !== void 0 && changesState.schedule ? JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.schedule) : JSON.stringify(schedule)
+              });
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(changes)
               };
-              filterConditons = [];
-              filterConditons.push({
-                attribute: 'parent_category_id',
-                value: parseInt(parentId)
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=id&where=").concat(JSON.stringify(filterConditons));
               _context2.next = 10;
-              return fetch(functionFetch, requestOptions);
+              return fetch("".concat(ordering.root, "/driver_companies"), requestOptions);
 
             case 10:
               response = _context2.sent;
@@ -234,111 +245,110 @@ var Settings = function Settings(props) {
               return response.json();
 
             case 13:
-              _yield$response$json2 = _context2.sent;
-              error = _yield$response$json2.error;
-              result = _yield$response$json2.result;
+              content = _context2.sent;
 
-              if (!error) {
-                _result = result.filter(function (setting) {
-                  return !categoryHideList.includes(setting.key);
-                }).map(function (setting) {
-                  var _setting$configs;
-
-                  var configs = (_setting$configs = setting.configs) === null || _setting$configs === void 0 ? void 0 : _setting$configs.filter(function (config) {
-                    return !configHideList.includes(config.key);
-                  }).sort(function (a, b) {
-                    return a.rank * 1 > b.rank * 1 ? 1 : -1;
-                  });
-                  return _objectSpread(_objectSpread({}, setting), {}, {
-                    configs: _toConsumableArray(configs)
-                  });
-                });
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-                  loading: false,
-                  categories: _result
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
                 }));
+                companies = [].concat(_toConsumableArray(driversCompaniesState.companies), [content.result]);
+                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+                  companies: companies
+                }));
+                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                setChangesState({});
+                props.onClose && props.onClose();
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-                  loading: true,
-                  error: result
-                }));
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
               }
 
-              _context2.next = 22;
+              _context2.next = 20;
               break;
 
-            case 19:
-              _context2.prev = 19;
-              _context2.t0 = _context2["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+            case 17:
+              _context2.prev = 17;
+              _context2.t0 = _context2["catch"](0);
+              setActionState({
                 loading: false,
-                error: _context2.t0
-              }));
+                error: [_context2.t0.message]
+              });
 
-            case 22:
+            case 20:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 19]]);
+      }, _callee2, null, [[0, 17]]);
     }));
 
-    return function getCagegories() {
+    return function handleAddDriversCompany() {
       return _ref2.apply(this, arguments);
     };
   }();
 
-  (0, _react.useEffect)(function () {
-    getParentCategory();
-  }, []);
-  (0, _react.useEffect)(function () {
-    if (parentId) getCagegories(parentId);
-  }, [parentId]);
+  var handleChangesState = function handleChangesState(key, val) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, key, val)));
+  };
+
+  var handleChangeScheduleState = function handleChangeScheduleState(scheduleChanges) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      schedule: scheduleChanges
+    }));
+  };
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    isUpdateConfig: isUpdateConfig,
-    handChangeConfig: setIsUpdateConfig,
-    categoryList: categoryList,
-    handleUpdateCategoryList: handleUpdateCategoryList
+    cleanChagesState: function cleanChagesState() {
+      return setChangesState({});
+    },
+    changesState: changesState,
+    actionState: actionState,
+    cleanActionState: function cleanActionState() {
+      return setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+        error: null
+      }));
+    },
+    handleChangesState: handleChangesState,
+    handleUpdateDriversCompany: handleUpdateDriversCompany,
+    handleAddDriversCompany: handleAddDriversCompany,
+    handleChangeScheduleState: handleChangeScheduleState
   })));
 };
 
-exports.Settings = Settings;
-Settings.propTypes = {
+exports.DriversCompanyDetails = DriversCompanyDetails;
+DriversCompanyDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Number to idenity setting group
-   */
-  settingsType: _propTypes.default.string,
-
-  /**
-   * Components types before Checkout
+   * Components types before drivers company details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after drivers company details
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before drivers company details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after drivers company details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Settings.defaultProps = {
+DriversCompanyDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

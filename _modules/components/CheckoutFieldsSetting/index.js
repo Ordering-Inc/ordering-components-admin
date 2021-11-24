@@ -70,6 +70,8 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
+  var hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes'];
+
   var _useState = (0, _react.useState)({
     fields: [],
     loading: false,
@@ -93,7 +95,7 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
 
   var getCheckoutFields = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+      var requestOptions, response, content, checkoutFields, orderValidationFields, validationF;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -121,8 +123,24 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
               content = _context.sent;
 
               if (!content.error) {
+                checkoutFields = content.result.filter(function (field) {
+                  return !hideSettingList.includes(field.code);
+                });
+                orderValidationFields = ['name', 'middle_name', 'lastname', 'second_lastname', 'email', 'mobile_phone', 'city_dropdown_option', 'address', 'zipcode', 'address_notes', 'coupon', 'driver_tip'];
+                validationF = [];
+                orderValidationFields.forEach(function (field) {
+                  var sort = checkoutFields.findIndex(function (validationfields) {
+                    return validationfields.code === field;
+                  });
+
+                  if (sort !== -1) {
+                    var item = checkoutFields[sort];
+                    checkoutFields.splice(sort, 1);
+                    validationF.push(item);
+                  }
+                });
                 setCheckoutFieldsState({
-                  fields: content.result,
+                  fields: validationF,
                   loading: false
                 });
               }
