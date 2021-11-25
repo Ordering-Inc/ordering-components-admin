@@ -8,17 +8,17 @@ export const AppleLogin = (props) => {
     if (window.document.getElementById('apple-login')) {
       return
     }
-    document.addEventListener('AppleIDSignInOnSuccess', (data) => {
+    const AppleIDSignInOnSuccess = document.addEventListener('AppleIDSignInOnSuccess', (data) => {
       onSuccess(data)
     })
-    document.addEventListener('AppleIDSignInOnFailure', (error) => {
+    const AppleIDSignInOnFailure = document.addEventListener('AppleIDSignInOnFailure', (error) => {
       onFailure(error)
     })
     createScriptApple()
 
     return () => {
-      document.removeEventListener('AppleIDSignInOnSuccess')
-      document.removeEventListener('AppleIDSignInOnFailure')
+      document.removeEventListener('AppleIDSignInOnSuccess', AppleIDSignInOnSuccess)
+      document.removeEventListener('AppleIDSignInOnFailure', AppleIDSignInOnFailure)
     }
   }, [])
 
