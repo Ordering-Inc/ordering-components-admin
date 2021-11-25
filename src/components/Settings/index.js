@@ -12,7 +12,8 @@ const configHideList = [
   'orders_metafields_strategy',
   'order_validate',
   'time_format',
-  'driver_close_distance'
+  'driver_close_distance',
+  'lazy_load_products_when_necessary'
 ]
 
 /**

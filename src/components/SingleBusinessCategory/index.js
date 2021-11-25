@@ -36,8 +36,14 @@ export const SingleBusinessCategory = (props) => {
       name: formState?.changes?.name,
       image: formState?.changes?.image
     }
+    for (const key in params) {
+      if (params[key] === null) {
+        delete params[key]
+      }
+    }
     editCategory(params)
   }
+
   /**
  * Update category photo data
  * @param {File} file Image to change category photo
@@ -164,14 +170,14 @@ export const SingleBusinessCategory = (props) => {
         })
         setIsEditMode(false)
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === category.id) {
-              return {
-                ...item,
-                ...params
-              }
+          const _categories = [...business.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === result.id) {
+              category.name = result?.name
+              category.enabled = result?.enabled
+              category.image = result?.image
             }
-            return item
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }

@@ -20,6 +20,9 @@ export const BusinessProductsListing = (props) => {
   const [categoriesState, setCategoriesState] = useState({})
   const [requestsState, setRequestsState] = useState({})
   const [productModal, setProductModal] = useState({ product: null, loading: false, error: null })
+  const [openCategories, setOpenCategories] = useState({ values: [] })
+  const [businessSlug, setBusinessSlug] = useState(slug)
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
 
   const categoryStateDefault = {
     loading: true,
@@ -39,8 +42,26 @@ export const BusinessProductsListing = (props) => {
     if (e === null && category === null) {
       setCategorySelected(null)
     }
-    const isInvalid = e.target.closest('.business_enable_control') || e.target.closest('.business_actions')
+    const isInvalid = e?.target?.closest && (e?.target?.closest('.business_enable_control') || e.target.closest('.business_actions'))
     if (isInvalid || category?.id === categorySelected?.id) return
+    setIsUpdateMode(false)
+    if (category?.subcategories?.length) {
+      if (!category?.parent_category_id) {
+        openCategories.values = []
+      }
+      if (openCategories.values.includes(category.id)) {
+        openCategories.values = openCategories.values.filter(categoryId => categoryId !== category.id)
+      } else {
+        openCategories.values.push(category.id)
+      }
+      setOpenCategories({
+        ...openCategories,
+        values: openCategories.values
+      })
+    }
+    if (category?.id === null) {
+      setOpenCategories({ ...openCategories, values: [] })
+    }
     setCategorySelected(category)
   }
 
@@ -65,11 +86,24 @@ export const BusinessProductsListing = (props) => {
         loading: false
       }
       if (categorySelected) {
-        const productsFiltered = businessState?.business?.categories?.find(
-          category => category.id === categorySelected.id
-        )?.products?.filter(
+        let categoryFiltered
+        const _categories = [...businessState?.business?.categories]
+        _categories.forEach(function iterate (category) {
+          if (category.id === categorySelected.id) {
+            categoryFiltered = category
+          }
+          Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+        })
+
+        let productsFiltered = categoryFiltered?.products?.filter(
           product => isMatchSearch(product.name, product.description)
         )
+
+        if (!productsFiltered) {
+          productsFiltered = categorySelected?.products?.filter(
+            product => isMatchSearch(product.name, product.description)
+          )
+        }
         categoryState.products = productsFiltered || []
       } else {
         const productsFiltered = businessState?.business?.categories?.reduce(
@@ -105,7 +139,9 @@ export const BusinessProductsListing = (props) => {
       return
     }
 
-    setCategoryState({ ...categoryState, loading: true })
+    if (!isUpdateMode) {
+      setCategoryState({ ...categoryState, loading: true })
+    }
 
     const parameters = {
       page: newFetch ? 1 : pagination.currentPage + 1,
@@ -222,7 +258,7 @@ export const BusinessProductsListing = (props) => {
       requestsState.business = source
       setRequestsState({ ...requestsState })
 
-      const { content: { result } } = await ordering.businesses(slug).asDashboard().get()
+      const { content: { result } } = await ordering.businesses(businessSlug).asDashboard().get()
 
       if (!result?.categories || result?.categories?.length === 0) {
         setErrorQuantityProducts(true)
@@ -246,6 +282,7 @@ export const BusinessProductsListing = (props) => {
    * Method to update the business
    */
   const handleUpdateBusinessState = (result) => {
+    setIsUpdateMode(true)
     const business = { ...businessState?.business }
     Object.assign(business, result)
     setBusinessState({
@@ -254,7 +291,15 @@ export const BusinessProductsListing = (props) => {
     })
   }
 
+  /**
+   * Method to update the category state
+   */
+  const handleUpdateCategoryState = (updatedCategory) => {
+    setCategoryState(updatedCategory)
+  }
+
   useEffect(() => {
+    if (businessState.loading) return
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true)
     } else if (businessState?.business?.categories) {
@@ -271,8 +316,10 @@ export const BusinessProductsListing = (props) => {
   }, [categorySelected?.id])
 
   useEffect(() => {
-    getBusiness()
-  }, [slug])
+    if (businessSlug) {
+      getBusiness()
+    }
+  }, [businessSlug])
 
   /**
    * Cancel business request
@@ -313,6 +360,10 @@ export const BusinessProductsListing = (props) => {
           setBusinessState={setBusinessState}
           handleUpdateBusinessState={handleUpdateBusinessState}
           updateProductModal={(val) => setProductModal({ ...productModal, product: val })}
+          openCategories={openCategories.values}
+          setOpenCategories={setOpenCategories}
+          setBusinessSlug={setBusinessSlug}
+          handleUpdateCategoryState={handleUpdateCategoryState}
         />
       )}
     </>

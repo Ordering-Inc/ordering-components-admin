@@ -15,14 +15,16 @@ export const BusinessCategoryEdit = (props) => {
     handleUpdateBusinessState,
     category,
     categoryId,
-    onClose
+    onClose,
+    categorySelected,
+    setCategorySelected
   } = props
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
-  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
+  const [formState, setFormState] = useState({ loading: false, changes: { enabled: true, enabledParent: false }, result: { error: false } })
 
   useEffect(() => {
     if (!category) return
@@ -52,10 +54,18 @@ export const BusinessCategoryEdit = (props) => {
 
   /**
   * Update credential data
-  * @param {Boolean} isChecked checkbox status
+  * @param {Object} isChecked checkbox status
   */
   const handleChangeCheckBox = (isChecked) => {
-    const currentChanges = { enabled: isChecked }
+    let currentChanges = null
+    if (isChecked.enabled !== undefined) {
+      currentChanges = { enabled: isChecked.enabled }
+    }
+    if (isChecked.enabledParent) {
+      currentChanges = { parent_category_id: categorySelected.id }
+    } else {
+      currentChanges = { parent_category_id: null }
+    }
 
     setFormState({
       ...formState,
@@ -95,7 +105,13 @@ export const BusinessCategoryEdit = (props) => {
           ...formState,
           loading: true
         })
-        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(formState.changes)
+        const changes = { ...formState.changes }
+        for (const key in changes) {
+          if (changes[key] === null) {
+            delete changes[key]
+          }
+        }
+        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(changes)
         if (!content.error) {
           setFormState({
             ...formState,
@@ -106,18 +122,18 @@ export const BusinessCategoryEdit = (props) => {
             },
             loading: false
           })
+          setCategorySelected(content.result)
           if (handleUpdateBusinessState) {
-            const _categories = businessState.business.categories.map(item => {
-              if (item.id === parseInt(id)) {
-                return {
-                  ...item,
-                  name: content?.result?.name,
-                  enabled: content?.result?.enabled,
-                  image: content?.result?.image
-                }
+            const _categories = [...businessState.business.categories]
+            _categories.forEach(function iterate (category) {
+              if (category.id === content?.result.id) {
+                category.name = content?.result?.name
+                category.enabled = content?.result?.enabled
+                category.image = content?.result?.image
               }
-              return item
+              Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
+
             const _business = { ...businessState.business, categories: _categories }
             handleUpdateBusinessState(_business)
           }

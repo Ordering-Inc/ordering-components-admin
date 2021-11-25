@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useWebsocket } from '../../contexts/WebsocketContext'
 
 export const DriversList = (props) => {
   const {
@@ -9,12 +10,14 @@ export const DriversList = (props) => {
     UIComponent,
     propsToFetch,
     isSearchByName,
-    isSearchByCellphone
+    isSearchByCellphone,
+    asDashboard
   } = props
 
   const [ordering] = useApi()
   const requestsState = {}
   const [driverActionStatus, setDriverActionStatus] = useState({ loading: true, error: null })
+  const socket = useWebsocket()
 
   /**
    * Get session
@@ -83,7 +86,7 @@ export const DriversList = (props) => {
 
   /**
    * change online state for drivers
-   * @param {Boolean} isOnline 
+   * @param {Boolean} isOnline
    */
   const handleChangeDriverIsOnline = (isOnline) => {
     setDriversIsOnline(isOnline)
@@ -91,7 +94,7 @@ export const DriversList = (props) => {
 
   /**
    * sub filter for drivers
-   * @param {Object} subFilter 
+   * @param {Object} subFilter
    */
   const handleChangeDriversSubFilter = (subFilter) => {
     setDriversSubfilter(subFilter)
@@ -224,6 +227,48 @@ export const DriversList = (props) => {
       }
     }
   }, [drivers, searchValue])
+
+  /**
+   * Listening driver change
+   */
+  useEffect(() => {
+    if (session?.loading) return
+    const handleUpdateDriver = (driver) => {
+      const found = driversList.drivers.find(_driver => _driver.id === driver.id)
+      let _drivers = []
+      if (found) {
+        _drivers = driversList.drivers.filter(_driver => {
+          if (_driver.id === driver.id) {
+            console.log('ddddd')
+            Object.assign(_driver, driver)
+          }
+          return true
+        })
+      } else {
+        _drivers = [...driversList.drivers, driver]
+      }
+      setDriversList({
+        ...driversList,
+        drivers: _drivers
+      })
+    }
+    socket.on('drivers_update', handleUpdateDriver)
+    return () => {
+      socket.off('drivers_update', handleUpdateDriver)
+    }
+  }, [socket, session?.loading, driversList.drivers])
+
+  useEffect(() => {
+    if (!session?.user) return
+    socket.join('drivers')
+    return () => {
+      socket.leave('drivers')
+    }
+  }, [socket, session?.user, asDashboard])
+
+  useEffect(() => {
+    getOnlineOfflineDrivers(driversList.drivers)
+  }, [driversList.drivers])
 
   return (
     <>

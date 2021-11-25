@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessMenuOptions = (props) => {
   const {
@@ -12,6 +14,9 @@ export const BusinessMenuOptions = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
+
   const [businessMenuState, setBusinessMenuState] = useState({ loading: false, error: null, menu: menu || {} })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [orderTypeState, setOrderTypeSate] = useState({})
@@ -61,71 +66,6 @@ export const BusinessMenuOptions = (props) => {
   }
 
   /**
-   * Method to control category selection
-   * @param {*} categoryId category id
-   */
-  const handleClickCategory = (categoryId) => {
-    const businessCategoryProducts = business.categories.find(category => category.id === categoryId).products
-    const businessCategoryProductsIds = businessCategoryProducts.reduce((ids, product) => [...ids, product.id], [])
-    let _selectedProductsIds = [...selectedProductsIds]
-    if (businessCategoryProductsIds.every(elem => selectedProductsIds.includes(elem))) {
-      _selectedProductsIds = _selectedProductsIds.filter(el => !businessCategoryProductsIds.includes(el))
-    } else if (businessCategoryProductsIds.some(elem => selectedProductsIds.includes(elem))) {
-      _selectedProductsIds = [...selectedProductsIds, ...businessCategoryProductsIds]
-      _selectedProductsIds = [...new Set(_selectedProductsIds)]
-    } else {
-      _selectedProductsIds = [...selectedProductsIds, ...businessCategoryProductsIds]
-    }
-    setSelectedProductsIds(_selectedProductsIds)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        products: JSON.stringify(_selectedProductsIds)
-      }
-    })
-  }
-
-  /**
-   * Method to control category selection
-   * @param {Number} categoryId category id
-   */
-  const handleCheckCategory = (categoryId) => {
-    const businessCategoryProducts = business.categories.find(category => category.id === categoryId).products
-    const businessCategoryProductsIds = businessCategoryProducts.reduce((ids, product) => [...ids, product.id], [])
-    let result
-    if (businessCategoryProductsIds.every(elem => selectedProductsIds.includes(elem))) {
-      result = 'all'
-    } else if (businessCategoryProductsIds.some(elem => selectedProductsIds.includes(elem))) {
-      result = 'some'
-    } else {
-      result = 'nothing'
-    }
-    return result
-  }
-
-  /**
-   * Method to control prodcut selection
-   * @param {Number} productId product id
-   */
-  const handleCheckProduct = (productId) => {
-    let _selectedProductsIds = [...selectedProductsIds]
-    if (_selectedProductsIds.includes(productId)) {
-      _selectedProductsIds = _selectedProductsIds.filter(id => id !== productId)
-    } else {
-      _selectedProductsIds.push(productId)
-    }
-    setSelectedProductsIds(_selectedProductsIds)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        products: JSON.stringify(_selectedProductsIds)
-      }
-    })
-  }
-
-  /**
    * Method to control the business schedule time enable state
    * @param {Number} daysOfWeekIndex index of week days
    */
@@ -137,7 +77,7 @@ export const BusinessMenuOptions = (props) => {
       ...formState,
       changes: {
         ...formState.changes,
-        schedule: JSON.stringify(_schedule)
+        schedule: _schedule
       }
     })
   }
@@ -272,98 +212,46 @@ export const BusinessMenuOptions = (props) => {
 
   /**
    * Update schedule time
-   * @param {Number} daysOfWeekIndex index of week days
    * @param {Boolean} isOpen open time if true, else close time
    * @param {Boolean} isHour hour if true, else minute
    * @param {String} value changed value
    */
-  const handleChangeAddScheduleTime = (daysOfWeekIndex, isOpen, isHour, value) => {
-    const _schedule = [...schedule]
-    let conflict
-
+  const handleChangeAddScheduleTime = (isOpen, isHour, value) => {
     if (isOpen) {
       if (isHour) {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: { hour: parseInt(value), minute: addScheduleTime.open.minute },
-            close: addScheduleTime.close
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            open: {
-              ...addScheduleTime.open,
-              hour: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: {
+            ...addScheduleTime.open,
+            hour: parseInt(value)
+          }
+        })
       } else {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: { hour: addScheduleTime.open.hour, minute: parseInt(value) },
-            close: addScheduleTime.close
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            open: {
-              ...addScheduleTime.open,
-              minute: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: {
+            ...addScheduleTime.open,
+            minute: parseInt(value)
+          }
+        })
       }
     } else {
       if (isHour) {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: addScheduleTime.open,
-            close: { hour: parseInt(value), minute: addScheduleTime.close.minute }
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            close: {
-              ...addScheduleTime.close,
-              hour: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: {
+            ...addScheduleTime.close,
+            hour: parseInt(value)
+          }
+        })
       } else {
-        conflict = isCheckConflict(
-          _schedule[daysOfWeekIndex].lapses,
-          {
-            open: addScheduleTime.open,
-            close: { hour: addScheduleTime.close.hour, minute: parseInt(value) }
-          },
-          null
-        )
-        if (conflict) {
-          setIsConflict(true)
-        } else {
-          setAddScheduleTime({
-            ...addScheduleTime,
-            close: {
-              ...addScheduleTime.close,
-              minute: parseInt(value)
-            }
-          })
-        }
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: {
+            ...addScheduleTime.close,
+            minute: parseInt(value)
+          }
+        })
       }
     }
   }
@@ -395,14 +283,19 @@ export const BusinessMenuOptions = (props) => {
    */
   const handleUpdateBusinessMenuOption = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
+      const changes = {}
+      for (const key in formState?.changes) {
+        changes[key] = JSON.stringify(formState?.changes[key])
+      }
       const requestOptions = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState?.changes)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/business/${business.id}/menus/${menu?.id}`, requestOptions)
       const content = await response.json()
@@ -418,7 +311,6 @@ export const BusinessMenuOptions = (props) => {
       })
 
       if (!content.error) {
-        props.onClose() && props.onClose()
         const _business = { ...business }
         _business.menus.filter(menu => {
           if (menu.id === content.result.id) {
@@ -427,6 +319,7 @@ export const BusinessMenuOptions = (props) => {
           return true
         })
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
+        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
@@ -439,16 +332,9 @@ export const BusinessMenuOptions = (props) => {
   const handleAddBusinessMenuOption = async () => {
     try {
       setFormState({ ...formState, loading: true })
-      let changes = { ...formState.changes }
-      if (!formState.changes?.schedule) {
-        setFormState({
-          ...formState,
-          changes: {
-            ...formState.changes,
-            schedule: JSON.stringify(schedule)
-          }
-        })
-        changes = { ...changes, schedule: JSON.stringify(schedule) }
+      const changes = {}
+      for (const key in formState?.changes) {
+        changes[key] = JSON.stringify(formState?.changes[key])
       }
       const requestOptions = {
         method: 'POST',
@@ -490,52 +376,40 @@ export const BusinessMenuOptions = (props) => {
    * @param {Number} index selected index
    * @param {Number} daysOfWeekIndex index of week days
    */
-  const handleSelectCopyTimes = (index, daysOfWeekIndex) => {
-    let _selectedCopyDays = [...selectedCopyDays]
-    const _schedule = [...schedule]
+  const handleSelectCopyTimes = (index) => {
+    setSelectedCopyDays([...selectedCopyDays, index])
+  }
 
-    if (!_selectedCopyDays.includes(index)) {
-      let conflict = false
-      for (let i = 0; i < _schedule[index].lapses.length; i++) {
-        if (isCheckConflict(_schedule[daysOfWeekIndex].lapses, _schedule[index].lapses[i], null)) {
-          conflict = true
-        }
+  /**
+   * Method to apply copy times
+   * @param {Number} daysOfWeekIndex index of week days
+   */
+  const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
+    const _schedule = schedule.map((option, index) => {
+      if (selectedCopyDays.includes(index)) {
+        return schedule[daysOfWeekIndex]
       }
-      if (conflict) {
-        setIsConflict(true)
-        return
-      }
-      _selectedCopyDays.push(index)
-
-      for (const laps of _schedule[index].lapses) {
-        _schedule[daysOfWeekIndex].lapses.push(laps)
-      }
-
-      _schedule[daysOfWeekIndex].lapses.sort((a, b) => convertMinutes(a.open) - convertMinutes(b.open))
-    } else {
-      _selectedCopyDays = _selectedCopyDays.filter(el => el !== index)
-
-      const newLapses = _schedule[daysOfWeekIndex].lapses.filter(laps => {
-        for (const deleteLaps of _schedule[index].lapses) {
-          if (convertMinutes(laps.open) === convertMinutes(deleteLaps.open) && convertMinutes(laps.close) === convertMinutes(deleteLaps.close)) {
-            return false
-          }
-        }
-        return true
-      })
-      _schedule[daysOfWeekIndex].lapses = newLapses
-    }
-
-    setSelectedCopyDays(_selectedCopyDays)
-
+      return option
+    })
     setSchedule(_schedule)
     setFormState({
       ...formState,
       changes: {
-        schedule: JSON.stringify(_schedule)
+        ...formState.changes,
+        schedule: _schedule
       }
     })
   }
+
+  useEffect(() => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        products: selectedProductsIds
+      }
+    })
+  }, [selectedProductsIds])
 
   useEffect(() => {
     setFormState({ ...formState, changes: {} })
@@ -580,11 +454,9 @@ export const BusinessMenuOptions = (props) => {
             businessMenuState={businessMenuState}
             formState={formState}
             selectedProductsIds={selectedProductsIds}
+            setSelectedProductsIds={setSelectedProductsIds}
             handleChangeInput={handleChangeInput}
             handleCheckOrderType={handleCheckOrderType}
-            handleCheckCategory={handleCheckCategory}
-            handleClickCategory={handleClickCategory}
-            handleCheckProduct={handleCheckProduct}
             handleUpdateBusinessMenuOption={handleUpdateBusinessMenuOption}
             handleAddBusinessMenuOption={handleAddBusinessMenuOption}
             scheduleTimes={schedule}
@@ -602,6 +474,7 @@ export const BusinessMenuOptions = (props) => {
             selectedCopyDays={selectedCopyDays}
             cleanSelectedCopyDays={cleanSelectedCopyDays}
             handleSelectCopyTimes={handleSelectCopyTimes}
+            handleApplyScheduleCopyTimes={handleApplyScheduleCopyTimes}
           />
         )
       }
