@@ -39,6 +39,9 @@ export const BusinessProductsListing = (props) => {
    * @param {Object} category Category object
    */
   const handleChangeCategory = (e, category) => {
+    if (e === null && category === null) {
+      setCategorySelected(null)
+    }
     const isInvalid = e?.target?.closest && (e?.target?.closest('.business_enable_control') || e.target.closest('.business_actions'))
     if (isInvalid || category?.id === categorySelected?.id) return
     setIsUpdateMode(false)
