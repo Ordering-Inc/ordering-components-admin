@@ -35,16 +35,16 @@ var AppleLogin = function AppleLogin(props) {
       return;
     }
 
-    document.addEventListener('AppleIDSignInOnSuccess', function (data) {
+    var AppleIDSignInOnSuccess = document.addEventListener('AppleIDSignInOnSuccess', function (data) {
       onSuccess(data);
     });
-    document.addEventListener('AppleIDSignInOnFailure', function (error) {
+    var AppleIDSignInOnFailure = document.addEventListener('AppleIDSignInOnFailure', function (error) {
       onFailure(error);
     });
     createScriptApple();
     return function () {
-      document.removeEventListener('AppleIDSignInOnSuccess');
-      document.removeEventListener('AppleIDSignInOnFailure');
+      document.removeEventListener('AppleIDSignInOnSuccess', AppleIDSignInOnSuccess);
+      document.removeEventListener('AppleIDSignInOnFailure', AppleIDSignInOnFailure);
     };
   }, []);
   /**

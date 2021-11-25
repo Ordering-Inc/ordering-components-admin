@@ -155,6 +155,10 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   var handleChangeCategory = function handleChangeCategory(e, category) {
     var _e$target, _e$target2, _category$subcategori;
 
+    if (e === null && category === null) {
+      setCategorySelected(null);
+    }
+
     var isInvalid = (e === null || e === void 0 ? void 0 : (_e$target = e.target) === null || _e$target === void 0 ? void 0 : _e$target.closest) && ((e === null || e === void 0 ? void 0 : (_e$target2 = e.target) === null || _e$target2 === void 0 ? void 0 : _e$target2.closest('.business_enable_control')) || e.target.closest('.business_actions'));
     if (isInvalid || (category === null || category === void 0 ? void 0 : category.id) === (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id)) return;
     setIsUpdateMode(false);
