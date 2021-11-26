@@ -216,23 +216,24 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
-                    if (item.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === product.id) {
-                          return _objectSpread(_objectSpread({}, prod), params);
+                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+                      var _products = category.products.map(function (_product) {
+                        if (_product.id === product.id) {
+                          return _objectSpread(_objectSpread({}, _product), params);
                         }
 
-                        return prod;
+                        return _product;
                       });
 
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
+                      category.products = _toConsumableArray(_products);
                     }
 
-                    return item;
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                   });
+
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
                   }));
@@ -321,22 +322,20 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = business === null || business === void 0 ? void 0 : business.categories.map(function (item) {
-                    if (item.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = _toConsumableArray(item.products);
+                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
 
-                      var filterItem = item.products.filter(function (prod) {
-                        return prod.id === product.id;
-                      })[0];
-                      var index = item.products.indexOf(filterItem);
-                      if (index > -1) _products.splice(index, 1);
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+                      var _products = category.products.filter(function (_product) {
+                        return _product.id !== product.id;
                       });
+
+                      category.products = _toConsumableArray(_products);
                     }
 
-                    return item;
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                   });
+
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
                   }));

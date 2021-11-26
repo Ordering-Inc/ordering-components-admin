@@ -386,7 +386,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
   var deleteCategory = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _yield$ordering$busin4, _yield$ordering$busin5, error, result, _categories, filterItem, index;
+      var _yield$ordering$busin4, _yield$ordering$busin5, error, result, _categories;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -424,14 +424,16 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = business.categories.map(function (item) {
-                    return item;
+                  _categories = _toConsumableArray(business.categories);
+
+                  _categories.forEach(function iterate(_category, index, object) {
+                    if (_category.id === category.id) {
+                      object.splice(index, 1);
+                    }
+
+                    Array.isArray(_category === null || _category === void 0 ? void 0 : _category.subcategories) && _category.subcategories.forEach(iterate);
                   });
-                  filterItem = business.categories.filter(function (cat) {
-                    return cat.id === category.id;
-                  })[0];
-                  index = business.categories.indexOf(filterItem);
-                  if (index > -1) _categories.splice(index, 1);
+
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                     categories: _categories
                   }));
