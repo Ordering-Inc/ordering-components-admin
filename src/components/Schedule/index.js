@@ -13,7 +13,7 @@ export const Schedule = (props) => {
   const [isTimeChangeError, setIsTimeChangeError] = useState(false)
   const [addScheduleTime, setAddScheduleTime] = useState({
     open: { hour: 0, minute: 0 },
-    close: { hour: 23, minute: 59 }
+    close: { hour: 23, minute: 45 }
   })
   const [openAddSchedule, setOpenAddSchedule] = useState({})
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
@@ -105,7 +105,7 @@ export const Schedule = (props) => {
     }
 
     if (!_isTimeChangeError) {
-      const conflict = isCheckConflict(currentLapses, changeScheduleTime, null)
+      const conflict = isCheckConflict(currentLapses, changeScheduleTime, lapseIndex)
       if (conflict) {
         setIsConflict(true)
       } else {
@@ -130,7 +130,7 @@ export const Schedule = (props) => {
   const handleOpenAddSchedule = (daysOfWeekIndex) => {
     setAddScheduleTime({
       open: { hour: 0, minute: 0 },
-      close: { hour: 23, minute: 59 }
+      close: { hour: 23, minute: 45 }
     })
     setOpenAddSchedule({
       [daysOfWeekIndex]: true
@@ -145,16 +145,27 @@ export const Schedule = (props) => {
   const handleChangeAddScheduleTime = (changeTime, isOpen) => {
     const hour = parseInt(changeTime.split(':')[0])
     const minute = parseInt(changeTime.split(':')[1])
+    let _isTimeChangeError = false
     if (isOpen) {
-      setAddScheduleTime({
-        ...addScheduleTime,
-        open: { hour: hour, minute: minute }
-      })
+      _isTimeChangeError = convertMinutes({ hour, minute }) >= convertMinutes(addScheduleTime.close)
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true)
+      } else {
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: { hour: hour, minute: minute }
+        })
+      }
     } else {
-      setAddScheduleTime({
-        ...addScheduleTime,
-        close: { hour: hour, minute: minute }
-      })
+      _isTimeChangeError = convertMinutes(addScheduleTime.open) >= convertMinutes({ hour, minute })
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true)
+      } else {
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: { hour: hour, minute: minute }
+        })
+      }
     }
   }
 
