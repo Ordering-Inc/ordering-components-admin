@@ -128,7 +128,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -140,7 +140,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -152,7 +152,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -164,7 +164,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -176,7 +176,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -188,7 +188,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }, {
@@ -200,7 +200,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
         },
         close: {
           hour: 23,
-          minute: 59
+          minute: 45
         }
       }]
     }]
