@@ -332,10 +332,34 @@ export const BusinessMenuOptions = (props) => {
   const handleAddBusinessMenuOption = async () => {
     try {
       setFormState({ ...formState, loading: true })
-      const changes = {}
-      for (const key in formState?.changes) {
-        changes[key] = JSON.stringify(formState?.changes[key])
+      const changes = { ...formState?.changes }
+      if (changes?.products) {
+        changes.products = JSON.stringify(changes?.products)
       }
+      if (changes?.schedule) {
+        changes.schedule = JSON.stringify(changes?.schedule)
+      } else {
+        const schedule = []
+        for (var i = 0; i < 7; i++) {
+          schedule.push({
+            enabled: true,
+            lapses: [
+              {
+                open: {
+                  hour: 0,
+                  minute: 0
+                },
+                close: {
+                  hour: 23,
+                  minute: 45
+                }
+              }
+            ]
+          })
+        }
+        changes.schedule = JSON.stringify(schedule)
+      }
+
       const requestOptions = {
         method: 'POST',
         headers: {
