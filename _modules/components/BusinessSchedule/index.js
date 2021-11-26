@@ -29,23 +29,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -90,238 +82,13 @@ var BusinessSchedule = function BusinessSchedule(props) {
       _useState2 = _slicedToArray(_useState, 2),
       formState = _useState2[0],
       setFormState = _useState2[1];
-
-  var _useState3 = (0, _react.useState)([]),
-      _useState4 = _slicedToArray(_useState3, 2),
-      schedule = _useState4[0],
-      setSchedule = _useState4[1];
-
-  var _useState5 = (0, _react.useState)([]),
-      _useState6 = _slicedToArray(_useState5, 2),
-      selectedCopyDays = _useState6[0],
-      setSelectedCopyDays = _useState6[1];
-
-  var _useState7 = (0, _react.useState)(false),
-      _useState8 = _slicedToArray(_useState7, 2),
-      isConflict = _useState8[0],
-      setIsConflict = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(null),
-      _useState10 = _slicedToArray(_useState9, 2),
-      openAddScheduleIndex = _useState10[0],
-      setOpenAddScheduleInex = _useState10[1];
-
-  var _useState11 = (0, _react.useState)({
-    open: {
-      hour: 0,
-      minute: 0
-    },
-    close: {
-      hour: 23,
-      minute: 59
-    }
-  }),
-      _useState12 = _slicedToArray(_useState11, 2),
-      addScheduleTime = _useState12[0],
-      setAddScheduleTime = _useState12[1];
-  /**
-   * Clean selectedCopyDays
-   */
-
-
-  var cleanSelectedCopyDays = function cleanSelectedCopyDays() {
-    return setSelectedCopyDays([]);
-  };
-  /**
-   * Method to check contain conflict
-   */
-
-
-  var isCheckConflict = function isCheckConflict(lapses, newSchedule, index) {
-    var openNew = newSchedule.open.hour * 60 + newSchedule.open.minute;
-    var closeNew = newSchedule.close.hour * 60 + newSchedule.close.minute;
-
-    for (var i = 0; i < lapses.length; i++) {
-      if (i !== index) {
-        var openOld = lapses[i].open.hour * 60 + lapses[i].open.minute;
-        var closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute;
-        if (openNew <= openOld && closeNew >= closeOld) return true;
-        if (openNew < openOld && closeNew > openOld) return true;
-        if (openNew > openOld && closeNew < closeOld) return true;
-        if (openNew < closeOld && closeNew > closeOld) return true;
-      }
-    }
-
-    return false;
-  };
-
-  var convertMinutes = function convertMinutes(_ref) {
-    var hour = _ref.hour,
-        minute = _ref.minute;
-    return hour * 60 + minute;
-  };
-  /**
-   * Update schedule time
-   * @param {Number} daysOfWeekIndex index of week days
-   * @param {Boolean} isOpen open time if true, else close time
-   * @param {Boolean} isHour hour if true, else minute
-   * @param {Number} index index of schedule time
-   * @param {String} value changed value
-   */
-
-
-  var handleChangeTime = function handleChangeTime(daysOfWeekIndex, isOpen, isHour, index, value) {
-    var _schedule = _toConsumableArray(schedule);
-
-    var conflict;
-    var selectedLaps = _schedule[daysOfWeekIndex].lapses[index];
-
-    if (isOpen) {
-      if (isHour) {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: {
-            hour: parseInt(value),
-            minute: selectedLaps.open.minute
-          },
-          close: selectedLaps.close
-        }, index);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          _schedule[daysOfWeekIndex].lapses[index].open.hour = parseInt(value);
-        }
-      } else {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: {
-            hour: selectedLaps.open.hour,
-            minute: parseInt(value)
-          },
-          close: selectedLaps.close
-        }, index);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          _schedule[daysOfWeekIndex].lapses[index].open.minute = parseInt(value);
-        }
-      }
-    } else {
-      if (isHour) {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: selectedLaps.open,
-          close: {
-            hour: parseInt(value),
-            minute: selectedLaps.close.minute
-          }
-        }, index);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          _schedule[daysOfWeekIndex].lapses[index].close.hour = parseInt(value);
-        }
-      } else {
-        conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, {
-          open: selectedLaps.open,
-          close: {
-            hour: selectedLaps.close.hour,
-            minute: parseInt(value)
-          }
-        }, index);
-
-        if (conflict) {
-          setIsConflict(true);
-        } else {
-          _schedule[daysOfWeekIndex].lapses[index].close.minute = parseInt(value);
-        }
-      }
-    }
-
-    if (!conflict) {
-      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
-        return convertMinutes(a.open) - convertMinutes(b.open);
-      });
-
-      setSchedule(_schedule);
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          schedule: _schedule
-        }
-      }));
-    }
-  };
-  /**
-   * Method to add the schedule time
-   * @param {Number} daysOfWeekIndex index of week days
-   */
-
-
-  var handleAddScheduleTime = function handleAddScheduleTime(daysOfWeekIndex) {
-    var _schedule = _toConsumableArray(schedule);
-
-    var conflict = isCheckConflict(_schedule[daysOfWeekIndex].lapses, addScheduleTime, null);
-
-    if (conflict) {
-      setIsConflict(true);
-    } else {
-      _schedule[daysOfWeekIndex].lapses.push(addScheduleTime);
-
-      _schedule[daysOfWeekIndex].lapses.sort(function (a, b) {
-        return convertMinutes(a.open) - convertMinutes(b.open);
-      });
-
-      setSchedule(_schedule);
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          schedule: _schedule
-        }
-      }));
-    }
-  };
-  /**
-   * Method to delete the schedule time
-   * @param {Number} daysOfWeekIndex index of week days
-   * @param {Number} index index of schedule time
-   */
-
-
-  var handleDeleteScheduleTime = function handleDeleteScheduleTime(daysOfWeekIndex, index) {
-    var _schedule = _toConsumableArray(schedule);
-
-    _schedule[daysOfWeekIndex].lapses.splice(index, 1);
-
-    setSchedule(_schedule);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        schedule: _schedule
-      }
-    }));
-  };
-  /**
-   * Method to control the business schedule time enable state
-   * @param {Number} daysOfWeekIndex index of week days
-   */
-
-
-  var handleScheduleTimeActiveState = function handleScheduleTimeActiveState(daysOfWeekIndex) {
-    var _schedule = _toConsumableArray(schedule);
-
-    _schedule[daysOfWeekIndex].enabled = !_schedule[daysOfWeekIndex].enabled;
-    setSchedule(_schedule);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        schedule: _schedule
-      }
-    }));
-  };
   /**
    * Method to update the business from the API
    */
 
 
-  var handleUpdateBusinessClick = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+  var handleUpdateSchedule = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
       var changes, _yield$ordering$busin, _yield$ordering$busin2, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -334,17 +101,21 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 loading: true
               }));
               changes = _objectSpread({}, formState.changes);
-              _context.next = 6;
+
+              if (changes === null || changes === void 0 ? void 0 : changes.schedule) {
+                changes.schedule = JSON.stringify(changes === null || changes === void 0 ? void 0 : changes.schedule);
+              }
+
+              _context.next = 7;
               return ordering.businesses(business.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 6:
+            case 7:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
               result = _yield$ordering$busin2.result;
-              setOpenAddScheduleInex(null);
 
               if (!error) {
                 handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
@@ -381,106 +152,23 @@ var BusinessSchedule = function BusinessSchedule(props) {
       }, _callee, null, [[0, 15]]);
     }));
 
-    return function handleUpdateBusinessClick() {
-      return _ref2.apply(this, arguments);
+    return function handleUpdateSchedule() {
+      return _ref.apply(this, arguments);
     };
   }();
-  /**
-   * Method to copy times
-   * @param {Number} index selected index
-   * @param {Number} daysOfWeekIndex index of week days
-   */
 
-
-  var handleSelectCopyTimes = function handleSelectCopyTimes(index) {
-    setSelectedCopyDays([].concat(_toConsumableArray(selectedCopyDays), [index]));
-  };
-  /**
-   * Method to apply copy times
-   * @param {Number} daysOfWeekIndex index of week days
-   */
-
-
-  var handleApplyScheduleCopyTimes = function handleApplyScheduleCopyTimes(daysOfWeekIndex) {
-    var _schedule = schedule.map(function (option, index) {
-      if (selectedCopyDays.includes(index)) {
-        return schedule[daysOfWeekIndex];
-      }
-
-      return option;
-    });
-
-    setSchedule(_schedule);
+  var handleChangeScheduleState = function handleChangeScheduleState(scheduleChanges) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {
-        schedule: _schedule
+        schedule: scheduleChanges
       }
     }));
   };
-  /**
-   * Update schedule time
-   * @param {Boolean} isOpen open time if true, else close time
-   * @param {Boolean} isHour hour if true, else minute
-   * @param {String} value changed value
-   */
 
-
-  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(isOpen, isHour, value) {
-    if (isOpen) {
-      if (isHour) {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
-            hour: parseInt(value)
-          })
-        }));
-      } else {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          open: _objectSpread(_objectSpread({}, addScheduleTime.open), {}, {
-            minute: parseInt(value)
-          })
-        }));
-      }
-    } else {
-      if (isHour) {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
-            hour: parseInt(value)
-          })
-        }));
-      } else {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          close: _objectSpread(_objectSpread({}, addScheduleTime.close), {}, {
-            minute: parseInt(value)
-          })
-        }));
-      }
-    }
-  };
-
-  (0, _react.useEffect)(function () {
-    if (Object.keys(formState.changes).length === 0 || isConflict) return;
-    handleUpdateBusinessClick();
-  }, [formState === null || formState === void 0 ? void 0 : formState.changes, isConflict]);
-  (0, _react.useEffect)(function () {
-    setSchedule(business === null || business === void 0 ? void 0 : business.schedule);
-  }, [business === null || business === void 0 ? void 0 : business.schedule]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
-    selectedCopyDays: selectedCopyDays,
-    isConflict: isConflict,
-    setIsConflict: setIsConflict,
-    cleanSelectedCopyDays: cleanSelectedCopyDays,
-    handleChangeTime: handleChangeTime,
-    handleAddScheduleTime: handleAddScheduleTime,
-    handleDeleteScheduleTime: handleDeleteScheduleTime,
-    handleScheduleTimeActiveState: handleScheduleTimeActiveState,
-    handleSelectCopyTimes: handleSelectCopyTimes,
-    addScheduleTime: addScheduleTime,
-    setAddScheduleTime: setAddScheduleTime,
-    handleChangeAddScheduleTime: handleChangeAddScheduleTime,
-    openAddScheduleIndex: openAddScheduleIndex,
-    setOpenAddScheduleInex: setOpenAddScheduleInex,
-    handleApplyScheduleCopyTimes: handleApplyScheduleCopyTimes
+    handleChangeScheduleState: handleChangeScheduleState,
+    handleUpdateSchedule: handleUpdateSchedule
   })));
 };
 
