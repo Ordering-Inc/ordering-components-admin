@@ -11,7 +11,8 @@ export const BusinessMenu = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
-  const [businessMenusState, setBusinessMenusState] = useState({ menus: [], loading: false, error: null })
+  const [businessMenusState, setBusinessMenusState] = useState({ menus: [], menusShared: [], loading: false, error: null })
+  const [isSelectedSharedMenus, setIsSelectedSharedMenus] = useState(false)
 
   /**
    * Method to get the business menus from API
@@ -53,34 +54,59 @@ export const BusinessMenu = (props) => {
   /**
    * Method to control business menu active state from API
    * @param {Number} menuId menu id to change the business menu state
+   * @param {Boolean} enabled menu enabled to change the business menu state
    */
-  const handleChangeBusinessMenuActiveState = async (menuId) => {
+  const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
     try {
       setBusinessMenusState({ ...businessMenusState, loading: true })
-      const businessMenu = businessMenusState.menus.find(menu => menu.id === menuId)
       const requestOptions = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ enabled: !businessMenu.enabled })
+        body: JSON.stringify({ enabled: enabled })
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus/${menuId}`, requestOptions)
+
+      const endPoint = isSelectedSharedMenus
+        ? `${ordering.root}/business/${business.id}/menus_shared/${menuId}`
+        : `${ordering.root}/business/${business.id}/menus/${menuId}`
+
+      const response = await fetch(endPoint, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const menus = businessMenusState.menus.filter(menu => {
-          if (menu.id === menuId) {
-            Object.assign(menu, content.result)
-          }
-          return true
-        })
-        setBusinessMenusState({
-          ...businessMenusState,
-          loading: false,
-          menus: menus
-        })
-        const _business = { ...business, menus: menus }
+        let _business = {}
+        if (!isSelectedSharedMenus) {
+          const menus = businessMenusState.menus.filter(menu => {
+            if (menu.id === menuId) {
+              Object.assign(menu, content.result)
+            }
+            return true
+          })
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            menus: menus
+          })
+          _business = { ...business, menus: menus }
+        } else {
+          const menusShared = businessMenusState.menusShared.filter(menu => {
+            if (menu.id === menuId) {
+              menu = {
+                ...menu,
+                ...content.result,
+                id: menu?.id
+              }
+            }
+            return true
+          })
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            menusShared: menusShared
+          })
+          _business = { ...business, menus_shared: menusShared }
+        }
         handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
       } else {
         setBusinessMenusState({
@@ -112,16 +138,32 @@ export const BusinessMenu = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus/${menuId}`, requestOptions)
+
+      const endPoint = isSelectedSharedMenus
+        ? `${ordering.root}/business/${business.id}/menus_shared/${menuId}`
+        : `${ordering.root}/business/${business.id}/menus/${menuId}`
+
+      const response = await fetch(endPoint, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const menus = businessMenusState.menus.filter(menu => menu.id !== menuId)
-        setBusinessMenusState({
-          ...businessMenusState,
-          loading: false,
-          menus: menus
-        })
-        const _business = { ...business, menus: menus }
+        let _business = {}
+        if (!isSelectedSharedMenus) {
+          const menus = businessMenusState.menus.filter(menu => menu.id !== menuId)
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            menus: menus
+          })
+          _business = { ...business, menus: menus }
+        } else {
+          const menusShared = businessMenusState.menusShared.filter(menu => menu.id !== menuId)
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            menusShared: menusShared
+          })
+          _business = { ...business, menus_shared: menusShared }
+        }
         handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
       } else {
         setBusinessMenusState({
@@ -141,7 +183,11 @@ export const BusinessMenu = (props) => {
 
   useEffect(() => {
     if (business?.menus) {
-      setBusinessMenusState({ ...businessMenusState, menus: [...business?.menus, ...business?.menus_shared] })
+      setBusinessMenusState({
+        ...businessMenusState,
+        menus: business?.menus,
+        menusShared: business?.menus_shared
+      })
     } else {
       getBusinessMenus()
     }
@@ -155,6 +201,8 @@ export const BusinessMenu = (props) => {
             businessMenusState={businessMenusState}
             handleChangeBusinessMenuActiveState={handleChangeBusinessMenuActiveState}
             handleDeleteBusinessMenu={handleDeleteBusinessMenu}
+            isSelectedSharedMenus={isSelectedSharedMenus}
+            setIsSelectedSharedMenus={setIsSelectedSharedMenus}
           />
         )
       }
