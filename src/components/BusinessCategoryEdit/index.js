@@ -182,7 +182,12 @@ export const BusinessCategoryEdit = (props) => {
         })
         if (handleUpdateBusinessState) {
           const _categories = [...businessState.business.categories]
-          _categories.push(content.result)
+          _categories.forEach(function iterate (category) {
+            if (category.id === content?.result.parent_category_id) {
+              category.subcategories.push({ ...content.result, products: [] })
+            }
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+          })
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
         showToast(ToastType.Success, t('CATEOGORY_CREATED', 'Category created'))

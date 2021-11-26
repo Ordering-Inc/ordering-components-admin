@@ -93,21 +93,12 @@ export const BusinessProductCreator = (props) => {
           loading: false
         })
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === categoryId) {
-              let _products = []
-              if (item.products && item.products.length > 0) {
-                _products = item.products.map(prod => {
-                  return prod
-                })
-              }
-              _products.push(content.result)
-              return {
-                ...item,
-                products: _products
-              }
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === categoryId) {
+              category.products.push(content.result)
             }
-            return item
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
