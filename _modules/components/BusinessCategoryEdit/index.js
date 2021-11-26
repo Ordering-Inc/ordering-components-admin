@@ -347,15 +347,21 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 if (handleUpdateBusinessState) {
                   _categories = _toConsumableArray(businessState.business.categories);
 
-                  _categories.forEach(function iterate(category) {
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
-                      category.subcategories.push(_objectSpread(_objectSpread({}, content.result), {}, {
-                        products: []
-                      }));
-                    }
+                  if (content === null || content === void 0 ? void 0 : content.result.parent_category_id) {
+                    _categories.forEach(function iterate(category) {
+                      if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                        category.subcategories.push(_objectSpread(_objectSpread({}, content.result), {}, {
+                          products: []
+                        }));
+                      }
 
-                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
-                  });
+                      Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+                    });
+                  } else {
+                    _categories.push(_objectSpread(_objectSpread({}, content.result), {}, {
+                      products: []
+                    }));
+                  }
 
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, businessState.business), {}, {
                     categories: _categories
