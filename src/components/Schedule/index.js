@@ -105,7 +105,7 @@ export const Schedule = (props) => {
     }
 
     if (!_isTimeChangeError) {
-      const conflict = isCheckConflict(currentLapses, changeScheduleTime, null)
+      const conflict = isCheckConflict(currentLapses, changeScheduleTime, lapseIndex)
       if (conflict) {
         setIsConflict(true)
       } else {
