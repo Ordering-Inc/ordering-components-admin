@@ -226,12 +226,14 @@ export const SingleBusinessCategory = (props) => {
           }
         })
         if (handleUpdateBusinessState) {
-          const _categories = business.categories.map(item => {
-            return item
+          const _categories = [...business.categories]
+          _categories.forEach(function iterate (_category, index, object) {
+            if (_category.id === category.id) {
+              object.splice(index, 1)
+            }
+            Array.isArray(_category?.subcategories) && _category.subcategories.forEach(iterate)
           })
-          const filterItem = business.categories.filter(cat => cat.id === category.id)[0]
-          const index = business.categories.indexOf(filterItem)
-          if (index > -1) _categories.splice(index, 1)
+
           handleUpdateBusinessState({ ...business, categories: _categories })
           if (category.id === categorySelected.id) setCategorySelected(_categories[0])
         }
