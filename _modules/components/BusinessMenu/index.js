@@ -25,14 +25,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -70,12 +62,18 @@ var BusinessMenu = function BusinessMenu(props) {
 
   var _useState = (0, _react.useState)({
     menus: [],
+    menusShared: [],
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
       businessMenusState = _useState2[0],
       setBusinessMenusState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      isSelectedSharedMenus = _useState4[0],
+      setIsSelectedSharedMenus = _useState4[1];
   /**
    * Method to get the business menus from API
    */
@@ -148,12 +146,13 @@ var BusinessMenu = function BusinessMenu(props) {
   /**
    * Method to control business menu active state from API
    * @param {Number} menuId menu id to change the business menu state
+   * @param {Boolean} enabled menu enabled to change the business menu state
    */
 
 
   var handleChangeBusinessMenuActiveState = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(menuId) {
-      var businessMenu, requestOptions, response, content, menus, _business;
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(menuId, enabled) {
+      var requestOptions, endPoint, response, content, _business, menus, menusShared;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -163,9 +162,6 @@ var BusinessMenu = function BusinessMenu(props) {
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: true
               }));
-              businessMenu = businessMenusState.menus.find(function (menu) {
-                return menu.id === menuId;
-              });
               requestOptions = {
                 method: 'PUT',
                 headers: {
@@ -173,11 +169,12 @@ var BusinessMenu = function BusinessMenu(props) {
                   Authorization: "Bearer ".concat(token)
                 },
                 body: JSON.stringify({
-                  enabled: !businessMenu.enabled
+                  enabled: enabled
                 })
               };
+              endPoint = isSelectedSharedMenus ? "".concat(ordering.root, "/business/").concat(business.id, "/menus_shared/").concat(menuId) : "".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId);
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId), requestOptions);
+              return fetch(endPoint, requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -188,20 +185,44 @@ var BusinessMenu = function BusinessMenu(props) {
               content = _context2.sent;
 
               if (!content.error) {
-                menus = businessMenusState.menus.filter(function (menu) {
-                  if (menu.id === menuId) {
-                    Object.assign(menu, content.result);
-                  }
+                _business = {};
 
-                  return true;
-                });
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  menus: menus
-                }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
+                if (!isSelectedSharedMenus) {
+                  menus = businessMenusState.menus.filter(function (menu) {
+                    if (menu.id === menuId) {
+                      Object.assign(menu, content.result);
+                    }
+
+                    return true;
+                  });
+                  setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                    loading: false,
+                    menus: menus
+                  }));
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus: menus
+                  });
+                } else {
+                  menusShared = businessMenusState.menusShared.filter(function (menu) {
+                    if (menu.id === menuId) {
+                      var _menu;
+
+                      menu = _objectSpread(_objectSpread(_objectSpread({}, menu), content.result), {}, {
+                        id: (_menu = menu) === null || _menu === void 0 ? void 0 : _menu.id
+                      });
+                    }
+
+                    return true;
+                  });
+                  setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                    loading: false,
+                    menusShared: menusShared
+                  }));
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus_shared: menusShared
+                  });
+                }
+
                 handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
               } else {
                 setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
@@ -229,7 +250,7 @@ var BusinessMenu = function BusinessMenu(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function handleChangeBusinessMenuActiveState(_x) {
+    return function handleChangeBusinessMenuActiveState(_x, _x2) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -241,7 +262,7 @@ var BusinessMenu = function BusinessMenu(props) {
 
   var handleDeleteBusinessMenu = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(menuId) {
-      var requestOptions, response, content, menus, _business;
+      var requestOptions, endPoint, response, content, _business, menus, menusShared;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -258,28 +279,45 @@ var BusinessMenu = function BusinessMenu(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context3.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId), requestOptions);
+              endPoint = isSelectedSharedMenus ? "".concat(ordering.root, "/business/").concat(business.id, "/menus_shared/").concat(menuId) : "".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId);
+              _context3.next = 6;
+              return fetch(endPoint, requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context3.sent;
 
               if (!content.error) {
-                menus = businessMenusState.menus.filter(function (menu) {
-                  return menu.id !== menuId;
-                });
-                setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-                  loading: false,
-                  menus: menus
-                }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
+                _business = {};
+
+                if (!isSelectedSharedMenus) {
+                  menus = businessMenusState.menus.filter(function (menu) {
+                    return menu.id !== menuId;
+                  });
+                  setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                    loading: false,
+                    menus: menus
+                  }));
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus: menus
+                  });
+                } else {
+                  menusShared = businessMenusState.menusShared.filter(function (menu) {
+                    return menu.id !== menuId;
+                  });
+                  setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                    loading: false,
+                    menusShared: menusShared
+                  }));
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus_shared: menusShared
+                  });
+                }
+
                 handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
               } else {
                 setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
@@ -288,26 +326,26 @@ var BusinessMenu = function BusinessMenu(props) {
                 }));
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeleteBusinessMenu(_x2) {
+    return function handleDeleteBusinessMenu(_x3) {
       return _ref3.apply(this, arguments);
     };
   }();
@@ -315,7 +353,8 @@ var BusinessMenu = function BusinessMenu(props) {
   (0, _react.useEffect)(function () {
     if (business !== null && business !== void 0 && business.menus) {
       setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
-        menus: [].concat(_toConsumableArray(business === null || business === void 0 ? void 0 : business.menus), _toConsumableArray(business === null || business === void 0 ? void 0 : business.menus_shared))
+        menus: business === null || business === void 0 ? void 0 : business.menus,
+        menusShared: business === null || business === void 0 ? void 0 : business.menus_shared
       }));
     } else {
       getBusinessMenus();
@@ -324,7 +363,9 @@ var BusinessMenu = function BusinessMenu(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessMenusState: businessMenusState,
     handleChangeBusinessMenuActiveState: handleChangeBusinessMenuActiveState,
-    handleDeleteBusinessMenu: handleDeleteBusinessMenu
+    handleDeleteBusinessMenu: handleDeleteBusinessMenu,
+    isSelectedSharedMenus: isSelectedSharedMenus,
+    setIsSelectedSharedMenus: setIsSelectedSharedMenus
   })));
 };
 

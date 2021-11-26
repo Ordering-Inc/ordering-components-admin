@@ -72,7 +72,7 @@ var Schedule = function Schedule(props) {
     },
     close: {
       hour: 23,
-      minute: 59
+      minute: 45
     }
   }),
       _useState8 = _slicedToArray(_useState7, 2),
@@ -195,7 +195,7 @@ var Schedule = function Schedule(props) {
     }
 
     if (!_isTimeChangeError) {
-      var conflict = isCheckConflict(currentLapses, changeScheduleTime, null);
+      var conflict = isCheckConflict(currentLapses, changeScheduleTime, lapseIndex);
 
       if (conflict) {
         setIsConflict(true);
@@ -233,7 +233,7 @@ var Schedule = function Schedule(props) {
       },
       close: {
         hour: 23,
-        minute: 59
+        minute: 45
       }
     });
     setOpenAddSchedule(_defineProperty({}, daysOfWeekIndex, true));
@@ -248,21 +248,40 @@ var Schedule = function Schedule(props) {
   var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(changeTime, isOpen) {
     var hour = parseInt(changeTime.split(':')[0]);
     var minute = parseInt(changeTime.split(':')[1]);
+    var _isTimeChangeError = false;
 
     if (isOpen) {
-      setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-        open: {
-          hour: hour,
-          minute: minute
-        }
-      }));
+      _isTimeChangeError = convertMinutes({
+        hour: hour,
+        minute: minute
+      }) >= convertMinutes(addScheduleTime.close);
+
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true);
+      } else {
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          open: {
+            hour: hour,
+            minute: minute
+          }
+        }));
+      }
     } else {
-      setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-        close: {
-          hour: hour,
-          minute: minute
-        }
-      }));
+      _isTimeChangeError = convertMinutes(addScheduleTime.open) >= convertMinutes({
+        hour: hour,
+        minute: minute
+      });
+
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true);
+      } else {
+        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
+          close: {
+            hour: hour,
+            minute: minute
+          }
+        }));
+      }
     }
   };
   /**
