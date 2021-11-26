@@ -195,7 +195,7 @@ var Schedule = function Schedule(props) {
     }
 
     if (!_isTimeChangeError) {
-      var conflict = isCheckConflict(currentLapses, changeScheduleTime, null);
+      var conflict = isCheckConflict(currentLapses, changeScheduleTime, lapseIndex);
 
       if (conflict) {
         setIsConflict(true);
