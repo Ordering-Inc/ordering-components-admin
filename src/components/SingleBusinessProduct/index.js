@@ -105,23 +105,21 @@ export const SingleBusinessProduct = (props) => {
           }
         })
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === product?.category_id) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product.id) {
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.map(_product => {
+                if (_product.id === product.id) {
                   return {
-                    ...prod,
+                    ..._product,
                     ...params
                   }
                 }
-                return prod
+                return _product
               })
-              return {
-                ...item,
-                products: _products
-              }
+              category.products = [..._products]
             }
-            return item
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
@@ -171,18 +169,13 @@ export const SingleBusinessProduct = (props) => {
           }
         })
         if (handleUpdateBusinessState) {
-          const _categories = business?.categories.map(item => {
-            if (item.id === product?.category_id) {
-              const _products = [...item.products]
-              const filterItem = item.products.filter(prod => prod.id === product.id)[0]
-              const index = item.products.indexOf(filterItem)
-              if (index > -1) _products.splice(index, 1)
-              return {
-                ...item,
-                products: _products
-              }
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.filter(_product => _product.id !== product.id)
+              category.products = [..._products]
             }
-            return item
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
           })
           handleUpdateBusinessState({ ...business, categories: _categories })
         }
