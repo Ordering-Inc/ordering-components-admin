@@ -145,16 +145,27 @@ export const Schedule = (props) => {
   const handleChangeAddScheduleTime = (changeTime, isOpen) => {
     const hour = parseInt(changeTime.split(':')[0])
     const minute = parseInt(changeTime.split(':')[1])
+    let _isTimeChangeError = false
     if (isOpen) {
-      setAddScheduleTime({
-        ...addScheduleTime,
-        open: { hour: hour, minute: minute }
-      })
+      _isTimeChangeError = convertMinutes({ hour, minute }) >= convertMinutes(addScheduleTime.close)
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true)
+      } else {
+        setAddScheduleTime({
+          ...addScheduleTime,
+          open: { hour: hour, minute: minute }
+        })
+      }
     } else {
-      setAddScheduleTime({
-        ...addScheduleTime,
-        close: { hour: hour, minute: minute }
-      })
+      _isTimeChangeError = convertMinutes(addScheduleTime.open) >= convertMinutes({ hour, minute })
+      if (_isTimeChangeError) {
+        setIsTimeChangeError(true)
+      } else {
+        setAddScheduleTime({
+          ...addScheduleTime,
+          close: { hour: hour, minute: minute }
+        })
+      }
     }
   }
 
