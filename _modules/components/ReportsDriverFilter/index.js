@@ -59,9 +59,9 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
   var UIComponent = props.UIComponent,
       filterList = props.filterList,
       handleChangeFilterList = props.handleChangeFilterList,
-      propsToFetch = props.propsToFetch,
       onClose = props.onClose,
-      isSearchByName = props.isSearchByName;
+      isSearchByName = props.isSearchByName,
+      isDriverGroup = props.isDriverGroup;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -174,7 +174,7 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
 
   var getDrivers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$driver_gr, _drivers;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -217,7 +217,7 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
                 };
               }
 
-              fetchEndpoint = where ? ordering.users().asDashboard().select(propsToFetch).where(where) : ordering.users().asDashboard().select(propsToFetch);
+              fetchEndpoint = where ? ordering.users().asDashboard().select().where(where) : ordering.users().asDashboard().select();
               _context.next = 9;
               return fetchEndpoint.get();
 
@@ -231,9 +231,23 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
               // const where = [{ attribute: 'level', value: '4' }]
               // const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
               if (!error) {
+                _drivers = [];
+
+                if (isDriverGroup && ((_filterList$driver_gr = filterList.driver_groups_ids) === null || _filterList$driver_gr === void 0 ? void 0 : _filterList$driver_gr.length) > 0) {
+                  _drivers = result.filter(function (driver) {
+                    var valid = false;
+                    driver.drivergroups.forEach(function (group) {
+                      if (filterList.driver_groups_ids.includes(group.id)) valid = true;
+                    });
+                    return valid;
+                  });
+                } else {
+                  _drivers = _toConsumableArray(result);
+                }
+
                 setDriverList(_objectSpread(_objectSpread({}, driverList), {}, {
                   loading: false,
-                  drivers: result,
+                  drivers: _drivers,
                   pagination: pagination
                 }));
               } else {
@@ -281,8 +295,11 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 
-    setDriverIds(_toConsumableArray((filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids) || _driverIds));
-    if (!(filterList !== null && filterList !== void 0 && filterList.drivers_ids) || (filterList === null || filterList === void 0 ? void 0 : (_filterList$drivers_i = filterList.drivers_ids) === null || _filterList$drivers_i === void 0 ? void 0 : _filterList$drivers_i.length) === (driverList === null || driverList === void 0 ? void 0 : driverList.drivers.length)) setIsAllCheck(true);
+    var filterDriverIds = (filterList === null || filterList === void 0 ? void 0 : (_filterList$drivers_i = filterList.drivers_ids) === null || _filterList$drivers_i === void 0 ? void 0 : _filterList$drivers_i.length) > 0 ? filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.filter(function (driverId) {
+      return _driverIds.includes(driverId);
+    }) : _driverIds;
+    setDriverIds(_toConsumableArray(filterDriverIds));
+    if (!(filterList !== null && filterList !== void 0 && filterList.drivers_ids) || (filterDriverIds === null || filterDriverIds === void 0 ? void 0 : filterDriverIds.length) === (driverList === null || driverList === void 0 ? void 0 : driverList.drivers.length)) setIsAllCheck(true);
   }, [driverList === null || driverList === void 0 ? void 0 : driverList.drivers]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driverList: driverList,
