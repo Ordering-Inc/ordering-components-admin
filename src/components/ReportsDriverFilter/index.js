@@ -7,9 +7,10 @@ export const ReportsDriverFilter = (props) => {
     UIComponent,
     filterList,
     handleChangeFilterList,
-    propsToFetch,
+    // propsToFetch,
     onClose,
-    isSearchByName
+    isSearchByName,
+    isDriverGroup
   } = props
 
   const [ordering] = useApi()
@@ -104,16 +105,29 @@ export const ReportsDriverFilter = (props) => {
         }
       }
       const fetchEndpoint = where
-        ? ordering.users().asDashboard().select(propsToFetch).where(where)
-        : ordering.users().asDashboard().select(propsToFetch)
+        ? ordering.users().asDashboard().select().where(where)
+        : ordering.users().asDashboard().select()
       const { content: { error, result, pagination } } = await fetchEndpoint.get()
       // const where = [{ attribute: 'level', value: '4' }]
       // const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
       if (!error) {
+        let _drivers = []
+        if (isDriverGroup && filterList.driver_groups_ids?.length > 0) {
+          _drivers = result.filter(driver => {
+            let valid = false
+            driver.drivergroups.forEach(group => {
+              if (filterList.driver_groups_ids.includes(group.id)) valid = true
+            })
+            return valid
+          })
+        } else {
+          _drivers = [...result]
+        }
+
         setDriverList({
           ...driverList,
           loading: false,
-          drivers: result,
+          drivers: _drivers,
           pagination
         })
       } else {
@@ -141,8 +155,11 @@ export const ReportsDriverFilter = (props) => {
   useEffect(() => {
     if (driverList?.drivers?.length === 0) return
     const _driverIds = driverList?.drivers.reduce((prev, cur) => [...prev, cur.id], [])
-    setDriverIds([...filterList?.drivers_ids || _driverIds])
-    if (!filterList?.drivers_ids || filterList?.drivers_ids?.length === driverList?.drivers.length) setIsAllCheck(true)
+    const filterDriverIds = filterList?.drivers_ids?.length > 0
+      ? filterList?.drivers_ids.filter(driverId => _driverIds.includes(driverId))
+      : _driverIds
+    setDriverIds([...filterDriverIds])
+    if (!filterList?.drivers_ids || filterDriverIds?.length === driverList?.drivers.length) setIsAllCheck(true)
   }, [driverList?.drivers])
 
   return (
