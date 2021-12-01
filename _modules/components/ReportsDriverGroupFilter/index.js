@@ -62,7 +62,8 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
       filterList = props.filterList,
       handleChangeFilterList = props.handleChangeFilterList,
       propsToFetch = props.propsToFetch,
-      onClose = props.onClose;
+      onClose = props.onClose,
+      setAvailableDriverIds = props.setAvailableDriverIds;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -132,6 +133,29 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
       driver_groups_ids: _groupIds
     }));
     onClose && onClose();
+    setAvailableDriverIds && handleChnageAvailbeDriverIds(_groupIds);
+  };
+
+  var handleChnageAvailbeDriverIds = function handleChnageAvailbeDriverIds(groupIds) {
+    if (!groupIds) {
+      setAvailableDriverIds(null);
+      return;
+    }
+
+    var _availableIds = [];
+    driverGroupList.driverGroups.forEach(function (driverGroup) {
+      if (groupIds.includes(driverGroup.id)) {
+        driverGroup.drivers.forEach(function (driver) {
+          _availableIds.push(driver.id);
+        });
+      }
+    });
+
+    var uniqueIds = _availableIds.filter(function (v, i, a) {
+      return a.indexOf(v) === i;
+    });
+
+    setAvailableDriverIds(uniqueIds);
   };
   /**
    * Method to change all check status
@@ -334,5 +358,5 @@ ReportsDriverGroupFilter.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'enabled', 'type']
+  propsToFetch: ['id', 'name', 'enabled', 'drivers']
 };

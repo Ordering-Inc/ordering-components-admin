@@ -56,12 +56,17 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var ReportsDriverFilter = function ReportsDriverFilter(props) {
+  var _paginationSettings$p;
+
   var UIComponent = props.UIComponent,
       filterList = props.filterList,
       handleChangeFilterList = props.handleChangeFilterList,
+      propsToFetch = props.propsToFetch,
       onClose = props.onClose,
       isSearchByName = props.isSearchByName,
-      isDriverGroup = props.isDriverGroup;
+      isSearchByLastName = props.isSearchByLastName,
+      availableDriverIds = props.availableDriverIds,
+      paginationSettings = props.paginationSettings;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -95,6 +100,16 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       searchValue = _useState8[0],
       setSearchValue = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({
+    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+    pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
+    totalItems: null,
+    totalPages: null
+  }),
+      _useState10 = _slicedToArray(_useState9, 2),
+      paginationProps = _useState10[0],
+      setPaginationProps = _useState10[1];
 
   var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
@@ -168,13 +183,14 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
     setIsAllCheck(!isAllCheck);
   };
   /**
-   * Method to get driver list from API
+   * Get users by params, order options and filters
+   * @param {boolean} newFetch Make a new request or next page
    */
 
 
   var getDrivers = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$driver_gr, _drivers;
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page, pageSize) {
+      var parameters, paginationParams, where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, nextPageItems, remainingItems;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -184,11 +200,24 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
               setDriverList(_objectSpread(_objectSpread({}, driverList), {}, {
                 loading: true
               }));
+              parameters = {};
+              paginationParams = {
+                page: page,
+                page_size: pageSize || paginationProps.pageSize
+              };
+              parameters = _objectSpread({}, paginationParams);
               where = null;
               conditions = [{
                 attribute: 'level',
                 value: '4'
               }];
+
+              if ((availableDriverIds === null || availableDriverIds === void 0 ? void 0 : availableDriverIds.length) > 0) {
+                conditions.push({
+                  attribute: 'id',
+                  value: availableDriverIds
+                });
+              }
 
               if (searchValue) {
                 searchConditions = [];
@@ -197,6 +226,16 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
                 if (isSearchByName) {
                   searchConditions.push({
                     attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByLastName) {
+                  searchConditions.push({
+                    attribute: 'lastname',
                     value: {
                       condition: 'ilike',
                       value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
@@ -217,11 +256,11 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
                 };
               }
 
-              fetchEndpoint = where ? ordering.users().asDashboard().select().where(where) : ordering.users().asDashboard().select();
-              _context.next = 9;
+              fetchEndpoint = where ? ordering.users().asDashboard().select(propsToFetch).parameters(parameters).where(where) : ordering.users().asDashboard().select(propsToFetch).parameters(parameters);
+              _context.next = 13;
               return fetchEndpoint.get();
 
-            case 9:
+            case 13:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               error = _yield$fetchEndpoint$2.error;
@@ -231,24 +270,25 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
               // const where = [{ attribute: 'level', value: '4' }]
               // const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
               if (!error) {
-                _drivers = [];
-
-                if (isDriverGroup && ((_filterList$driver_gr = filterList.driver_groups_ids) === null || _filterList$driver_gr === void 0 ? void 0 : _filterList$driver_gr.length) > 0) {
-                  _drivers = result.filter(function (driver) {
-                    var valid = false;
-                    driver.drivergroups.forEach(function (group) {
-                      if (filterList.driver_groups_ids.includes(group.id)) valid = true;
-                    });
-                    return valid;
-                  });
-                } else {
-                  _drivers = _toConsumableArray(result);
-                }
-
                 setDriverList(_objectSpread(_objectSpread({}, driverList), {}, {
                   loading: false,
-                  drivers: _drivers,
+                  drivers: result,
                   pagination: pagination
+                }));
+                nextPageItems = 0;
+
+                if (pagination.current_page !== pagination.total_pages) {
+                  remainingItems = pagination.total - driverList.drivers.length;
+                  nextPageItems = remainingItems < pagination.page_size ? remainingItems : pagination.page_size;
+                }
+
+                setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+                  currentPage: pagination.current_page,
+                  totalPages: pagination.total_pages,
+                  totalItems: pagination.total,
+                  from: pagination.from,
+                  to: pagination.to,
+                  nextPageItems: nextPageItems
                 }));
               } else {
                 setDriverList(_objectSpread(_objectSpread({}, driverList), {}, {
@@ -257,33 +297,33 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 24;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 21:
+              _context.prev = 21;
               _context.t0 = _context["catch"](0);
               setDriverList(_objectSpread(_objectSpread({}, driverList), {}, {
                 loading: false,
                 error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 20:
+            case 24:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 21]]);
     }));
 
-    return function getDrivers() {
+    return function getDrivers(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
     var controller = new AbortController();
-    getDrivers();
+    getDrivers(1, null);
     return controller.abort();
   }, [searchValue]);
   (0, _react.useEffect)(function () {
@@ -304,6 +344,8 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driverList: driverList,
     driverIds: driverIds,
+    paginationProps: paginationProps,
+    getDrivers: getDrivers,
     searchValue: searchValue,
     onSearch: setSearchValue,
     handleChangeDriverId: handleChangeDriverId,
@@ -369,5 +411,10 @@ ReportsDriverFilter.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups']
+  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'],
+  paginationSettings: {
+    initialPage: 1,
+    pageSize: 10,
+    controlType: 'infinity'
+  }
 };
