@@ -9,7 +9,8 @@ export const ReportsDriverGroupFilter = (props) => {
     filterList,
     handleChangeFilterList,
     propsToFetch,
-    onClose
+    onClose,
+    setAvailableDriverIds
   } = props
 
   const [ordering] = useApi()
@@ -43,6 +44,24 @@ export const ReportsDriverGroupFilter = (props) => {
     const _groupIds = driverGroupIds ? [...driverGroupIds] : null
     handleChangeFilterList({ ...filterList, driver_groups_ids: _groupIds })
     onClose && onClose()
+    setAvailableDriverIds && handleChnageAvailbeDriverIds(_groupIds)
+  }
+
+  const handleChnageAvailbeDriverIds = (groupIds) => {
+    if (!groupIds) {
+      setAvailableDriverIds(null)
+      return
+    }
+    const _availableIds = []
+    driverGroupList.driverGroups.forEach(driverGroup => {
+      if (groupIds.includes(driverGroup.id)) {
+        driverGroup.drivers.forEach(driver => {
+          _availableIds.push(driver.id)
+        })
+      }
+    })
+    const uniqueIds = _availableIds.filter((v, i, a) => a.indexOf(v) === i)
+    setAvailableDriverIds(uniqueIds)
   }
 
   /**
@@ -181,5 +200,5 @@ ReportsDriverGroupFilter.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'enabled', 'type']
+  propsToFetch: ['id', 'name', 'enabled', 'drivers']
 }
