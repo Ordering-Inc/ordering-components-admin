@@ -7,10 +7,12 @@ export const ReportsDriverFilter = (props) => {
     UIComponent,
     filterList,
     handleChangeFilterList,
-    // propsToFetch,
+    propsToFetch,
     onClose,
     isSearchByName,
-    isDriverGroup
+    isSearchByLastName,
+    availableDriverIds,
+    paginationSettings
   } = props
 
   const [ordering] = useApi()
@@ -22,6 +24,12 @@ export const ReportsDriverFilter = (props) => {
   const [driverIds, setDriverIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
   const [searchValue, setSearchValue] = useState(null)
+  const [paginationProps, setPaginationProps] = useState({
+    currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
+    pageSize: paginationSettings.pageSize ?? 10,
+    totalItems: null,
+    totalPages: null
+  })
   const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
@@ -68,17 +76,31 @@ export const ReportsDriverFilter = (props) => {
   }
 
   /**
-   * Method to get driver list from API
+   * Get users by params, order options and filters
+   * @param {boolean} newFetch Make a new request or next page
    */
 
-  const getDrivers = async () => {
+  const getDrivers = async (page, pageSize) => {
     try {
       setDriverList({
         ...driverList,
         loading: true
       })
+      let parameters = {}
+
+      const paginationParams = {
+        page: page,
+        page_size: pageSize || paginationProps.pageSize
+      }
+
+      parameters = { ...paginationParams }
+
       let where = null
       const conditions = [{ attribute: 'level', value: '4' }]
+      if (availableDriverIds?.length > 0) {
+        conditions.push({ attribute: 'id', value: availableDriverIds })
+      }
+
       if (searchValue) {
         const searchConditions = []
         const isSpecialCharacter = rex.test(searchValue)
@@ -86,6 +108,17 @@ export const ReportsDriverFilter = (props) => {
           searchConditions.push(
             {
               attribute: 'name',
+              value: {
+                condition: 'ilike',
+                value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        if (isSearchByLastName) {
+          searchConditions.push(
+            {
+              attribute: 'lastname',
               value: {
                 condition: 'ilike',
                 value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
@@ -105,30 +138,31 @@ export const ReportsDriverFilter = (props) => {
         }
       }
       const fetchEndpoint = where
-        ? ordering.users().asDashboard().select().where(where)
-        : ordering.users().asDashboard().select()
+        ? ordering.users().asDashboard().select(propsToFetch).parameters(parameters).where(where)
+        : ordering.users().asDashboard().select(propsToFetch).parameters(parameters)
       const { content: { error, result, pagination } } = await fetchEndpoint.get()
       // const where = [{ attribute: 'level', value: '4' }]
       // const { content: { error, result, pagination } } = await ordering.users().asDashboard().select(propsToFetch).where(where).get()
       if (!error) {
-        let _drivers = []
-        if (isDriverGroup && filterList.driver_groups_ids?.length > 0) {
-          _drivers = result.filter(driver => {
-            let valid = false
-            driver.drivergroups.forEach(group => {
-              if (filterList.driver_groups_ids.includes(group.id)) valid = true
-            })
-            return valid
-          })
-        } else {
-          _drivers = [...result]
-        }
-
         setDriverList({
           ...driverList,
           loading: false,
-          drivers: _drivers,
+          drivers: result,
           pagination
+        })
+        let nextPageItems = 0
+        if (pagination.current_page !== pagination.total_pages) {
+          const remainingItems = pagination.total - driverList.drivers.length
+          nextPageItems = remainingItems < pagination.page_size ? remainingItems : pagination.page_size
+        }
+        setPaginationProps({
+          ...paginationProps,
+          currentPage: pagination.current_page,
+          totalPages: pagination.total_pages,
+          totalItems: pagination.total,
+          from: pagination.from,
+          to: pagination.to,
+          nextPageItems
         })
       } else {
         setDriverList({
@@ -148,7 +182,7 @@ export const ReportsDriverFilter = (props) => {
 
   useEffect(() => {
     const controller = new AbortController()
-    getDrivers()
+    getDrivers(1, null)
     return controller.abort()
   }, [searchValue])
 
@@ -169,6 +203,8 @@ export const ReportsDriverFilter = (props) => {
           {...props}
           driverList={driverList}
           driverIds={driverIds}
+          paginationProps={paginationProps}
+          getDrivers={getDrivers}
           searchValue={searchValue}
           onSearch={setSearchValue}
           handleChangeDriverId={handleChangeDriverId}
@@ -234,5 +270,6 @@ ReportsDriverFilter.defaultProps = {
     'country_phone_code', 'city_id', 'city', 'address', 'addresses',
     'address_notes', 'dropdown_option_id', 'dropdown_option', 'location',
     'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'
-  ]
+  ],
+  paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
 }
