@@ -318,7 +318,11 @@ var Schedule = function Schedule(props) {
 
 
   var handleSelectCopyTimes = function handleSelectCopyTimes(index) {
-    setSelectedCopyDays([].concat(_toConsumableArray(selectedCopyDays), [index]));
+    var _selectedCopyDays = selectedCopyDays.includes(index) ? selectedCopyDays.filter(function (day) {
+      return day !== index;
+    }) : [].concat(_toConsumableArray(selectedCopyDays), [index]);
+
+    setSelectedCopyDays(_selectedCopyDays);
   };
   /**
    * Method to apply copy times
@@ -329,7 +333,13 @@ var Schedule = function Schedule(props) {
   var handleApplyScheduleCopyTimes = function handleApplyScheduleCopyTimes(daysOfWeekIndex) {
     var _schedule = scheduleState.map(function (option, index) {
       if (selectedCopyDays.includes(index)) {
-        return scheduleState[daysOfWeekIndex];
+        var lapses = _toConsumableArray(scheduleState[daysOfWeekIndex].lapses);
+
+        var original = {
+          enabled: scheduleState[daysOfWeekIndex].enabled,
+          lapses: lapses
+        };
+        return original;
       }
 
       return option;
@@ -340,11 +350,11 @@ var Schedule = function Schedule(props) {
 
   (0, _react.useEffect)(function () {
     if (scheduleState.length === 0) return;
-    handleChangeScheduleState(scheduleState);
+    handleChangeScheduleState(_toConsumableArray(scheduleState));
   }, [scheduleState]);
   (0, _react.useEffect)(function () {
     if (scheduleList) {
-      setScheduleState(scheduleList);
+      setScheduleState(_toConsumableArray(scheduleList));
     } else {
       var schedule = [];
 
