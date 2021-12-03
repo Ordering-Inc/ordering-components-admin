@@ -63,7 +63,8 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
   var _useState = (0, _react.useState)({
     lapse: 'today',
     businessIds: null,
-    app_id: 'all'
+    app_id: 'all',
+    franchises_id: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
       filterList = _useState2[0],
@@ -166,6 +167,7 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
     var params = "lapse=".concat(filterList === null || filterList === void 0 ? void 0 : filterList.lapse);
     if (filterList !== null && filterList !== void 0 && filterList.businessIds && (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.length) > 0) params = "".concat(params, "&businesses=").concat(filterList === null || filterList === void 0 ? void 0 : (_filterList$businessI = filterList.businessIds) === null || _filterList$businessI === void 0 ? void 0 : _filterList$businessI.toString());
     if (filterList !== null && filterList !== void 0 && filterList.app_id && filterList.app_id !== 'all') params = "".concat(params, "&app_id=").concat(filterList === null || filterList === void 0 ? void 0 : filterList.app_id);
+    if (filterList !== null && filterList !== void 0 && filterList.franchises_id && (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.length) > 0) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
     return "".concat(rootUrl, "?").concat(params);
   };
   /**

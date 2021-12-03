@@ -63,6 +63,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
   var _useState = (0, _react.useState)({
     lapse: 'today',
     userIds: null,
+    driver_groups_ids: null,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -93,8 +94,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState8 = _slicedToArray(_useState7, 2),
-      topProductList = _useState8[0],
-      setTopProductList = _useState8[1];
+      orderStatusList = _useState8[0],
+      setOrderStatusList = _useState8[1];
 
   var _useState9 = (0, _react.useState)({
     loading: false,
@@ -102,8 +103,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState10 = _slicedToArray(_useState9, 2),
-      topCategoryList = _useState10[0],
-      setTopCategoryList = _useState10[1];
+      topOrdersList = _useState10[0],
+      setTopOrdersList = _useState10[1];
 
   var _useState11 = (0, _react.useState)({
     loading: false,
@@ -111,8 +112,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState12 = _slicedToArray(_useState11, 2),
-      orderStatusList = _useState12[0],
-      setOrderStatusList = _useState12[1];
+      spendTimesList = _useState12[0],
+      setSpendTimesList = _useState12[1];
 
   var _useState13 = (0, _react.useState)({
     loading: false,
@@ -120,17 +121,17 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState14 = _slicedToArray(_useState13, 2),
-      topOrdersList = _useState14[0],
-      setTopOrdersList = _useState14[1];
+      availableTimesList = _useState14[0],
+      setAvailableTimesList = _useState14[1];
 
   var _useState15 = (0, _react.useState)({
     loading: false,
-    data: [],
+    data: {},
     error: null
   }),
       _useState16 = _slicedToArray(_useState15, 2),
-      spendTimesList = _useState16[0],
-      setSpendTimesList = _useState16[1];
+      busyTimesList = _useState16[0],
+      setBusyTimesList = _useState16[1];
 
   var _useState17 = (0, _react.useState)({
     loading: false,
@@ -138,17 +139,17 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState18 = _slicedToArray(_useState17, 2),
-      availableTimesList = _useState18[0],
-      setAvailableTimesList = _useState18[1];
+      customerSatisfactionList = _useState18[0],
+      setCustomerSatisfactionList = _useState18[1];
 
   var _useState19 = (0, _react.useState)({
     loading: false,
-    data: {},
+    data: [],
     error: null
   }),
       _useState20 = _slicedToArray(_useState19, 2),
-      busyTimesList = _useState20[0],
-      setBusyTimesList = _useState20[1];
+      ordersAcceptSpendList = _useState20[0],
+      setOrdersAcceptSpendList = _useState20[1];
 
   var _useState21 = (0, _react.useState)({
     loading: false,
@@ -156,8 +157,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState22 = _slicedToArray(_useState21, 2),
-      customerSatisfactionList = _useState22[0],
-      setCustomerSatisfactionList = _useState22[1];
+      arrivedPickUpSpendList = _useState22[0],
+      setArrivedPickUpSpendList = _useState22[1];
 
   var _useState23 = (0, _react.useState)({
     loading: false,
@@ -165,8 +166,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState24 = _slicedToArray(_useState23, 2),
-      ordersAcceptSpendList = _useState24[0],
-      setOrdersAcceptSpendList = _useState24[1];
+      orderLocationList = _useState24[0],
+      setOrderLocationList = _useState24[1];
 
   var _useState25 = (0, _react.useState)({
     loading: false,
@@ -174,8 +175,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState26 = _slicedToArray(_useState25, 2),
-      arrivedPickUpSpendList = _useState26[0],
-      setArrivedPickUpSpendList = _useState26[1];
+      completeSpendList = _useState26[0],
+      setCompleteSpendList = _useState26[1];
 
   var _useState27 = (0, _react.useState)({
     loading: false,
@@ -183,8 +184,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState28 = _slicedToArray(_useState27, 2),
-      orderLocationList = _useState28[0],
-      setOrderLocationList = _useState28[1];
+      pickUpSpendList = _useState28[0],
+      setPickUpSpendList = _useState28[1];
 
   var _useState29 = (0, _react.useState)({
     loading: false,
@@ -192,26 +193,8 @@ var DriverAnalytics = function DriverAnalytics(props) {
     error: null
   }),
       _useState30 = _slicedToArray(_useState29, 2),
-      completeSpendList = _useState30[0],
-      setCompleteSpendList = _useState30[1];
-
-  var _useState31 = (0, _react.useState)({
-    loading: false,
-    data: [],
-    error: null
-  }),
-      _useState32 = _slicedToArray(_useState31, 2),
-      pickUpSpendList = _useState32[0],
-      setPickUpSpendList = _useState32[1];
-
-  var _useState33 = (0, _react.useState)({
-    loading: false,
-    data: [],
-    error: null
-  }),
-      _useState34 = _slicedToArray(_useState33, 2),
-      deliverySpendList = _useState34[0],
-      setDeliverySpendList = _useState34[1];
+      deliverySpendList = _useState30[0],
+      setDeliverySpendList = _useState30[1];
 
   var paramsForAPI = function paramsForAPI(type) {
     var _filterList$userIds;
@@ -219,6 +202,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
     var rootUrl = "".concat(ordering.root, "/reports/").concat(type);
     var params = "lapse=".concat(filterList === null || filterList === void 0 ? void 0 : filterList.lapse, "&timezone=").concat(filterList === null || filterList === void 0 ? void 0 : filterList.timeZone);
     if (filterList !== null && filterList !== void 0 && filterList.userIds) params = "".concat(params, "&drivers=").concat(filterList === null || filterList === void 0 ? void 0 : (_filterList$userIds = filterList.userIds) === null || _filterList$userIds === void 0 ? void 0 : _filterList$userIds.toString());
+    if (filterList !== null && filterList !== void 0 && filterList.driver_groups_ids) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
     return "".concat(rootUrl, "?").concat(params);
   };
   /**
@@ -384,11 +368,11 @@ var DriverAnalytics = function DriverAnalytics(props) {
     };
   }();
   /**
-   * Method to get top product list
+   * Method to get order status List
    */
 
 
-  var getTopProducts = /*#__PURE__*/function () {
+  var getOrderStatus = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
       var requestOptions, functionFetch, response, _yield$response$json3, error, result;
 
@@ -405,7 +389,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context3.prev = 2;
-              setTopProductList(_objectSpread(_objectSpread({}, topProductList), {}, {
+              setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -415,7 +399,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_top_selling');
+              functionFetch = paramsForAPI('drivers_orders_status');
               _context3.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -430,12 +414,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json3.result;
 
               if (!error) {
-                setTopProductList(_objectSpread(_objectSpread({}, topProductList), {}, {
+                setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setTopProductList(_objectSpread(_objectSpread({}, topProductList), {}, {
+                setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -447,7 +431,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context3.prev = 17;
               _context3.t0 = _context3["catch"](2);
-              setTopProductList(_objectSpread(_objectSpread({}, topProductList), {}, {
+              setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
                 loading: false,
                 error: _context3.t0
               }));
@@ -460,16 +444,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee3, null, [[2, 17]]);
     }));
 
-    return function getTopProducts() {
+    return function getOrderStatus() {
       return _ref3.apply(this, arguments);
     };
   }();
   /**
-   * Method to get top category list
+   * Method to get top orders list
    */
 
 
-  var getTopCategories = /*#__PURE__*/function () {
+  var getTopOrders = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
       var requestOptions, functionFetch, response, _yield$response$json4, error, result;
 
@@ -486,7 +470,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context4.prev = 2;
-              setTopCategoryList(_objectSpread(_objectSpread({}, topCategoryList), {}, {
+              setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -496,7 +480,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_top_categories');
+              functionFetch = paramsForAPI('drivers_top_orders');
               _context4.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -511,12 +495,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json4.result;
 
               if (!error) {
-                setTopCategoryList(_objectSpread(_objectSpread({}, topCategoryList), {}, {
+                setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setTopCategoryList(_objectSpread(_objectSpread({}, topCategoryList), {}, {
+                setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -528,7 +512,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context4.prev = 17;
               _context4.t0 = _context4["catch"](2);
-              setTopCategoryList(_objectSpread(_objectSpread({}, topCategoryList), {}, {
+              setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
                 loading: false,
                 error: _context4.t0
               }));
@@ -541,16 +525,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee4, null, [[2, 17]]);
     }));
 
-    return function getTopCategories() {
+    return function getTopOrders() {
       return _ref4.apply(this, arguments);
     };
   }();
   /**
-   * Method to get order status List
+   * Method to get complete spend List
    */
 
 
-  var getOrderStatus = /*#__PURE__*/function () {
+  var getCustomerSatisfaction = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
       var requestOptions, functionFetch, response, _yield$response$json5, error, result;
 
@@ -567,7 +551,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context5.prev = 2;
-              setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
+              setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -577,7 +561,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_orders_status');
+              functionFetch = paramsForAPI('customer_satisfaction');
               _context5.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -592,12 +576,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json5.result;
 
               if (!error) {
-                setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
+                setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
+                setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -609,7 +593,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context5.prev = 17;
               _context5.t0 = _context5["catch"](2);
-              setOrderStatusList(_objectSpread(_objectSpread({}, orderStatusList), {}, {
+              setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
                 loading: false,
                 error: _context5.t0
               }));
@@ -622,16 +606,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee5, null, [[2, 17]]);
     }));
 
-    return function getOrderStatus() {
+    return function getCustomerSatisfaction() {
       return _ref5.apply(this, arguments);
     };
   }();
   /**
-   * Method to get top orders list
+   * Method to get complete spend List
    */
 
 
-  var getTopOrders = /*#__PURE__*/function () {
+  var getCompleteSpend = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
       var requestOptions, functionFetch, response, _yield$response$json6, error, result;
 
@@ -648,7 +632,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context6.prev = 2;
-              setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
+              setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -658,7 +642,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_top_orders');
+              functionFetch = paramsForAPI('drivers_complete_spend');
               _context6.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -673,12 +657,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json6.result;
 
               if (!error) {
-                setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
+                setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
+                setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -690,7 +674,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context6.prev = 17;
               _context6.t0 = _context6["catch"](2);
-              setTopOrdersList(_objectSpread(_objectSpread({}, topOrdersList), {}, {
+              setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
                 loading: false,
                 error: _context6.t0
               }));
@@ -703,16 +687,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee6, null, [[2, 17]]);
     }));
 
-    return function getTopOrders() {
+    return function getCompleteSpend() {
       return _ref6.apply(this, arguments);
     };
   }();
   /**
-   * Method to get complete spend List
+   * Method to get spend times list
    */
 
 
-  var getCustomerSatisfaction = /*#__PURE__*/function () {
+  var getSpendTimes = /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee7() {
       var requestOptions, functionFetch, response, _yield$response$json7, error, result;
 
@@ -729,7 +713,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context7.prev = 2;
-              setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
+              setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -739,7 +723,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('customer_satisfaction');
+              functionFetch = paramsForAPI('drivers_spend_times');
               _context7.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -754,12 +738,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json7.result;
 
               if (!error) {
-                setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
+                setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
+                setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -771,7 +755,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context7.prev = 17;
               _context7.t0 = _context7["catch"](2);
-              setCustomerSatisfactionList(_objectSpread(_objectSpread({}, customerSatisfactionList), {}, {
+              setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
                 loading: false,
                 error: _context7.t0
               }));
@@ -784,16 +768,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee7, null, [[2, 17]]);
     }));
 
-    return function getCustomerSatisfaction() {
+    return function getSpendTimes() {
       return _ref7.apply(this, arguments);
     };
   }();
   /**
-   * Method to get complete spend List
+   * Method to get available times list
    */
 
 
-  var getCompleteSpend = /*#__PURE__*/function () {
+  var getAvailableTimes = /*#__PURE__*/function () {
     var _ref8 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee8() {
       var requestOptions, functionFetch, response, _yield$response$json8, error, result;
 
@@ -810,7 +794,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context8.prev = 2;
-              setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
+              setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -820,7 +804,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_complete_spend');
+              functionFetch = paramsForAPI('drivers_available_times');
               _context8.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -835,12 +819,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json8.result;
 
               if (!error) {
-                setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
+                setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
+                setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -852,7 +836,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context8.prev = 17;
               _context8.t0 = _context8["catch"](2);
-              setCompleteSpendList(_objectSpread(_objectSpread({}, completeSpendList), {}, {
+              setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
                 loading: false,
                 error: _context8.t0
               }));
@@ -865,16 +849,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee8, null, [[2, 17]]);
     }));
 
-    return function getCompleteSpend() {
+    return function getAvailableTimes() {
       return _ref8.apply(this, arguments);
     };
   }();
   /**
-   * Method to get spend times list
+   * Method to busy times list
    */
 
 
-  var getSpendTimes = /*#__PURE__*/function () {
+  var getBusyTimes = /*#__PURE__*/function () {
     var _ref9 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee9() {
       var requestOptions, functionFetch, response, _yield$response$json9, error, result;
 
@@ -891,7 +875,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context9.prev = 2;
-              setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
+              setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -901,7 +885,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_spend_times');
+              functionFetch = paramsForAPI('drivers_busy_times');
               _context9.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -916,12 +900,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json9.result;
 
               if (!error) {
-                setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
+                setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
+                setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -933,7 +917,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context9.prev = 17;
               _context9.t0 = _context9["catch"](2);
-              setSpendTimesList(_objectSpread(_objectSpread({}, spendTimesList), {}, {
+              setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
                 loading: false,
                 error: _context9.t0
               }));
@@ -946,16 +930,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee9, null, [[2, 17]]);
     }));
 
-    return function getSpendTimes() {
+    return function getBusyTimes() {
       return _ref9.apply(this, arguments);
     };
   }();
   /**
-   * Method to get available times list
+   * Method to get orders accept spend list
    */
 
 
-  var getAvailableTimes = /*#__PURE__*/function () {
+  var getOrdersAcceptSpend = /*#__PURE__*/function () {
     var _ref10 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee10() {
       var requestOptions, functionFetch, response, _yield$response$json10, error, result;
 
@@ -972,7 +956,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context10.prev = 2;
-              setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
+              setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -982,7 +966,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_available_times');
+              functionFetch = paramsForAPI('drivers_accept_spend');
               _context10.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -997,12 +981,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json10.result;
 
               if (!error) {
-                setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
+                setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
+                setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -1014,7 +998,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context10.prev = 17;
               _context10.t0 = _context10["catch"](2);
-              setAvailableTimesList(_objectSpread(_objectSpread({}, availableTimesList), {}, {
+              setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
                 loading: false,
                 error: _context10.t0
               }));
@@ -1027,16 +1011,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee10, null, [[2, 17]]);
     }));
 
-    return function getAvailableTimes() {
+    return function getOrdersAcceptSpend() {
       return _ref10.apply(this, arguments);
     };
   }();
   /**
-   * Method to busy times list
+   * Method to get drivers arrived pickup spend list
    */
 
 
-  var getBusyTimes = /*#__PURE__*/function () {
+  var getArrivedPickeUpSpend = /*#__PURE__*/function () {
     var _ref11 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee11() {
       var requestOptions, functionFetch, response, _yield$response$json11, error, result;
 
@@ -1053,7 +1037,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context11.prev = 2;
-              setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
+              setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -1063,7 +1047,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_busy_times');
+              functionFetch = paramsForAPI('drivers_arrived_pickup_spend');
               _context11.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -1078,12 +1062,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json11.result;
 
               if (!error) {
-                setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
+                setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
+                setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -1095,7 +1079,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context11.prev = 17;
               _context11.t0 = _context11["catch"](2);
-              setBusyTimesList(_objectSpread(_objectSpread({}, busyTimesList), {}, {
+              setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
                 loading: false,
                 error: _context11.t0
               }));
@@ -1108,16 +1092,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee11, null, [[2, 17]]);
     }));
 
-    return function getBusyTimes() {
+    return function getArrivedPickeUpSpend() {
       return _ref11.apply(this, arguments);
     };
   }();
   /**
-   * Method to get orders accept spend list
+   * Method to get location List
    */
 
 
-  var getOrdersAcceptSpend = /*#__PURE__*/function () {
+  var getLocations = /*#__PURE__*/function () {
     var _ref12 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee12() {
       var requestOptions, functionFetch, response, _yield$response$json12, error, result;
 
@@ -1134,7 +1118,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context12.prev = 2;
-              setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
+              setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -1144,7 +1128,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_accept_spend');
+              functionFetch = paramsForAPI('drivers_order_location');
               _context12.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -1159,12 +1143,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json12.result;
 
               if (!error) {
-                setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
+                setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
                   loading: false,
-                  data: result
+                  locations: result
                 }));
               } else {
-                setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
+                setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -1176,7 +1160,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context12.prev = 17;
               _context12.t0 = _context12["catch"](2);
-              setOrdersAcceptSpendList(_objectSpread(_objectSpread({}, ordersAcceptSpendList), {}, {
+              setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
                 loading: false,
                 error: _context12.t0
               }));
@@ -1189,16 +1173,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee12, null, [[2, 17]]);
     }));
 
-    return function getOrdersAcceptSpend() {
+    return function getLocations() {
       return _ref12.apply(this, arguments);
     };
   }();
   /**
-   * Method to get drivers arrived pickup spend list
+   * Method to get arrived pickup spend list
    */
 
 
-  var getArrivedPickeUpSpend = /*#__PURE__*/function () {
+  var getPickUpSpend = /*#__PURE__*/function () {
     var _ref13 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee13() {
       var requestOptions, functionFetch, response, _yield$response$json13, error, result;
 
@@ -1215,7 +1199,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context13.prev = 2;
-              setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
+              setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -1225,7 +1209,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_arrived_pickup_spend');
+              functionFetch = paramsForAPI('drivers_pickup_spend');
               _context13.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -1240,12 +1224,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json13.result;
 
               if (!error) {
-                setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
+                setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
                   loading: false,
                   data: result
                 }));
               } else {
-                setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
+                setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -1257,7 +1241,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context13.prev = 17;
               _context13.t0 = _context13["catch"](2);
-              setArrivedPickUpSpendList(_objectSpread(_objectSpread({}, arrivedPickUpSpendList), {}, {
+              setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
                 loading: false,
                 error: _context13.t0
               }));
@@ -1270,16 +1254,16 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee13, null, [[2, 17]]);
     }));
 
-    return function getArrivedPickeUpSpend() {
+    return function getPickUpSpend() {
       return _ref13.apply(this, arguments);
     };
   }();
   /**
-   * Method to get location List
+   * Method to get arrived pickup spend list
    */
 
 
-  var getLocations = /*#__PURE__*/function () {
+  var getDeliverySpend = /*#__PURE__*/function () {
     var _ref14 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee14() {
       var requestOptions, functionFetch, response, _yield$response$json14, error, result;
 
@@ -1296,7 +1280,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
 
             case 2:
               _context14.prev = 2;
-              setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
+              setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -1306,7 +1290,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_order_location');
+              functionFetch = paramsForAPI('drivers_delivery_spend');
               _context14.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -1321,12 +1305,12 @@ var DriverAnalytics = function DriverAnalytics(props) {
               result = _yield$response$json14.result;
 
               if (!error) {
-                setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
+                setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
                   loading: false,
-                  locations: result
+                  data: result
                 }));
               } else {
-                setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
+                setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
                   loading: true,
                   error: result
                 }));
@@ -1338,7 +1322,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
             case 17:
               _context14.prev = 17;
               _context14.t0 = _context14["catch"](2);
-              setOrderLocationList(_objectSpread(_objectSpread({}, orderLocationList), {}, {
+              setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
                 loading: false,
                 error: _context14.t0
               }));
@@ -1351,178 +1335,14 @@ var DriverAnalytics = function DriverAnalytics(props) {
       }, _callee14, null, [[2, 17]]);
     }));
 
-    return function getLocations() {
-      return _ref14.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get arrived pickup spend list
-   */
-
-
-  var getPickUpSpend = /*#__PURE__*/function () {
-    var _ref15 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee15() {
-      var requestOptions, functionFetch, response, _yield$response$json15, error, result;
-
-      return _regenerator.default.wrap(function _callee15$(_context15) {
-        while (1) {
-          switch (_context15.prev = _context15.next) {
-            case 0:
-              if (!loading) {
-                _context15.next = 2;
-                break;
-              }
-
-              return _context15.abrupt("return");
-
-            case 2:
-              _context15.prev = 2;
-              setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              functionFetch = paramsForAPI('drivers_pickup_spend');
-              _context15.next = 8;
-              return fetch(functionFetch, requestOptions);
-
-            case 8:
-              response = _context15.sent;
-              _context15.next = 11;
-              return response.json();
-
-            case 11:
-              _yield$response$json15 = _context15.sent;
-              error = _yield$response$json15.error;
-              result = _yield$response$json15.result;
-
-              if (!error) {
-                setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
-                  loading: false,
-                  data: result
-                }));
-              } else {
-                setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
-                  loading: true,
-                  error: result
-                }));
-              }
-
-              _context15.next = 20;
-              break;
-
-            case 17:
-              _context15.prev = 17;
-              _context15.t0 = _context15["catch"](2);
-              setPickUpSpendList(_objectSpread(_objectSpread({}, pickUpSpendList), {}, {
-                loading: false,
-                error: _context15.t0
-              }));
-
-            case 20:
-            case "end":
-              return _context15.stop();
-          }
-        }
-      }, _callee15, null, [[2, 17]]);
-    }));
-
-    return function getPickUpSpend() {
-      return _ref15.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get arrived pickup spend list
-   */
-
-
-  var getDeliverySpend = /*#__PURE__*/function () {
-    var _ref16 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee16() {
-      var requestOptions, functionFetch, response, _yield$response$json16, error, result;
-
-      return _regenerator.default.wrap(function _callee16$(_context16) {
-        while (1) {
-          switch (_context16.prev = _context16.next) {
-            case 0:
-              if (!loading) {
-                _context16.next = 2;
-                break;
-              }
-
-              return _context16.abrupt("return");
-
-            case 2:
-              _context16.prev = 2;
-              setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              functionFetch = paramsForAPI('drivers_delivery_spend');
-              _context16.next = 8;
-              return fetch(functionFetch, requestOptions);
-
-            case 8:
-              response = _context16.sent;
-              _context16.next = 11;
-              return response.json();
-
-            case 11:
-              _yield$response$json16 = _context16.sent;
-              error = _yield$response$json16.error;
-              result = _yield$response$json16.result;
-
-              if (!error) {
-                setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
-                  loading: false,
-                  data: result
-                }));
-              } else {
-                setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
-                  loading: true,
-                  error: result
-                }));
-              }
-
-              _context16.next = 20;
-              break;
-
-            case 17:
-              _context16.prev = 17;
-              _context16.t0 = _context16["catch"](2);
-              setDeliverySpendList(_objectSpread(_objectSpread({}, deliverySpendList), {}, {
-                loading: false,
-                error: _context16.t0
-              }));
-
-            case 20:
-            case "end":
-              return _context16.stop();
-          }
-        }
-      }, _callee16, null, [[2, 17]]);
-    }));
-
     return function getDeliverySpend() {
-      return _ref16.apply(this, arguments);
+      return _ref14.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
     getOrders();
     getSales();
-    getTopProducts();
-    getTopCategories();
     getOrderStatus();
     getTopOrders();
     getSpendTimes();
@@ -1540,8 +1360,6 @@ var DriverAnalytics = function DriverAnalytics(props) {
     filterList: filterList,
     ordersList: ordersList,
     salesList: salesList,
-    topProductList: topProductList,
-    topCategoryList: topCategoryList,
     orderStatusList: orderStatusList,
     topOrdersList: topOrdersList,
     customerSatisfactionList: customerSatisfactionList,
