@@ -62,7 +62,6 @@ export const DriversList = (props) => {
     }
   }
 
-
   /**
    * Method to assign driver to order from API
    * @param {object} assign assigned order id and driver id
@@ -136,7 +135,7 @@ export const DriversList = (props) => {
       let where = null
       const conditions = []
       conditions.push({ attribute: 'level', value: [4] })
-      
+
       if (searchValue) {
         const searchConditions = []
         if (isSearchByName) {
@@ -251,9 +250,28 @@ export const DriversList = (props) => {
         drivers: _drivers
       })
     }
+    const handleTrackingDriver = (trackingData) => {
+      let drivers = []
+      drivers = driversList.drivers.filter(_driver => {
+        if (_driver.id === trackingData.driver_id) {
+          if (typeof trackingData.location === 'string') {
+            const trackingLocation = trackingData.location
+            const _location = trackingLocation.replaceAll('\\', '')
+            const location = JSON.parse(_location)
+            _driver.location = location
+          } else {
+            _driver.location = trackingData.location
+          }
+        }
+        return true
+      })
+      setDriversList({ ...driversList, drivers: drivers })
+    }
     socket.on('drivers_update', handleUpdateDriver)
+    socket.on('tracking_driver', handleTrackingDriver)
     return () => {
       socket.off('drivers_update', handleUpdateDriver)
+      socket.off('tracking_driver', handleTrackingDriver)
     }
   }, [socket, session?.loading, driversList.drivers])
 
