@@ -239,7 +239,6 @@ export const DriversList = (props) => {
       if (found) {
         _drivers = driversList.drivers.filter(_driver => {
           if (_driver.id === driver.id) {
-            console.log('ddddd')
             Object.assign(_driver, driver)
           }
           return true
@@ -261,9 +260,6 @@ export const DriversList = (props) => {
   useEffect(() => {
     if (!session?.user) return
     socket.join('drivers')
-    return () => {
-      socket.leave('drivers')
-    }
   }, [socket, session?.user, asDashboard])
 
   useEffect(() => {
