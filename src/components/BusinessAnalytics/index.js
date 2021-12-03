@@ -11,7 +11,7 @@ export const BusinessAnalytics = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  const [filterList, setFilterList] = useState({ lapse: 'today', businessIds: null, app_id: 'all' })
+  const [filterList, setFilterList] = useState({ lapse: 'today', businessIds: null, app_id: 'all', franchises_id: null })
   const [ordersList, setOrdersList] = useState({ loading: false, data: [], error: null })
   const [salesList, setSalesList] = useState({ loading: false, data: [], error: null })
   const [topProductList, setTopProductList] = useState({ loading: false, data: [], error: null })
@@ -28,6 +28,8 @@ export const BusinessAnalytics = (props) => {
     let params = `lapse=${filterList?.lapse}`
     if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses=${filterList?.businessIds?.toString()}`
     if (filterList?.app_id && filterList.app_id !== 'all') params = `${params}&app_id=${filterList?.app_id}`
+    if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
+
     return `${rootUrl}?${params}`
   }
 
