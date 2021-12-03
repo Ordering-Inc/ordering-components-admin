@@ -196,7 +196,10 @@ export const Schedule = (props) => {
    * @param {Number} daysOfWeekIndex index of week days
    */
   const handleSelectCopyTimes = (index) => {
-    setSelectedCopyDays([...selectedCopyDays, index])
+    const _selectedCopyDays = selectedCopyDays.includes(index)
+      ? selectedCopyDays.filter(day => day !== index)
+      : [...selectedCopyDays, index]
+    setSelectedCopyDays(_selectedCopyDays)
   }
   /**
    * Method to apply copy times
@@ -205,7 +208,12 @@ export const Schedule = (props) => {
   const handleApplyScheduleCopyTimes = (daysOfWeekIndex) => {
     const _schedule = scheduleState.map((option, index) => {
       if (selectedCopyDays.includes(index)) {
-        return scheduleState[daysOfWeekIndex]
+        const lapses = [...scheduleState[daysOfWeekIndex].lapses]
+        const original = {
+          enabled: scheduleState[daysOfWeekIndex].enabled,
+          lapses: lapses
+        }
+        return original
       }
       return option
     })
@@ -214,12 +222,12 @@ export const Schedule = (props) => {
 
   useEffect(() => {
     if (scheduleState.length === 0) return
-    handleChangeScheduleState(scheduleState)
+    handleChangeScheduleState([...scheduleState])
   }, [scheduleState])
 
   useEffect(() => {
     if (scheduleList) {
-      setScheduleState(scheduleList)
+      setScheduleState([...scheduleList])
     } else {
       const schedule = []
       for (var i = 0; i < 7; i++) {
