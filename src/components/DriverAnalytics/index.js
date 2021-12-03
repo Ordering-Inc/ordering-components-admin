@@ -11,11 +11,9 @@ export const DriverAnalytics = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  const [filterList, setFilterList] = useState({ lapse: 'today', userIds: null, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
+  const [filterList, setFilterList] = useState({ lapse: 'today', userIds: null, driver_groups_ids: null, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
   const [ordersList, setOrdersList] = useState({ loading: false, data: [], error: null })
   const [salesList, setSalesList] = useState({ loading: false, data: [], error: null })
-  const [topProductList, setTopProductList] = useState({ loading: false, data: [], error: null })
-  const [topCategoryList, setTopCategoryList] = useState({ loading: false, data: [], error: null })
   const [orderStatusList, setOrderStatusList] = useState({ loading: false, data: [], error: null })
   const [topOrdersList, setTopOrdersList] = useState({ loading: false, data: [], error: null })
   const [spendTimesList, setSpendTimesList] = useState({ loading: false, data: [], error: null })
@@ -33,6 +31,7 @@ export const DriverAnalytics = (props) => {
     const rootUrl = `${ordering.root}/reports/${type}`
     let params = `lapse=${filterList?.lapse}&timezone=${filterList?.timeZone}`
     if (filterList?.userIds) params = `${params}&drivers=${filterList?.userIds?.toString()}`
+    if (filterList?.driver_groups_ids) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
     return `${rootUrl}?${params}`
   }
 
@@ -110,86 +109,6 @@ export const DriverAnalytics = (props) => {
     } catch (err) {
       setSalesList({
         ...salesList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get top product list
-   */
-  const getTopProducts = async () => {
-    if (loading) return
-    try {
-      setTopProductList({ ...topProductList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_top_selling')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setTopProductList({
-          ...topProductList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setTopProductList({
-          ...topProductList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setTopProductList({
-        ...topProductList,
-        loading: false,
-        error: err
-      })
-    }
-  }
-
-  /**
-   * Method to get top category list
-   */
-  const getTopCategories = async () => {
-    if (loading) return
-    try {
-      setTopCategoryList({ ...topCategoryList, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const functionFetch = paramsForAPI('drivers_top_categories')
-
-      const response = await fetch(functionFetch, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setTopCategoryList({
-          ...topCategoryList,
-          loading: false,
-          data: result
-        })
-      } else {
-        setTopCategoryList({
-          ...topCategoryList,
-          loading: true,
-          error: result
-        })
-      }
-    } catch (err) {
-      setTopCategoryList({
-        ...topCategoryList,
         loading: false,
         error: err
       })
@@ -679,8 +598,6 @@ export const DriverAnalytics = (props) => {
   useEffect(() => {
     getOrders()
     getSales()
-    getTopProducts()
-    getTopCategories()
     getOrderStatus()
     getTopOrders()
     getSpendTimes()
@@ -703,8 +620,6 @@ export const DriverAnalytics = (props) => {
           filterList={filterList}
           ordersList={ordersList}
           salesList={salesList}
-          topProductList={topProductList}
-          topCategoryList={topCategoryList}
           orderStatusList={orderStatusList}
           topOrdersList={topOrdersList}
           customerSatisfactionList={customerSatisfactionList}
