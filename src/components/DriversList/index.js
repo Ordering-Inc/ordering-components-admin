@@ -258,7 +258,7 @@ export const DriversList = (props) => {
   }, [socket, session?.loading, driversList.drivers])
 
   useEffect(() => {
-    if (!session?.user) return
+    if (!session?.user || drivers) return
     socket.join('drivers')
   }, [socket, session?.user, asDashboard])
 
