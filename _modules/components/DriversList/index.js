@@ -420,7 +420,6 @@ var DriversList = function DriversList(props) {
       if (found) {
         _drivers = driversList.drivers.filter(function (_driver) {
           if (_driver.id === driver.id) {
-            console.log('ddddd');
             Object.assign(_driver, driver);
           }
 
@@ -435,17 +434,39 @@ var DriversList = function DriversList(props) {
       }));
     };
 
+    var handleTrackingDriver = function handleTrackingDriver(trackingData) {
+      var drivers = [];
+      drivers = driversList.drivers.filter(function (_driver) {
+        if (_driver.id === trackingData.driver_id) {
+          if (typeof trackingData.location === 'string') {
+            var trackingLocation = trackingData.location;
+
+            var _location = trackingLocation.replaceAll('\\', '');
+
+            var location = JSON.parse(_location);
+            _driver.location = location;
+          } else {
+            _driver.location = trackingData.location;
+          }
+        }
+
+        return true;
+      });
+      setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+        drivers: drivers
+      }));
+    };
+
     socket.on('drivers_update', handleUpdateDriver);
+    socket.on('tracking_driver', handleTrackingDriver);
     return function () {
       socket.off('drivers_update', handleUpdateDriver);
+      socket.off('tracking_driver', handleTrackingDriver);
     };
   }, [socket, session === null || session === void 0 ? void 0 : session.loading, driversList.drivers]);
   (0, _react.useEffect)(function () {
-    if (!(session !== null && session !== void 0 && session.user)) return;
+    if (!(session !== null && session !== void 0 && session.user) || drivers) return;
     socket.join('drivers');
-    return function () {
-      socket.leave('drivers');
-    };
   }, [socket, session === null || session === void 0 ? void 0 : session.user, asDashboard]);
   (0, _react.useEffect)(function () {
     getOnlineOfflineDrivers(driversList.drivers);

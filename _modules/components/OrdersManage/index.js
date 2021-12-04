@@ -650,11 +650,6 @@ var OrdersManage = function OrdersManage(props) {
     }
 
     socket.on('orders_register', handleRegisterOrder);
-    return function () {
-      socket.leave('orders');
-      socket.leave('drivers');
-      socket.off('orders_register', handleRegisterOrder);
-    };
   }, [socket, loading, user]);
   /**
    * Listening multi orders action start to change status
