@@ -316,11 +316,6 @@ export const OrdersManage = (props) => {
       socket.join(`messages_orders_${user?.id}`)
     }
     socket.on('orders_register', handleRegisterOrder)
-    return () => {
-      socket.leave('orders')
-      socket.leave('drivers')
-      socket.off('orders_register', handleRegisterOrder)
-    }
   }, [socket, loading, user])
 
   /**
