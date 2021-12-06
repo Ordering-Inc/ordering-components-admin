@@ -67,6 +67,7 @@ import { DriversGroupLogs } from './components/DriversGroupLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
+import { EnterprisePromontionList } from './components/EnterprisePromontionList'
 import { ExamineClick } from './components/ExamineClick'
 import { ExportCSV } from './components/ExportCSV'
 import { FacebookLoginButton } from './components/FacebookLoginButton'
@@ -249,6 +250,7 @@ export {
   DriversGroupOrders,
   DriversGroupsList,
   DriversGroupLogs,
+  EnterprisePromontionList,
   ExamineClick,
   ExportCSV,
   FacebookLoginButton,
