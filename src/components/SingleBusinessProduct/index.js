@@ -13,7 +13,8 @@ export const SingleBusinessProduct = (props) => {
     UIComponent,
     business,
     handleUpdateBusinessState,
-    product
+    product,
+    businessState
   } = props
 
   const [{ loading }] = useSession()
@@ -73,7 +74,9 @@ export const SingleBusinessProduct = (props) => {
       images: formState?.changes?.images,
       name: formState?.changes?.name,
       description: formState?.changes?.description,
-      price: formState?.changes?.price
+      price: formState?.changes?.price,
+      fee_fixed: formState?.changes?.fee_fixed,
+      fee_percentage: formState?.changes?.fee_percentage
     }
     for (const key in params) {
       if (params[key] === null) {
@@ -209,7 +212,7 @@ export const SingleBusinessProduct = (props) => {
         changes: { ...product }
       })
     }
-  }, [product])
+  }, [product, businessState])
 
   return (
     <>

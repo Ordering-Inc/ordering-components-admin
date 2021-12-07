@@ -351,8 +351,14 @@ export const BusinessSpreadSheet = (props) => {
 
   useEffect(() => {
     const spreadProducts = []
+    const taxShowbusiness = `${business.tax}% ${business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`
     for (const product of categoryState.products) {
-      spreadProducts.push(product)
+      const taxShow = !product?.tax ? taxShowbusiness : `${product.tax?.rate}% ${business.tax?.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`
+      const _product = {
+        ...product,
+        taxShow: taxShow
+      }
+      spreadProducts.push(_product)
     }
     setFormState({ ...formState, products: spreadProducts })
   }, [categoryState?.products])

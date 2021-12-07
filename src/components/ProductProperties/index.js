@@ -11,30 +11,29 @@ export const ProductProperties = (props) => {
     business,
     UIComponent,
     product,
-    handleUpdateBusinessState
+    handleUpdateBusinessState,
+    setFormTaxState,
+    formTaxState,
+    taxes,
+    setTaxes
   } = props
   const [ordering] = useApi()
   const [session] = useSession()
   const [productState, setProductState] = useState(product)
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-
+  const [formTaxChanges, setFormTaxChanges] = useState({})
+  const [taxToEdit, setTaxToEdit] = useState(null)
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [timeout, setTimeoutCustom] = useState(null)
   /**
    * Method to update the product details from API
    */
   const handleUpdateClick = async (params) => {
     try {
-      setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.category_id).products(productState?.id).save(changes, {
         accessToken: session.token
       })
-      setFormState({
-        ...formState,
-        changes: error ? formState.changes : {},
-        result: result,
-        loading: false
-      })
-
       if (!error) {
         setProductState({ ...productState, ...result })
         if (handleUpdateBusinessState) {
@@ -82,9 +81,95 @@ export const ProductProperties = (props) => {
     })
   }
 
+  const handleChangeTax = (name, value) => {
+    setFormTaxChanges({
+      ...formTaxChanges,
+      [name]: value
+    })
+  }
+
+  const handleSaveTax = async (id, inheritTax) => {
+    let result
+    if (id) {
+      const response = await fetch(`${ordering.root}/taxes/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        },
+        body: JSON.stringify({
+          ...formTaxChanges
+        })
+      })
+      const { result: tax } = await response.json()
+      result = tax
+      setTaxes({
+        ...taxes,
+        [`id:${tax.id}`]: {
+          name: tax.name,
+          description: tax.description,
+          id: tax.id,
+          rate: tax.rate,
+          type: tax.type
+        }
+      })
+    } else {
+      const response = await fetch(`${ordering.root}/taxes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        },
+        body: JSON.stringify(inheritTax || formTaxChanges)
+      })
+      const { result: tax } = await response.json()
+      setTaxes({
+        ...taxes,
+        [`id:${tax.id}`]: {
+          name: tax.name,
+          description: tax.description,
+          id: tax.id,
+          rate: tax.rate,
+          type: tax.type
+        }
+      })
+    }
+    if (result?.error) return
+    setTaxToEdit(null)
+  }
+
+  const handleDeleteTax = async (id) => {
+    setFormTaxState({
+      ...formTaxState,
+      loading: true
+    })
+    if (id) {
+      const response = await fetch(`${ordering.root}/taxes/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        }
+      })
+      const { error } = await response.json()
+      if (!error) {
+        const newTaxes = taxes
+        delete newTaxes[`id:${id}`]
+        setTaxes(newTaxes)
+      }
+      setFormTaxState({
+        ...formTaxState,
+        loading: false
+      })
+    }
+  }
+
   useEffect(() => {
     if (Object.keys(formState.changes).length > 0) {
-      handleUpdateClick()
+      clearInterval(timeout)
+      setTimeoutCustom(setTimeout(function () {
+        handleUpdateClick()
+      }, 1000))
     }
   }, [formState.changes])
 
@@ -98,7 +183,16 @@ export const ProductProperties = (props) => {
         <UIComponent
           {...props}
           productState={productState}
+          taxes={taxes}
+          formTaxState={formTaxState}
+          taxToEdit={taxToEdit}
+          alertState={alertState}
+          setAlertState={setAlertState}
           handleClickProperty={handleClickProperty}
+          handleChangeTax={handleChangeTax}
+          setTaxToEdit={setTaxToEdit}
+          handleSaveTax={handleSaveTax}
+          handleDeleteTax={handleDeleteTax}
         />
       )}
     </>
