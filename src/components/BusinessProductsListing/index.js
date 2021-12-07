@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { useSession } from '../../contexts/SessionContext'
 
 export const BusinessProductsListing = (props) => {
   const {
@@ -14,6 +15,7 @@ export const BusinessProductsListing = (props) => {
     UIComponent
   } = props
 
+  const [{ auth }] = useSession()
   const [categorySelected, setCategorySelected] = useState(null)
   const [searchValue, setSearchValue] = useState(null)
   const [businessState, setBusinessState] = useState({ business: {}, menus: null, loading: true, error: null })
@@ -23,6 +25,8 @@ export const BusinessProductsListing = (props) => {
   const [openCategories, setOpenCategories] = useState({ values: [] })
   const [businessSlug, setBusinessSlug] = useState(slug)
   const [isUpdateMode, setIsUpdateMode] = useState(false)
+  const [taxes, setTaxes] = useState({})
+  const [formTaxState, setFormTaxState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   const categoryStateDefault = {
     loading: true,
@@ -245,6 +249,35 @@ export const BusinessProductsListing = (props) => {
     }
   }
 
+  const getTaxes = async () => {
+    const taxesObject = {}
+    setFormTaxState({
+      ...formTaxState,
+      loading: true
+    })
+    const response = await fetch(`${ordering.root}/taxes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth}`
+      }
+    })
+    const { error, result } = await response.json()
+    if (!error) {
+      result.forEach(tax => (taxesObject[`id:${tax.id}`] = tax))
+      setTaxes(taxesObject)
+      return
+    }
+    setFormTaxState({
+      ...formTaxState,
+      result: {
+        error: true,
+        result: taxesObject
+      },
+      loading: false
+    })
+  }
+
   useEffect(() => {
     if (isInitialRender) {
       getProduct()
@@ -341,6 +374,10 @@ export const BusinessProductsListing = (props) => {
     }
   }, [requestsState.products])
 
+  useEffect(() => {
+    getTaxes()
+  }, [])
+
   return (
     <>
       {UIComponent && (
@@ -364,6 +401,10 @@ export const BusinessProductsListing = (props) => {
           setOpenCategories={setOpenCategories}
           setBusinessSlug={setBusinessSlug}
           handleUpdateCategoryState={handleUpdateCategoryState}
+          setFormTaxState={setFormTaxState}
+          formTaxState={formTaxState}
+          taxes={taxes}
+          setTaxes={setTaxes}
         />
       )}
     </>
