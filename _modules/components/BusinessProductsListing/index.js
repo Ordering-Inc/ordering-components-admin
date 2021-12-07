@@ -13,9 +13,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var _SessionContext = require("../../contexts/SessionContext");
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -25,7 +27,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -33,7 +35,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -47,7 +49,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -63,6 +65,10 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       isInitialRender = props.isInitialRender,
       ordering = props.ordering,
       UIComponent = props.UIComponent;
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      auth = _useSession2[0].auth;
 
   var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
@@ -120,6 +126,22 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       isUpdateMode = _useState18[0],
       setIsUpdateMode = _useState18[1];
 
+  var _useState19 = (0, _react.useState)({}),
+      _useState20 = _slicedToArray(_useState19, 2),
+      taxes = _useState20[0],
+      setTaxes = _useState20[1];
+
+  var _useState21 = (0, _react.useState)({
+    loading: false,
+    changes: {},
+    result: {
+      error: false
+    }
+  }),
+      _useState22 = _slicedToArray(_useState21, 2),
+      formTaxState = _useState22[0],
+      setFormTaxState = _useState22[1];
+
   var categoryStateDefault = {
     loading: true,
     pagination: {
@@ -132,20 +154,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     products: []
   };
 
-  var _useState19 = (0, _react.useState)(categoryStateDefault),
-      _useState20 = _slicedToArray(_useState19, 2),
-      categoryState = _useState20[0],
-      setCategoryState = _useState20[1];
-
-  var _useState21 = (0, _react.useState)(null),
-      _useState22 = _slicedToArray(_useState21, 2),
-      errors = _useState22[0],
-      setErrors = _useState22[1];
-
-  var _useState23 = (0, _react.useState)(false),
+  var _useState23 = (0, _react.useState)(categoryStateDefault),
       _useState24 = _slicedToArray(_useState23, 2),
-      errorQuantityProducts = _useState24[0],
-      setErrorQuantityProducts = _useState24[1];
+      categoryState = _useState24[0],
+      setCategoryState = _useState24[1];
+
+  var _useState25 = (0, _react.useState)(null),
+      _useState26 = _slicedToArray(_useState25, 2),
+      errors = _useState26[0],
+      setErrors = _useState26[1];
+
+  var _useState27 = (0, _react.useState)(false),
+      _useState28 = _slicedToArray(_useState27, 2),
+      errorQuantityProducts = _useState28[0],
+      setErrorQuantityProducts = _useState28[1];
   /**
    * Change category selected
    * @param {Object} category Category object
@@ -163,8 +185,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     if (isInvalid || (category === null || category === void 0 ? void 0 : category.id) === (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id)) return;
     setIsUpdateMode(false);
 
-    if (category !== null && category !== void 0 && (_category$subcategori = category.subcategories) !== null && _category$subcategori !== void 0 && _category$subcategori.length) {
-      if (!(category !== null && category !== void 0 && category.parent_category_id)) {
+    if (category === null || category === void 0 ? void 0 : (_category$subcategori = category.subcategories) === null || _category$subcategori === void 0 ? void 0 : _category$subcategori.length) {
+      if (!(category === null || category === void 0 ? void 0 : category.parent_category_id)) {
         openCategories.values = [];
       }
 
@@ -214,7 +236,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (businessState !== null && businessState !== void 0 && (_businessState$busine = businessState.business) !== null && _businessState$busine !== void 0 && _businessState$busine.lazy_load_products_recommended) {
+              if (businessState === null || businessState === void 0 ? void 0 : (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.lazy_load_products_recommended) {
                 _context.next = 5;
                 break;
               }
@@ -428,6 +450,70 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     };
   }();
 
+  var getTaxes = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var taxesObject, response, _yield$response$json, error, result;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              taxesObject = {};
+              setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
+                loading: true
+              }));
+              _context3.next = 4;
+              return fetch("".concat(ordering.root, "/taxes"), {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(auth)
+                }
+              });
+
+            case 4:
+              response = _context3.sent;
+              _context3.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json = _context3.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+
+              if (error) {
+                _context3.next = 14;
+                break;
+              }
+
+              result.forEach(function (tax) {
+                return taxesObject["id:".concat(tax.id)] = tax;
+              });
+              setTaxes(taxesObject);
+              return _context3.abrupt("return");
+
+            case 14:
+              setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
+                result: {
+                  error: true,
+                  result: taxesObject
+                },
+                loading: false
+              }));
+
+            case 15:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function getTaxes() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (isInitialRender) {
       getProduct();
@@ -435,28 +521,28 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   }, [JSON.stringify((_businessState$busine5 = businessState.business) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.id), isInitialRender]);
 
   var getBusiness = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
       var _result$categories, source, _yield$ordering$busin2, result;
 
-      return _regenerator.default.wrap(function _callee3$(_context3) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.prev = 0;
+              _context4.prev = 0;
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: true
               }));
               source = {};
               requestsState.business = source;
               setRequestsState(_objectSpread({}, requestsState));
-              _context3.next = 7;
+              _context4.next = 7;
               return ordering.businesses(businessSlug).asDashboard().get();
 
             case 7:
-              _yield$ordering$busin2 = _context3.sent;
+              _yield$ordering$busin2 = _context4.sent;
               result = _yield$ordering$busin2.content.result;
 
-              if (!(result !== null && result !== void 0 && result.categories) || (result === null || result === void 0 ? void 0 : (_result$categories = result.categories) === null || _result$categories === void 0 ? void 0 : _result$categories.length) === 0) {
+              if (!(result === null || result === void 0 ? void 0 : result.categories) || (result === null || result === void 0 ? void 0 : (_result$categories = result.categories) === null || _result$categories === void 0 ? void 0 : _result$categories.length) === 0) {
                 setErrorQuantityProducts(true);
               }
 
@@ -464,27 +550,27 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 business: result,
                 loading: false
               }));
-              _context3.next = 16;
+              _context4.next = 16;
               break;
 
             case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
-                error: [_context3.t0.message]
+                error: [_context4.t0.message]
               }));
 
             case 16:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, null, [[0, 13]]);
+      }, _callee4, null, [[0, 13]]);
     }));
 
     return function getBusiness() {
-      return _ref3.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
   /**
@@ -518,7 +604,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
-    } else if (businessState !== null && businessState !== void 0 && (_businessState$busine6 = businessState.business) !== null && _businessState$busine6 !== void 0 && _businessState$busine6.categories) {
+    } else if (businessState === null || businessState === void 0 ? void 0 : (_businessState$busine6 = businessState.business) === null || _businessState$busine6 === void 0 ? void 0 : _businessState$busine6.categories) {
       var _businessState$busine7;
 
       setCategorySelected(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine7 = businessState.business) === null || _businessState$busine7 === void 0 ? void 0 : _businessState$busine7.categories[0]);
@@ -555,6 +641,9 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       request && request.cancel && request.cancel();
     };
   }, [requestsState.products]);
+  (0, _react.useEffect)(function () {
+    getTaxes();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     errors: errors,
     categorySelected: categorySelected,
@@ -577,7 +666,11 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     openCategories: openCategories.values,
     setOpenCategories: setOpenCategories,
     setBusinessSlug: setBusinessSlug,
-    handleUpdateCategoryState: handleUpdateCategoryState
+    handleUpdateCategoryState: handleUpdateCategoryState,
+    setFormTaxState: setFormTaxState,
+    formTaxState: formTaxState,
+    taxes: taxes,
+    setTaxes: setTaxes
   })));
 };
 
