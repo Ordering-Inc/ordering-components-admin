@@ -66,7 +66,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
   var UIComponent = props.UIComponent,
       business = props.business,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
-      product = props.product;
+      product = props.product,
+      businessState = props.businessState;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -154,13 +155,15 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
 
 
   var handleUpdateClick = function handleUpdateClick() {
-    var _formState$changes, _formState$changes2, _formState$changes3, _formState$changes4;
+    var _formState$changes, _formState$changes2, _formState$changes3, _formState$changes4, _formState$changes5, _formState$changes6;
 
     var params = {
       images: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.images,
       name: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.name,
       description: formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.description,
-      price: formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.price
+      price: formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.price,
+      fee_fixed: formState === null || formState === void 0 ? void 0 : (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.fee_fixed,
+      fee_percentage: formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.fee_percentage
     };
 
     for (var key in params) {
@@ -385,7 +388,7 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
         changes: _objectSpread({}, product)
       }));
     }
-  }, [product]);
+  }, [product, businessState]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     handleChangeProductActive: handleChangeProductActive,
     handleUpdateClick: handleUpdateClick,

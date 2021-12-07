@@ -581,14 +581,23 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
 
   (0, _react.useEffect)(function () {
     var spreadProducts = [];
+    var taxShowbusiness = "".concat(business.tax, "% ").concat(business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
 
     var _iterator2 = _createForOfIteratorHelper(categoryState.products),
         _step2;
 
     try {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var _product$tax, _business$tax;
+
         var product = _step2.value;
-        spreadProducts.push(product);
+        var taxShow = !(product === null || product === void 0 ? void 0 : product.tax) ? taxShowbusiness : "".concat((_product$tax = product.tax) === null || _product$tax === void 0 ? void 0 : _product$tax.rate, "% ").concat(((_business$tax = business.tax) === null || _business$tax === void 0 ? void 0 : _business$tax.type) === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
+
+        var _product = _objectSpread(_objectSpread({}, product), {}, {
+          taxShow: taxShow
+        });
+
+        spreadProducts.push(_product);
       }
     } catch (err) {
       _iterator2.e(err);

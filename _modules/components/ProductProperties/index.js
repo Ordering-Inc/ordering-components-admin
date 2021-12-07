@@ -54,7 +54,11 @@ var ProductProperties = function ProductProperties(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      setFormTaxState = props.setFormTaxState,
+      formTaxState = props.formTaxState,
+      taxes = props.taxes,
+      setTaxes = props.setTaxes;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -79,6 +83,29 @@ var ProductProperties = function ProductProperties(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       formState = _useState4[0],
       setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({}),
+      _useState6 = _slicedToArray(_useState5, 2),
+      formTaxChanges = _useState6[0],
+      setFormTaxChanges = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      taxToEdit = _useState8[0],
+      setTaxToEdit = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({
+    open: false,
+    content: []
+  }),
+      _useState10 = _slicedToArray(_useState9, 2),
+      alertState = _useState10[0],
+      setAlertState = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(null),
+      _useState12 = _slicedToArray(_useState11, 2),
+      timeout = _useState12[0],
+      setTimeoutCustom = _useState12[1];
   /**
    * Method to update the product details from API
    */
@@ -93,25 +120,17 @@ var ProductProperties = function ProductProperties(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
               changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
-              _context.next = 5;
+              _context.next = 4;
               return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : productState.category_id).products(productState === null || productState === void 0 ? void 0 : productState.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 5:
+            case 4:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
               result = _yield$ordering$busin2.result;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: error ? formState.changes : {},
-                result: result,
-                loading: false
-              }));
 
               if (!error) {
                 setProductState(_objectSpread(_objectSpread({}, productState), result));
@@ -141,11 +160,11 @@ var ProductProperties = function ProductProperties(props) {
                 }
               }
 
-              _context.next = 16;
+              _context.next = 14;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 11:
+              _context.prev = 11;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -155,12 +174,12 @@ var ProductProperties = function ProductProperties(props) {
                 loading: false
               }));
 
-            case 16:
+            case 14:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 11]]);
     }));
 
     return function handleUpdateClick(_x) {
@@ -178,9 +197,169 @@ var ProductProperties = function ProductProperties(props) {
     }));
   };
 
+  var handleChangeTax = function handleChangeTax(name, value) {
+    setFormTaxChanges(_objectSpread(_objectSpread({}, formTaxChanges), {}, _defineProperty({}, name, value)));
+  };
+
+  var handleSaveTax = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, inheritTax) {
+      var _result;
+
+      var result, response, _yield$response$json, tax, _response, _yield$_response$json, _tax;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              if (!id) {
+                _context2.next = 12;
+                break;
+              }
+
+              _context2.next = 3;
+              return fetch("".concat(ordering.root, "/taxes/").concat(id), {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.auth)
+                },
+                body: JSON.stringify(_objectSpread({}, formTaxChanges))
+              });
+
+            case 3:
+              response = _context2.sent;
+              _context2.next = 6;
+              return response.json();
+
+            case 6:
+              _yield$response$json = _context2.sent;
+              tax = _yield$response$json.result;
+              result = tax;
+              setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(tax.id), {
+                name: tax.name,
+                description: tax.description,
+                id: tax.id,
+                rate: tax.rate,
+                type: tax.type
+              })));
+              _context2.next = 20;
+              break;
+
+            case 12:
+              _context2.next = 14;
+              return fetch("".concat(ordering.root, "/taxes"), {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.auth)
+                },
+                body: JSON.stringify(inheritTax || formTaxChanges)
+              });
+
+            case 14:
+              _response = _context2.sent;
+              _context2.next = 17;
+              return _response.json();
+
+            case 17:
+              _yield$_response$json = _context2.sent;
+              _tax = _yield$_response$json.result;
+              setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(_tax.id), {
+                name: _tax.name,
+                description: _tax.description,
+                id: _tax.id,
+                rate: _tax.rate,
+                type: _tax.type
+              })));
+
+            case 20:
+              if (!((_result = result) === null || _result === void 0 ? void 0 : _result.error)) {
+                _context2.next = 22;
+                break;
+              }
+
+              return _context2.abrupt("return");
+
+            case 22:
+              setTaxToEdit(null);
+
+            case 23:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function handleSaveTax(_x2, _x3) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var handleDeleteTax = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(id) {
+      var response, _yield$response$json2, error, newTaxes;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
+                loading: true
+              }));
+
+              if (!id) {
+                _context3.next = 11;
+                break;
+              }
+
+              _context3.next = 4;
+              return fetch("".concat(ordering.root, "/taxes/").concat(id), {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.auth)
+                }
+              });
+
+            case 4:
+              response = _context3.sent;
+              _context3.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json2 = _context3.sent;
+              error = _yield$response$json2.error;
+
+              if (!error) {
+                newTaxes = taxes;
+                delete newTaxes["id:".concat(id)];
+                setTaxes(newTaxes);
+              }
+
+              setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
+                loading: false
+              }));
+
+            case 11:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function handleDeleteTax(_x4) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (Object.keys(formState.changes).length > 0) {
-      handleUpdateClick();
+      clearInterval(timeout);
+      setTimeoutCustom(setTimeout(function () {
+        handleUpdateClick();
+      }, 1000));
     }
   }, [formState.changes]);
   (0, _react.useEffect)(function () {
@@ -188,7 +367,16 @@ var ProductProperties = function ProductProperties(props) {
   }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
-    handleClickProperty: handleClickProperty
+    taxes: taxes,
+    formTaxState: formTaxState,
+    taxToEdit: taxToEdit,
+    alertState: alertState,
+    setAlertState: setAlertState,
+    handleClickProperty: handleClickProperty,
+    handleChangeTax: handleChangeTax,
+    setTaxToEdit: setTaxToEdit,
+    handleSaveTax: handleSaveTax,
+    handleDeleteTax: handleDeleteTax
   })));
 };
 
