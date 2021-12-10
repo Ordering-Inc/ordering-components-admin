@@ -69,6 +69,12 @@ Object.defineProperty(exports, "Settings", {
     return _Settings.Settings;
   }
 });
+Object.defineProperty(exports, "BatchImageForm", {
+  enumerable: true,
+  get: function get() {
+    return _BatchImageForm.BatchImageForm;
+  }
+});
 Object.defineProperty(exports, "BusinessAndProductList", {
   enumerable: true,
   get: function get() {
@@ -1291,6 +1297,8 @@ var _ApiKeysList = require("./components/ApiKeysList");
 var _BaseComponent = require("./components/BaseComponent");
 
 var _Settings = require("./components/Settings");
+
+var _BatchImageForm = require("./components/BatchImageForm");
 
 var _BusinessAndProductList = require("./components/BusinessAndProductList");
 
