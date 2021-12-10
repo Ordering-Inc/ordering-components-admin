@@ -11,7 +11,14 @@ export const DriverAnalytics = (props) => {
   const [{ token, loading }] = useSession()
   const [ordering] = useApi()
 
-  const [filterList, setFilterList] = useState({ lapse: 'today', userIds: null, driver_groups_ids: null, timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone })
+  const [filterList, setFilterList] = useState({
+    lapse: 'today',
+    userIds: null,
+    app_id: 'all',
+    driver_groups_ids: null,
+    franchises_id: null,
+    timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+  })
   const [ordersList, setOrdersList] = useState({ loading: false, data: [], error: null })
   const [salesList, setSalesList] = useState({ loading: false, data: [], error: null })
   const [orderStatusList, setOrderStatusList] = useState({ loading: false, data: [], error: null })
@@ -31,7 +38,9 @@ export const DriverAnalytics = (props) => {
     const rootUrl = `${ordering.root}/reports/${type}`
     let params = `lapse=${filterList?.lapse}&timezone=${filterList?.timeZone}`
     if (filterList?.userIds) params = `${params}&drivers=${filterList?.userIds?.toString()}`
+    if (filterList?.app_id && filterList.app_id !== 'all') params = `${params}&app_id=${filterList?.app_id}`
     if (filterList?.driver_groups_ids) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
+    if (filterList?.franchises_id) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
     return `${rootUrl}?${params}`
   }
 
@@ -49,7 +58,7 @@ export const DriverAnalytics = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = paramsForAPI('orders_drivers')
+      const functionFetch = paramsForAPI('driver_orders_v2')
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
@@ -89,7 +98,7 @@ export const DriverAnalytics = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = paramsForAPI('drivers_sales')
+      const functionFetch = paramsForAPI('driver_sales_v2')
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
