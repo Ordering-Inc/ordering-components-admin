@@ -9,6 +9,7 @@ import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
 import { ApiKeysList } from './components/ApiKeysList'
 import { BaseComponent } from './components/BaseComponent'
 import { Settings } from './components/Settings'
+import { BatchImageForm } from './components/BatchImageForm'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
@@ -194,6 +195,7 @@ export {
   ApiKeysList,
   BaseComponent,
   Settings,
+  BatchImageForm,
   BusinessAndProductList,
   BusinessAnalytics,
   BusinessBasicInformation,
