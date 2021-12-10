@@ -27,7 +27,8 @@ export const AdvancedReports = (props) => {
       franchises_id: null,
       driver_companies_ids: null,
       driver_groups_ids: null,
-      delivery_types_ids: null
+      delivery_types_ids: null,
+      app_ids: null
     }
   )
 
@@ -53,6 +54,7 @@ export const AdvancedReports = (props) => {
       if (filterList?.driver_companies_ids && filterList?.driver_companies_ids.length > 0) params = `${params}&driver_companies_ids=${JSON.stringify(filterList?.driver_companies_ids)}`
       if (filterList?.driver_groups_ids && filterList?.driver_groups_ids.length > 0) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
       if (filterList?.delivery_types_ids && filterList?.delivery_types_ids.length > 0) params = `${params}&delivery_types_ids=${JSON.stringify(filterList?.delivery_types_ids)}`
+      if (filterList?.app_ids && filterList?.app_ids.length > 0) params = `${params}&app_ids=${JSON.stringify(filterList?.app_ids)}`
 
       const functionFetch = `${ordering.root}/reports/${endpoint}?${params}`
 
