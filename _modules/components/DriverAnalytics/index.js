@@ -63,7 +63,9 @@ var DriverAnalytics = function DriverAnalytics(props) {
   var _useState = (0, _react.useState)({
     lapse: 'today',
     userIds: null,
+    app_id: 'all',
     driver_groups_ids: null,
+    franchises_id: null,
     timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -202,7 +204,9 @@ var DriverAnalytics = function DriverAnalytics(props) {
     var rootUrl = "".concat(ordering.root, "/reports/").concat(type);
     var params = "lapse=".concat(filterList === null || filterList === void 0 ? void 0 : filterList.lapse, "&timezone=").concat(filterList === null || filterList === void 0 ? void 0 : filterList.timeZone);
     if (filterList === null || filterList === void 0 ? void 0 : filterList.userIds) params = "".concat(params, "&drivers=").concat(filterList === null || filterList === void 0 ? void 0 : (_filterList$userIds = filterList.userIds) === null || _filterList$userIds === void 0 ? void 0 : _filterList$userIds.toString());
+    if ((filterList === null || filterList === void 0 ? void 0 : filterList.app_id) && filterList.app_id !== 'all') params = "".concat(params, "&app_id=").concat(filterList === null || filterList === void 0 ? void 0 : filterList.app_id);
     if (filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
+    if (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
     return "".concat(rootUrl, "?").concat(params);
   };
   /**
@@ -237,7 +241,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('orders_drivers');
+              functionFetch = paramsForAPI('driver_orders_v2');
               _context.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -318,7 +322,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('drivers_sales');
+              functionFetch = paramsForAPI('driver_sales_v2');
               _context2.next = 8;
               return fetch(functionFetch, requestOptions);
 

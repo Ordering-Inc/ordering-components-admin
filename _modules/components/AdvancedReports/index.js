@@ -93,7 +93,8 @@ var AdvancedReports = function AdvancedReports(props) {
     franchises_id: null,
     driver_companies_ids: null,
     driver_groups_ids: null,
-    delivery_types_ids: null
+    delivery_types_ids: null,
+    app_ids: null
   }),
       _useState6 = _slicedToArray(_useState5, 2),
       filterList = _useState6[0],
@@ -138,16 +139,17 @@ var AdvancedReports = function AdvancedReports(props) {
               if ((filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
               if ((filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids.length) > 0) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
               if ((filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids.length) > 0) params = "".concat(params, "&delivery_types_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids));
+              if ((filterList === null || filterList === void 0 ? void 0 : filterList.app_ids) && (filterList === null || filterList === void 0 ? void 0 : filterList.app_ids.length) > 0) params = "".concat(params, "&app_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.app_ids));
               functionFetch = "".concat(ordering.root, "/reports/").concat(endpoint, "?").concat(params);
-              _context.next = 16;
+              _context.next = 17;
               return fetch(functionFetch, requestOptions);
 
-            case 16:
+            case 17:
               response = _context.sent;
-              _context.next = 19;
+              _context.next = 20;
               return response.json();
 
-            case 19:
+            case 20:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -164,23 +166,23 @@ var AdvancedReports = function AdvancedReports(props) {
                 }));
               }
 
-              _context.next = 28;
+              _context.next = 29;
               break;
 
-            case 25:
-              _context.prev = 25;
+            case 26:
+              _context.prev = 26;
               _context.t0 = _context["catch"](2);
               setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 28:
+            case 29:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 25]]);
+      }, _callee, null, [[2, 26]]);
     }));
 
     return function getBusinessDistanceList() {

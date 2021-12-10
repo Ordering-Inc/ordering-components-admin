@@ -1221,6 +1221,12 @@ Object.defineProperty(exports, "ReportsBrandFilter", {
     return _ReportsBrandFilter.ReportsBrandFilter;
   }
 });
+Object.defineProperty(exports, "ReportsAppIdFilter", {
+  enumerable: true,
+  get: function get() {
+    return _ReportsAppIdFilter.ReportsAppIdFilter;
+  }
+});
 Object.defineProperty(exports, "ReportsDriverGroupFilter", {
   enumerable: true,
   get: function get() {
@@ -1613,6 +1619,8 @@ var _FloatingButton = require("./components/FloatingButton");
 var _ResetPassword = require("./components/ResetPassword");
 
 var _ReportsBrandFilter = require("./components/ReportsBrandFilter");
+
+var _ReportsAppIdFilter = require("./components/ReportsAppIdFilter");
 
 var _ReportsDriverGroupFilter = require("./components/ReportsDriverGroupFilter");
 
