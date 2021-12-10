@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.SingleBusinessProduct = void 0;
+exports.BatchImageForm = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,11 +13,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _SessionContext = require("../../contexts/SessionContext");
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _LanguageContext = require("../../contexts/LanguageContext");
+var _SessionContext = require("../../contexts/SessionContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
 
@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -59,120 +59,66 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to manage Checkout page behavior without UI component
- */
-var SingleBusinessProduct = function SingleBusinessProduct(props) {
-  var UIComponent = props.UIComponent,
-      business = props.business,
+var BatchImageForm = function BatchImageForm(props) {
+  var categorySelected = props.categorySelected,
+      businessState = props.businessState,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
-      product = props.product,
-      businessState = props.businessState;
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      loading = _useSession2[0].loading;
-
-  var _useApi = (0, _ApiContext.useApi)(),
-      _useApi2 = _slicedToArray(_useApi, 1),
-      ordering = _useApi2[0];
+      UIComponent = props.UIComponent;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
+  var _useApi = (0, _ApiContext.useApi)(),
+      _useApi2 = _slicedToArray(_useApi, 1),
+      ordering = _useApi2[0];
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      loading = _useSession2[0].loading;
+
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
-  var _useState = (0, _react.useState)({
-    loading: false,
-    changes: {},
-    result: {
-      error: false
-    }
-  }),
+  var _useState = (0, _react.useState)([]),
       _useState2 = _slicedToArray(_useState, 2),
-      formState = _useState2[0],
-      setFormState = _useState2[1];
+      products = _useState2[0],
+      setProducts = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(false),
+  var business = businessState.business;
+
+  var _useState3 = (0, _react.useState)({
+    photos: [],
+    loading: false,
+    result: {
+      error: null
+    },
+    API: false,
+    endPoint: false
+  }),
       _useState4 = _slicedToArray(_useState3, 2),
-      isEditMode = _useState4[0],
-      setIsEditMode = _useState4[1];
+      formState = _useState4[0],
+      setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      images = _useState6[0],
+      setImages = _useState6[1];
   /**
-   * Set enabled property of a product
-   * @param {Boolean} isChecked
-   */
-
-
-  var handleChangeProductActive = function handleChangeProductActive(isChecked) {
-    var params = {
-      enabled: isChecked
-    };
-    editProduct(params);
-  };
-  /**
-   * Set properties of a product
-   * @param {EventTarget} evt Related Html element
-   */
-
-
-  var handleChangeInput = function handleChangeInput(evt) {
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, evt.target.name, evt.target.value))
-    }));
-    setIsEditMode(true);
-  };
-  /**
-  * Update business photo data
-  * @param {File} file Image to change business photo
+  * Clean formState
   */
 
 
-  var handlechangeImage = function handlechangeImage(file) {
-    var reader = new window.FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = function () {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          images: reader.result
-        })
-      }));
-    };
-
-    reader.onerror = function (error) {
-      return console.log(error);
-    };
-
-    setIsEditMode(true);
-  };
-  /**
-   * Set name property of a product
-   * @param {String} value
-   */
-
-
-  var handleUpdateClick = function handleUpdateClick() {
-    var _formState$changes, _formState$changes2, _formState$changes3, _formState$changes4, _formState$changes5, _formState$changes6;
-
-    var params = {
-      images: formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.images,
-      name: formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.name,
-      description: formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.description,
-      price: formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.price,
-      fee_fixed: formState === null || formState === void 0 ? void 0 : (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.fee_fixed,
-      fee_percentage: formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.fee_percentage
-    };
-
-    for (var key in params) {
-      if (params[key] === null) {
-        delete params[key];
-      }
-    }
-
-    editProduct(params);
+  var cleanFormState = function cleanFormState() {
+    return setFormState({
+      photos: [],
+      loading: false,
+      result: {
+        error: null
+      },
+      API: false
+    });
   };
   /**
    * Method to edit a product
@@ -180,8 +126,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
 
 
   var editProduct = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _categories;
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(product, params) {
+      var _yield$ordering$busin, _yield$ordering$busin2, error, result, _formState$photos, _categories, photos;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -198,7 +144,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
               _context.prev = 2;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
+                loading: true,
+                API: false
               }));
               _context.next = 7;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(product === null || product === void 0 ? void 0 : product.category_id)).products(product === null || product === void 0 ? void 0 : product.id).save(params);
@@ -210,14 +157,6 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
               result = _yield$ordering$busin2.result;
 
               if (!error) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  loading: false,
-                  result: {
-                    error: false,
-                    result: result
-                  }
-                }));
-
                 if (handleUpdateBusinessState) {
                   _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
 
@@ -242,8 +181,29 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                   }));
                 }
 
-                showToast(_ToastContext.ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'));
-                setIsEditMode(false);
+                photos = formState === null || formState === void 0 ? void 0 : (_formState$photos = formState.photos) === null || _formState$photos === void 0 ? void 0 : _formState$photos.filter(function (photo) {
+                  return (photo === null || photo === void 0 ? void 0 : photo.name) !== (result === null || result === void 0 ? void 0 : result.id);
+                });
+
+                if (photos.length > 0) {
+                  setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                    photos: photos,
+                    API: true
+                  }));
+                } else {
+                  setFormState({
+                    loading: false,
+                    photos: [],
+                    result: {
+                      error: false,
+                      result: 'all product updated'
+                    },
+                    API: false,
+                    endPoint: true
+                  });
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_UPDATE', 'Products updated'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -276,177 +236,149 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
       }, _callee, null, [[2, 14]]);
     }));
 
-    return function editProduct(_x) {
+    return function editProduct(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-  * Method to edit a product
-  */
+   * Upload product photo data
+   * @param {File} file Image to change user photo
+   */
 
 
-  var deleteProduct = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
+  var fileToDataUri = function fileToDataUri(image) {
+    // eslint-disable-next-line promise/param-names
+    return new Promise(function (res) {
+      var reader = new FileReader();
+      var type = image.type,
+          name = image.name,
+          size = image.size;
+      reader.addEventListener('load', function () {
+        res({
+          base64: reader.result,
+          name: parseInt(name.split('.')[0]),
+          type: type,
+          size: size
+        });
+      });
+      reader.readAsDataURL(image);
+    });
+  };
 
+  var handleUploadImages = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(files) {
+      var newImagesPromises, i, newImages;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (!loading) {
-                _context2.next = 2;
-                break;
+              newImagesPromises = [];
+
+              for (i = 0; i < files.length; i++) {
+                newImagesPromises.push(fileToDataUri(files[i]));
               }
 
-              return _context2.abrupt("return");
+              _context2.next = 4;
+              return Promise.all(newImagesPromises);
 
-            case 2:
-              _context2.prev = 2;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
-              _context2.next = 7;
-              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(product === null || product === void 0 ? void 0 : product.category_id)).products(product === null || product === void 0 ? void 0 : product.id).delete();
+            case 4:
+              newImages = _context2.sent;
+              setImages([].concat(_toConsumableArray(images), _toConsumableArray(newImages)));
 
-            case 7:
-              _yield$ordering$busin3 = _context2.sent;
-              _yield$ordering$busin4 = _yield$ordering$busin3.content;
-              error = _yield$ordering$busin4.error;
-              result = _yield$ordering$busin4.result;
-
-              if (!error) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  loading: false,
-                  result: {
-                    error: false,
-                    result: result
-                  }
-                }));
-
-                if (handleUpdateBusinessState) {
-                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
-
-                  _categories.forEach(function iterate(category) {
-                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = category.products.filter(function (_product) {
-                        return _product.id !== product.id;
-                      });
-
-                      category.products = _toConsumableArray(_products);
-                    }
-
-                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
-                  });
-
-                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
-                    categories: _categories
-                  }));
-                }
-
-                showToast(_ToastContext.ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'));
-              } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  loading: false,
-                  result: {
-                    error: true,
-                    result: result
-                  }
-                }));
-              }
-
-              _context2.next = 17;
-              break;
-
-            case 14:
-              _context2.prev = 14;
-              _context2.t0 = _context2["catch"](2);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: false,
-                result: {
-                  error: true,
-                  result: _context2.t0
-                }
-              }));
-
-            case 17:
+            case 6:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 14]]);
+      }, _callee2);
     }));
 
-    return function deleteProduct() {
+    return function handleUploadImages(_x3) {
       return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (product) {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread({}, product)
-      }));
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      photos: images
+    }));
+  }, [images]);
+  /**
+  * Save Product
+  */
+
+  var updateProduct = function updateProduct() {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      API: true,
+      loading: true
+    }));
+  };
+
+  (0, _react.useEffect)(function () {
+    if (categorySelected && categorySelected !== null && categorySelected !== void 0 && categorySelected.products && (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.products.length) > 0) {
+      setProducts(categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.products);
     }
-  }, [product, businessState]);
+  }, [categorySelected]);
+  (0, _react.useEffect)(function () {
+    var _formState$photos2;
+
+    if (formState !== null && formState !== void 0 && formState.API && (formState === null || formState === void 0 ? void 0 : (_formState$photos2 = formState.photos) === null || _formState$photos2 === void 0 ? void 0 : _formState$photos2.length) > 0) {
+      var _photo = formState === null || formState === void 0 ? void 0 : formState.photos[0];
+
+      var params = {
+        images: _photo === null || _photo === void 0 ? void 0 : _photo.base64
+      };
+      var product = products.find(function (product) {
+        return (_photo === null || _photo === void 0 ? void 0 : _photo.name) === (product === null || product === void 0 ? void 0 : product.id);
+      });
+      editProduct(product, params);
+    }
+
+    if (formState !== null && formState !== void 0 && formState.API && (formState === null || formState === void 0 ? void 0 : formState.photos.length) === 0) {
+      cleanFormState();
+    }
+  }, [formState === null || formState === void 0 ? void 0 : formState.API]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    handleChangeProductActive: handleChangeProductActive,
-    handleUpdateClick: handleUpdateClick,
-    deleteProduct: deleteProduct,
-    productFormState: formState,
-    handleChangeInput: handleChangeInput,
-    handlechangeImage: handlechangeImage,
-    isEditMode: isEditMode
+    handleUploadImages: handleUploadImages,
+    cleanFormState: cleanFormState,
+    updateProduct: updateProduct,
+    formState: formState,
+    products: products
   })));
 };
 
-exports.SingleBusinessProduct = SingleBusinessProduct;
-SingleBusinessProduct.propTypes = {
+exports.BatchImageForm = BatchImageForm;
+BatchImageForm.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Object for a business
-   */
-  business: _propTypes.default.object,
-
-  /**
-   * Function to set a business state
-   */
-  handleUpdateBusinessState: _propTypes.default.func,
-
-  /**
-   * Object for a product
-   */
-  product: _propTypes.default.object,
-
-  /**
-   * Components types before Checkout
+   * Components types before business promotion form
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
-   * Array of type components, the parent props will pass to these components
-   */
+  * Components types after business promotion form
+  * Array of type components, the parent props will pass to these components
+  */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements before business promotion form
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements after business promotion form
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-SingleBusinessProduct.defaultProps = {
+BatchImageForm.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
