@@ -58,7 +58,7 @@ export const BusinessMenuOptions = (props) => {
   const handleUpdateBusinessMenuOption = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
+      setFormState({ ...formState, loading: true, result: { error: false } })
       const changes = {}
       for (const key in formState?.changes) {
         changes[key] = JSON.stringify(formState?.changes[key])
@@ -105,7 +105,8 @@ export const BusinessMenuOptions = (props) => {
    */
   const handleAddBusinessMenuOption = async () => {
     try {
-      setFormState({ ...formState, loading: true })
+      setFormState({ ...formState, loading: true, result: { error: false } })
+
       const changes = { ...formState?.changes }
       if (changes?.products) {
         changes.products = JSON.stringify(changes?.products)
@@ -205,11 +206,18 @@ export const BusinessMenuOptions = (props) => {
     } else {
       setSelectedProductsIds([])
       setOrderTypeSate({
-        delivery: false,
-        pickup: false,
+        delivery: true,
+        pickup: true,
         eatin: false,
         curbside: false,
         driver_thru: false
+      })
+      setFormState({
+        ...formState,
+        changes: {
+          delivery: true,
+          pickup: true
+        }
       })
     }
   }, [menu])
