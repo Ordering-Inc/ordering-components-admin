@@ -59,9 +59,9 @@ export const BusinessMenuOptions = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, result: { error: false } })
-      const changes = {}
-      for (const key in formState?.changes) {
-        changes[key] = JSON.stringify(formState?.changes[key])
+      const changes = { ...formState.changes }
+      if (changes?.schedule) {
+        changes.schedule = JSON.stringify(changes.schedule)
       }
       const requestOptions = {
         method: 'PUT',
