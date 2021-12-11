@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -71,6 +75,14 @@ var ProductMetaFields = function ProductMetaFields(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
   /**
    * Array to save meta fields
    */
@@ -173,6 +185,7 @@ var ProductMetaFields = function ProductMetaFields(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -183,10 +196,10 @@ var ProductMetaFields = function ProductMetaFields(props) {
                   Authorization: "Bearer ".concat(session.token)
                 }
               };
-              _context2.next = 5;
+              _context2.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/metafields/").concat(metaFieldId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
 
               if (response.ok) {
@@ -203,13 +216,14 @@ var ProductMetaFields = function ProductMetaFields(props) {
                   }
                 });
                 handleSuccessDeleteBusinessMetaFields && handleSuccessDeleteBusinessMetaFields(metaFieldId);
+                showToast(_ToastContext.ToastType.Success, t('METAFIELD_DELETED', 'Metafield deleted'));
               }
 
-              _context2.next = 12;
+              _context2.next = 13;
               break;
 
-            case 9:
-              _context2.prev = 9;
+            case 10:
+              _context2.prev = 10;
               _context2.t0 = _context2["catch"](0);
               setActionState({
                 result: {
@@ -219,12 +233,12 @@ var ProductMetaFields = function ProductMetaFields(props) {
                 loading: false
               });
 
-            case 12:
+            case 13:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 9]]);
+      }, _callee2, null, [[0, 10]]);
     }));
 
     return function handleDeleteMetaField(_x) {
@@ -245,6 +259,7 @@ var ProductMetaFields = function ProductMetaFields(props) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -256,15 +271,15 @@ var ProductMetaFields = function ProductMetaFields(props) {
                 },
                 body: JSON.stringify(values)
               };
-              _context3.next = 5;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/metafields"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               _yield$response$json2 = _context3.sent;
               error = _yield$response$json2.error;
               result = _yield$response$json2.result;
@@ -293,13 +308,15 @@ var ProductMetaFields = function ProductMetaFields(props) {
                 if (handleSuccessAddMetaFields) {
                   handleSuccessAddMetaFields(result);
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('METAFIELD_ADDED', 'Metafield added'));
               }
 
-              _context3.next = 17;
+              _context3.next = 18;
               break;
 
-            case 14:
-              _context3.prev = 14;
+            case 15:
+              _context3.prev = 15;
               _context3.t0 = _context3["catch"](0);
               setActionState({
                 result: {
@@ -309,12 +326,12 @@ var ProductMetaFields = function ProductMetaFields(props) {
                 loading: false
               });
 
-            case 17:
+            case 18:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 14]]);
+      }, _callee3, null, [[0, 15]]);
     }));
 
     return function handeAddMetaField(_x2) {
