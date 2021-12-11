@@ -140,7 +140,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleUpdateBusinessMenuOption = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var changes, key, requestOptions, response, content, _business;
+      var changes, requestOptions, response, content, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -154,10 +154,10 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                   error: false
                 }
               }));
-              changes = {};
+              changes = _objectSpread({}, formState.changes);
 
-              for (key in formState === null || formState === void 0 ? void 0 : formState.changes) {
-                changes[key] = JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes[key]);
+              if (changes !== null && changes !== void 0 && changes.schedule) {
+                changes.schedule = JSON.stringify(changes.schedule);
               }
 
               requestOptions = {
