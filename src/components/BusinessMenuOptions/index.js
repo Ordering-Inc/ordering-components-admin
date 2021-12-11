@@ -93,7 +93,7 @@ export const BusinessMenuOptions = (props) => {
           return true
         })
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
-        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+        showToast(ToastType.Success, t('MENU_SAVED', 'Products catalog saved'))
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
@@ -105,6 +105,7 @@ export const BusinessMenuOptions = (props) => {
    */
   const handleAddBusinessMenuOption = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, result: { error: false } })
 
       const changes = { ...formState?.changes }
@@ -164,6 +165,7 @@ export const BusinessMenuOptions = (props) => {
         _menu = { ..._menu, products: products }
         _business.menus.push(_menu)
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
+        showToast(ToastType.Success, t('MENU_ADDED', 'Products catalog added'))
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
