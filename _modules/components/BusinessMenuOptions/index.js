@@ -199,7 +199,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 });
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                showToast(_ToastContext.ToastType.Success, t('MENU_SAVED', 'Products catalog saved'));
               }
 
               _context.next = 19;
@@ -242,6 +242,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true,
                 result: {
@@ -286,15 +287,15 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context2.next = 8;
+              _context2.next = 9;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus"), requestOptions);
 
-            case 8:
+            case 9:
               response = _context2.sent;
-              _context2.next = 11;
+              _context2.next = 12;
               return response.json();
 
-            case 11:
+            case 12:
               content = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
@@ -323,13 +324,14 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 _business.menus.push(_menu);
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
+                showToast(_ToastContext.ToastType.Success, t('MENU_ADDED', 'Products catalog added'));
               }
 
-              _context2.next = 19;
+              _context2.next = 20;
               break;
 
-            case 16:
-              _context2.prev = 16;
+            case 17:
+              _context2.prev = 17;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -339,12 +341,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 }
               }));
 
-            case 19:
+            case 20:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 16]]);
+      }, _callee2, null, [[0, 17]]);
     }));
 
     return function handleAddBusinessMenuOption() {
