@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage product extras behavior without UI component
@@ -15,6 +17,9 @@ export const ProductExtras = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [productState, setProductState] = useState({ product: product, loading: false, error: null })
   const [extrasState, setExtrasState] = useState({ extras: business?.extras, loading: false, error: null })
   const [changesState, setChangesState] = useState({})
@@ -58,7 +63,7 @@ export const ProductExtras = (props) => {
         product_id: product?.id,
         extras: JSON.stringify(extraIds)
       }
-
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setProductState({ ...productState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -79,6 +84,7 @@ export const ProductExtras = (props) => {
           product: updatedProduct
         })
         updateBusinessState(updatedProduct, business)
+        showToast(ToastType.Success, t('EXTRA_SAVED', 'Extra saved'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
@@ -112,6 +118,7 @@ export const ProductExtras = (props) => {
    */
   const handleUpdateExtraState = async (extraId, params) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtrasState({ ...extrasState, loading: true })
       const requestOptions = {
         method: 'PUT',
@@ -159,6 +166,7 @@ export const ProductExtras = (props) => {
           const updatedBusiness = { ...businessState, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('EXTRA_SAVED', 'Extra saved'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
@@ -183,6 +191,7 @@ export const ProductExtras = (props) => {
    */
   const handleDeteteExtra = async (extraId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtrasState({ ...extrasState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -212,6 +221,7 @@ export const ProductExtras = (props) => {
           const updatedBusiness = { ...businessState, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
@@ -239,6 +249,7 @@ export const ProductExtras = (props) => {
         business_id: business?.id,
         ...changesState
       }
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtrasState({ ...extrasState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -259,6 +270,7 @@ export const ProductExtras = (props) => {
           const updatedBusiness = { ...business, extras: extras }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('EXTRA_ADDED', 'Extra added'))
       }
     } catch (err) {
       setExtrasState({ ...extrasState, loading: false, error: err.message })
