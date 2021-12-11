@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const ProductExtraOptionDetails = (props) => {
   const {
@@ -13,6 +15,9 @@ export const ProductExtraOptionDetails = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [optionState, setOptionState] = useState({ option: option, loading: false, error: null })
   const [changesState, setChangesState] = useState({ changes: {}, result: {} })
   const [editSubOptionId, setEditSubOptionId] = useState(null)
@@ -187,6 +192,7 @@ export const ProductExtraOptionDetails = (props) => {
         }
       }
       if (Object.keys(changes).length === 0) return
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setOptionState({ ...optionState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -220,6 +226,7 @@ export const ProductExtraOptionDetails = (props) => {
         const updatedExtra = { ...extra, options: options }
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('CHOICE_SAVED', 'Choice saved'))
       }
     } catch (err) {
       setOptionState({ ...optionState, loading: false, error: err.message })
@@ -246,6 +253,7 @@ export const ProductExtraOptionDetails = (props) => {
         return
       }
       if (Object.keys(changes).length === 0) return
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       changes.enabled = true
       setOptionState({ ...optionState, loading: true })
       const requestOptions = {
@@ -276,6 +284,7 @@ export const ProductExtraOptionDetails = (props) => {
         const updatedExtra = { ...extra, options: options }
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('CHOICE_ADDED', 'Choice added'))
       }
     } catch (err) {
       setOptionState({ ...optionState, loading: false, error: err.message })
@@ -288,6 +297,7 @@ export const ProductExtraOptionDetails = (props) => {
    */
   const handleDeteteSubOption = async (subOptionId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setOptionState({ ...optionState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -311,6 +321,7 @@ export const ProductExtraOptionDetails = (props) => {
         const updatedExtra = { ...extra, options: options }
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('CHOICE_DELETED', 'Choice deleted'))
       }
     } catch (err) {
       setOptionState({ ...optionState, loading: false, error: err.message })
@@ -337,6 +348,7 @@ export const ProductExtraOptionDetails = (props) => {
    */
   const handleUpdateOption = async (change) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setSettingChangeState({ ...settingChangeState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -363,6 +375,7 @@ export const ProductExtraOptionDetails = (props) => {
         const updatedExtra = { ...extra, options: options }
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('OPTION_SAVED', 'Option saved'))
       }
     } catch (err) {
       setSettingChangeState({ ...settingChangeState, loading: false, error: err.message })
