@@ -149,7 +149,10 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               _context.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
+                loading: true,
+                result: {
+                  error: false
+                }
               }));
               changes = {};
 
@@ -240,7 +243,10 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
             case 0:
               _context2.prev = 0;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
+                loading: true,
+                result: {
+                  error: false
+                }
               }));
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
 
@@ -385,12 +391,18 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     } else {
       setSelectedProductsIds([]);
       setOrderTypeSate({
-        delivery: false,
-        pickup: false,
+        delivery: true,
+        pickup: true,
         eatin: false,
         curbside: false,
         driver_thru: false
       });
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          delivery: true,
+          pickup: true
+        }
+      }));
     }
   }, [menu]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
