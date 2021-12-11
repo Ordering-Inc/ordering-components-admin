@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage product extras behavior without UI component
@@ -15,6 +17,9 @@ export const ProductExtraOptions = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [extraState, setExtraState] = useState({ extra: extra, loading: false, error: null })
   const [changesState, setChangesState] = useState({ changes: {}, result: {} })
   const [editOptionId, setEditOptionId] = useState(null)
@@ -161,6 +166,7 @@ export const ProductExtraOptions = (props) => {
    */
   const handleUpdateOption = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtraState({ ...extraState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -186,6 +192,7 @@ export const ProductExtraOptions = (props) => {
         const updatedExtra = { ...extraState.extra, options: options }
         setExtraState({ ...extraState, loading: false, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('OPTION_SAVED', 'Option saved'))
       }
     } catch (err) {
       setExtraState({ ...extraState, loading: false, error: err.message })
@@ -197,6 +204,7 @@ export const ProductExtraOptions = (props) => {
    */
   const handleAddOption = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtraState({ ...extraState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -221,6 +229,7 @@ export const ProductExtraOptions = (props) => {
         const updatedExtra = { ...extraState.extra, options: options }
         setExtraState({ ...extraState, loading: false, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('OPTION_ADDED', 'Option added'))
       }
     } catch (err) {
       setExtraState({ ...extraState, loading: false, error: err.message })
@@ -232,6 +241,7 @@ export const ProductExtraOptions = (props) => {
    */
   const handleDeteteOption = async (optionId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setExtraState({ ...extraState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -247,6 +257,7 @@ export const ProductExtraOptions = (props) => {
         const updatedExtra = { ...extraState.extra, options: options }
         setExtraState({ ...extraState, loading: false, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)
+        showToast(ToastType.Success, t('OPTION_DELETED', 'Option deleted'))
       }
     } catch (err) {
       setExtraState({ ...extraState, loading: false, error: err.message })
