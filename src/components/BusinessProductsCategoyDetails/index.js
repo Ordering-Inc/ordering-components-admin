@@ -6,9 +6,9 @@ import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
 /**
- * Component to manage BusinessCategoryEdit behavior without UI component
+ * Component to manage BusinessProductsCategoyDetails behavior without UI component
  */
-export const BusinessCategoryEdit = (props) => {
+export const BusinessProductsCategoyDetails = (props) => {
   const {
     UIComponent,
     businessState,
@@ -25,6 +25,7 @@ export const BusinessCategoryEdit = (props) => {
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
   const [formState, setFormState] = useState({ loading: false, changes: { enabled: true, enabledParent: false }, result: { error: false } })
+  const [parentCategories, setParentCategories] = useState([])
 
   useEffect(() => {
     if (!category) return
@@ -40,7 +41,7 @@ export const BusinessCategoryEdit = (props) => {
   }, [businessState])
 
   /**
-  * Update credential data
+  * Update form input data
   * @param {EventTarget} e Related HTML event
   */
   const handleChangeInput = (e) => {
@@ -70,6 +71,16 @@ export const BusinessCategoryEdit = (props) => {
     setFormState({
       ...formState,
       changes: { ...formState.changes, ...currentChanges }
+    })
+  }
+
+  /**
+   * Update form item
+   */
+  const handleChangeItem = (change) => {
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...change }
     })
   }
 
@@ -125,11 +136,22 @@ export const BusinessCategoryEdit = (props) => {
           setCategorySelected(content.result)
           if (handleUpdateBusinessState) {
             const _categories = [...businessState.business.categories]
-            _categories.forEach(function iterate (category) {
-              if (category.id === content?.result.id) {
+            _categories.forEach(function iterate (category, index, object) {
+              if (category.id === content?.result.parent_category_id) {
+                if (Array.isArray(category?.subcategories)) {
+                  const found = category.subcategories.find(subCategory => subCategory.id === content?.result.id)
+                  if (!found) {
+                    category.subcategories.push(content?.result)
+                  }
+                }
+              }
+              if (category.id === content?.result.id && category.parent_category_id === content?.result.parent_category_id) {
                 category.name = content?.result?.name
                 category.enabled = content?.result?.enabled
                 category.image = content?.result?.image
+              }
+              if (category.id === content?.result.id && category.parent_category_id !== content?.result.parent_category_id) {
+                object.splice(index, 1)
               }
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
@@ -216,24 +238,49 @@ export const BusinessCategoryEdit = (props) => {
     }
   }
 
+  useEffect(() => {
+    if (businessState.loading || !categorySelected) return
+    const getParentCategories = (category, id) => {
+      let path
+      const item = { id: category.id, name: category.name }
+      if (!category || typeof category !== 'object') return
+      if (category.id === id) {
+        return []
+      }
+      (category?.subcategories || []).some(child =>
+        path = getParentCategories(child, id)
+      )
+      return path && [item, ...path]
+    }
+    businessState.business.categories.forEach(category => {
+      const _parentCategories = getParentCategories(category, categorySelected?.id)
+      if (_parentCategories) {
+        setParentCategories(_parentCategories)
+      }
+    })
+  }, [businessState?.loading, categorySelected])
+
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
+          isAddMode={!category}
           formState={formState}
           setFormState={setFormState}
+          parentCategories={parentCategories}
           handlechangeImage={handlechangeImage}
           handleChangeInput={handleChangeInput}
           handleUpdateClick={handleUpdateClick}
           handleChangeCheckBox={handleChangeCheckBox}
+          handleChangeItem={handleChangeItem}
         />
       )}
     </>
   )
 }
 
-BusinessCategoryEdit.propTypes = {
+BusinessProductsCategoyDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -272,7 +319,7 @@ BusinessCategoryEdit.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-BusinessCategoryEdit.defaultProps = {
+BusinessProductsCategoyDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
