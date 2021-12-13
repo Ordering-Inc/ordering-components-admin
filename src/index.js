@@ -16,7 +16,6 @@ import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessBrandBUSIDetail } from './components/BusinessBrandBUSIDetail'
 import { BusinessBrandGENDetail } from './components/BusinessBrandGENDetail'
 import { BusinessBrandListing } from './components/BusinessBrandListing'
-import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
@@ -32,6 +31,7 @@ import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
+import { BusinessProductsCategoyDetails } from './components/BusinessProductsCategoyDetails'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessPromotionForm } from './components/BusinessPromotionForm'
@@ -202,7 +202,6 @@ export {
   BusinessBrandBUSIDetail,
   BusinessBrandGENDetail,
   BusinessBrandListing,
-  BusinessCategoryEdit,
   BusinessController,
   BusinessDeliveryZone,
   BusinessDetails,
@@ -221,6 +220,7 @@ export {
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessPaymethods,
+  BusinessProductsCategoyDetails,
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
