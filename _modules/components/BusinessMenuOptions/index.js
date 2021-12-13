@@ -140,7 +140,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleUpdateBusinessMenuOption = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var changes, key, requestOptions, response, content, _business;
+      var changes, requestOptions, response, content, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -149,12 +149,15 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               _context.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
+                loading: true,
+                result: {
+                  error: false
+                }
               }));
-              changes = {};
+              changes = _objectSpread({}, formState.changes);
 
-              for (key in formState === null || formState === void 0 ? void 0 : formState.changes) {
-                changes[key] = JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes[key]);
+              if (changes !== null && changes !== void 0 && changes.schedule) {
+                changes.schedule = JSON.stringify(changes.schedule);
               }
 
               requestOptions = {
@@ -196,7 +199,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 });
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                showToast(_ToastContext.ToastType.Success, t('MENU_SAVED', 'Products catalog saved'));
               }
 
               _context.next = 19;
@@ -239,8 +242,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
+                loading: true,
+                result: {
+                  error: false
+                }
               }));
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
 
@@ -280,15 +287,15 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context2.next = 8;
+              _context2.next = 9;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus"), requestOptions);
 
-            case 8:
+            case 9:
               response = _context2.sent;
-              _context2.next = 11;
+              _context2.next = 12;
               return response.json();
 
-            case 11:
+            case 12:
               content = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: content.error ? formState.changes : {},
@@ -317,13 +324,14 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 _business.menus.push(_menu);
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
+                showToast(_ToastContext.ToastType.Success, t('MENU_ADDED', 'Products catalog added'));
               }
 
-              _context2.next = 19;
+              _context2.next = 20;
               break;
 
-            case 16:
-              _context2.prev = 16;
+            case 17:
+              _context2.prev = 17;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
@@ -333,12 +341,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 }
               }));
 
-            case 19:
+            case 20:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 16]]);
+      }, _callee2, null, [[0, 17]]);
     }));
 
     return function handleAddBusinessMenuOption() {
@@ -385,12 +393,18 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     } else {
       setSelectedProductsIds([]);
       setOrderTypeSate({
-        delivery: false,
-        pickup: false,
+        delivery: true,
+        pickup: true,
         eatin: false,
         curbside: false,
         driver_thru: false
       });
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          delivery: true,
+          pickup: true
+        }
+      }));
     }
   }, [menu]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
