@@ -11,9 +11,10 @@ import { useLanguage } from '../../contexts/LanguageContext'
 export const ProductGallery = (props) => {
   const {
     UIComponent,
-    businessId,
+    business,
     categoryId,
-    productId
+    product,
+    handleUpdateBusinessState
   } = props
 
   const [ordering] = useApi()
@@ -21,8 +22,34 @@ export const ProductGallery = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
-  const [productGalleryState, setProductGalleryState] = useState({ loading: false, photos: [], videos: [], error: null })
+  const [productGalleryState, setProductGalleryState] = useState({ loading: false, gallery: [], photos: [], videos: [], error: null })
   const [changesState, setChangesState] = useState({ changes: {}, itemId: null, loading: false, error: null })
+
+  /**
+   * Method to update the business state from updated product
+   * @param {Object} updatedProduct
+   */
+  const updateBusinessState = (updatedProduct, businessState) => {
+    if (handleUpdateBusinessState) {
+      const categories = businessState.categories.map(item => {
+        if (item.id === parseInt(product?.category_id)) {
+          const _products = item.products.map(prod => {
+            if (prod.id === product?.id) {
+              Object.assign(prod, updatedProduct)
+            }
+            return prod
+          })
+          return {
+            ...item,
+            products: _products
+          }
+        }
+        return item
+      })
+      const updatedBusiness = { ...businessState, categories: categories }
+      handleUpdateBusinessState(updatedBusiness)
+    }
+  }
 
   /**
    * Method to get the product gallery from API
@@ -37,7 +64,7 @@ export const ProductGallery = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${businessId}/categories/${categoryId}/products/${productId}/gallery`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${categoryId}/products/${product.id}/gallery`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         const photos = content.result.filter(item => item.type === 1)
@@ -45,6 +72,7 @@ export const ProductGallery = (props) => {
         setProductGalleryState({
           ...productGalleryState,
           loading: false,
+          gallery: content.result,
           photos: photos,
           videos: videos
         })
@@ -80,22 +108,29 @@ export const ProductGallery = (props) => {
         },
         body: JSON.stringify(params)
       }
-      const response = await fetch(`${ordering.root}/business/${businessId}/categories/${categoryId}/products/${productId}/gallery`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${categoryId}/products/${product.id}/gallery`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setChangesState({ ...changesState, loading: false, changes: {} })
         showToast(ToastType.Success, t('PRODUCT_GALLERY_ITEM_ADDED', 'Product gallery item added'))
+        const gallery = [...productGalleryState.gallery, content.result]
         if (content.result?.type === 1) {
           setProductGalleryState({
             ...productGalleryState,
+            gallery: gallery,
             photos: [...productGalleryState.photos, content.result]
           })
         }
         if (content.result?.type === 2) {
           setProductGalleryState({
             ...productGalleryState,
+            gallery: gallery,
             videos: [...productGalleryState.videos, content.result]
           })
+        }
+        if (handleUpdateBusinessState) {
+          const updatedProduct = { ...product, gallery: gallery }
+          updateBusinessState(updatedProduct, business)
         }
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
@@ -120,10 +155,46 @@ export const ProductGallery = (props) => {
         },
         body: JSON.stringify(changesState?.changes)
       }
-      const response = await fetch(`${ordering.root}/business/${businessId}/categories/${categoryId}/products/${productId}/gallery/${changesState?.itemId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${categoryId}/products/${product.id}/gallery/${changesState?.itemId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setChangesState({ ...changesState, loading: false, changes: {} })
+        const gallery = productGalleryState.gallery.filter(item => {
+          if (item.id === content.result.id) {
+            Object.assign(item, content.result)
+          }
+          return true
+        })
+        if (content.result?.type === 1) {
+          const photos = productGalleryState.photos.filter(item => {
+            if (item.id === content.result.id) {
+              Object.assign(item, content.result)
+            }
+            return true
+          })
+          setProductGalleryState({
+            ...setProductGalleryState,
+            gallery: gallery,
+            photos: photos
+          })
+        }
+        if (content.result?.type === 2) {
+          const videos = productGalleryState.videos.filter(item => {
+            if (item.id === content.result.id) {
+              Object.assign(item, content.result)
+            }
+            return true
+          })
+          setProductGalleryState({
+            ...setProductGalleryState,
+            gallery: gallery,
+            videos: videos
+          })
+        }
+        if (handleUpdateBusinessState) {
+          const updatedProduct = { ...product, gallery: gallery }
+          updateBusinessState(updatedProduct, business)
+        }
         showToast(ToastType.Success, t('PRODUCT_GALLERY_ITEM_SAVED', 'Product gallery item saved'))
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
@@ -149,14 +220,16 @@ export const ProductGallery = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${businessId}/categories/${categoryId}/products/${productId}/gallery/${itemId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${categoryId}/products/${product.id}/gallery/${itemId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setChangesState({ ...changesState, loading: false, changes: {} })
+        const gallery = productGalleryState?.gallery.filter(item => item.id !== itemId)
         if (type === 1) {
           const photos = productGalleryState?.photos.filter(photo => photo.id !== itemId)
           setProductGalleryState({
             ...productGalleryState,
+            gallery: gallery,
             photos: photos
           })
         }
@@ -164,8 +237,13 @@ export const ProductGallery = (props) => {
           const videos = productGalleryState?.videos.filter(video => video.id !== itemId)
           setProductGalleryState({
             ...productGalleryState,
+            gallery: gallery,
             videos: videos
           })
+        }
+        if (handleUpdateBusinessState) {
+          const updatedProduct = { ...product, gallery: gallery }
+          updateBusinessState(updatedProduct, business)
         }
         showToast(ToastType.Success, t('PRODUCT_GALLERY_ITEM_DELETED', 'Product gallery item deleted'))
       } else {
@@ -233,8 +311,20 @@ export const ProductGallery = (props) => {
   }, [changesState?.changes])
 
   useEffect(() => {
-    getProductGallery()
-  }, [])
+    if (product?.gallery) {
+      const photos = product?.gallery.filter(item => item.type === 1)
+      const videos = product?.gallery.filter(item => item.type === 2)
+      setProductGalleryState({
+        ...productGalleryState,
+        loading: false,
+        gallery: product.gallery,
+        photos: photos,
+        videos: videos
+      })
+    } else {
+      getProductGallery()
+    }
+  }, [product])
 
   return (
     <>

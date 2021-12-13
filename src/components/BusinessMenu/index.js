@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessMenu = (props) => {
   const {
@@ -11,6 +13,9 @@ export const BusinessMenu = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
+
   const [businessMenusState, setBusinessMenusState] = useState({ menus: [], menusShared: [], loading: false, error: null })
   const [isSelectedSharedMenus, setIsSelectedSharedMenus] = useState(false)
 
@@ -58,6 +63,7 @@ export const BusinessMenu = (props) => {
    */
   const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setBusinessMenusState({ ...businessMenusState, loading: true })
       const requestOptions = {
         method: 'PUT',
@@ -108,6 +114,7 @@ export const BusinessMenu = (props) => {
           _business = { ...business, menus_shared: menusShared }
         }
         handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
+        showToast(ToastType.Success, t('MENU_SAVED', 'Products catalog saved'))
       } else {
         setBusinessMenusState({
           ...businessMenusState,
@@ -130,6 +137,7 @@ export const BusinessMenu = (props) => {
    */
   const handleDeleteBusinessMenu = async (menuId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setBusinessMenusState({ ...businessMenusState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -165,6 +173,7 @@ export const BusinessMenu = (props) => {
           _business = { ...business, menus_shared: menusShared }
         }
         handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
+        showToast(ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'))
       } else {
         setBusinessMenusState({
           ...businessMenusState,
