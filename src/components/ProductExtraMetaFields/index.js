@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const ProductExtraMetaFields = (props) => {
   const {
@@ -15,6 +17,8 @@ export const ProductExtraMetaFields = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
 
   /**
    * Array to save meta fields
@@ -51,6 +55,7 @@ export const ProductExtraMetaFields = (props) => {
    */
   const handleDeleteMetaField = async (metaFieldId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -72,6 +77,7 @@ export const ProductExtraMetaFields = (props) => {
           }
         })
         handleSuccessDeleteBusinessMetaFields && handleSuccessDeleteBusinessMetaFields(metaFieldId)
+        showToast(ToastType.Success, t('METAFIELD_DELETED', 'Metafield deleted'))
       }
     } catch (error) {
       setActionState({
@@ -89,6 +95,7 @@ export const ProductExtraMetaFields = (props) => {
    */
   const handeAddMetaField = async (values) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -124,6 +131,7 @@ export const ProductExtraMetaFields = (props) => {
         if (handleSuccessAddMetaFields) {
           handleSuccessAddMetaFields(result)
         }
+        showToast(ToastType.Success, t('METAFIELD_ADDED', 'Metafield added'))
       }
     } catch (error) {
       setActionState({

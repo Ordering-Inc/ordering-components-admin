@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage product properties behavior without UI component
@@ -19,23 +21,28 @@ export const ProductProperties = (props) => {
   } = props
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [productState, setProductState] = useState(product)
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [formTaxChanges, setFormTaxChanges] = useState({})
   const [taxToEdit, setTaxToEdit] = useState(null)
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [timeout, setTimeoutCustom] = useState(null)
   /**
    * Method to update the product details from API
    */
   const handleUpdateClick = async (params) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.category_id).products(productState?.id).save(changes, {
         accessToken: session.token
       })
       if (!error) {
         setProductState({ ...productState, ...result })
+        setFormState({ ...formState, loading: false, changes: {} })
         if (handleUpdateBusinessState) {
           const categories = business.categories.map(item => {
             if (item.id === parseInt(product?.category_id)) {
@@ -55,6 +62,9 @@ export const ProductProperties = (props) => {
           const updatedBusiness = { ...business, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+      } else {
+        setFormState({ ...formState, loading: false })
       }
     } catch (err) {
       setFormState({
@@ -91,6 +101,7 @@ export const ProductProperties = (props) => {
   const handleSaveTax = async (id, inheritTax) => {
     let result
     if (id) {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const response = await fetch(`${ordering.root}/taxes/${id}`, {
         method: 'PUT',
         headers: {
@@ -113,7 +124,9 @@ export const ProductProperties = (props) => {
           type: tax.type
         }
       })
+      showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
     } else {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const response = await fetch(`${ordering.root}/taxes`, {
         method: 'POST',
         headers: {
@@ -133,6 +146,7 @@ export const ProductProperties = (props) => {
           type: tax.type
         }
       })
+      showToast(ToastType.Success, t('PRODUCT_TAX_ADDED', 'Product tax added'))
     }
     if (result?.error) return
     setTaxToEdit(null)
@@ -144,6 +158,7 @@ export const ProductProperties = (props) => {
       loading: true
     })
     if (id) {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       const response = await fetch(`${ordering.root}/taxes/${id}`, {
         method: 'DELETE',
         headers: {
@@ -156,6 +171,7 @@ export const ProductProperties = (props) => {
         const newTaxes = taxes
         delete newTaxes[`id:${id}`]
         setTaxes(newTaxes)
+        showToast(ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'))
       }
       setFormTaxState({
         ...formTaxState,
@@ -163,15 +179,6 @@ export const ProductProperties = (props) => {
       })
     }
   }
-
-  useEffect(() => {
-    if (Object.keys(formState.changes).length > 0) {
-      clearInterval(timeout)
-      setTimeoutCustom(setTimeout(function () {
-        handleUpdateClick()
-      }, 1000))
-    }
-  }, [formState.changes])
 
   useEffect(() => {
     setProductState(product)
@@ -188,11 +195,13 @@ export const ProductProperties = (props) => {
           taxToEdit={taxToEdit}
           alertState={alertState}
           setAlertState={setAlertState}
+          formState={formState}
           handleClickProperty={handleClickProperty}
           handleChangeTax={handleChangeTax}
           setTaxToEdit={setTaxToEdit}
           handleSaveTax={handleSaveTax}
           handleDeleteTax={handleDeleteTax}
+          handleUpdateClick={handleUpdateClick}
         />
       )}
     </>

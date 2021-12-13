@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage product ingredient behavior without UI component
@@ -15,6 +17,9 @@ export const ProductIngredient = (props) => {
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [productState, setProductState] = useState({ product: product, loading: false, error: null })
   const [changesState, setChangesState] = useState({})
   const [isAddMode, setIsAddMode] = useState(false)
@@ -46,8 +51,8 @@ export const ProductIngredient = (props) => {
         category_id: product?.category_id,
         product_id: product?.id
       }
-
       changes = { ...changes, ...changesState }
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setProductState({ ...productState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -93,6 +98,7 @@ export const ProductIngredient = (props) => {
           const updatedBusiness = { ...business, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
@@ -111,6 +117,7 @@ export const ProductIngredient = (props) => {
       }
 
       changes = { ...changes, ...changesState }
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setProductState({ ...productState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -155,6 +162,7 @@ export const ProductIngredient = (props) => {
           const updatedBusiness = { ...business, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
@@ -167,6 +175,7 @@ export const ProductIngredient = (props) => {
    */
   const handleDeleteIngredient = async (ingredientId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setProductState({ ...productState, loading: false })
       const requestOptions = {
         method: 'DELETE',
@@ -204,6 +213,7 @@ export const ProductIngredient = (props) => {
           const updatedBusiness = { ...business, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('INGREDIENT_DELETED', 'Ingredient deleted'))
       }
     } catch (err) {
       setProductState({ ...productState, loading: false, error: err.message })
