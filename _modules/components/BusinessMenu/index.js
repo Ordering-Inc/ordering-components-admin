@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -59,6 +63,14 @@ var BusinessMenu = function BusinessMenu(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
     menus: [],
@@ -159,6 +171,7 @@ var BusinessMenu = function BusinessMenu(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: true
               }));
@@ -173,15 +186,15 @@ var BusinessMenu = function BusinessMenu(props) {
                 })
               };
               endPoint = isSelectedSharedMenus ? "".concat(ordering.root, "/business/").concat(business.id, "/menus_shared/").concat(menuId) : "".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId);
-              _context2.next = 6;
+              _context2.next = 7;
               return fetch(endPoint, requestOptions);
 
-            case 6:
+            case 7:
               response = _context2.sent;
-              _context2.next = 9;
+              _context2.next = 10;
               return response.json();
 
-            case 9:
+            case 10:
               content = _context2.sent;
 
               if (!content.error) {
@@ -224,6 +237,7 @@ var BusinessMenu = function BusinessMenu(props) {
                 }
 
                 handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
+                showToast(_ToastContext.ToastType.Success, t('MENU_SAVED', 'Products catalog saved'));
               } else {
                 setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                   loading: false,
@@ -231,23 +245,23 @@ var BusinessMenu = function BusinessMenu(props) {
                 }));
               }
 
-              _context2.next = 16;
+              _context2.next = 17;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 14:
+              _context2.prev = 14;
               _context2.t0 = _context2["catch"](0);
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 14]]);
     }));
 
     return function handleChangeBusinessMenuActiveState(_x, _x2) {
@@ -269,6 +283,7 @@ var BusinessMenu = function BusinessMenu(props) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: true
               }));
@@ -280,15 +295,15 @@ var BusinessMenu = function BusinessMenu(props) {
                 }
               };
               endPoint = isSelectedSharedMenus ? "".concat(ordering.root, "/business/").concat(business.id, "/menus_shared/").concat(menuId) : "".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menuId);
-              _context3.next = 6;
+              _context3.next = 7;
               return fetch(endPoint, requestOptions);
 
-            case 6:
+            case 7:
               response = _context3.sent;
-              _context3.next = 9;
+              _context3.next = 10;
               return response.json();
 
-            case 9:
+            case 10:
               content = _context3.sent;
 
               if (!content.error) {
@@ -319,6 +334,7 @@ var BusinessMenu = function BusinessMenu(props) {
                 }
 
                 handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
+                showToast(_ToastContext.ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'));
               } else {
                 setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                   loading: false,
@@ -326,23 +342,23 @@ var BusinessMenu = function BusinessMenu(props) {
                 }));
               }
 
-              _context3.next = 16;
+              _context3.next = 17;
               break;
 
-            case 13:
-              _context3.prev = 13;
+            case 14:
+              _context3.prev = 14;
               _context3.t0 = _context3["catch"](0);
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 13]]);
+      }, _callee3, null, [[0, 14]]);
     }));
 
     return function handleDeleteBusinessMenu(_x3) {

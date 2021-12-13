@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -71,6 +75,14 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     extra: extra,
@@ -274,6 +286,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: true
               }));
@@ -285,15 +298,15 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                 },
                 body: JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.changes)
               };
-              _context.next = 5;
+              _context.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(editOptionId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context.sent;
 
               if (!content.error) {
@@ -316,25 +329,26 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   extra: updatedExtra
                 }));
                 handleSuccessUpdateBusiness(updatedExtra);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_SAVED', 'Option saved'));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context.t0.message
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
     return function handleUpdateOption() {
@@ -354,6 +368,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: true
               }));
@@ -365,15 +380,15 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                 },
                 body: JSON.stringify(addChangesState)
               };
-              _context2.next = 5;
+              _context2.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context2.sent;
 
               if (!content.error) {
@@ -396,25 +411,26 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   extra: updatedExtra
                 }));
                 handleSuccessUpdateBusiness(updatedExtra);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_ADDED', 'Option added'));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context2.t0.message
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
     return function handleAddOption() {
@@ -435,6 +451,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: true
               }));
@@ -445,15 +462,15 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context3.next = 5;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(optionId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context3.sent;
 
               if (!content.error) {
@@ -468,25 +485,26 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                   extra: updatedExtra
                 }));
                 handleSuccessUpdateBusiness(updatedExtra);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_DELETED', 'Option deleted'));
               }
 
-              _context3.next = 15;
+              _context3.next = 16;
               break;
 
-            case 12:
-              _context3.prev = 12;
+            case 13:
+              _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
               setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
                 loading: false,
                 error: _context3.t0.message
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 12]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
     return function handleDeteteOption(_x) {

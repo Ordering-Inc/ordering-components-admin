@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -68,6 +72,14 @@ var ProductProperties = function ProductProperties(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
 
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)(product),
       _useState2 = _slicedToArray(_useState, 2),
       productState = _useState2[0],
@@ -101,11 +113,6 @@ var ProductProperties = function ProductProperties(props) {
       _useState10 = _slicedToArray(_useState9, 2),
       alertState = _useState10[0],
       setAlertState = _useState10[1];
-
-  var _useState11 = (0, _react.useState)(null),
-      _useState12 = _slicedToArray(_useState11, 2),
-      timeout = _useState12[0],
-      setTimeoutCustom = _useState12[1];
   /**
    * Method to update the product details from API
    */
@@ -120,13 +127,17 @@ var ProductProperties = function ProductProperties(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
               changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
-              _context.next = 4;
+              _context.next = 6;
               return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : productState.category_id).products(productState === null || productState === void 0 ? void 0 : productState.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 4:
+            case 6:
               _yield$ordering$busin = _context.sent;
               _yield$ordering$busin2 = _yield$ordering$busin.content;
               error = _yield$ordering$busin2.error;
@@ -134,6 +145,10 @@ var ProductProperties = function ProductProperties(props) {
 
               if (!error) {
                 setProductState(_objectSpread(_objectSpread({}, productState), result));
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  changes: {}
+                }));
 
                 if (handleUpdateBusinessState) {
                   categories = business.categories.map(function (item) {
@@ -158,13 +173,19 @@ var ProductProperties = function ProductProperties(props) {
                   });
                   handleUpdateBusinessState(updatedBusiness);
                 }
+
+                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false
+                }));
               }
 
-              _context.next = 14;
+              _context.next = 16;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -174,12 +195,12 @@ var ProductProperties = function ProductProperties(props) {
                 loading: false
               }));
 
-            case 14:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
     return function handleUpdateClick(_x) {
@@ -212,11 +233,12 @@ var ProductProperties = function ProductProperties(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               if (!id) {
-                _context2.next = 12;
+                _context2.next = 14;
                 break;
               }
 
-              _context2.next = 3;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              _context2.next = 4;
               return fetch("".concat(ordering.root, "/taxes/").concat(id), {
                 method: 'PUT',
                 headers: {
@@ -226,12 +248,12 @@ var ProductProperties = function ProductProperties(props) {
                 body: JSON.stringify(_objectSpread({}, formTaxChanges))
               });
 
-            case 3:
+            case 4:
               response = _context2.sent;
-              _context2.next = 6;
+              _context2.next = 7;
               return response.json();
 
-            case 6:
+            case 7:
               _yield$response$json = _context2.sent;
               tax = _yield$response$json.result;
               result = tax;
@@ -242,11 +264,13 @@ var ProductProperties = function ProductProperties(props) {
                 rate: tax.rate,
                 type: tax.type
               })));
-              _context2.next = 20;
+              showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
+              _context2.next = 24;
               break;
 
-            case 12:
-              _context2.next = 14;
+            case 14:
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              _context2.next = 17;
               return fetch("".concat(ordering.root, "/taxes"), {
                 method: 'POST',
                 headers: {
@@ -256,12 +280,12 @@ var ProductProperties = function ProductProperties(props) {
                 body: JSON.stringify(inheritTax || formTaxChanges)
               });
 
-            case 14:
+            case 17:
               _response = _context2.sent;
-              _context2.next = 17;
+              _context2.next = 20;
               return _response.json();
 
-            case 17:
+            case 20:
               _yield$_response$json = _context2.sent;
               _tax = _yield$_response$json.result;
               setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(_tax.id), {
@@ -271,19 +295,20 @@ var ProductProperties = function ProductProperties(props) {
                 rate: _tax.rate,
                 type: _tax.type
               })));
+              showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_ADDED', 'Product tax added'));
 
-            case 20:
+            case 24:
               if (!((_result = result) === null || _result === void 0 ? void 0 : _result.error)) {
-                _context2.next = 22;
+                _context2.next = 26;
                 break;
               }
 
               return _context2.abrupt("return");
 
-            case 22:
+            case 26:
               setTaxToEdit(null);
 
-            case 23:
+            case 27:
             case "end":
               return _context2.stop();
           }
@@ -309,11 +334,12 @@ var ProductProperties = function ProductProperties(props) {
               }));
 
               if (!id) {
-                _context3.next = 11;
+                _context3.next = 12;
                 break;
               }
 
-              _context3.next = 4;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              _context3.next = 5;
               return fetch("".concat(ordering.root, "/taxes/").concat(id), {
                 method: 'DELETE',
                 headers: {
@@ -322,12 +348,12 @@ var ProductProperties = function ProductProperties(props) {
                 }
               });
 
-            case 4:
+            case 5:
               response = _context3.sent;
-              _context3.next = 7;
+              _context3.next = 8;
               return response.json();
 
-            case 7:
+            case 8:
               _yield$response$json2 = _context3.sent;
               error = _yield$response$json2.error;
 
@@ -335,13 +361,14 @@ var ProductProperties = function ProductProperties(props) {
                 newTaxes = taxes;
                 delete newTaxes["id:".concat(id)];
                 setTaxes(newTaxes);
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'));
               }
 
               setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
                 loading: false
               }));
 
-            case 11:
+            case 12:
             case "end":
               return _context3.stop();
           }
@@ -355,14 +382,6 @@ var ProductProperties = function ProductProperties(props) {
   }();
 
   (0, _react.useEffect)(function () {
-    if (Object.keys(formState.changes).length > 0) {
-      clearInterval(timeout);
-      setTimeoutCustom(setTimeout(function () {
-        handleUpdateClick();
-      }, 1000));
-    }
-  }, [formState.changes]);
-  (0, _react.useEffect)(function () {
     setProductState(product);
   }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
@@ -372,11 +391,13 @@ var ProductProperties = function ProductProperties(props) {
     taxToEdit: taxToEdit,
     alertState: alertState,
     setAlertState: setAlertState,
+    formState: formState,
     handleClickProperty: handleClickProperty,
     handleChangeTax: handleChangeTax,
     setTaxToEdit: setTaxToEdit,
     handleSaveTax: handleSaveTax,
-    handleDeleteTax: handleDeleteTax
+    handleDeleteTax: handleDeleteTax,
+    handleUpdateClick: handleUpdateClick
   })));
 };
 

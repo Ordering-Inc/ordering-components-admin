@@ -1,11 +1,9 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessCategoryEdit = void 0;
+exports.BusinessProductsCategoyDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -28,6 +26,8 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -60,9 +60,9 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage BusinessCategoryEdit behavior without UI component
+ * Component to manage BusinessProductsCategoyDetails behavior without UI component
  */
-var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
+var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(props) {
   var UIComponent = props.UIComponent,
       businessState = props.businessState,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
@@ -102,6 +102,11 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
       formState = _useState2[0],
       setFormState = _useState2[1];
 
+  var _useState3 = (0, _react.useState)([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      parentCategories = _useState4[0],
+      setParentCategories = _useState4[1];
+
   (0, _react.useEffect)(function () {
     if (!category) return;
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -121,7 +126,7 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
     }
   }, [businessState]);
   /**
-  * Update credential data
+  * Update form input data
   * @param {EventTarget} e Related HTML event
   */
 
@@ -159,6 +164,16 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
 
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+  /**
+   * Update form item
+   */
+
+
+  var handleChangeItem = function handleChangeItem(change) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), change)
     }));
   };
   /**
@@ -245,13 +260,29 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
                 if (handleUpdateBusinessState) {
                   _categories = _toConsumableArray(businessState.business.categories);
 
-                  _categories.forEach(function iterate(category) {
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id)) {
+                  _categories.forEach(function iterate(category, index, object) {
+                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                      if (Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories)) {
+                        var found = category.subcategories.find(function (subCategory) {
+                          return subCategory.id === (content === null || content === void 0 ? void 0 : content.result.id);
+                        });
+
+                        if (!found) {
+                          category.subcategories.push(content === null || content === void 0 ? void 0 : content.result);
+                        }
+                      }
+                    }
+
+                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       var _content$result, _content$result2, _content$result3;
 
                       category.name = content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name;
                       category.enabled = content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled;
                       category.image = content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image;
+                    }
+
+                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id !== (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                      object.splice(index, 1);
                     }
 
                     Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
@@ -405,18 +436,50 @@ var BusinessCategoryEdit = function BusinessCategoryEdit(props) {
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    if (businessState.loading || !categorySelected) return;
+
+    var getParentCategories = function getParentCategories(category, id) {
+      var path;
+      var item = {
+        id: category.id,
+        name: category.name
+      };
+      if (!category || _typeof(category) !== 'object') return;
+
+      if (category.id === id) {
+        return [];
+      }
+
+      ((category === null || category === void 0 ? void 0 : category.subcategories) || []).some(function (child) {
+        return path = getParentCategories(child, id);
+      });
+      return path && [item].concat(_toConsumableArray(path));
+    };
+
+    businessState.business.categories.forEach(function (category) {
+      var _parentCategories = getParentCategories(category, categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id);
+
+      if (_parentCategories) {
+        setParentCategories(_parentCategories);
+      }
+    });
+  }, [businessState === null || businessState === void 0 ? void 0 : businessState.loading, categorySelected]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    isAddMode: !category,
     formState: formState,
     setFormState: setFormState,
+    parentCategories: parentCategories,
     handlechangeImage: handlechangeImage,
     handleChangeInput: handleChangeInput,
     handleUpdateClick: handleUpdateClick,
-    handleChangeCheckBox: handleChangeCheckBox
+    handleChangeCheckBox: handleChangeCheckBox,
+    handleChangeItem: handleChangeItem
   })));
 };
 
-exports.BusinessCategoryEdit = BusinessCategoryEdit;
-BusinessCategoryEdit.propTypes = {
+exports.BusinessProductsCategoyDetails = BusinessProductsCategoyDetails;
+BusinessProductsCategoyDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -461,7 +524,7 @@ BusinessCategoryEdit.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessCategoryEdit.defaultProps = {
+BusinessProductsCategoyDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

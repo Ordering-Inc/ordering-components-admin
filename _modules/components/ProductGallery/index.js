@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -64,9 +64,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var ProductGallery = function ProductGallery(props) {
   var UIComponent = props.UIComponent,
-      businessId = props.businessId,
+      business = props.business,
       categoryId = props.categoryId,
-      productId = props.productId;
+      product = props.product,
+      handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -86,6 +87,7 @@ var ProductGallery = function ProductGallery(props) {
 
   var _useState = (0, _react.useState)({
     loading: false,
+    gallery: [],
     photos: [],
     videos: [],
     error: null
@@ -103,6 +105,39 @@ var ProductGallery = function ProductGallery(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       changesState = _useState4[0],
       setChangesState = _useState4[1];
+  /**
+   * Method to update the business state from updated product
+   * @param {Object} updatedProduct
+   */
+
+
+  var updateBusinessState = function updateBusinessState(updatedProduct, businessState) {
+    if (handleUpdateBusinessState) {
+      var categories = businessState.categories.map(function (item) {
+        if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
+          var _products = item.products.map(function (prod) {
+            if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
+              Object.assign(prod, updatedProduct);
+            }
+
+            return prod;
+          });
+
+          return _objectSpread(_objectSpread({}, item), {}, {
+            products: _products
+          });
+        }
+
+        return item;
+      });
+
+      var updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
+        categories: categories
+      });
+
+      handleUpdateBusinessState(updatedBusiness);
+    }
+  };
   /**
    * Method to get the product gallery from API
    */
@@ -127,7 +162,7 @@ var ProductGallery = function ProductGallery(props) {
                 }
               };
               _context.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/gallery"), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(categoryId, "/products/").concat(product.id, "/gallery"), requestOptions);
 
             case 5:
               response = _context.sent;
@@ -146,6 +181,7 @@ var ProductGallery = function ProductGallery(props) {
                 });
                 setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
                   loading: false,
+                  gallery: content.result,
                   photos: photos,
                   videos: videos
                 }));
@@ -187,7 +223,7 @@ var ProductGallery = function ProductGallery(props) {
 
   var handleAddProductGalleryItem = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(params) {
-      var requestOptions, response, content, _content$result, _content$result2;
+      var requestOptions, response, content, _content$result, _content$result2, gallery, updatedProduct;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -207,7 +243,7 @@ var ProductGallery = function ProductGallery(props) {
                 body: JSON.stringify(params)
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/gallery"), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(categoryId, "/products/").concat(product.id, "/gallery"), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -223,17 +259,27 @@ var ProductGallery = function ProductGallery(props) {
                   changes: {}
                 }));
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_GALLERY_ITEM_ADDED', 'Product gallery item added'));
+                gallery = [].concat(_toConsumableArray(productGalleryState.gallery), [content.result]);
 
                 if (((_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.type) === 1) {
                   setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
+                    gallery: gallery,
                     photos: [].concat(_toConsumableArray(productGalleryState.photos), [content.result])
                   }));
                 }
 
                 if (((_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.type) === 2) {
                   setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
+                    gallery: gallery,
                     videos: [].concat(_toConsumableArray(productGalleryState.videos), [content.result])
                   }));
+                }
+
+                if (handleUpdateBusinessState) {
+                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                    gallery: gallery
+                  });
+                  updateBusinessState(updatedProduct, business);
                 }
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
@@ -272,7 +318,8 @@ var ProductGallery = function ProductGallery(props) {
 
   var handleUpdateProductGallery = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var requestOptions, response, content;
+      var requestOptions, response, content, _content$result3, _content$result4, gallery, photos, videos, updatedProduct;
+
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -291,7 +338,7 @@ var ProductGallery = function ProductGallery(props) {
                 body: JSON.stringify(changesState === null || changesState === void 0 ? void 0 : changesState.changes)
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/gallery/").concat(changesState === null || changesState === void 0 ? void 0 : changesState.itemId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(categoryId, "/products/").concat(product.id, "/gallery/").concat(changesState === null || changesState === void 0 ? void 0 : changesState.itemId), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -306,6 +353,49 @@ var ProductGallery = function ProductGallery(props) {
                   loading: false,
                   changes: {}
                 }));
+                gallery = productGalleryState.gallery.filter(function (item) {
+                  if (item.id === content.result.id) {
+                    Object.assign(item, content.result);
+                  }
+
+                  return true;
+                });
+
+                if (((_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.type) === 1) {
+                  photos = productGalleryState.photos.filter(function (item) {
+                    if (item.id === content.result.id) {
+                      Object.assign(item, content.result);
+                    }
+
+                    return true;
+                  });
+                  setProductGalleryState(_objectSpread(_objectSpread({}, setProductGalleryState), {}, {
+                    gallery: gallery,
+                    photos: photos
+                  }));
+                }
+
+                if (((_content$result4 = content.result) === null || _content$result4 === void 0 ? void 0 : _content$result4.type) === 2) {
+                  videos = productGalleryState.videos.filter(function (item) {
+                    if (item.id === content.result.id) {
+                      Object.assign(item, content.result);
+                    }
+
+                    return true;
+                  });
+                  setProductGalleryState(_objectSpread(_objectSpread({}, setProductGalleryState), {}, {
+                    gallery: gallery,
+                    videos: videos
+                  }));
+                }
+
+                if (handleUpdateBusinessState) {
+                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                    gallery: gallery
+                  });
+                  updateBusinessState(updatedProduct, business);
+                }
+
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_GALLERY_ITEM_SAVED', 'Product gallery item saved'));
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
@@ -346,7 +436,7 @@ var ProductGallery = function ProductGallery(props) {
 
   var handleDeteteProductGalleryItem = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(itemId, type) {
-      var requestOptions, response, content, photos, videos;
+      var requestOptions, response, content, gallery, photos, videos, updatedProduct;
       return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -364,7 +454,7 @@ var ProductGallery = function ProductGallery(props) {
                 }
               };
               _context4.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/categories/").concat(categoryId, "/products/").concat(productId, "/gallery/").concat(itemId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(categoryId, "/products/").concat(product.id, "/gallery/").concat(itemId), requestOptions);
 
             case 6:
               response = _context4.sent;
@@ -379,12 +469,16 @@ var ProductGallery = function ProductGallery(props) {
                   loading: false,
                   changes: {}
                 }));
+                gallery = productGalleryState === null || productGalleryState === void 0 ? void 0 : productGalleryState.gallery.filter(function (item) {
+                  return item.id !== itemId;
+                });
 
                 if (type === 1) {
                   photos = productGalleryState === null || productGalleryState === void 0 ? void 0 : productGalleryState.photos.filter(function (photo) {
                     return photo.id !== itemId;
                   });
                   setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
+                    gallery: gallery,
                     photos: photos
                   }));
                 }
@@ -394,8 +488,16 @@ var ProductGallery = function ProductGallery(props) {
                     return video.id !== itemId;
                   });
                   setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
+                    gallery: gallery,
                     videos: videos
                   }));
+                }
+
+                if (handleUpdateBusinessState) {
+                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                    gallery: gallery
+                  });
+                  updateBusinessState(updatedProduct, business);
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_GALLERY_ITEM_DELETED', 'Product gallery item deleted'));
@@ -488,8 +590,23 @@ var ProductGallery = function ProductGallery(props) {
     handleUpdateProductGallery();
   }, [changesState === null || changesState === void 0 ? void 0 : changesState.changes]);
   (0, _react.useEffect)(function () {
-    getProductGallery();
-  }, []);
+    if (product === null || product === void 0 ? void 0 : product.gallery) {
+      var photos = product === null || product === void 0 ? void 0 : product.gallery.filter(function (item) {
+        return item.type === 1;
+      });
+      var videos = product === null || product === void 0 ? void 0 : product.gallery.filter(function (item) {
+        return item.type === 2;
+      });
+      setProductGalleryState(_objectSpread(_objectSpread({}, productGalleryState), {}, {
+        loading: false,
+        gallery: product.gallery,
+        photos: photos,
+        videos: videos
+      }));
+    } else {
+      getProductGallery();
+    }
+  }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productGalleryState: productGalleryState,
     changesState: changesState,

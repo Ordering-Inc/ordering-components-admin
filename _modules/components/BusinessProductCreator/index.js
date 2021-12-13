@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -73,6 +77,14 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: false,
@@ -157,6 +169,7 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
 
             case 2:
               _context.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
 
               if (categorySelected.id === null && categorySelected.id === 'featured') {
                 categoryId = parseInt(business === null || business === void 0 ? void 0 : business.categories[0]);
@@ -167,10 +180,10 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 7;
+              _context.next = 8;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(categoryId).products().save(formState.changes);
 
-            case 7:
+            case 8:
               _yield$ordering$busin = _context.sent;
               content = _yield$ordering$busin.content;
 
@@ -202,6 +215,7 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
 
                 setIsAddProduct(false);
                 handleParentProductAdd && handleParentProductAdd(false);
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_ADD', 'Product added'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -210,11 +224,11 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](2);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -224,12 +238,12 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
                 loading: false
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 12]]);
+      }, _callee, null, [[2, 13]]);
     }));
 
     return function handleUpdateClick() {
