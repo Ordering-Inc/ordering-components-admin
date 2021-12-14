@@ -465,6 +465,12 @@ Object.defineProperty(exports, "DriversGroupAutoassign", {
     return _DriversGroupAutoassign.DriversGroupAutoassign;
   }
 });
+Object.defineProperty(exports, "DriversGroupDetails", {
+  enumerable: true,
+  get: function get() {
+    return _DriversGroupDetails.DriversGroupDetails;
+  }
+});
 Object.defineProperty(exports, "DriversGroupLogs", {
   enumerable: true,
   get: function get() {
@@ -1403,6 +1409,8 @@ var _DriverReviewDetails = require("./components/DriverReviewDetails");
 var _DriversCompaniesList = require("./components/DriversCompaniesList");
 
 var _DriversGroupAutoassign = require("./components/DriversGroupAutoassign");
+
+var _DriversGroupDetails = require("./components/DriversGroupDetails");
 
 var _DriversGroupOrders = require("./components/DriversGroupOrders");
 

@@ -138,53 +138,18 @@ var DriversGroupsList = function DriversGroupsList(props) {
       startSeveralDeleteStart = _useState14[0],
       setStartSeveralDeleteStart = _useState14[1];
 
-  var _useState15 = (0, _react.useState)(false),
-      _useState16 = _slicedToArray(_useState15, 2),
-      openDetails = _useState16[0],
-      setOpenDetails = _useState16[1];
-
-  var _useState17 = (0, _react.useState)({}),
-      _useState18 = _slicedToArray(_useState17, 2),
-      changesState = _useState18[0],
-      setChangesState = _useState18[1];
-
-  var _useState19 = (0, _react.useState)({
+  var _useState15 = (0, _react.useState)({
     loading: false,
     error: null
   }),
-      _useState20 = _slicedToArray(_useState19, 2),
-      actionState = _useState20[0],
-      setActionState = _useState20[1];
+      _useState16 = _slicedToArray(_useState15, 2),
+      actionState = _useState16[0],
+      setActionState = _useState16[1];
 
-  var _useState21 = (0, _react.useState)(null),
-      _useState22 = _slicedToArray(_useState21, 2),
-      curDriversGroup = _useState22[0],
-      setCurDriversGroup = _useState22[1];
-
-  var _useState23 = (0, _react.useState)([]),
-      _useState24 = _slicedToArray(_useState23, 2),
-      selectedBusinessIds = _useState24[0],
-      setSelectedBusinessIds = _useState24[1];
-
-  var _useState25 = (0, _react.useState)([]),
-      _useState26 = _slicedToArray(_useState25, 2),
-      selectedPaymethodIds = _useState26[0],
-      setSelectedPaymethodIds = _useState26[1];
-
-  var _useState27 = (0, _react.useState)([]),
-      _useState28 = _slicedToArray(_useState27, 2),
-      selectedDriverIds = _useState28[0],
-      setSelectedDriverIds = _useState28[1];
-
-  var _useState29 = (0, _react.useState)([]),
-      _useState30 = _slicedToArray(_useState29, 2),
-      selectedDriversCompanyIds = _useState30[0],
-      setSelectedDriversCompanyIds = _useState30[1];
-
-  var _useState31 = (0, _react.useState)([]),
-      _useState32 = _slicedToArray(_useState31, 2),
-      selectedGroupList = _useState32[0],
-      setSelectedGroupList = _useState32[1];
+  var _useState17 = (0, _react.useState)([]),
+      _useState18 = _slicedToArray(_useState17, 2),
+      selectedGroupList = _useState18[0],
+      setSelectedGroupList = _useState18[1];
   /**
    * Method to get the drivers groups from API
    */
@@ -606,7 +571,6 @@ var DriversGroupsList = function DriversGroupsList(props) {
                   groups: groups
                 }));
                 showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
-                setChangesState({});
               } else {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false,
@@ -727,126 +691,6 @@ var DriversGroupsList = function DriversGroupsList(props) {
       return _ref8.apply(this, arguments);
     };
   }();
-  /**
-   * Method to add new drivers group from API
-   */
-
-
-  var handleAddDriversGroup = /*#__PURE__*/function () {
-    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee9() {
-      var extraAttributes, changes, requestOptions, response, content, _content$result, newGroup, newAdmin, groups;
-
-      return _regenerator.default.wrap(function _callee9$(_context9) {
-        while (1) {
-          switch (_context9.prev = _context9.next) {
-            case 0:
-              _context9.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              extraAttributes = {
-                enabled: true,
-                autoassign_amount_drivers: 1,
-                autoassign_autoaccept_by_driver: false,
-                autoassign_autoreject_time: 30,
-                autoassign_increment_radius: 100,
-                autoassign_initial_radius: 500,
-                autoassign_max_in_accepted_by_business: 5,
-                autoassign_max_in_accepted_by_driver: 5,
-                autoassign_max_in_driver_in_business: 5,
-                autoassign_max_in_pending: 5,
-                autoassign_max_in_pickup_completed: 5,
-                autoassign_max_in_ready_for_pickup: 5,
-                autoassign_max_orders: 5,
-                autoassign_max_radius: 1000,
-                orders_group_max_distance_between_delivery: 200,
-                orders_group_max_distance_between_pickup: 200,
-                orders_group_max_orders: 1,
-                orders_group_max_time_between: 5,
-                orders_group_max_time_between_delivery: 600,
-                orders_group_max_time_between_pickup: 600,
-                orders_group_start_in_status: '7',
-                orders_group_use_maps_api: false
-              };
-              changes = _objectSpread(_objectSpread({}, changesState), extraAttributes);
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
-              };
-              _context9.next = 8;
-              return fetch("".concat(ordering.root, "/drivergroups"), requestOptions);
-
-            case 8:
-              response = _context9.sent;
-              _context9.next = 11;
-              return response.json();
-
-            case 11:
-              content = _context9.sent;
-
-              if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
-                newGroup = _objectSpread({}, content.result);
-
-                if (!((_content$result = content.result) !== null && _content$result !== void 0 && _content$result.administrator) && driversManagersList.managers.length > 0) {
-                  newAdmin = driversManagersList.managers.find(function (manager) {
-                    var _content$result2;
-
-                    return manager.id === ((_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.administrator_id);
-                  });
-                  newGroup = _objectSpread(_objectSpread({}, newGroup), {}, {
-                    administrator: newAdmin
-                  });
-                }
-
-                groups = [].concat(_toConsumableArray(driversGroupsState.groups), [newGroup]);
-                setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                  groups: groups
-                }));
-                showToast(_ToastContext.ToastType.Success, t('DRIVER_GROUP_ADDED', 'Driver group added'));
-                setChangesState({});
-                setOpenDetails(false);
-              } else {
-                setActionState({
-                  loading: false,
-                  error: content.result
-                });
-              }
-
-              _context9.next = 18;
-              break;
-
-            case 15:
-              _context9.prev = 15;
-              _context9.t0 = _context9["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context9.t0.message]
-              });
-
-            case 18:
-            case "end":
-              return _context9.stop();
-          }
-        }
-      }, _callee9, null, [[0, 15]]);
-    }));
-
-    return function handleAddDriversGroup() {
-      return _ref9.apply(this, arguments);
-    };
-  }();
-
-  var handleChangesState = function handleChangesState(changes) {
-    setChangesState(_objectSpread(_objectSpread({}, changesState), changes));
-  };
 
   var handleSelectGroup = function handleSelectGroup(groupId) {
     var ids = [];
@@ -874,190 +718,10 @@ var DriversGroupsList = function DriversGroupsList(props) {
     }
   };
 
-  var handleSelectBusiness = function handleSelectBusiness(businessId, checked) {
-    var businessIds = _toConsumableArray(selectedBusinessIds);
-
-    var filteredIds = [];
-
-    if (checked) {
-      filteredIds = [].concat(_toConsumableArray(businessIds), [businessId]);
-    } else {
-      filteredIds = businessIds.filter(function (id) {
-        return id !== businessId;
-      });
-    }
-
-    setSelectedBusinessIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      business: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectPaymethod = function handleSelectPaymethod(paymethodId, checked) {
-    var paymethodIds = _toConsumableArray(selectedPaymethodIds);
-
-    var filteredIds = [];
-
-    if (checked) {
-      filteredIds = [].concat(_toConsumableArray(paymethodIds), [paymethodId]);
-    } else {
-      filteredIds = paymethodIds.filter(function (id) {
-        return id !== paymethodId;
-      });
-    }
-
-    setSelectedPaymethodIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      allowed_paymethods: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectDriver = function handleSelectDriver(driverId, checked) {
-    var driverIds = _toConsumableArray(selectedDriverIds);
-
-    var filteredIds = [];
-
-    if (checked) {
-      filteredIds = [].concat(_toConsumableArray(driverIds), [driverId]);
-    } else {
-      filteredIds = driverIds.filter(function (id) {
-        return id !== driverId;
-      });
-    }
-
-    setSelectedDriverIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      drivers: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectDriversCompany = function handleSelectDriversCompany(driverCompanyId, checked) {
-    var driverCompanyIds = _toConsumableArray(selectedDriversCompanyIds);
-
-    var filteredIds = [];
-
-    if (checked) {
-      filteredIds = [].concat(_toConsumableArray(driverCompanyIds), [driverCompanyId]);
-    } else {
-      filteredIds = driverCompanyIds.filter(function (id) {
-        return id !== driverCompanyId;
-      });
-    }
-
-    setSelectedDriversCompanyIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      driver_companies: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectAllBusiness = function handleSelectAllBusiness(isAll) {
-    var _businessesList$busin;
-
-    var businessIds = businessesList === null || businessesList === void 0 ? void 0 : (_businessesList$busin = businessesList.businesses) === null || _businessesList$busin === void 0 ? void 0 : _businessesList$busin.reduce(function (ids, business) {
-      return [].concat(_toConsumableArray(ids), [business.id]);
-    }, []);
-    var filteredIds = [];
-
-    if (isAll) {
-      filteredIds = _toConsumableArray(businessIds);
-    } else {
-      filteredIds = [];
-    }
-
-    setSelectedBusinessIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      business: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectAllPaymethod = function handleSelectAllPaymethod(isAll) {
-    var _paymethodsList$payme;
-
-    var paymethodIds = paymethodsList === null || paymethodsList === void 0 ? void 0 : (_paymethodsList$payme = paymethodsList.paymethods) === null || _paymethodsList$payme === void 0 ? void 0 : _paymethodsList$payme.reduce(function (ids, paymethod) {
-      return [].concat(_toConsumableArray(ids), [paymethod.id]);
-    }, []);
-    var filteredIds = [];
-
-    if (isAll) {
-      filteredIds = _toConsumableArray(paymethodIds);
-    } else {
-      filteredIds = [];
-    }
-
-    setSelectedPaymethodIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      allowed_paymethods: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectAllDriver = function handleSelectAllDriver(isAll) {
-    var _driversList$drivers;
-
-    var driverIds = driversList === null || driversList === void 0 ? void 0 : (_driversList$drivers = driversList.drivers) === null || _driversList$drivers === void 0 ? void 0 : _driversList$drivers.reduce(function (ids, driver) {
-      return [].concat(_toConsumableArray(ids), [driver.id]);
-    }, []);
-    var filteredIds = [];
-
-    if (isAll) {
-      filteredIds = _toConsumableArray(driverIds);
-    } else {
-      filteredIds = [];
-    }
-
-    setSelectedDriverIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      drivers: JSON.stringify(filteredIds)
-    }));
-  };
-
-  var handleSelectAllDriversCompany = function handleSelectAllDriversCompany(isAll) {
-    var _driversCompanyList$c;
-
-    var driverCompanyIds = driversCompanyList === null || driversCompanyList === void 0 ? void 0 : (_driversCompanyList$c = driversCompanyList.companies) === null || _driversCompanyList$c === void 0 ? void 0 : _driversCompanyList$c.reduce(function (ids, company) {
-      return [].concat(_toConsumableArray(ids), [company.id]);
-    }, []);
-    var filteredIds = [];
-
-    if (isAll) {
-      filteredIds = _toConsumableArray(driverCompanyIds);
-    } else {
-      filteredIds = [];
-    }
-
-    setSelectedDriversCompanyIds(filteredIds);
-    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      driver_companies: JSON.stringify(filteredIds)
-    }));
-  };
-
   (0, _react.useEffect)(function () {
     if (!startSeveralDeleteStart || selectedGroupList.length === 0) return;
     handleDeleteDriversGroup(selectedGroupList[0]);
   }, [selectedGroupList, startSeveralDeleteStart]);
-  (0, _react.useEffect)(function () {
-    if (curDriversGroup) {
-      var _curDriversGroup$busi;
-
-      var businessIds = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : (_curDriversGroup$busi = curDriversGroup.business) === null || _curDriversGroup$busi === void 0 ? void 0 : _curDriversGroup$busi.reduce(function (ids, business) {
-        return [].concat(_toConsumableArray(ids), [business.id]);
-      }, []);
-      setSelectedBusinessIds(businessIds);
-      setSelectedPaymethodIds((curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.allowed_paymethods) || []);
-      var drivers = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.drivers.reduce(function (ids, driver) {
-        return [].concat(_toConsumableArray(ids), [driver.id]);
-      }, []);
-      setSelectedDriverIds(drivers);
-      var companyIds = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.driver_companies.reduce(function (ids, company) {
-        return [].concat(_toConsumableArray(ids), [company.id]);
-      }, []);
-      setSelectedDriversCompanyIds(companyIds);
-    } else {
-      setSelectedBusinessIds([]);
-      setSelectedPaymethodIds([]);
-      setSelectedDriverIds([]);
-      setSelectedDriversCompanyIds([]);
-    }
-  }, [curDriversGroup]);
   (0, _react.useEffect)(function () {
     getDriversGroups();
 
@@ -1072,42 +736,21 @@ var DriversGroupsList = function DriversGroupsList(props) {
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversGroupsState: driversGroupsState,
+    setDriversGroupsState: setDriversGroupsState,
     driversManagersList: driversManagersList,
     businessesList: businessesList,
     paymethodsList: paymethodsList,
     driversList: driversList,
     driversCompanyList: driversCompanyList,
-    openDetails: openDetails,
-    setOpenDetails: setOpenDetails,
-    cleanChagesState: function cleanChagesState() {
-      return setChangesState({});
-    },
-    changesState: changesState,
     actionState: actionState,
-    handleChangesState: handleChangesState,
     handleUpdateDriversGroup: handleUpdateDriversGroup,
     handleDeleteDriversGroup: handleDeleteDriversGroup,
     handleDeleteSelectedGroups: function handleDeleteSelectedGroups() {
       return setStartSeveralDeleteStart(true);
     },
-    curDriversGroup: curDriversGroup,
-    setCurDriversGroup: setCurDriversGroup,
-    handleSelectBusiness: handleSelectBusiness,
-    handleSelectAllBusiness: handleSelectAllBusiness,
-    selectedBusinessIds: selectedBusinessIds,
-    selectedPaymethodIds: selectedPaymethodIds,
-    selectedDriverIds: selectedDriverIds,
-    handleSelectDriver: handleSelectDriver,
-    handleSelectAllDriver: handleSelectAllDriver,
-    handleSelectPaymethod: handleSelectPaymethod,
-    handleSelectAllPaymethod: handleSelectAllPaymethod,
-    selectedDriversCompanyIds: selectedDriversCompanyIds,
-    handleSelectDriversCompany: handleSelectDriversCompany,
-    handleSelectAllDriversCompany: handleSelectAllDriversCompany,
     selectedGroupList: selectedGroupList,
     handleSelectGroup: handleSelectGroup,
-    handleAllSelectGroup: handleAllSelectGroup,
-    handleAddDriversGroup: handleAddDriversGroup
+    handleAllSelectGroup: handleAllSelectGroup
   })));
 };
 
