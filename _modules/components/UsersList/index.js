@@ -450,7 +450,7 @@ var UsersList = function UsersList(props) {
               if (!error) {
                 users = [];
 
-                if (deafultUserTypesSelected.includes(user.level)) {
+                if (userTypesSelected.includes(user.level)) {
                   users = usersList.users.filter(function (_user) {
                     if (_user.id === user.id) {
                       _user.level = user.level;
