@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage product details edit form behavior without UI component
@@ -16,6 +18,9 @@ export const ProductDetatils = (props) => {
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [productState, setProductState] = useState({ loading: false, product: null, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
 
@@ -29,6 +34,7 @@ export const ProductDetatils = (props) => {
    */
   const handleUpdateClick = async (params) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.product?.category_id).products(productState?.product?.id).save(changes, {
@@ -68,6 +74,7 @@ export const ProductDetatils = (props) => {
           const updatedBusiness = { ...business, categories: categories }
           handleUpdateBusinessState(updatedBusiness)
         }
+        showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
       }
     } catch (err) {
       setFormState({

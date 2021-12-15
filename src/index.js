@@ -9,13 +9,13 @@ import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
 import { ApiKeysList } from './components/ApiKeysList'
 import { BaseComponent } from './components/BaseComponent'
 import { Settings } from './components/Settings'
+import { BatchImageForm } from './components/BatchImageForm'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
 import { BusinessBrandBUSIDetail } from './components/BusinessBrandBUSIDetail'
 import { BusinessBrandGENDetail } from './components/BusinessBrandGENDetail'
 import { BusinessBrandListing } from './components/BusinessBrandListing'
-import { BusinessCategoryEdit } from './components/BusinessCategoryEdit'
 import { BusinessController } from './components/BusinessController'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
@@ -31,6 +31,7 @@ import { BusinessMenuOptions } from './components/BusinessMenuOptions'
 import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
+import { BusinessProductsCategoyDetails } from './components/BusinessProductsCategoyDetails'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
 import { BusinessProductsSearch } from './components/BusinessProductsSearch'
 import { BusinessPromotionForm } from './components/BusinessPromotionForm'
@@ -173,6 +174,7 @@ import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/Str
 import { FloatingButton } from './components/FloatingButton'
 import { ResetPassword } from './components/ResetPassword'
 import { ReportsBrandFilter } from './components/ReportsBrandFilter'
+import { ReportsAppIdFilter } from './components/ReportsAppIdFilter'
 import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
@@ -193,13 +195,13 @@ export {
   ApiKeysList,
   BaseComponent,
   Settings,
+  BatchImageForm,
   BusinessAndProductList,
   BusinessAnalytics,
   BusinessBasicInformation,
   BusinessBrandBUSIDetail,
   BusinessBrandGENDetail,
   BusinessBrandListing,
-  BusinessCategoryEdit,
   BusinessController,
   BusinessDeliveryZone,
   BusinessDetails,
@@ -218,6 +220,7 @@ export {
   BusinessMenuOptions,
   BusinessMenuShare,
   BusinessPaymethods,
+  BusinessProductsCategoyDetails,
   BusinessProductsCategories,
   BusinessProductsSearch,
   BusinessReviews,
@@ -346,6 +349,7 @@ export {
   FloatingButton,
   ResetPassword,
   ReportsBrandFilter,
+  ReportsAppIdFilter,
   ReportsDriverGroupFilter,
   Analytics,
   UsersList,
