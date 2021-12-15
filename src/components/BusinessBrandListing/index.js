@@ -21,6 +21,7 @@ export const BusinessBrandListing = (props) => {
 
   const [brandListState, setBrandListState] = useState({ loading: false, brands: [], error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: null } })
+  const [openDetail, setOpenDetail] = useState(false)
 
   /**
    * Method to update brand list
@@ -64,6 +65,7 @@ export const BusinessBrandListing = (props) => {
           handleUpdateBrandList(_brands)
         }
         showToast(ToastType.Success, t('BRAND_DELETED', 'Brand deleted'))
+        setOpenDetail(false)
       } else {
         setFormState({
           ...formState,
@@ -197,6 +199,8 @@ export const BusinessBrandListing = (props) => {
           handleChangeState={handleChangeState}
           brandFormState={formState}
           handleDeleteBrand={deleteBrand}
+          openDetail={openDetail}
+          setOpenDetail={setOpenDetail}
         />
       )}
     </>

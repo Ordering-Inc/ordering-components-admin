@@ -238,6 +238,7 @@ export const SingleBusinessCategory = (props) => {
           if (category.id === categorySelected.id) setCategorySelected(_categories[0])
         }
         showToast(ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'))
+        props.onClose && props.onClose(category.id)
       } else {
         setFormState({
           ...formState,

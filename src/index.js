@@ -62,6 +62,7 @@ import { DriverGroupSetting } from './components/DriverGroupSetting'
 import { DriverReviewDetails } from './components/DriverReviewDetails'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
+import { DriversGroupDetails } from './components/DriversGroupDetails'
 import { DriversGroupOrders } from './components/DriversGroupOrders'
 import { DriversGroupsList } from './components/DriversGroupsList'
 import { DriversGroupLogs } from './components/DriversGroupLogs'
@@ -251,6 +252,7 @@ export {
   DriverAnalytics,
   DriversCompaniesList,
   DriversGroupAutoassign,
+  DriversGroupDetails,
   DriversGroupOrders,
   DriversGroupsList,
   DriversGroupLogs,

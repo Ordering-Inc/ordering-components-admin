@@ -114,11 +114,41 @@ export const DriversCompanyDetails = (props) => {
         setActionState({ ...actionState, loading: false })
         const companies = [...driversCompaniesState.companies, content.result]
         setDriversCompaniesState({ ...driversCompaniesState, companies: companies })
-        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+        showToast(ToastType.Success, t('DRIVER_COMPANY_ADDED', 'Driver company added'))
         setChangesState({})
         props.onClose && props.onClose()
       } else {
         setActionState({ loading: false, error: content.result })
+      }
+    } catch (err) {
+      setActionState({ loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to delete the selected drivers company from API
+   */
+  const handleDeleteDriversCompany = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/driver_companies/${driversCompany.id}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setActionState({ ...actionState, loading: false })
+        const companies = driversCompaniesState.companies.filter(company => company.id !== driversCompany.id)
+        setDriversCompaniesState({ ...driversCompaniesState, companies: companies })
+        showToast(ToastType.Success, t('DRIVER_COMPANY_DELETED', 'Driver company deleted'))
+        props.onClose && props.onClose()
+      } else {
+        setActionState({ ...actionState, loading: false, error: content.result })
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
@@ -153,6 +183,7 @@ export const DriversCompanyDetails = (props) => {
             handleUpdateDriversCompany={handleUpdateDriversCompany}
             handleAddDriversCompany={handleAddDriversCompany}
             handleChangeScheduleState={handleChangeScheduleState}
+            handleDeleteDriversCompany={handleDeleteDriversCompany}
           />
         )
       }

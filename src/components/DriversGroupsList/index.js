@@ -24,14 +24,7 @@ export const DriversGroupsList = (props) => {
   const [driversCompanyList, setDriversCompanyList] = useState({ companies: [], loading: false, error: null })
 
   const [startSeveralDeleteStart, setStartSeveralDeleteStart] = useState(false)
-  const [openDetails, setOpenDetails] = useState(false)
-  const [changesState, setChangesState] = useState({})
   const [actionState, setActionState] = useState({ loading: false, error: null })
-  const [curDriversGroup, setCurDriversGroup] = useState(null)
-  const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
-  const [selectedPaymethodIds, setSelectedPaymethodIds] = useState([])
-  const [selectedDriverIds, setSelectedDriverIds] = useState([])
-  const [selectedDriversCompanyIds, setSelectedDriversCompanyIds] = useState([])
   const [selectedGroupList, setSelectedGroupList] = useState([])
 
   /**
@@ -190,7 +183,6 @@ export const DriversGroupsList = (props) => {
         })
         setDriversGroupsState({ ...driversGroupsState, groups: groups })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
-        setChangesState({})
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
       }
@@ -238,72 +230,6 @@ export const DriversGroupsList = (props) => {
     }
   }
 
-  /**
-   * Method to add new drivers group from API
-   */
-  const handleAddDriversGroup = async () => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
-      const extraAttributes = {
-        enabled: true,
-        autoassign_amount_drivers: 1,
-        autoassign_autoaccept_by_driver: false,
-        autoassign_autoreject_time: 30,
-        autoassign_increment_radius: 100,
-        autoassign_initial_radius: 500,
-        autoassign_max_in_accepted_by_business: 5,
-        autoassign_max_in_accepted_by_driver: 5,
-        autoassign_max_in_driver_in_business: 5,
-        autoassign_max_in_pending: 5,
-        autoassign_max_in_pickup_completed: 5,
-        autoassign_max_in_ready_for_pickup: 5,
-        autoassign_max_orders: 5,
-        autoassign_max_radius: 1000,
-        orders_group_max_distance_between_delivery: 200,
-        orders_group_max_distance_between_pickup: 200,
-        orders_group_max_orders: 1,
-        orders_group_max_time_between: 5,
-        orders_group_max_time_between_delivery: 600,
-        orders_group_max_time_between_pickup: 600,
-        orders_group_start_in_status: '7',
-        orders_group_use_maps_api: false
-      }
-      const changes = { ...changesState, ...extraAttributes }
-      const requestOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(changes)
-      }
-      const response = await fetch(`${ordering.root}/drivergroups`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setActionState({ ...actionState, loading: false })
-        let newGroup = { ...content.result }
-        if (!content.result?.administrator && driversManagersList.managers.length > 0) {
-          const newAdmin = driversManagersList.managers.find(manager => manager.id === content.result?.administrator_id)
-          newGroup = { ...newGroup, administrator: newAdmin }
-        }
-        const groups = [...driversGroupsState.groups, newGroup]
-        setDriversGroupsState({ ...driversGroupsState, groups: groups })
-        showToast(ToastType.Success, t('DRIVER_GROUP_ADDED', 'Driver group added'))
-        setChangesState({})
-        setOpenDetails(false)
-      } else {
-        setActionState({ loading: false, error: content.result })
-      }
-    } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
-    }
-  }
-
-  const handleChangesState = (changes) => {
-    setChangesState({ ...changesState, ...changes })
-  }
-
   const handleSelectGroup = (groupId) => {
     let ids = []
     if (selectedGroupList.includes(groupId)) {
@@ -323,147 +249,10 @@ export const DriversGroupsList = (props) => {
     }
   }
 
-  const handleSelectBusiness = (businessId, checked) => {
-    const businessIds = [...selectedBusinessIds]
-    let filteredIds = []
-    if (checked) {
-      filteredIds = [...businessIds, businessId]
-    } else {
-      filteredIds = businessIds.filter(id => id !== businessId)
-    }
-    setSelectedBusinessIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      business: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectPaymethod = (paymethodId, checked) => {
-    const paymethodIds = [...selectedPaymethodIds]
-    let filteredIds = []
-    if (checked) {
-      filteredIds = [...paymethodIds, paymethodId]
-    } else {
-      filteredIds = paymethodIds.filter(id => id !== paymethodId)
-    }
-    setSelectedPaymethodIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      allowed_paymethods: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectDriver = (driverId, checked) => {
-    const driverIds = [...selectedDriverIds]
-    let filteredIds = []
-    if (checked) {
-      filteredIds = [...driverIds, driverId]
-    } else {
-      filteredIds = driverIds.filter(id => id !== driverId)
-    }
-    setSelectedDriverIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      drivers: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectDriversCompany = (driverCompanyId, checked) => {
-    const driverCompanyIds = [...selectedDriversCompanyIds]
-    let filteredIds = []
-    if (checked) {
-      filteredIds = [...driverCompanyIds, driverCompanyId]
-    } else {
-      filteredIds = driverCompanyIds.filter(id => id !== driverCompanyId)
-    }
-    setSelectedDriversCompanyIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      driver_companies: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectAllBusiness = (isAll) => {
-    const businessIds = businessesList?.businesses?.reduce((ids, business) => [...ids, business.id], [])
-    let filteredIds = []
-    if (isAll) {
-      filteredIds = [...businessIds]
-    } else {
-      filteredIds = []
-    }
-    setSelectedBusinessIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      business: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectAllPaymethod = (isAll) => {
-    const paymethodIds = paymethodsList?.paymethods?.reduce((ids, paymethod) => [...ids, paymethod.id], [])
-    let filteredIds = []
-    if (isAll) {
-      filteredIds = [...paymethodIds]
-    } else {
-      filteredIds = []
-    }
-    setSelectedPaymethodIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      allowed_paymethods: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectAllDriver = (isAll) => {
-    const driverIds = driversList?.drivers?.reduce((ids, driver) => [...ids, driver.id], [])
-    let filteredIds = []
-    if (isAll) {
-      filteredIds = [...driverIds]
-    } else {
-      filteredIds = []
-    }
-    setSelectedDriverIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      drivers: JSON.stringify(filteredIds)
-    })
-  }
-
-  const handleSelectAllDriversCompany = (isAll) => {
-    const driverCompanyIds = driversCompanyList?.companies?.reduce((ids, company) => [...ids, company.id], [])
-    let filteredIds = []
-    if (isAll) {
-      filteredIds = [...driverCompanyIds]
-    } else {
-      filteredIds = []
-    }
-    setSelectedDriversCompanyIds(filteredIds)
-    setChangesState({
-      ...changesState,
-      driver_companies: JSON.stringify(filteredIds)
-    })
-  }
-
   useEffect(() => {
     if (!startSeveralDeleteStart || selectedGroupList.length === 0) return
     handleDeleteDriversGroup(selectedGroupList[0])
   }, [selectedGroupList, startSeveralDeleteStart])
-
-  useEffect(() => {
-    if (curDriversGroup) {
-      const businessIds = curDriversGroup?.business?.reduce((ids, business) => [...ids, business.id], [])
-      setSelectedBusinessIds(businessIds)
-      setSelectedPaymethodIds(curDriversGroup?.allowed_paymethods || [])
-      const drivers = curDriversGroup?.drivers.reduce((ids, driver) => [...ids, driver.id], [])
-      setSelectedDriverIds(drivers)
-      const companyIds = curDriversGroup?.driver_companies.reduce((ids, company) => [...ids, company.id], [])
-      setSelectedDriversCompanyIds(companyIds)
-    } else {
-      setSelectedBusinessIds([])
-      setSelectedPaymethodIds([])
-      setSelectedDriverIds([])
-      setSelectedDriversCompanyIds([])
-    }
-  }, [curDriversGroup])
 
   useEffect(() => {
     getDriversGroups()
@@ -483,39 +272,19 @@ export const DriversGroupsList = (props) => {
           <UIComponent
             {...props}
             driversGroupsState={driversGroupsState}
+            setDriversGroupsState={setDriversGroupsState}
             driversManagersList={driversManagersList}
             businessesList={businessesList}
             paymethodsList={paymethodsList}
             driversList={driversList}
             driversCompanyList={driversCompanyList}
-            openDetails={openDetails}
-            setOpenDetails={setOpenDetails}
-            cleanChagesState={() => setChangesState({})}
-            changesState={changesState}
             actionState={actionState}
-            handleChangesState={handleChangesState}
             handleUpdateDriversGroup={handleUpdateDriversGroup}
             handleDeleteDriversGroup={handleDeleteDriversGroup}
             handleDeleteSelectedGroups={() => setStartSeveralDeleteStart(true)}
-            curDriversGroup={curDriversGroup}
-            setCurDriversGroup={setCurDriversGroup}
-            handleSelectBusiness={handleSelectBusiness}
-            handleSelectAllBusiness={handleSelectAllBusiness}
-            selectedBusinessIds={selectedBusinessIds}
-            selectedPaymethodIds={selectedPaymethodIds}
-            selectedDriverIds={selectedDriverIds}
-            handleSelectDriver={handleSelectDriver}
-            handleSelectAllDriver={handleSelectAllDriver}
-            handleSelectPaymethod={handleSelectPaymethod}
-            handleSelectAllPaymethod={handleSelectAllPaymethod}
-            selectedDriversCompanyIds={selectedDriversCompanyIds}
-            handleSelectDriversCompany={handleSelectDriversCompany}
-            handleSelectAllDriversCompany={handleSelectAllDriversCompany}
-
             selectedGroupList={selectedGroupList}
             handleSelectGroup={handleSelectGroup}
             handleAllSelectGroup={handleAllSelectGroup}
-            handleAddDriversGroup={handleAddDriversGroup}
           />
         )
       }

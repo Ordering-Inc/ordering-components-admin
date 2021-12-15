@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useUtils } from '../../contexts/UtilsContext'
 
 export const BusinessSpreadSheet = (props) => {
   const {
@@ -19,6 +20,7 @@ export const BusinessSpreadSheet = (props) => {
   const [ordering] = useApi()
   const [, { showToast }] = useToast()
   const [{ token, loading }] = useSession()
+  const [{ parsePrice }] = useUtils()
   const [formState, setFormState] = useState({ products: null, loading: false, result: { error: false } })
   const [removingWithSupr, setRemovingWithSupr] = useState(false)
   const [undo, setUndo] = useState(false)
@@ -26,6 +28,8 @@ export const BusinessSpreadSheet = (props) => {
     row: -1,
     col: -1
   })
+  const taxShowbusiness = `${business.tax}% ${business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`
+  const feeShowbusiness = `${parsePrice(0)} + ${business.service_fee}%`
 
   /**
    * Method to remove a row from spreadSheet table
@@ -269,7 +273,11 @@ export const BusinessSpreadSheet = (props) => {
         }
         setFormState({
           ...formState,
-          products: result,
+          products: result.map(product => ({
+            ...product,
+            taxShow: !product?.tax ? taxShowbusiness : `${product.tax?.rate}% ${business.tax?.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`,
+            feeShow: !product?.fee ? feeShowbusiness : `${parsePrice(product.fee?.fixed)} + ${product.fee?.percentage}%`
+          })),
           loading: false,
           result: {
             error: false,
@@ -351,12 +359,13 @@ export const BusinessSpreadSheet = (props) => {
 
   useEffect(() => {
     const spreadProducts = []
-    const taxShowbusiness = `${business.tax}% ${business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`
     for (const product of categoryState.products) {
       const taxShow = !product?.tax ? taxShowbusiness : `${product.tax?.rate}% ${business.tax?.type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')}`
+      const feeShow = !product.fee ? feeShowbusiness : `${parsePrice(product.fee?.fixed)} + ${product.fee?.percentage}%`
       const _product = {
         ...product,
-        taxShow: taxShow
+        taxShow,
+        feeShow
       }
       spreadProducts.push(_product)
     }
