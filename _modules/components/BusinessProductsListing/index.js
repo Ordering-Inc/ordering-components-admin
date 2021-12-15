@@ -70,7 +70,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      auth = _useSession2[0].auth;
+      token = _useSession2[0].token;
 
   var _useEvent = (0, _EventContext.useEvent)(),
       _useEvent2 = _slicedToArray(_useEvent, 1),
@@ -489,7 +489,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(auth)
+                  Authorization: "Bearer ".concat(token)
                 }
               });
 
@@ -553,7 +553,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(auth)
+                  Authorization: "Bearer ".concat(token)
                 }
               });
 
