@@ -117,12 +117,13 @@ var Schedule = function Schedule(props) {
 
     for (var i = 0; i < lapses.length; i++) {
       if (i !== index) {
-        var openOld = lapses[i].open.hour * 60 + lapses[i].open.minute;
-        var closeOld = lapses[i].close.hour * 60 + lapses[i].close.minute;
-        if (openNew <= openOld && closeNew >= closeOld) return true;
+        var openOld = lapses[i].open.hour * 60 + parseInt(lapses[i].open.minute / 15) * 15;
+        var closeOld = lapses[i].close.hour * 60 + parseInt(lapses[i].close.minute / 15) * 15;
+        if (openNew < openOld && closeNew > closeOld) return true;
         if (openNew < openOld && closeNew > openOld) return true;
         if (openNew > openOld && closeNew < closeOld) return true;
         if (openNew < closeOld && closeNew > closeOld) return true;
+        if (closeNew === closeOld || openNew === openOld) return true;
       }
     }
 
