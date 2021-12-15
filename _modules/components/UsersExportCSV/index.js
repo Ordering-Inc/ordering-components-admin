@@ -17,15 +17,15 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _SessionContext = require("../../contexts/SessionContext");
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -43,14 +43,21 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var UsersExportCSV = function UsersExportCSV(props) {
-  var UIComponent = props.UIComponent,
+  var deafultUserTypesSelected = props.deafultUserTypesSelected,
+      disabledActiveStateCondition = props.disabledActiveStateCondition,
+      UIComponent = props.UIComponent,
       userTypesSelected = props.userTypesSelected,
-      selectedUserActiveState = props.selectedUserActiveState;
+      selectedUserActiveState = props.selectedUserActiveState,
+      searchValue = props.searchValue,
+      isSearchByUserId = props.isSearchByUserId,
+      isSearchByUserEmail = props.isSearchByUserEmail,
+      isSearchByUserPhone = props.isSearchByUserPhone,
+      isSearchByUserName = props.isSearchByUserName;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -77,7 +84,7 @@ var UsersExportCSV = function UsersExportCSV(props) {
 
   var getCSV = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, functionFetch, response, fileSuffix;
+      var requestOptions, defaultConditions, filterConditons, searchConditions, functionFetch, response, fileSuffix;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -101,6 +108,15 @@ var UsersExportCSV = function UsersExportCSV(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
+              defaultConditions = [];
+
+              if (Array.isArray(deafultUserTypesSelected)) {
+                defaultConditions.push({
+                  attribute: 'level',
+                  value: deafultUserTypesSelected
+                });
+              }
+
               filterConditons = [];
 
               if (filterApply) {
@@ -111,20 +127,78 @@ var UsersExportCSV = function UsersExportCSV(props) {
                   });
                 }
 
-                filterConditons.push({
-                  attribute: 'enabled',
-                  value: selectedUserActiveState
-                });
+                if (!disabledActiveStateCondition) {
+                  filterConditons.push({
+                    attribute: 'enabled',
+                    value: selectedUserActiveState
+                  });
+                }
+
+                if (searchValue) {
+                  searchConditions = [];
+
+                  if (isSearchByUserId) {
+                    searchConditions.push({
+                      attribute: 'id',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserEmail) {
+                    searchConditions.push({
+                      attribute: 'email',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserPhone) {
+                    searchConditions.push({
+                      attribute: 'cellphone',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserName) {
+                    searchConditions.push({
+                      attribute: 'name',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                    searchConditions.push({
+                      attribute: 'lastname',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  filterConditons.push({
+                    conector: 'OR',
+                    conditions: searchConditions
+                  });
+                }
               }
 
-              functionFetch = filterApply ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id");
-              _context.next = 10;
+              functionFetch = filterApply ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : defaultConditions.length > 0 ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(defaultConditions)) : "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id");
+              _context.next = 12;
               return fetch(functionFetch, requestOptions);
 
-            case 10:
+            case 12:
               response = _context.sent;
               fileSuffix = new Date().getTime();
-              _context.next = 14;
+              _context.next = 16;
               return response.blob().then(function (blob) {
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
@@ -133,27 +207,27 @@ var UsersExportCSV = function UsersExportCSV(props) {
                 a.click();
               });
 
-            case 14:
+            case 16:
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false
               }));
-              _context.next = 20;
+              _context.next = 22;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](2);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 20:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 19]]);
     }));
 
     return function getCSV(_x) {

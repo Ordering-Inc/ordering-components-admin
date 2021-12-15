@@ -21,15 +21,17 @@ var _ToastContext = require("../../contexts/ToastContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+var _EventContext = require("../../contexts/EventContext");
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -47,7 +49,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -62,7 +64,9 @@ var ProductProperties = function ProductProperties(props) {
       setFormTaxState = props.setFormTaxState,
       formTaxState = props.formTaxState,
       taxes = props.taxes,
-      setTaxes = props.setTaxes;
+      setTaxes = props.setTaxes,
+      fees = props.fees,
+      setFees = props.setFees;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -71,6 +75,10 @@ var ProductProperties = function ProductProperties(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useEvent = (0, _EventContext.useEvent)(),
+      _useEvent2 = _slicedToArray(_useEvent, 1),
+      events = _useEvent2[0];
 
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
@@ -101,7 +109,10 @@ var ProductProperties = function ProductProperties(props) {
       formTaxChanges = _useState6[0],
       setFormTaxChanges = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(null),
+  var _useState7 = (0, _react.useState)({
+    action: null,
+    payload: null
+  }),
       _useState8 = _slicedToArray(_useState7, 2),
       taxToEdit = _useState8[0],
       setTaxToEdit = _useState8[1];
@@ -113,6 +124,11 @@ var ProductProperties = function ProductProperties(props) {
       _useState10 = _slicedToArray(_useState9, 2),
       alertState = _useState10[0],
       setAlertState = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(null),
+      _useState12 = _slicedToArray(_useState11, 2),
+      timeout = _useState12[0],
+      setTimeoutCustom = _useState12[1];
   /**
    * Method to update the product details from API
    */
@@ -223,23 +239,24 @@ var ProductProperties = function ProductProperties(props) {
   };
 
   var handleSaveTax = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, inheritTax) {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, action) {
       var _result;
 
-      var result, response, _yield$response$json, tax, _response, _yield$_response$json, _tax;
+      var result, response, _yield$response$json, data, _response, _yield$_response$json, _data;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+
               if (!id) {
-                _context2.next = 14;
+                _context2.next = 13;
                 break;
               }
 
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               _context2.next = 4;
-              return fetch("".concat(ordering.root, "/taxes/").concat(id), {
+              return fetch("".concat(ordering.root, "/").concat(action, "/").concat(id), {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
@@ -255,60 +272,105 @@ var ProductProperties = function ProductProperties(props) {
 
             case 7:
               _yield$response$json = _context2.sent;
-              tax = _yield$response$json.result;
-              result = tax;
-              setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(tax.id), {
-                name: tax.name,
-                description: tax.description,
-                id: tax.id,
-                rate: tax.rate,
-                type: tax.type
-              })));
-              showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
-              _context2.next = 24;
+              data = _yield$response$json.result;
+              result = data;
+
+              if (action === 'taxes') {
+                setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(data.id), {
+                  name: data.name,
+                  description: data.description,
+                  id: data.id,
+                  rate: data.rate,
+                  type: data.type
+                })));
+                events.emit('tax_changed', {
+                  tax: {
+                    name: data.name,
+                    description: data.description,
+                    id: data.id,
+                    rate: data.rate,
+                    type: data.type
+                  }
+                });
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
+              } else {
+                setFees(_objectSpread(_objectSpread({}, fees), {}, _defineProperty({}, "id:".concat(data.id), {
+                  name: data.name,
+                  description: data.description,
+                  id: data.id,
+                  fixed: data.fixed,
+                  percentage: data.percentage
+                })));
+                events.emit('fee_changed', {
+                  fee: {
+                    name: data.name,
+                    description: data.description,
+                    id: data.id,
+                    fixed: data.fixed,
+                    percentage: data.percentage
+                  }
+                });
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'));
+              }
+
+              _context2.next = 21;
               break;
 
-            case 14:
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              _context2.next = 17;
-              return fetch("".concat(ordering.root, "/taxes"), {
+            case 13:
+              _context2.next = 15;
+              return fetch("".concat(ordering.root, "/").concat(action), {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(session.auth)
                 },
-                body: JSON.stringify(inheritTax || formTaxChanges)
+                body: JSON.stringify(formTaxChanges)
               });
 
-            case 17:
+            case 15:
               _response = _context2.sent;
-              _context2.next = 20;
+              _context2.next = 18;
               return _response.json();
 
-            case 20:
+            case 18:
               _yield$_response$json = _context2.sent;
-              _tax = _yield$_response$json.result;
-              setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(_tax.id), {
-                name: _tax.name,
-                description: _tax.description,
-                id: _tax.id,
-                rate: _tax.rate,
-                type: _tax.type
-              })));
-              showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_ADDED', 'Product tax added'));
+              _data = _yield$_response$json.result;
 
-            case 24:
-              if (!((_result = result) !== null && _result !== void 0 && _result.error)) {
-                _context2.next = 26;
+              if (action === 'taxes') {
+                setTaxes(_objectSpread(_objectSpread({}, taxes), {}, _defineProperty({}, "id:".concat(_data.id), {
+                  name: _data.name,
+                  description: _data.description,
+                  id: _data.id,
+                  rate: _data.rate,
+                  type: _data.type
+                })));
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
+              } else {
+                setFees(_objectSpread(_objectSpread({}, fees), {}, _defineProperty({}, "id:".concat(_data.id), {
+                  name: _data.name,
+                  description: _data.description,
+                  id: _data.id,
+                  fixed: _data.fixed,
+                  percentage: _data.percentage
+                })));
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'));
+              }
+
+            case 21:
+              if (!((_result = result) === null || _result === void 0 ? void 0 : _result.error)) {
+                _context2.next = 23;
                 break;
               }
 
               return _context2.abrupt("return");
 
-            case 26:
-              setTaxToEdit(null);
+            case 23:
+              setTaxToEdit({
+                action: null,
+                payload: null
+              });
 
-            case 27:
+            case 24:
             case "end":
               return _context2.stop();
           }
@@ -322,8 +384,8 @@ var ProductProperties = function ProductProperties(props) {
   }();
 
   var handleDeleteTax = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(id) {
-      var response, _yield$response$json2, error, newTaxes;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(id, action) {
+      var response, _yield$response$json2, error, newTaxes, newFees;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -332,15 +394,15 @@ var ProductProperties = function ProductProperties(props) {
               setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
 
               if (!id) {
-                _context3.next = 12;
+                _context3.next = 11;
                 break;
               }
 
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               _context3.next = 5;
-              return fetch("".concat(ordering.root, "/taxes/").concat(id), {
+              return fetch("".concat(ordering.root, "/").concat(action, "/").concat(id), {
                 method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
@@ -358,12 +420,28 @@ var ProductProperties = function ProductProperties(props) {
               error = _yield$response$json2.error;
 
               if (!error) {
-                newTaxes = taxes;
-                delete newTaxes["id:".concat(id)];
-                setTaxes(newTaxes);
-                showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'));
+                if (action === 'taxes') {
+                  newTaxes = taxes;
+                  events.emit('tax_deleted', {
+                    tax: newTaxes["id:".concat(id)],
+                    isRemove: true
+                  });
+                  delete newTaxes["id:".concat(id)];
+                  setTaxes(newTaxes);
+                  showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'));
+                } else {
+                  newFees = fees;
+                  events.emit('fee_deleted', {
+                    tax: newFees["id:".concat(id)],
+                    isRemove: true
+                  });
+                  delete newFees["id:".concat(id)];
+                  setFees(newFees);
+                  showToast(_ToastContext.ToastType.Success, t('PRODUCT_FEE_DELETED', 'Product fee deleted'));
+                }
               }
 
+            case 11:
               setFormTaxState(_objectSpread(_objectSpread({}, formTaxState), {}, {
                 loading: false
               }));
@@ -376,7 +454,7 @@ var ProductProperties = function ProductProperties(props) {
       }, _callee3);
     }));
 
-    return function handleDeleteTax(_x4) {
+    return function handleDeleteTax(_x4, _x5) {
       return _ref3.apply(this, arguments);
     };
   }();
@@ -384,9 +462,18 @@ var ProductProperties = function ProductProperties(props) {
   (0, _react.useEffect)(function () {
     setProductState(product);
   }, [product]);
+  (0, _react.useEffect)(function () {
+    if (Object.keys(formState.changes).length > 0) {
+      clearInterval(timeout);
+      setTimeoutCustom(setTimeout(function () {
+        handleUpdateClick();
+      }, 1000));
+    }
+  }, [formState.changes]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
     taxes: taxes,
+    fees: fees,
     formTaxState: formTaxState,
     taxToEdit: taxToEdit,
     alertState: alertState,
