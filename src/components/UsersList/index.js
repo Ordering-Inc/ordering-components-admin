@@ -288,7 +288,7 @@ export const UsersList = (props) => {
       })
       if (!error) {
         let users = []
-        if (deafultUserTypesSelected.includes(user.level)) {
+        if (userTypesSelected.includes(user.level)) {
           users = usersList.users.filter(_user => {
             if (_user.id === user.id) {
               _user.level = user.level
