@@ -21,6 +21,8 @@ var _LanguageContext = require("../../contexts/LanguageContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
 
+var _UtilsContext = require("../../contexts/UtilsContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -79,6 +81,10 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
       token = _useSession2$.token,
       loading = _useSession2$.loading;
 
+  var _useUtils = (0, _UtilsContext.useUtils)(),
+      _useUtils2 = _slicedToArray(_useUtils, 1),
+      parsePrice = _useUtils2[0].parsePrice;
+
   var _useState = (0, _react.useState)({
     products: null,
     loading: false,
@@ -107,6 +113,9 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       curCell = _useState8[0],
       setCurCell = _useState8[1];
+
+  var taxShowbusiness = "".concat(business.tax, "% ").concat(business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
+  var feeShowbusiness = "".concat(parsePrice(0), " + ").concat(business.service_fee, "%");
   /**
    * Method to remove a row from spreadSheet table
    * @param {Number} row Number of selected row
@@ -115,7 +124,6 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
    * @param {Number} col1 Number of selected col
    * @param {Object} hotTableObj Object for spreadSheet mode table
    */
-
 
   var handleAfterSectionEnd = function handleAfterSectionEnd(row, col, row1, col1, hotTableObj) {
     if (curCell.row === row && curCell.col === col || row !== row1 || col !== col1) return;
@@ -443,7 +451,14 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                 }
 
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  products: result,
+                  products: result.map(function (product) {
+                    var _product$tax, _business$tax, _product$fee, _product$fee2;
+
+                    return _objectSpread(_objectSpread({}, product), {}, {
+                      taxShow: !(product !== null && product !== void 0 && product.tax) ? taxShowbusiness : "".concat((_product$tax = product.tax) === null || _product$tax === void 0 ? void 0 : _product$tax.rate, "% ").concat(((_business$tax = business.tax) === null || _business$tax === void 0 ? void 0 : _business$tax.type) === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price')),
+                      feeShow: !(product !== null && product !== void 0 && product.fee) ? feeShowbusiness : "".concat(parsePrice((_product$fee = product.fee) === null || _product$fee === void 0 ? void 0 : _product$fee.fixed), " + ").concat((_product$fee2 = product.fee) === null || _product$fee2 === void 0 ? void 0 : _product$fee2.percentage, "%")
+                    });
+                  }),
                   loading: false,
                   result: {
                     error: false,
@@ -581,20 +596,21 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
 
   (0, _react.useEffect)(function () {
     var spreadProducts = [];
-    var taxShowbusiness = "".concat(business.tax, "% ").concat(business.tax_type === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
 
     var _iterator2 = _createForOfIteratorHelper(categoryState.products),
         _step2;
 
     try {
       for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-        var _product$tax, _business$tax;
+        var _product$tax2, _business$tax2, _product$fee3, _product$fee4;
 
         var product = _step2.value;
-        var taxShow = !(product !== null && product !== void 0 && product.tax) ? taxShowbusiness : "".concat((_product$tax = product.tax) === null || _product$tax === void 0 ? void 0 : _product$tax.rate, "% ").concat(((_business$tax = business.tax) === null || _business$tax === void 0 ? void 0 : _business$tax.type) === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
+        var taxShow = !(product !== null && product !== void 0 && product.tax) ? taxShowbusiness : "".concat((_product$tax2 = product.tax) === null || _product$tax2 === void 0 ? void 0 : _product$tax2.rate, "% ").concat(((_business$tax2 = business.tax) === null || _business$tax2 === void 0 ? void 0 : _business$tax2.type) === 1 ? t('INCLUDED_ON_PRICE', 'Included on price') : t('NOT_INCLUDED_ON_PRICE', 'Not included on price'));
+        var feeShow = !product.fee ? feeShowbusiness : "".concat(parsePrice((_product$fee3 = product.fee) === null || _product$fee3 === void 0 ? void 0 : _product$fee3.fixed), " + ").concat((_product$fee4 = product.fee) === null || _product$fee4 === void 0 ? void 0 : _product$fee4.percentage, "%");
 
         var _product = _objectSpread(_objectSpread({}, product), {}, {
-          taxShow: taxShow
+          taxShow: taxShow,
+          feeShow: feeShow
         });
 
         spreadProducts.push(_product);

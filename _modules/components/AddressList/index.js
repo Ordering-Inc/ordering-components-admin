@@ -59,7 +59,9 @@ var AddressList = function AddressList(props) {
   var UIComponent = props.UIComponent,
       changeOrderAddressWithDefault = props.changeOrderAddressWithDefault,
       handleClickSetDefault = props.handleClickSetDefault,
-      handleClickDelete = props.handleClickDelete;
+      handleClickDelete = props.handleClickDelete,
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      userState = props.userState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -267,7 +269,7 @@ var AddressList = function AddressList(props) {
 
   var handleDelete = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(address) {
-      var _yield$ordering$users, content, addresses;
+      var _yield$ordering$users, content, addresses, updatedUser;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -305,6 +307,13 @@ var AddressList = function AddressList(props) {
                 setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
                   addresses: addresses
                 }));
+
+                if (handleSuccessUpdate) {
+                  updatedUser = _objectSpread(_objectSpread({}, userState.user), {}, {
+                    addresses: addresses
+                  });
+                  handleSuccessUpdate(updatedUser);
+                }
               }
 
               _context3.next = 15;

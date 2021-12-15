@@ -423,20 +423,21 @@ var UsersList = function UsersList(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
               requestsState = {};
               source = {};
               requestsState.updateOrder = source;
-              _context2.next = 7;
+              _context2.next = 8;
               return ordering.setAccessToken(session.token).users(user.id).save({
                 level: user.level
               }, {
                 cancelToken: source
               });
 
-            case 7:
+            case 8:
               _yield$ordering$setAc = _context2.sent;
               _yield$ordering$setAc2 = _yield$ordering$setAc.content;
               error = _yield$ordering$setAc2.error;
@@ -449,7 +450,7 @@ var UsersList = function UsersList(props) {
               if (!error) {
                 users = [];
 
-                if (deafultUserTypesSelected.includes(user.level)) {
+                if (userTypesSelected.includes(user.level)) {
                   users = usersList.users.filter(function (_user) {
                     if (_user.id === user.id) {
                       _user.level = user.level;
@@ -466,25 +467,26 @@ var UsersList = function UsersList(props) {
                 setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
                   users: users
                 }));
+                showToast(_ToastContext.ToastType.Success, t('UPDATED', 'Updated'));
               }
 
-              _context2.next = 18;
+              _context2.next = 19;
               break;
 
-            case 15:
-              _context2.prev = 15;
+            case 16:
+              _context2.prev = 16;
               _context2.t0 = _context2["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
 
-            case 18:
+            case 19:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 15]]);
+      }, _callee2, null, [[0, 16]]);
     }));
 
     return function handleChangeUserType(_x3) {

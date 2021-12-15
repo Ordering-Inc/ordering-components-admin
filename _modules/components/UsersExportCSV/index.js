@@ -48,9 +48,16 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var UsersExportCSV = function UsersExportCSV(props) {
-  var UIComponent = props.UIComponent,
+  var deafultUserTypesSelected = props.deafultUserTypesSelected,
+      disabledActiveStateCondition = props.disabledActiveStateCondition,
+      UIComponent = props.UIComponent,
       userTypesSelected = props.userTypesSelected,
-      selectedUserActiveState = props.selectedUserActiveState;
+      selectedUserActiveState = props.selectedUserActiveState,
+      searchValue = props.searchValue,
+      isSearchByUserId = props.isSearchByUserId,
+      isSearchByUserEmail = props.isSearchByUserEmail,
+      isSearchByUserPhone = props.isSearchByUserPhone,
+      isSearchByUserName = props.isSearchByUserName;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -77,7 +84,7 @@ var UsersExportCSV = function UsersExportCSV(props) {
 
   var getCSV = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, functionFetch, response, fileSuffix;
+      var requestOptions, defaultConditions, filterConditons, searchConditions, functionFetch, response, fileSuffix;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -101,6 +108,15 @@ var UsersExportCSV = function UsersExportCSV(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
+              defaultConditions = [];
+
+              if (Array.isArray(deafultUserTypesSelected)) {
+                defaultConditions.push({
+                  attribute: 'level',
+                  value: deafultUserTypesSelected
+                });
+              }
+
               filterConditons = [];
 
               if (filterApply) {
@@ -111,20 +127,78 @@ var UsersExportCSV = function UsersExportCSV(props) {
                   });
                 }
 
-                filterConditons.push({
-                  attribute: 'enabled',
-                  value: selectedUserActiveState
-                });
+                if (!disabledActiveStateCondition) {
+                  filterConditons.push({
+                    attribute: 'enabled',
+                    value: selectedUserActiveState
+                  });
+                }
+
+                if (searchValue) {
+                  searchConditions = [];
+
+                  if (isSearchByUserId) {
+                    searchConditions.push({
+                      attribute: 'id',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserEmail) {
+                    searchConditions.push({
+                      attribute: 'email',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserPhone) {
+                    searchConditions.push({
+                      attribute: 'cellphone',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  if (isSearchByUserName) {
+                    searchConditions.push({
+                      attribute: 'name',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                    searchConditions.push({
+                      attribute: 'lastname',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    });
+                  }
+
+                  filterConditons.push({
+                    conector: 'OR',
+                    conditions: searchConditions
+                  });
+                }
               }
 
-              functionFetch = filterApply ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id");
-              _context.next = 10;
+              functionFetch = filterApply ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : defaultConditions.length > 0 ? "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(defaultConditions)) : "".concat(ordering.root, "/users.csv?mode=dashboard&orderBy=id");
+              _context.next = 12;
               return fetch(functionFetch, requestOptions);
 
-            case 10:
+            case 12:
               response = _context.sent;
               fileSuffix = new Date().getTime();
-              _context.next = 14;
+              _context.next = 16;
               return response.blob().then(function (blob) {
                 var url = window.URL.createObjectURL(blob);
                 var a = document.createElement('a');
@@ -133,27 +207,27 @@ var UsersExportCSV = function UsersExportCSV(props) {
                 a.click();
               });
 
-            case 14:
+            case 16:
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false
               }));
-              _context.next = 20;
+              _context.next = 22;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 19:
+              _context.prev = 19;
               _context.t0 = _context["catch"](2);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 20:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 17]]);
+      }, _callee, null, [[2, 19]]);
     }));
 
     return function getCSV(_x) {

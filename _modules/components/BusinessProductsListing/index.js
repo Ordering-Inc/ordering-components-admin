@@ -15,6 +15,8 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
+var _EventContext = require("../../contexts/EventContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -69,6 +71,10 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       auth = _useSession2[0].auth;
+
+  var _useEvent = (0, _EventContext.useEvent)(),
+      _useEvent2 = _slicedToArray(_useEvent, 1),
+      events = _useEvent2[0];
 
   var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
@@ -131,16 +137,32 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       taxes = _useState20[0],
       setTaxes = _useState20[1];
 
-  var _useState21 = (0, _react.useState)({
+  var _useState21 = (0, _react.useState)({}),
+      _useState22 = _slicedToArray(_useState21, 2),
+      fees = _useState22[0],
+      setFees = _useState22[1];
+
+  var _useState23 = (0, _react.useState)({
     loading: false,
     changes: {},
     result: {
       error: false
     }
   }),
-      _useState22 = _slicedToArray(_useState21, 2),
-      formTaxState = _useState22[0],
-      setFormTaxState = _useState22[1];
+      _useState24 = _slicedToArray(_useState23, 2),
+      formTaxState = _useState24[0],
+      setFormTaxState = _useState24[1];
+
+  var _useState25 = (0, _react.useState)({
+    loading: false,
+    changes: {},
+    result: {
+      error: false
+    }
+  }),
+      _useState26 = _slicedToArray(_useState25, 2),
+      formFeeState = _useState26[0],
+      setFormFeeState = _useState26[1];
 
   var categoryStateDefault = {
     loading: true,
@@ -154,20 +176,20 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     products: []
   };
 
-  var _useState23 = (0, _react.useState)(categoryStateDefault),
-      _useState24 = _slicedToArray(_useState23, 2),
-      categoryState = _useState24[0],
-      setCategoryState = _useState24[1];
-
-  var _useState25 = (0, _react.useState)(null),
-      _useState26 = _slicedToArray(_useState25, 2),
-      errors = _useState26[0],
-      setErrors = _useState26[1];
-
-  var _useState27 = (0, _react.useState)(false),
+  var _useState27 = (0, _react.useState)(categoryStateDefault),
       _useState28 = _slicedToArray(_useState27, 2),
-      errorQuantityProducts = _useState28[0],
-      setErrorQuantityProducts = _useState28[1];
+      categoryState = _useState28[0],
+      setCategoryState = _useState28[1];
+
+  var _useState29 = (0, _react.useState)(null),
+      _useState30 = _slicedToArray(_useState29, 2),
+      errors = _useState30[0],
+      setErrors = _useState30[1];
+
+  var _useState31 = (0, _react.useState)(false),
+      _useState32 = _slicedToArray(_useState31, 2),
+      errorQuantityProducts = _useState32[0],
+      setErrorQuantityProducts = _useState32[1];
   /**
    * Change category selected
    * @param {Object} category Category object
@@ -514,6 +536,70 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     };
   }();
 
+  var getFees = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var feesObject, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              feesObject = {};
+              setFormFeeState(_objectSpread(_objectSpread({}, formFeeState), {}, {
+                loading: true
+              }));
+              _context4.next = 4;
+              return fetch("".concat(ordering.root, "/fees"), {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(auth)
+                }
+              });
+
+            case 4:
+              response = _context4.sent;
+              _context4.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json2 = _context4.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (error) {
+                _context4.next = 14;
+                break;
+              }
+
+              result.forEach(function (fee) {
+                return feesObject["id:".concat(fee.id)] = fee;
+              });
+              setFees(feesObject);
+              return _context4.abrupt("return");
+
+            case 14:
+              setFormFeeState(_objectSpread(_objectSpread({}, formFeeState), {}, {
+                result: {
+                  error: true,
+                  result: feesObject
+                },
+                loading: false
+              }));
+
+            case 15:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function getFees() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (isInitialRender) {
       getProduct();
@@ -521,25 +607,25 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   }, [JSON.stringify((_businessState$busine5 = businessState.business) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.id), isInitialRender]);
 
   var getBusiness = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
       var _result$categories, source, _yield$ordering$busin2, result;
 
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.prev = 0;
+              _context5.prev = 0;
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: true
               }));
               source = {};
               requestsState.business = source;
               setRequestsState(_objectSpread({}, requestsState));
-              _context4.next = 7;
+              _context5.next = 7;
               return ordering.businesses(businessSlug).asDashboard().get();
 
             case 7:
-              _yield$ordering$busin2 = _context4.sent;
+              _yield$ordering$busin2 = _context5.sent;
               result = _yield$ordering$busin2.content.result;
 
               if (!(result !== null && result !== void 0 && result.categories) || (result === null || result === void 0 ? void 0 : (_result$categories = result.categories) === null || _result$categories === void 0 ? void 0 : _result$categories.length) === 0) {
@@ -550,27 +636,27 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 business: result,
                 loading: false
               }));
-              _context4.next = 16;
+              _context5.next = 16;
               break;
 
             case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](0);
+              _context5.prev = 13;
+              _context5.t0 = _context5["catch"](0);
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 loading: false,
-                error: [_context4.t0.message]
+                error: [_context5.t0.message]
               }));
 
             case 16:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee5, null, [[0, 13]]);
     }));
 
     return function getBusiness() {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   /**
@@ -597,17 +683,104 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     setCategoryState(updatedCategory);
   };
 
-  (0, _react.useEffect)(function () {
+  var handleUpdateTaxesProducts = function handleUpdateTaxesProducts(_ref6) {
     var _businessState$busine6;
+
+    var tax = _ref6.tax,
+        isRemove = _ref6.isRemove,
+        id = _ref6.id;
+
+    var _categories = _toConsumableArray(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine6 = businessState.business) === null || _businessState$busine6 === void 0 ? void 0 : _businessState$busine6.categories);
+
+    var replaceSameTaxes = function replaceSameTaxes(categories, tax) {
+      for (var i = 0; i < (categories === null || categories === void 0 ? void 0 : categories.length); i++) {
+        var _category$subcategori2;
+
+        var category = categories[i];
+
+        for (var j = 0; j < category.products.length; j++) {
+          var _product$tax, _product$tax2;
+
+          var product = category.products[j];
+
+          if (isRemove && ((_product$tax = product.tax) === null || _product$tax === void 0 ? void 0 : _product$tax.id) === tax.id) {
+            product.tax = null;
+            product.tax_id = null;
+          } else if (product.tax && ((_product$tax2 = product.tax) === null || _product$tax2 === void 0 ? void 0 : _product$tax2.id) === tax.id) {
+            Object.assign(product.tax, tax);
+            product.tax_id = tax.id;
+          }
+        }
+
+        if (((_category$subcategori2 = category.subcategories) === null || _category$subcategori2 === void 0 ? void 0 : _category$subcategori2.length) > 0) {
+          categories.subcategories = replaceSameTaxes(categories.subcategories, tax);
+        }
+      }
+
+      return categories;
+    };
+
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+        categories: replaceSameTaxes(_categories, tax)
+      })
+    }));
+  };
+
+  var handleUpdateFeesProducts = function handleUpdateFeesProducts(_ref7) {
+    var _businessState$busine7;
+
+    var fee = _ref7.fee,
+        isRemove = _ref7.isRemove;
+
+    var _categories = _toConsumableArray(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine7 = businessState.business) === null || _businessState$busine7 === void 0 ? void 0 : _businessState$busine7.categories);
+
+    var replaceSameFees = function replaceSameFees(categories, fee) {
+      for (var i = 0; i < (categories === null || categories === void 0 ? void 0 : categories.length); i++) {
+        var _category$subcategori3;
+
+        var category = categories[i];
+
+        for (var j = 0; j < category.products.length; j++) {
+          var _product$fee, _product$fee2;
+
+          var product = category.products[j];
+
+          if (isRemove && ((_product$fee = product.fee) === null || _product$fee === void 0 ? void 0 : _product$fee.id) === fee.id) {
+            product.fee = null;
+            product.fee_id = null;
+          } else if (product.fee && ((_product$fee2 = product.fee) === null || _product$fee2 === void 0 ? void 0 : _product$fee2.id) === fee.id) {
+            Object.assign(product.fee, fee);
+            product.fee_id = fee.id;
+          }
+        }
+
+        if (((_category$subcategori3 = category.subcategories) === null || _category$subcategori3 === void 0 ? void 0 : _category$subcategori3.length) > 0) {
+          categories.subcategories = replaceSameFees(categories.subcategories, fee);
+        }
+      }
+
+      return categories;
+    };
+
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: _objectSpread(_objectSpread({}, businessState.business), {}, {
+        categories: replaceSameFees(_categories, fee)
+      })
+    }));
+  };
+
+  (0, _react.useEffect)(function () {
+    var _businessState$busine8;
 
     if (businessState.loading) return;
 
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
       getProducts(true);
-    } else if (businessState !== null && businessState !== void 0 && (_businessState$busine6 = businessState.business) !== null && _businessState$busine6 !== void 0 && _businessState$busine6.categories) {
-      var _businessState$busine7;
+    } else if (businessState !== null && businessState !== void 0 && (_businessState$busine8 = businessState.business) !== null && _businessState$busine8 !== void 0 && _businessState$busine8.categories) {
+      var _businessState$busine9;
 
-      setCategorySelected(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine7 = businessState.business) === null || _businessState$busine7 === void 0 ? void 0 : _businessState$busine7.categories[0]);
+      setCategorySelected(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine9 = businessState.business) === null || _businessState$busine9 === void 0 ? void 0 : _businessState$busine9.categories[0]);
     }
   }, [businessState]);
   (0, _react.useEffect)(function () {
@@ -621,6 +794,22 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       getBusiness();
     }
   }, [businessSlug]);
+  (0, _react.useEffect)(function () {
+    var _Object$keys;
+
+    if (((_Object$keys = Object.keys(businessState === null || businessState === void 0 ? void 0 : businessState.business)) === null || _Object$keys === void 0 ? void 0 : _Object$keys.length) > 0) {
+      events.on('tax_changed', handleUpdateTaxesProducts);
+      events.on('fee_changed', handleUpdateFeesProducts);
+      events.on('tax_deleted', handleUpdateTaxesProducts);
+      events.on('fee_deleted', handleUpdateFeesProducts);
+      return function () {
+        events.off('tax_changed', handleUpdateTaxesProducts);
+        events.off('fee_changed', handleUpdateFeesProducts);
+        events.off('tax_deleted', handleUpdateFeesProducts);
+        events.off('fee_deleted', handleUpdateFeesProducts);
+      };
+    }
+  }, [businessState === null || businessState === void 0 ? void 0 : businessState.business]);
   /**
    * Cancel business request
    */
@@ -643,6 +832,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   }, [requestsState.products]);
   (0, _react.useEffect)(function () {
     getTaxes();
+    getFees();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     errors: errors,
@@ -670,7 +860,9 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     setFormTaxState: setFormTaxState,
     formTaxState: formTaxState,
     taxes: taxes,
-    setTaxes: setTaxes
+    setTaxes: setTaxes,
+    fees: fees,
+    setFees: setFees
   })));
 };
 

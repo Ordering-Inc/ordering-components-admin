@@ -255,7 +255,7 @@ var DriversCompanyDetails = function DriversCompanyDetails(props) {
                 setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
                   companies: companies
                 }));
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                showToast(_ToastContext.ToastType.Success, t('DRIVER_COMPANY_ADDED', 'Driver company added'));
                 setChangesState({});
                 props.onClose && props.onClose();
               } else {
@@ -288,6 +288,83 @@ var DriversCompanyDetails = function DriversCompanyDetails(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete the selected drivers company from API
+   */
+
+
+  var handleDeleteDriversCompany = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content, companies;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/driver_companies/").concat(driversCompany.id), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false
+                }));
+                companies = driversCompaniesState.companies.filter(function (company) {
+                  return company.id !== driversCompany.id;
+                });
+                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+                  companies: companies
+                }));
+                showToast(_ToastContext.ToastType.Success, t('DRIVER_COMPANY_DELETED', 'Driver company deleted'));
+                props.onClose && props.onClose();
+              } else {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleDeleteDriversCompany() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
 
   var handleChangesState = function handleChangesState(key, val) {
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, key, val)));
@@ -313,7 +390,8 @@ var DriversCompanyDetails = function DriversCompanyDetails(props) {
     handleChangesState: handleChangesState,
     handleUpdateDriversCompany: handleUpdateDriversCompany,
     handleAddDriversCompany: handleAddDriversCompany,
-    handleChangeScheduleState: handleChangeScheduleState
+    handleChangeScheduleState: handleChangeScheduleState,
+    handleDeleteDriversCompany: handleDeleteDriversCompany
   })));
 };
 

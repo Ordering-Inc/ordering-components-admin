@@ -99,6 +99,11 @@ var BusinessBrandListing = function BusinessBrandListing(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       formState = _useState6[0],
       setFormState = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      openDetail = _useState8[0],
+      setOpenDetail = _useState8[1];
   /**
    * Method to update brand list
    */
@@ -166,6 +171,7 @@ var BusinessBrandListing = function BusinessBrandListing(props) {
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('BRAND_DELETED', 'Brand deleted'));
+                setOpenDetail(false);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   result: content,
@@ -384,7 +390,9 @@ var BusinessBrandListing = function BusinessBrandListing(props) {
     brandListState: brandListState,
     handleChangeState: handleChangeState,
     brandFormState: formState,
-    handleDeleteBrand: deleteBrand
+    handleDeleteBrand: deleteBrand,
+    openDetail: openDetail,
+    setOpenDetail: setOpenDetail
   })));
 };
 

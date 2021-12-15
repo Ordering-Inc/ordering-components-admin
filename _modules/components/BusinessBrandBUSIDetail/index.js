@@ -27,15 +27,15 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -95,6 +95,41 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
       franchise_id: null
     };
     updateBusinessList(businessId, changes);
+  };
+
+  var handleSelectAllBusinesses = function handleSelectAllBusinesses(isAll, brandId) {
+    var changes;
+    var _businesses = [];
+
+    if (isAll) {
+      changes = {
+        franchise_id: brandId
+      };
+      businessList.businesses.forEach(function (business) {
+        if (business.franchise_id !== brandId) {
+          updateBusinessList(business.id, changes);
+          business.franchise_id = brandId;
+        }
+
+        _businesses.push(business);
+      });
+    } else {
+      changes = {
+        franchise_id: null
+      };
+      businessList.businesses.forEach(function (business) {
+        if (business.franchise_id !== null) {
+          updateBusinessList(business.id, changes);
+          business.franchise_id = null;
+        }
+
+        _businesses.push(business);
+      });
+    }
+
+    setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+      businesses: _businesses
+    }));
   };
   /**
    * Method to get business list from API
@@ -224,9 +259,11 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
 
                   return business;
                 });
-                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
-                  businesses: _businesses
-                }));
+                setBusinessList(function (preBusinessList) {
+                  return _objectSpread(_objectSpread({}, preBusinessList), {}, {
+                    businesses: _businesses
+                  });
+                });
                 showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
               }
 
@@ -258,7 +295,8 @@ var BusinessBrandBUSIDetail = function BusinessBrandBUSIDetail(props) {
     searchValue: searchValue,
     onSearch: setSearchValue,
     businessList: businessList,
-    handleChangeCheckBox: handleChangeCheckBox
+    handleChangeCheckBox: handleChangeCheckBox,
+    handleSelectAllBusinesses: handleSelectAllBusinesses
   })));
 };
 

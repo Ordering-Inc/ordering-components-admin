@@ -50,7 +50,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var UserDetails = function UserDetails(props) {
   var userId = props.userId,
       propsToFetch = props.propsToFetch,
-      UIComponent = props.UIComponent;
+      UIComponent = props.UIComponent,
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -130,8 +131,17 @@ var UserDetails = function UserDetails(props) {
       getUser();
     }
   }, [userId]);
+
+  var handleSuccessUserUpdate = function handleSuccessUserUpdate(updatedUser) {
+    setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+      user: Object.assign(userState.user, updatedUser)
+    }));
+    handleSuccessUpdate && handleSuccessUpdate(updatedUser);
+  };
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    userState: userState
+    userState: userState,
+    handleSuccessUserUpdate: handleSuccessUserUpdate
   })));
 };
 
@@ -164,21 +174,21 @@ UserDetails.propTypes = {
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after order details
-   * Array of type components, the parent props will pass to these components
-   */
+    * Components types after order details
+    * Array of type components, the parent props will pass to these components
+    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before order details
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+    * Elements before order details
+    * Array of HTML/Components elements, these components will not get the parent props
+    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after order details
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+    * Elements after order details
+    * Array of HTML/Components elements, these components will not get the parent props
+    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
 UserDetails.defaultProps = {
