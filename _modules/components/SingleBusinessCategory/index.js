@@ -441,6 +441,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'));
+                props.onClose && props.onClose(category.id);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
