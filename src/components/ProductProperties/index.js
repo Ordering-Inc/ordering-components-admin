@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useEvent } from '../../contexts/EventContext'
 
 /**
  * Component to manage product properties behavior without UI component
@@ -17,18 +18,23 @@ export const ProductProperties = (props) => {
     setFormTaxState,
     formTaxState,
     taxes,
-    setTaxes
+    setTaxes,
+    fees,
+    setFees
   } = props
   const [ordering] = useApi()
   const [session] = useSession()
+  const [events] = useEvent()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
   const [productState, setProductState] = useState(product)
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [formTaxChanges, setFormTaxChanges] = useState({})
-  const [taxToEdit, setTaxToEdit] = useState(null)
+  const [taxToEdit, setTaxToEdit] = useState({ action: null, payload: null })
   const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [timeout, setTimeoutCustom] = useState(null)
+
   /**
    * Method to update the product details from API
    */
@@ -98,11 +104,11 @@ export const ProductProperties = (props) => {
     })
   }
 
-  const handleSaveTax = async (id, inheritTax) => {
+  const handleSaveTax = async (id, action) => {
     let result
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
     if (id) {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const response = await fetch(`${ordering.root}/taxes/${id}`, {
+      const response = await fetch(`${ordering.root}/${action}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -112,54 +118,99 @@ export const ProductProperties = (props) => {
           ...formTaxChanges
         })
       })
-      const { result: tax } = await response.json()
-      result = tax
-      setTaxes({
-        ...taxes,
-        [`id:${tax.id}`]: {
-          name: tax.name,
-          description: tax.description,
-          id: tax.id,
-          rate: tax.rate,
-          type: tax.type
-        }
-      })
-      showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
+      const { result: data } = await response.json()
+      result = data
+      if (action === 'taxes') {
+        setTaxes({
+          ...taxes,
+          [`id:${data.id}`]: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            rate: data.rate,
+            type: data.type
+          }
+        })
+        events.emit('tax_changed', {
+          tax: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            rate: data.rate,
+            type: data.type
+          }
+        })
+        showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
+      } else {
+        setFees({
+          ...fees,
+          [`id:${data.id}`]: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            fixed: data.fixed,
+            percentage: data.percentage
+          }
+        })
+        events.emit('fee_changed', {
+          fee: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            fixed: data.fixed,
+            percentage: data.percentage
+          }
+        })
+        showToast(ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'))
+      }
     } else {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const response = await fetch(`${ordering.root}/taxes`, {
+      const response = await fetch(`${ordering.root}/${action}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.auth}`
         },
-        body: JSON.stringify(inheritTax || formTaxChanges)
+        body: JSON.stringify(formTaxChanges)
       })
-      const { result: tax } = await response.json()
-      setTaxes({
-        ...taxes,
-        [`id:${tax.id}`]: {
-          name: tax.name,
-          description: tax.description,
-          id: tax.id,
-          rate: tax.rate,
-          type: tax.type
-        }
-      })
-      showToast(ToastType.Success, t('PRODUCT_TAX_ADDED', 'Product tax added'))
+      const { result: data } = await response.json()
+      if (action === 'taxes') {
+        setTaxes({
+          ...taxes,
+          [`id:${data.id}`]: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            rate: data.rate,
+            type: data.type
+          }
+        })
+        showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
+      } else {
+        setFees({
+          ...fees,
+          [`id:${data.id}`]: {
+            name: data.name,
+            description: data.description,
+            id: data.id,
+            fixed: data.fixed,
+            percentage: data.percentage
+          }
+        })
+        showToast(ToastType.Success, t('PRODUCT_FEE_SAVED', 'Product fee saved'))
+      }
     }
     if (result?.error) return
-    setTaxToEdit(null)
+    setTaxToEdit({ action: null, payload: null })
   }
 
-  const handleDeleteTax = async (id) => {
+  const handleDeleteTax = async (id, action) => {
     setFormTaxState({
       ...formTaxState,
       loading: true
     })
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
     if (id) {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const response = await fetch(`${ordering.root}/taxes/${id}`, {
+      const response = await fetch(`${ordering.root}/${action}/${id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -168,21 +219,39 @@ export const ProductProperties = (props) => {
       })
       const { error } = await response.json()
       if (!error) {
-        const newTaxes = taxes
-        delete newTaxes[`id:${id}`]
-        setTaxes(newTaxes)
-        showToast(ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'))
+        if (action === 'taxes') {
+          const newTaxes = taxes
+          events.emit('tax_deleted', { tax: newTaxes[`id:${id}`], isRemove: true })
+          delete newTaxes[`id:${id}`]
+          setTaxes(newTaxes)
+          showToast(ToastType.Success, t('PRODUCT_TAX_DELETED', 'Product tax deleted'))
+        } else {
+          const newFees = fees
+          events.emit('fee_deleted', { tax: newFees[`id:${id}`], isRemove: true })
+          delete newFees[`id:${id}`]
+          setFees(newFees)
+          showToast(ToastType.Success, t('PRODUCT_FEE_DELETED', 'Product fee deleted'))
+        }
       }
-      setFormTaxState({
-        ...formTaxState,
-        loading: false
-      })
     }
+    setFormTaxState({
+      ...formTaxState,
+      loading: false
+    })
   }
 
   useEffect(() => {
     setProductState(product)
   }, [product])
+
+  useEffect(() => {
+    if (Object.keys(formState.changes).length > 0) {
+      clearInterval(timeout)
+      setTimeoutCustom(setTimeout(function () {
+        handleUpdateClick()
+      }, 1000))
+    }
+  }, [formState.changes])
 
   return (
     <>
@@ -191,6 +260,7 @@ export const ProductProperties = (props) => {
           {...props}
           productState={productState}
           taxes={taxes}
+          fees={fees}
           formTaxState={formTaxState}
           taxToEdit={taxToEdit}
           alertState={alertState}

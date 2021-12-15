@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const BusinessProductsListing = (props) => {
   const {
@@ -16,6 +17,7 @@ export const BusinessProductsListing = (props) => {
   } = props
 
   const [{ auth }] = useSession()
+  const [events] = useEvent()
   const [categorySelected, setCategorySelected] = useState(null)
   const [searchValue, setSearchValue] = useState(null)
   const [businessState, setBusinessState] = useState({ business: {}, menus: null, loading: true, error: null })
@@ -26,8 +28,9 @@ export const BusinessProductsListing = (props) => {
   const [businessSlug, setBusinessSlug] = useState(slug)
   const [isUpdateMode, setIsUpdateMode] = useState(false)
   const [taxes, setTaxes] = useState({})
+  const [fees, setFees] = useState({})
   const [formTaxState, setFormTaxState] = useState({ loading: false, changes: {}, result: { error: false } })
-
+  const [formFeeState, setFormFeeState] = useState({ loading: false, changes: {}, result: { error: false } })
   const categoryStateDefault = {
     loading: true,
     pagination: { currentPage: 0, pageSize: 20, totalItems: null, totalPages: 0, nextPageItems: 10 },
@@ -278,6 +281,35 @@ export const BusinessProductsListing = (props) => {
     })
   }
 
+  const getFees = async () => {
+    const feesObject = {}
+    setFormFeeState({
+      ...formFeeState,
+      loading: true
+    })
+    const response = await fetch(`${ordering.root}/fees`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${auth}`
+      }
+    })
+    const { error, result } = await response.json()
+    if (!error) {
+      result.forEach(fee => (feesObject[`id:${fee.id}`] = fee))
+      setFees(feesObject)
+      return
+    }
+    setFormFeeState({
+      ...formFeeState,
+      result: {
+        error: true,
+        result: feesObject
+      },
+      loading: false
+    })
+  }
+
   useEffect(() => {
     if (isInitialRender) {
       getProduct()
@@ -331,6 +363,66 @@ export const BusinessProductsListing = (props) => {
     setCategoryState(updatedCategory)
   }
 
+  const handleUpdateTaxesProducts = ({ tax, isRemove, id }) => {
+    const _categories = [...businessState?.business?.categories]
+    const replaceSameTaxes = (categories, tax) => {
+      for (let i = 0; i < categories?.length; i++) {
+        const category = categories[i]
+        for (let j = 0; j < category.products.length; j++) {
+          const product = category.products[j]
+          if (isRemove && product.tax?.id === tax.id) {
+            product.tax = null
+            product.tax_id = null
+          } else if (product.tax && product.tax?.id === tax.id) {
+            Object.assign(product.tax, tax)
+            product.tax_id = tax.id
+          }
+        }
+        if (category.subcategories?.length > 0) {
+          categories.subcategories = replaceSameTaxes(categories.subcategories, tax)
+        }
+      }
+      return categories
+    }
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState.business,
+        categories: replaceSameTaxes(_categories, tax)
+      }
+    })
+  }
+
+  const handleUpdateFeesProducts = ({ fee, isRemove }) => {
+    const _categories = [...businessState?.business?.categories]
+    const replaceSameFees = (categories, fee) => {
+      for (let i = 0; i < categories?.length; i++) {
+        const category = categories[i]
+        for (let j = 0; j < category.products.length; j++) {
+          const product = category.products[j]
+          if (isRemove && product.fee?.id === fee.id) {
+            product.fee = null
+            product.fee_id = null
+          } else if (product.fee && product.fee?.id === fee.id) {
+            Object.assign(product.fee, fee)
+            product.fee_id = fee.id
+          }
+        }
+        if (category.subcategories?.length > 0) {
+          categories.subcategories = replaceSameFees(categories.subcategories, fee)
+        }
+      }
+      return categories
+    }
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState.business,
+        categories: replaceSameFees(_categories, fee)
+      }
+    })
+  }
+
   useEffect(() => {
     if (businessState.loading) return
     if (!businessState.loading && (categorySelected || isAllCategoryProducts)) {
@@ -354,6 +446,21 @@ export const BusinessProductsListing = (props) => {
     }
   }, [businessSlug])
 
+  useEffect(() => {
+    if (Object.keys(businessState?.business)?.length > 0) {
+      events.on('tax_changed', handleUpdateTaxesProducts)
+      events.on('fee_changed', handleUpdateFeesProducts)
+      events.on('tax_deleted', handleUpdateTaxesProducts)
+      events.on('fee_deleted', handleUpdateFeesProducts)
+      return () => {
+        events.off('tax_changed', handleUpdateTaxesProducts)
+        events.off('fee_changed', handleUpdateFeesProducts)
+        events.off('tax_deleted', handleUpdateFeesProducts)
+        events.off('fee_deleted', handleUpdateFeesProducts)
+      }
+    }
+  }, [businessState?.business])
+
   /**
    * Cancel business request
    */
@@ -376,6 +483,7 @@ export const BusinessProductsListing = (props) => {
 
   useEffect(() => {
     getTaxes()
+    getFees()
   }, [])
 
   return (
@@ -405,6 +513,8 @@ export const BusinessProductsListing = (props) => {
           formTaxState={formTaxState}
           taxes={taxes}
           setTaxes={setTaxes}
+          fees={fees}
+          setFees={setFees}
         />
       )}
     </>
