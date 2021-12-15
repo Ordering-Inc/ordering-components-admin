@@ -7,12 +7,13 @@ export const UserDetails = (props) => {
   const {
     userId,
     propsToFetch,
-    UIComponent
+    UIComponent,
+    handleSuccessUpdate
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
-  const [userState, setUserState] = useState({ user: null, loading: false,  error: null })
+  const [userState, setUserState] = useState({ user: null, loading: false, error: null })
 
   /**
    * Method to get user from API
@@ -51,16 +52,25 @@ export const UserDetails = (props) => {
     }
   }, [userId])
 
+  const handleSuccessUserUpdate = (updatedUser) => {
+    setUserState({
+      ...userState,
+      user: Object.assign(userState.user, updatedUser)
+    })
+    handleSuccessUpdate && handleSuccessUpdate(updatedUser)
+  }
+
   return (
     <>
-    {
-      UIComponent && (
-        <UIComponent
-          {...props}
-          userState={userState}
-        />
-      )
-    }
+      {
+        UIComponent && (
+          <UIComponent
+            {...props}
+            userState={userState}
+            handleSuccessUserUpdate={handleSuccessUserUpdate}
+          />
+        )
+      }
     </>
   )
 }
@@ -89,22 +99,22 @@ UserDetails.propTypes = {
    * Components types before order details
    * Array of type components, the parent props will pass to these components
    */
-   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
-   /**
+  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
+  /**
     * Components types after order details
     * Array of type components, the parent props will pass to these components
     */
-   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
-   /**
+  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
+  /**
     * Elements before order details
     * Array of HTML/Components elements, these components will not get the parent props
     */
-   beforeElements: PropTypes.arrayOf(PropTypes.element),
-   /**
+  beforeElements: PropTypes.arrayOf(PropTypes.element),
+  /**
     * Elements after order details
     * Array of HTML/Components elements, these components will not get the parent props
     */
-   afterElements: PropTypes.arrayOf(PropTypes.element)
+  afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
 UserDetails.defaultProps = {
