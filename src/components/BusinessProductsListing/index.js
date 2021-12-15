@@ -16,7 +16,7 @@ export const BusinessProductsListing = (props) => {
     UIComponent
   } = props
 
-  const [{ auth }] = useSession()
+  const [{ token }] = useSession()
   const [events] = useEvent()
   const [categorySelected, setCategorySelected] = useState(null)
   const [searchValue, setSearchValue] = useState(null)
@@ -262,7 +262,7 @@ export const BusinessProductsListing = (props) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth}`
+        Authorization: `Bearer ${token}`
       }
     })
     const { error, result } = await response.json()
@@ -291,7 +291,7 @@ export const BusinessProductsListing = (props) => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${auth}`
+        Authorization: `Bearer ${token}`
       }
     })
     const { error, result } = await response.json()
