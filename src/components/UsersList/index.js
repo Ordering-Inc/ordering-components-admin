@@ -275,6 +275,7 @@ export const UsersList = (props) => {
    */
   const handleChangeUserType = async (user) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const requestsState = {}
       const source = {}
@@ -298,6 +299,7 @@ export const UsersList = (props) => {
           users = usersList.users.filter(_user => _user.id !== result.id)
         }
         setUsersList({ ...usersList, users })
+        showToast(ToastType.Success, t('UPDATED', 'Updated'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
