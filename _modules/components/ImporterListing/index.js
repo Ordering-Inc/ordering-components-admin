@@ -25,6 +25,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -240,6 +248,20 @@ var ImporterListing = function ImporterListing(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+  * Method to add user
+  * @param {Object} newImporter new user to add
+  */
+
+
+  var handleSuccessAddImporter = function handleSuccessAddImporter(newImporter) {
+    setImporterList(_objectSpread(_objectSpread({}, importerList), {}, {
+      importers: [].concat(_toConsumableArray(importerList.importers), [newImporter])
+    }));
+    setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+      total: paginationDetail !== null && paginationDetail !== void 0 && paginationDetail.total ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     getImporters(1, null);
@@ -250,7 +272,8 @@ var ImporterListing = function ImporterListing(props) {
     getImporters: getImporters,
     paginationProps: paginationProps,
     paginationDetail: paginationDetail,
-    handleDeleteImporter: handleDeleteImporter
+    handleDeleteImporter: handleDeleteImporter,
+    handleSuccessAddImporter: handleSuccessAddImporter
   })));
 };
 

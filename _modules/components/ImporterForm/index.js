@@ -1,7 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -33,6 +31,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -55,7 +55,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  * Component to create importer form without UI component
  */
 var ImporterForm = function ImporterForm(props) {
-  var UIComponent = props.UIComponent;
+  var UIComponent = props.UIComponent,
+      handleSuccessAdd = props.handleSuccessAdd;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -94,15 +95,20 @@ var ImporterForm = function ImporterForm(props) {
       fieldList = _useState6[0],
       setFieldList = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(false),
+  var _useState7 = (0, _react.useState)({}),
       _useState8 = _slicedToArray(_useState7, 2),
-      isEdit = _useState8[0],
-      setIsEdit = _useState8[1];
+      metafieldList = _useState8[0],
+      setMetaFieldList = _useState8[1];
 
-  var _useState9 = (0, _react.useState)({}),
+  var _useState9 = (0, _react.useState)(false),
       _useState10 = _slicedToArray(_useState9, 2),
-      editState = _useState10[0],
-      setEditState = _useState10[1];
+      isEdit = _useState10[0],
+      setIsEdit = _useState10[1];
+
+  var _useState11 = (0, _react.useState)({}),
+      _useState12 = _slicedToArray(_useState11, 2),
+      editState = _useState12[0],
+      setEditState = _useState12[1];
   /**
   * Update form state data
   * @param {EventTarget} e Related HTML event
@@ -153,6 +159,20 @@ var ImporterForm = function ImporterForm(props) {
     setFieldList(_fieldList);
   };
 
+  var addNewMetaField = function addNewMetaField(key, value) {
+    var field = _defineProperty({}, key, parseInt(value));
+
+    setMetaFieldList(_objectSpread(_objectSpread({}, metafieldList), field));
+    clearFieldForm();
+  };
+
+  var removeMetaField = function removeMetaField(metaFieldKey) {
+    var _metafieldList = _objectSpread({}, metafieldList);
+
+    delete _metafieldList[metaFieldKey];
+    setMetaFieldList(_metafieldList);
+  };
+
   var handleChangeSelect = function handleChangeSelect(type, value) {
     var currentChanges = {};
     currentChanges = _defineProperty({}, type, value);
@@ -186,67 +206,32 @@ var ImporterForm = function ImporterForm(props) {
   };
 
   var handleEditState = function handleEditState(seletedImpoter) {
-    var _seletedImpoter$mappi, _seletedImpoter$mappi20, _seletedImpoter$mappi21, _seletedImpoter$mappi22, _seletedImpoter$mappi23;
+    var _seletedImpoter$mappi, _seletedImpoter$mappi2;
 
-    if ((seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type) !== 'sync_businesses') {
-      handleChangeSelect('type', seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type);
+    var _metafieldList = {};
+    _metafieldList = seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi = seletedImpoter.mapping) === null || _seletedImpoter$mappi === void 0 ? void 0 : _seletedImpoter$mappi.metafields;
+
+    if (_typeof(_metafieldList) === 'object' && _metafieldList !== null) {
+      setMetaFieldList(_metafieldList);
     }
 
     var _fieldList = {};
-    _fieldList = seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi = seletedImpoter.mapping) === null || _seletedImpoter$mappi === void 0 ? void 0 : _seletedImpoter$mappi.fields;
+    _fieldList = seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi2 = seletedImpoter.mapping) === null || _seletedImpoter$mappi2 === void 0 ? void 0 : _seletedImpoter$mappi2.fields;
+
+    if (_typeof(_fieldList) === 'object' && _fieldList !== null) {
+      setFieldList(_fieldList);
+    }
+
     var _mappingState = {};
-
-    if ((seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type) === 'sync_businesses') {
-      var _seletedImpoter$mappi2, _seletedImpoter$mappi3, _seletedImpoter$mappi4, _seletedImpoter$mappi5, _seletedImpoter$mappi6, _seletedImpoter$mappi7;
-
-      _mappingState = {
-        id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi2 = seletedImpoter.mapping) === null || _seletedImpoter$mappi2 === void 0 ? void 0 : _seletedImpoter$mappi2.business_id,
-        externalId: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi3 = seletedImpoter.mapping) === null || _seletedImpoter$mappi3 === void 0 ? void 0 : _seletedImpoter$mappi3.external_business_id,
-        externalKey: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi4 = seletedImpoter.mapping) === null || _seletedImpoter$mappi4 === void 0 ? void 0 : _seletedImpoter$mappi4.external_business_key
-      };
-      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
-        business_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi5 = seletedImpoter.mapping) === null || _seletedImpoter$mappi5 === void 0 ? void 0 : _seletedImpoter$mappi5.business_id,
-        external_business_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi6 = seletedImpoter.mapping) === null || _seletedImpoter$mappi6 === void 0 ? void 0 : _seletedImpoter$mappi6.business_id,
-        external_business_key: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi7 = seletedImpoter.mapping) === null || _seletedImpoter$mappi7 === void 0 ? void 0 : _seletedImpoter$mappi7.business_id
-      }));
-    }
-
-    if ((seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type) === 'sync_categories') {
-      var _seletedImpoter$mappi8, _seletedImpoter$mappi9, _seletedImpoter$mappi10, _seletedImpoter$mappi11, _seletedImpoter$mappi12, _seletedImpoter$mappi13;
-
-      _mappingState = {
-        id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi8 = seletedImpoter.mapping) === null || _seletedImpoter$mappi8 === void 0 ? void 0 : _seletedImpoter$mappi8.category_id,
-        externalId: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi9 = seletedImpoter.mapping) === null || _seletedImpoter$mappi9 === void 0 ? void 0 : _seletedImpoter$mappi9.external_category_id,
-        externalKey: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi10 = seletedImpoter.mapping) === null || _seletedImpoter$mappi10 === void 0 ? void 0 : _seletedImpoter$mappi10.external_category_key
-      };
-      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
-        category_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi11 = seletedImpoter.mapping) === null || _seletedImpoter$mappi11 === void 0 ? void 0 : _seletedImpoter$mappi11.category_id,
-        external_category_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi12 = seletedImpoter.mapping) === null || _seletedImpoter$mappi12 === void 0 ? void 0 : _seletedImpoter$mappi12.external_category_id,
-        external_category_key: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi13 = seletedImpoter.mapping) === null || _seletedImpoter$mappi13 === void 0 ? void 0 : _seletedImpoter$mappi13.external_category_key
-      }));
-    }
-
-    if ((seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type) === 'sync_products') {
-      var _seletedImpoter$mappi14, _seletedImpoter$mappi15, _seletedImpoter$mappi16, _seletedImpoter$mappi17, _seletedImpoter$mappi18, _seletedImpoter$mappi19;
-
-      _mappingState = {
-        id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi14 = seletedImpoter.mapping) === null || _seletedImpoter$mappi14 === void 0 ? void 0 : _seletedImpoter$mappi14.product_id,
-        externalId: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi15 = seletedImpoter.mapping) === null || _seletedImpoter$mappi15 === void 0 ? void 0 : _seletedImpoter$mappi15.external_product_id,
-        externalKey: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi16 = seletedImpoter.mapping) === null || _seletedImpoter$mappi16 === void 0 ? void 0 : _seletedImpoter$mappi16.external_product_key
-      };
-      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
-        product_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi17 = seletedImpoter.mapping) === null || _seletedImpoter$mappi17 === void 0 ? void 0 : _seletedImpoter$mappi17.category_id,
-        external_product_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi18 = seletedImpoter.mapping) === null || _seletedImpoter$mappi18 === void 0 ? void 0 : _seletedImpoter$mappi18.external_category_id,
-        external_product_key: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi19 = seletedImpoter.mapping) === null || _seletedImpoter$mappi19 === void 0 ? void 0 : _seletedImpoter$mappi19.external_category_key
-      }));
-    }
-
+    _mappingState = seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.mapping;
+    setMappingState(_mappingState);
     setEditState(_objectSpread(_objectSpread({}, editState), {}, {
       name: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.name,
       slug: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.slug,
       type: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type,
       mapping: _mappingState,
-      fields: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi20 = seletedImpoter.mapping) === null || _seletedImpoter$mappi20 === void 0 ? void 0 : _seletedImpoter$mappi20.fields
+      fields: _fieldList,
+      metafields: _metafieldList
     }));
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
@@ -254,12 +239,6 @@ var ImporterForm = function ImporterForm(props) {
         slug: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.slug,
         type: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type
       })
-    }));
-    setFieldList(_fieldList);
-    setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
-      product_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi21 = seletedImpoter.mapping) === null || _seletedImpoter$mappi21 === void 0 ? void 0 : _seletedImpoter$mappi21.category_id,
-      external_product_id: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi22 = seletedImpoter.mapping) === null || _seletedImpoter$mappi22 === void 0 ? void 0 : _seletedImpoter$mappi22.external_category_id,
-      external_product_key: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : (_seletedImpoter$mappi23 = seletedImpoter.mapping) === null || _seletedImpoter$mappi23 === void 0 ? void 0 : _seletedImpoter$mappi23.external_category_key
     }));
   };
 
@@ -317,6 +296,14 @@ var ImporterForm = function ImporterForm(props) {
                     result: result
                   }
                 });
+
+                if (handleSuccessAdd) {
+                  handleSuccessAdd(result);
+                }
+
+                if (props.onClose) {
+                  props.onClose();
+                }
               }
 
               _context.next = 19;
@@ -347,6 +334,20 @@ var ImporterForm = function ImporterForm(props) {
   }();
 
   (0, _react.useEffect)(function () {
+    if (Object.keys(metafieldList).length !== 0) {
+      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
+        metafields: metafieldList
+      }));
+    }
+  }, [metafieldList]);
+  (0, _react.useEffect)(function () {
+    if (Object.keys(fieldList).length !== 0) {
+      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
+        fields: fieldList
+      }));
+    }
+  }, [fieldList]);
+  (0, _react.useEffect)(function () {
     if (Object.keys(mappingState).length !== 0) {
       var data = _objectSpread({}, mappingState);
 
@@ -357,17 +358,11 @@ var ImporterForm = function ImporterForm(props) {
       }));
     }
   }, [mappingState]);
-  (0, _react.useEffect)(function () {
-    if (Object.keys(fieldList).length !== 0) {
-      setMappingState(_objectSpread(_objectSpread({}, mappingState), {}, {
-        fields: fieldList
-      }));
-    }
-  }, [fieldList]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     mappingState: mappingState,
     fieldList: fieldList,
+    metafieldList: metafieldList,
     editState: editState,
     isEdit: isEdit,
     handleChangeInput: handleChangeInput,
@@ -375,6 +370,8 @@ var ImporterForm = function ImporterForm(props) {
     handleChangeMappingInput: handleChangeMappingInput,
     addNewField: addNewField,
     removeField: removeField,
+    addNewMetaField: addNewMetaField,
+    removeMetaField: removeMetaField,
     clearImorterForm: clearImorterForm,
     setIsEdit: setIsEdit,
     handleCreateImporter: handleCreateImporter,
