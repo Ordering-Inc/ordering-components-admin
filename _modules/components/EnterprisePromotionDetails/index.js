@@ -62,9 +62,12 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
   var promotion = props.promotion,
       promotionsList = props.promotionsList,
+      businessesList = props.businessesList,
+      sitesState = props.sitesState,
       UIComponent = props.UIComponent,
       handleSuccessUpdatePromotions = props.handleSuccessUpdatePromotions,
-      handleSuccessAddPromotion = props.handleSuccessAddPromotion;
+      handleSuccessAddPromotion = props.handleSuccessAddPromotion,
+      handleSuccessDeletePromotion = props.handleSuccessDeletePromotion;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
@@ -111,6 +114,16 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       isAddMode = _useState8[0],
       setIsAddMode = _useState8[1];
+
+  var _useState9 = (0, _react.useState)([]),
+      _useState10 = _slicedToArray(_useState9, 2),
+      selectedBusinessIds = _useState10[0],
+      setSelectedBusinessIds = _useState10[1];
+
+  var _useState11 = (0, _react.useState)([]),
+      _useState12 = _slicedToArray(_useState11, 2),
+      selectedSitesIds = _useState12[0],
+      setSelectedSitesIds = _useState12[1];
   /**
    * Clean formState
    */
@@ -171,7 +184,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
    */
 
 
-  var handleChangeSites = function handleChangeSites(checked, siteId) {
+  var handleSelectSite = function handleSelectSite(checked, siteId) {
     var _formState$changes;
 
     var sites = [];
@@ -194,9 +207,75 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       });
     }
 
+    setSelectedSitesIds(sites);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
         sites: sites
+      })
+    }));
+  };
+
+  var handleSelectAllBusiness = function handleSelectAllBusiness(isAll) {
+    var _businessesList$busin;
+
+    var businessIds = businessesList === null || businessesList === void 0 ? void 0 : (_businessesList$busin = businessesList.businesses) === null || _businessesList$busin === void 0 ? void 0 : _businessesList$busin.reduce(function (ids, business) {
+      return [].concat(_toConsumableArray(ids), [business.id]);
+    }, []);
+    var filteredIds = [];
+
+    if (isAll) {
+      filteredIds = _toConsumableArray(businessIds);
+    } else {
+      filteredIds = [];
+    }
+
+    setSelectedBusinessIds(filteredIds);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        businesses: filteredIds
+      })
+    }));
+  };
+
+  var handleSelectBusiness = function handleSelectBusiness(businessId, checked) {
+    var businessIds = _toConsumableArray(selectedBusinessIds);
+
+    var filteredIds = [];
+
+    if (checked) {
+      filteredIds = [].concat(_toConsumableArray(businessIds), [businessId]);
+    } else {
+      filteredIds = businessIds.filter(function (id) {
+        return id !== businessId;
+      });
+    }
+
+    setSelectedBusinessIds(filteredIds);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        businesses: filteredIds
+      })
+    }));
+  };
+
+  var handleSelectAllSites = function handleSelectAllSites(isAll) {
+    var _sitesState$sites;
+
+    var sitesIds = (_sitesState$sites = sitesState.sites) === null || _sitesState$sites === void 0 ? void 0 : _sitesState$sites.reduce(function (ids, site) {
+      return [].concat(_toConsumableArray(ids), [site.id]);
+    }, []);
+    var filteredIds = [];
+
+    if (isAll) {
+      filteredIds = _toConsumableArray(sitesIds);
+    } else {
+      filteredIds = [];
+    }
+
+    setSelectedSitesIds(filteredIds);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        sties: filteredIds
       })
     }));
   };
@@ -338,11 +417,13 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
               content = _context2.sent;
 
               if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                setActionState({
+                  error: null,
                   loading: false
-                }));
+                });
                 handleSuccessAddPromotion && handleSuccessAddPromotion(content.result);
                 showToast(_ToastContext.ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'));
+                props.onClose && props.onClose();
               } else {
                 setActionState({
                   loading: false,
@@ -373,6 +454,71 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete the business promotion
+   * @param {Number} promotionId promotion id
+   */
+
+
+  var handleDeletePromotion = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/offers/").concat(promotion.id), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                handleSuccessDeletePromotion && handleSuccessDeletePromotion(promotion.id);
+                showToast(_ToastContext.ToastType.Success, t('OFFER_DELETED', 'Offer deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleDeletePromotion() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (Object.keys(promotion).length === 0) {
@@ -386,15 +532,25 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
           type: 1,
           target: 1,
           rate_type: 1,
-          stackable: false // products: [{ id: 220, is_condition: true }],
-          // businesses: [3],
+          stackable: false,
+          rate: 5 // products: [{ id: 220, is_condition: true }],
           // categories: [11]
 
         }
       }));
     } else {
+      var _promotion$businesses, _promotion$sites;
+
       setIsAddMode(false);
       cleanFormState();
+      var businessIds = promotion === null || promotion === void 0 ? void 0 : (_promotion$businesses = promotion.businesses) === null || _promotion$businesses === void 0 ? void 0 : _promotion$businesses.reduce(function (ids, business) {
+        return [].concat(_toConsumableArray(ids), [business.id]);
+      }, []);
+      setSelectedBusinessIds(businessIds || []);
+      var sitesIds = promotion === null || promotion === void 0 ? void 0 : (_promotion$sites = promotion.sites) === null || _promotion$sites === void 0 ? void 0 : _promotion$sites.reduce(function (ids, site) {
+        return [].concat(_toConsumableArray(ids), [site.id]);
+      }, []);
+      setSelectedSitesIds(sitesIds || []);
     }
 
     setPromotionState(_objectSpread(_objectSpread({}, promotionState), {}, {
@@ -406,12 +562,18 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     promotionState: promotionState,
     formState: formState,
     actionState: actionState,
+    selectedBusinessIds: selectedBusinessIds,
+    selectedSitesIds: selectedSitesIds,
     handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
     handleUpdateClick: handleUpdateClick,
     handleAddPromotion: handleAddPromotion,
+    handleDeletePromotion: handleDeletePromotion,
     handleChangeItem: handleChangeItem,
-    handleChangeSites: handleChangeSites
+    handleSelectSite: handleSelectSite,
+    handleSelectAllBusiness: handleSelectAllBusiness,
+    handleSelectBusiness: handleSelectBusiness,
+    handleSelectAllSites: handleSelectAllSites
   })));
 };
 
