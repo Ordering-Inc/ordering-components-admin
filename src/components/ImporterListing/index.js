@@ -93,6 +93,24 @@ export const ImporterListing = (props) => {
     }
   }
 
+  /**
+* Method to add user
+* @param {Object} newImporter new user to add
+*/
+  const handleSuccessAddImporter = (newImporter) => {
+    setImporterList({
+      ...importerList,
+      importers: [
+        ...importerList.importers,
+        newImporter
+      ]
+    })
+    setPaginationDetail({
+      ...paginationDetail,
+      total: paginationDetail?.total ? paginationDetail?.total + 1 : 1
+    })
+  }
+
   useEffect(() => {
     getImporters(1, null)
   }, [])
@@ -108,6 +126,7 @@ export const ImporterListing = (props) => {
           paginationProps={paginationProps}
           paginationDetail={paginationDetail}
           handleDeleteImporter={handleDeleteImporter}
+          handleSuccessAddImporter={handleSuccessAddImporter}
         />
       )}
     </>

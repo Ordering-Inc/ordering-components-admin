@@ -27,6 +27,31 @@ export const BusinessBrandBUSIDetail = (props) => {
     updateBusinessList(businessId, changes)
   }
 
+  const handleSelectAllBusinesses = (isAll, brandId) => {
+    let changes
+    const _businesses = []
+    if (isAll) {
+      changes = { franchise_id: brandId }
+      businessList.businesses.forEach(business => {
+        if (business.franchise_id !== brandId) {
+          updateBusinessList(business.id, changes)
+          business.franchise_id = brandId
+        }
+        _businesses.push(business)
+      })
+    } else {
+      changes = { franchise_id: null }
+      businessList.businesses.forEach(business => {
+        if (business.franchise_id !== null) {
+          updateBusinessList(business.id, changes)
+          business.franchise_id = null
+        }
+        _businesses.push(business)
+      })
+    }
+    setBusinessList({ ...businessList, businesses: _businesses })
+  }
+
   /**
    * Method to get business list from API
    */
@@ -108,7 +133,7 @@ export const BusinessBrandBUSIDetail = (props) => {
           }
           return business
         })
-        setBusinessList({ ...businessList, businesses: _businesses })
+        setBusinessList(preBusinessList => ({ ...preBusinessList, businesses: _businesses }))
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
     } catch (error) {
@@ -129,6 +154,7 @@ export const BusinessBrandBUSIDetail = (props) => {
           onSearch={setSearchValue}
           businessList={businessList}
           handleChangeCheckBox={handleChangeCheckBox}
+          handleSelectAllBusinesses={handleSelectAllBusinesses}
         />
       )}
     </>

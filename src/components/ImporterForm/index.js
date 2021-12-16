@@ -9,9 +9,10 @@ import { useLanguage } from '../../contexts/LanguageContext'
  * Component to create importer form without UI component
  */
 
-export const ImporterForm = (props) => {
+ export const ImporterForm = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    handleSuccessAdd
   } = props
   const [ordering] = useApi()
   const [session] = useSession()
@@ -20,6 +21,7 @@ export const ImporterForm = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [mappingState, setMappingState] = useState({})
   const [fieldList, setFieldList] = useState({})
+  const [metafieldList, setMetaFieldList] = useState({})
   const [isEdit, setIsEdit] = useState(false)
   const [editState, setEditState] = useState({})
 
@@ -80,6 +82,20 @@ export const ImporterForm = (props) => {
     setFieldList(_fieldList)
   }
 
+  const addNewMetaField = (key, value) => {
+    const field = { [key]: parseInt(value) }
+    setMetaFieldList({
+      ...metafieldList, ...field
+    })
+    clearFieldForm()
+  }
+
+  const removeMetaField = (metaFieldKey) => {
+    const _metafieldList = { ...metafieldList }
+    delete _metafieldList[metaFieldKey]
+    setMetaFieldList(_metafieldList)
+  }
+
   const handleChangeSelect = (type, value) => {
     let currentChanges = {}
     currentChanges = { [type]: value }
@@ -115,65 +131,30 @@ export const ImporterForm = (props) => {
   }
 
   const handleEditState = (seletedImpoter) => {
-    if (seletedImpoter?.type !== 'sync_businesses') {
-      handleChangeSelect('type', seletedImpoter?.type)
+    let _metafieldList = {}
+    _metafieldList = seletedImpoter?.mapping?.metafields
+    if (typeof _metafieldList === 'object' && _metafieldList !== null) {
+      setMetaFieldList(_metafieldList)
     }
+
     let _fieldList = {}
     _fieldList = seletedImpoter?.mapping?.fields
+    if (typeof _fieldList === 'object' && _fieldList !== null) {
+      setFieldList(_fieldList)
+    }
 
     let _mappingState = {}
-    if (seletedImpoter?.type === 'sync_businesses') {
-      _mappingState = {
-        id: seletedImpoter?.mapping?.business_id,
-        externalId: seletedImpoter?.mapping?.external_business_id,
-        externalKey: seletedImpoter?.mapping?.external_business_key
-      }
-
-      setMappingState({
-        ...mappingState,
-        business_id: seletedImpoter?.mapping?.business_id,
-        external_business_id: seletedImpoter?.mapping?.business_id,
-        external_business_key: seletedImpoter?.mapping?.business_id
-      })
-    }
-    if (seletedImpoter?.type === 'sync_categories') {
-      _mappingState = {
-        id: seletedImpoter?.mapping?.category_id,
-        externalId: seletedImpoter?.mapping?.external_category_id,
-        externalKey: seletedImpoter?.mapping?.external_category_key
-      }
-
-      setMappingState({
-        ...mappingState,
-        category_id: seletedImpoter?.mapping?.category_id,
-        external_category_id: seletedImpoter?.mapping?.external_category_id,
-        external_category_key: seletedImpoter?.mapping?.external_category_key
-      })
-    }
-    if (seletedImpoter?.type === 'sync_products') {
-      _mappingState = {
-        id: seletedImpoter?.mapping?.product_id,
-        externalId: seletedImpoter?.mapping?.external_product_id,
-        externalKey: seletedImpoter?.mapping?.external_product_key
-      }
-
-      setMappingState({
-        ...mappingState,
-        product_id: seletedImpoter?.mapping?.category_id,
-        external_product_id: seletedImpoter?.mapping?.external_category_id,
-        external_product_key: seletedImpoter?.mapping?.external_category_key
-      })
-    }
-
+    _mappingState = seletedImpoter?.mapping
+    setMappingState(_mappingState)
     setEditState({
       ...editState,
       name: seletedImpoter?.name,
       slug: seletedImpoter?.slug,
       type: seletedImpoter?.type,
       mapping: _mappingState,
-      fields: seletedImpoter?.mapping?.fields
+      fields: _fieldList,
+      metafields: _metafieldList
     })
-
     setFormState({
       ...formState,
       changes: {
@@ -182,15 +163,6 @@ export const ImporterForm = (props) => {
         slug: seletedImpoter?.slug,
         type: seletedImpoter?.type
       }
-    })
-
-    setFieldList(_fieldList)
-
-    setMappingState({
-      ...mappingState,
-      product_id: seletedImpoter?.mapping?.category_id,
-      external_product_id: seletedImpoter?.mapping?.external_category_id,
-      external_product_key: seletedImpoter?.mapping?.external_category_key
     })
   }
 
@@ -230,6 +202,12 @@ export const ImporterForm = (props) => {
             result: result
           }
         })
+        if (handleSuccessAdd) {
+          handleSuccessAdd(result)
+        }
+        if (props.onClose) {
+          props.onClose()
+        }
       }
     } catch (error) {
       setFormState({
@@ -244,6 +222,24 @@ export const ImporterForm = (props) => {
   }
 
   useEffect(() => {
+    if (Object.keys(metafieldList).length !== 0) {
+      setMappingState({
+        ...mappingState,
+        metafields: metafieldList
+      })
+    }
+  }, [metafieldList])
+
+  useEffect(() => {
+    if (Object.keys(fieldList).length !== 0) {
+      setMappingState({
+        ...mappingState,
+        fields: fieldList
+      })
+    }
+  }, [fieldList])
+
+  useEffect(() => {
     if (Object.keys(mappingState).length !== 0) {
       const data = { ...mappingState }
       setFormState({
@@ -256,15 +252,6 @@ export const ImporterForm = (props) => {
     }
   }, [mappingState])
 
-  useEffect(() => {
-    if (Object.keys(fieldList).length !== 0) {
-      setMappingState({
-        ...mappingState,
-        fields: fieldList
-      })
-    }
-  }, [fieldList])
-
   return (
     <>
       {UIComponent && (
@@ -273,6 +260,7 @@ export const ImporterForm = (props) => {
           formState={formState}
           mappingState={mappingState}
           fieldList={fieldList}
+          metafieldList={metafieldList}
           editState={editState}
           isEdit={isEdit}
           handleChangeInput={handleChangeInput}
@@ -280,6 +268,8 @@ export const ImporterForm = (props) => {
           handleChangeMappingInput={handleChangeMappingInput}
           addNewField={addNewField}
           removeField={removeField}
+          addNewMetaField={addNewMetaField}
+          removeMetaField={removeMetaField}
           clearImorterForm={clearImorterForm}
           setIsEdit={setIsEdit}
           handleCreateImporter={handleCreateImporter}

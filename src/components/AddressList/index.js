@@ -14,7 +14,9 @@ export const AddressList = (props) => {
     UIComponent,
     changeOrderAddressWithDefault,
     handleClickSetDefault,
-    handleClickDelete
+    handleClickDelete,
+    handleSuccessUpdate,
+    userState
   } = props
 
   const [ordering] = useApi()
@@ -125,6 +127,10 @@ export const AddressList = (props) => {
           return _address.id !== address.id
         })
         setAddressList({ ...addressList, addresses })
+        if (handleSuccessUpdate) {
+          const updatedUser = { ...userState.user, addresses: addresses }
+          handleSuccessUpdate(updatedUser)
+        }
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })

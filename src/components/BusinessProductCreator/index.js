@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage CreateBusinessProduct behavior without UI component
@@ -18,6 +20,9 @@ export const BusinessProductCreator = (props) => {
 
   const [{ loading }] = useSession()
   const [ordering] = useApi()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [formState, setFormState] = useState({ loading: false, changes: { enabled: true }, result: { error: false } })
 
   /**
@@ -71,6 +76,7 @@ export const BusinessProductCreator = (props) => {
   const handleUpdateClick = async () => {
     if (loading) return
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       let categoryId
       if (categorySelected.id === null && categorySelected.id === 'featured') {
         categoryId = parseInt(business?.categories[0])
@@ -104,6 +110,7 @@ export const BusinessProductCreator = (props) => {
         }
         setIsAddProduct(false)
         handleParentProductAdd && handleParentProductAdd(false)
+        showToast(ToastType.Success, t('PRODUCT_ADD', 'Product added'))
       } else {
         setFormState({
           ...formState,
