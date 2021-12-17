@@ -414,7 +414,7 @@ var InvoiceDriverManager = function InvoiceDriverManager(props) {
       misc_amount: driverInvocing.misc_amount,
       misc_description: driverInvocing.misc_description,
       orders_subtotal: orders.reduce(function (previous, current) {
-        return previous + getSubtotal(current) + (current.tax_type === 1 ? getTax(current) : 0);
+        return previous + getSubtotal(current);
       }, 0),
       orders_total: orders.reduce(function (previous, current) {
         return previous + getTotal(current);
