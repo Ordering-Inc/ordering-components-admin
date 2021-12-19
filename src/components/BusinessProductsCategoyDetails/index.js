@@ -203,11 +203,11 @@ export const BusinessProductsCategoyDetails = (props) => {
           loading: false
         })
         if (handleUpdateBusinessState) {
-          const _categories = [...businessState.business.categories]
+          const _categories = businessState.business.categories
           if (content?.result.parent_category_id) {
             _categories.forEach(function iterate (category) {
               if (category.id === content?.result.parent_category_id) {
-                category.subcategories.push({ ...content.result, products: [] })
+                category.subcategories.push({ ...content.result, products: [], subcategories: [] })
               }
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
