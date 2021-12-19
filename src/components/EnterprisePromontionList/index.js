@@ -31,6 +31,7 @@ export const EnterprisePromontionList = (props) => {
   const [dataSelected, setDataSelected] = useState(null)
   const [sitesState, setSitesState] = useState({ loading: false, sites: [], error: null })
   const [paymethodsState, setPaymethodsState] = useState({ loading: false, paymethods: [], error: null })
+  const [businessesList, setBusinessesList] = useState({ businesses: [], loading: false, error: null })
 
   /**
    * Method to get the promotions from API
@@ -150,38 +151,6 @@ export const EnterprisePromontionList = (props) => {
   }
 
   /**
-   * Method to delete the business promotion
-   * @param {Number} promotionId promotion id
-   */
-  const handleDeletePromotion = async (promotionId) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const response = await fetch(`${ordering.root}/offers/${promotionId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        const _promotions = promotionListState.promotions.filter(promotion => promotion.id !== promotionId)
-        setPromotionListState({ ...promotionListState, promotions: _promotions })
-        setPaginationProps({
-          ...paginationProps,
-          to: paginationProps?.to - 1,
-          total: paginationProps?.total - 1
-        })
-        showToast(ToastType.Success, t('OFFER_DELETED', 'Offer deleted'))
-      }
-    } catch (err) {
-      setActionState({ loading: false, error: [err.message] })
-    }
-  }
-
-  /**
    * Method to handle drag start
    */
   const handleDragStart = (event, promotion) => {
@@ -282,6 +251,19 @@ export const EnterprisePromontionList = (props) => {
   }
 
   /**
+   * Method to delete the promotion in the promotion list
+   * @param {Number} promotionId promotion to delete
+   */
+  const handleSuccessDeletePromotion = (promotionId) => {
+    const promotions = promotionListState.promotions.filter(promotion => promotion.id !== promotionId)
+    setPaginationProps({
+      ...paginationProps,
+      total: paginationProps?.total - 1
+    })
+    setPromotionListState({ ...promotionListState, promotions })
+  }
+
+  /**
    * Method to get all the sites from API
    */
   const getSites = async () => {
@@ -335,6 +317,26 @@ export const EnterprisePromontionList = (props) => {
     }
   }
 
+  /**
+   * Method to get businesses from API
+   */
+  const getBusinesses = async () => {
+    try {
+      setBusinessesList({ ...businessesList, loading: false })
+      const { content: { error, result } } = await ordering
+        .setAccessToken(token)
+        .businesses()
+        .select(['name', 'logo'])
+        .asDashboard()
+        .get()
+      if (!error) {
+        setBusinessesList({ ...businessesList, loading: false, businesses: result })
+      }
+    } catch (err) {
+      setBusinessesList({ ...businessesList, loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
     if (promotionListState.loading) return
     getPromotions(1, paginationProps.pageSize)
@@ -342,6 +344,7 @@ export const EnterprisePromontionList = (props) => {
 
   useEffect(() => {
     getSites()
+    getBusinesses()
     getPaymethods()
   }, [])
 
@@ -352,6 +355,7 @@ export const EnterprisePromontionList = (props) => {
           <UIComponent
             {...props}
             sitesState={sitesState}
+            businessesList={businessesList}
             paymethodsState={paymethodsState}
             promotionListState={promotionListState}
             paginationProps={paginationProps}
@@ -365,9 +369,9 @@ export const EnterprisePromontionList = (props) => {
             handleDrop={handleDrop}
             handleDragEnd={handleDragEnd}
             handleEnablePromotion={handleEnablePromotion}
-            handleDeletePromotion={handleDeletePromotion}
             handleSuccessUpdatePromotions={handleSuccessUpdatePromotions}
             handleSuccessAddPromotion={handleSuccessAddPromotion}
+            handleSuccessDeletePromotion={handleSuccessDeletePromotion}
           />
         )
       }

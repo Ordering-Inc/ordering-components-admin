@@ -9,9 +9,12 @@ export const EnterprisePromotionDetails = (props) => {
   const {
     promotion,
     promotionsList,
+    businessesList,
+    sitesState,
     UIComponent,
     handleSuccessUpdatePromotions,
-    handleSuccessAddPromotion
+    handleSuccessAddPromotion,
+    handleSuccessDeletePromotion
   } = props
 
   const [, t] = useLanguage()
@@ -23,6 +26,8 @@ export const EnterprisePromotionDetails = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {} })
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
+  const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
+  const [selectedSitesIds, setSelectedSitesIds] = useState([])
 
   /**
    * Clean formState
@@ -76,7 +81,7 @@ export const EnterprisePromotionDetails = (props) => {
   /**
    * Method to change the sites
    */
-  const handleChangeSites = (checked, siteId) => {
+  const handleSelectSite = (checked, siteId) => {
     let sites = []
     if (formState.changes?.sites) {
       sites = [...formState.changes?.sites]
@@ -88,11 +93,66 @@ export const EnterprisePromotionDetails = (props) => {
     } else {
       sites = sites.filter(id => id !== siteId)
     }
+    setSelectedSitesIds(sites)
     setFormState({
       ...formState,
       changes: {
         ...formState.changes,
         sites: sites
+      }
+    })
+  }
+
+  const handleSelectAllBusiness = (isAll) => {
+    const businessIds = businessesList?.businesses?.reduce((ids, business) => [...ids, business.id], [])
+    let filteredIds = []
+    if (isAll) {
+      filteredIds = [...businessIds]
+    } else {
+      filteredIds = []
+    }
+    setSelectedBusinessIds(filteredIds)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        businesses: filteredIds
+      }
+    })
+  }
+
+  const handleSelectBusiness = (businessId, checked) => {
+    const businessIds = [...selectedBusinessIds]
+    let filteredIds = []
+    if (checked) {
+      filteredIds = [...businessIds, businessId]
+    } else {
+      filteredIds = businessIds.filter(id => id !== businessId)
+    }
+    setSelectedBusinessIds(filteredIds)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        businesses: filteredIds
+      }
+    })
+  }
+
+  const handleSelectAllSites = (isAll) => {
+    const sitesIds = sitesState.sites?.reduce((ids, site) => [...ids, site.id], [])
+    let filteredIds = []
+    if (isAll) {
+      filteredIds = [...sitesIds]
+    } else {
+      filteredIds = []
+    }
+    setSelectedSitesIds(filteredIds)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        sties: filteredIds
       }
     })
   }
@@ -174,9 +234,10 @@ export const EnterprisePromotionDetails = (props) => {
       const response = await fetch(`${ordering.root}/offers`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setActionState({ ...actionState, loading: false })
+        setActionState({ error: null, loading: false })
         handleSuccessAddPromotion && handleSuccessAddPromotion(content.result)
         showToast(ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'))
+        props.onClose && props.onClose()
       } else {
         setActionState({
           loading: false,
@@ -188,6 +249,33 @@ export const EnterprisePromotionDetails = (props) => {
         loading: false,
         error: err.message
       })
+    }
+  }
+
+  /**
+   * Method to delete the business promotion
+   * @param {Number} promotionId promotion id
+   */
+  const handleDeletePromotion = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/offers/${promotion.id}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        handleSuccessDeletePromotion && handleSuccessDeletePromotion(promotion.id)
+        showToast(ToastType.Success, t('OFFER_DELETED', 'Offer deleted'))
+        props.onClose && props.onClose()
+      }
+    } catch (err) {
+      setActionState({ loading: false, error: [err.message] })
     }
   }
 
@@ -204,15 +292,19 @@ export const EnterprisePromotionDetails = (props) => {
           type: 1,
           target: 1,
           rate_type: 1,
-          stackable: false
+          stackable: false,
+          rate: 5
           // products: [{ id: 220, is_condition: true }],
-          // businesses: [3],
           // categories: [11]
         }
       })
     } else {
       setIsAddMode(false)
       cleanFormState()
+      const businessIds = promotion?.businesses?.reduce((ids, business) => [...ids, business.id], [])
+      setSelectedBusinessIds(businessIds || [])
+      const sitesIds = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
+      setSelectedSitesIds(sitesIds || [])
     }
     setPromotionState({ ...promotionState, promotion: promotion })
   }, [promotion])
@@ -227,12 +319,18 @@ export const EnterprisePromotionDetails = (props) => {
             promotionState={promotionState}
             formState={formState}
             actionState={actionState}
+            selectedBusinessIds={selectedBusinessIds}
+            selectedSitesIds={selectedSitesIds}
             handleChangeImage={handleChangeImage}
             handleChangeInput={handleChangeInput}
             handleUpdateClick={handleUpdateClick}
             handleAddPromotion={handleAddPromotion}
+            handleDeletePromotion={handleDeletePromotion}
             handleChangeItem={handleChangeItem}
-            handleChangeSites={handleChangeSites}
+            handleSelectSite={handleSelectSite}
+            handleSelectAllBusiness={handleSelectAllBusiness}
+            handleSelectBusiness={handleSelectBusiness}
+            handleSelectAllSites={handleSelectAllSites}
           />
         )
       }
