@@ -89,6 +89,61 @@ export const ProductDetatils = (props) => {
   }
 
   /**
+ * Method to edit a product
+ */
+  const handleDeleteProduct = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({
+        ...formState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(product?.id).delete()
+      if (!error) {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: false,
+            result: result
+          }
+        })
+        if (handleUpdateBusinessState) {
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.filter(_product => _product.id !== product.id)
+              category.products = [..._products]
+            }
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
+        showToast(ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'))
+        props.onClose && props.onClose()
+      } else {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
+      })
+    }
+  }
+
+  /**
    * Method to change the product enabled state
    */
   const handleChangeProductActiveState = () => {
@@ -145,6 +200,7 @@ export const ProductDetatils = (props) => {
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           handleUpdateClick={handleUpdateClick}
+          handleDeleteProduct={handleDeleteProduct}
         />
       )}
     </>
