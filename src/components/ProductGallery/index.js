@@ -280,18 +280,30 @@ export const ProductGallery = (props) => {
    */
   let timeout = null
   const handleChangeInput = (e, itemId) => {
+    if (!itemId) {
+      handleChangeState(e, itemId)
+      return
+    }
     e.persist()
     clearTimeout(timeout)
     timeout = setTimeout(function () {
-      setChangesState({
-        ...changesState,
-        changes: {
-          ...changesState.changes,
-          [e.target.name]: e.target.value
-        },
-        itemId: itemId
-      })
+      handleChangeState(e, itemId)
     }, 1000)
+  }
+
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeState = (e, itemId) => {
+    setChangesState({
+      ...changesState,
+      changes: {
+        ...changesState.changes,
+        [e.target.name]: e.target.value
+      },
+      itemId: itemId
+    })
   }
 
   /**
