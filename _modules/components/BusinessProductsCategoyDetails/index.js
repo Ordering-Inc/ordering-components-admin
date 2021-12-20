@@ -376,13 +376,14 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = _toConsumableArray(businessState.business.categories);
+                  _categories = businessState.business.categories;
 
                   if (content !== null && content !== void 0 && content.result.parent_category_id) {
                     _categories.forEach(function iterate(category) {
                       if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                         category.subcategories.push(_objectSpread(_objectSpread({}, content.result), {}, {
-                          products: []
+                          products: [],
+                          subcategories: []
                         }));
                       }
 

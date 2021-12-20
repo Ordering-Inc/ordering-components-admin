@@ -94,11 +94,17 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
       _useSession2$ = _useSession2[0],
       token = _useSession2$.token,
       loading = _useSession2$.loading;
+
+  var _useState7 = (0, _react.useState)(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      searchValue = _useState8[0],
+      setSearchValue = _useState8[1];
+
+  var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
    * Method to change driver group id
    * @param {number} id
    */
-
 
   var handleChangeDriverGroupId = function handleChangeDriverGroupId(id) {
     var found = driverGroupIds === null || driverGroupIds === void 0 ? void 0 : driverGroupIds.find(function (groupId) {
@@ -195,7 +201,7 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
 
   var getDriverGroups = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination, enabledDriverGroups;
+      var where, conditions, searchConditions, isSpecialCharacter, requestOptions, functionFetch, response, _yield$response$json, error, result, pagination, enabledDriverGroups;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -213,6 +219,32 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
               setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
                 loading: true
               }));
+              where = null;
+              conditions = [];
+
+              if (searchValue) {
+                searchConditions = [];
+                isSpecialCharacter = rex.test(searchValue);
+                searchConditions.push({
+                  attribute: 'name',
+                  value: {
+                    condition: 'ilike',
+                    value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
+                  }
+                });
+                conditions.push({
+                  conector: 'AND',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
               requestOptions = {
                 method: 'GET',
                 headers: {
@@ -220,16 +252,16 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = "".concat(ordering.root, "/drivergroups?params=").concat(propsToFetch);
-              _context.next = 8;
+              functionFetch = where ? "".concat(ordering.root, "/drivergroups?params=").concat(propsToFetch, "&where=").concat(JSON.stringify(conditions[0])) : "".concat(ordering.root, "/drivergroups?params=").concat(propsToFetch);
+              _context.next = 12;
               return fetch(functionFetch, requestOptions);
 
-            case 8:
+            case 12:
               response = _context.sent;
-              _context.next = 11;
+              _context.next = 15;
               return response.json();
 
-            case 11:
+            case 15:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -251,23 +283,23 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
                 }));
               }
 
-              _context.next = 21;
+              _context.next = 25;
               break;
 
-            case 18:
-              _context.prev = 18;
+            case 22:
+              _context.prev = 22;
               _context.t0 = _context["catch"](2);
               setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 21:
+            case 25:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 18]]);
+      }, _callee, null, [[2, 22]]);
     }));
 
     return function getDriverGroups() {
@@ -292,13 +324,20 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
     setDriverGroupIds(_toConsumableArray((filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids) || _groupIds));
     if (!(filterList !== null && filterList !== void 0 && filterList.driver_groups_ids) || (filterList === null || filterList === void 0 ? void 0 : (_filterList$driver_gr = filterList.driver_groups_ids) === null || _filterList$driver_gr === void 0 ? void 0 : _filterList$driver_gr.length) === (driverGroupList === null || driverGroupList === void 0 ? void 0 : driverGroupList.driverGroups.length)) setIsAllCheck(true);
   }, [driverGroupList === null || driverGroupList === void 0 ? void 0 : driverGroupList.driverGroups]);
+  (0, _react.useEffect)(function () {
+    var controller = new AbortController();
+    getDriverGroups();
+    return controller.abort();
+  }, [searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driverGroupList: driverGroupList,
     driverGroupIds: driverGroupIds,
     handleChangeDriverGroupId: handleChangeDriverGroupId,
     handleClickFilterButton: handleClickFilterButton,
     isAllCheck: isAllCheck,
-    handleChangeAllCheck: handleChangeAllCheck
+    handleChangeAllCheck: handleChangeAllCheck,
+    searchValue: searchValue,
+    onSearch: setSearchValue
   })));
 };
 

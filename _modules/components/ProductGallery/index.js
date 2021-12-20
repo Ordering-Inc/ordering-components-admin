@@ -563,14 +563,28 @@ var ProductGallery = function ProductGallery(props) {
   var timeout = null;
 
   var handleChangeInput = function handleChangeInput(e, itemId) {
+    if (!itemId) {
+      handleChangeState(e, itemId);
+      return;
+    }
+
     e.persist();
     clearTimeout(timeout);
     timeout = setTimeout(function () {
-      setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-        changes: _objectSpread(_objectSpread({}, changesState.changes), {}, _defineProperty({}, e.target.name, e.target.value)),
-        itemId: itemId
-      }));
+      handleChangeState(e, itemId);
     }, 1000);
+  };
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeState = function handleChangeState(e, itemId) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      changes: _objectSpread(_objectSpread({}, changesState.changes), {}, _defineProperty({}, e.target.name, e.target.value)),
+      itemId: itemId
+    }));
   };
   /**
    * Method to add new product from changes

@@ -138,6 +138,15 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
       _useState14 = _slicedToArray(_useState13, 2),
       paymethodsState = _useState14[0],
       setPaymethodsState = _useState14[1];
+
+  var _useState15 = (0, _react.useState)({
+    businesses: [],
+    loading: false,
+    error: null
+  }),
+      _useState16 = _slicedToArray(_useState15, 2),
+      businessesList = _useState16[0],
+      setBusinessesList = _useState16[1];
   /**
    * Method to get the promotions from API
    */
@@ -333,80 +342,6 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
     };
   }();
   /**
-   * Method to delete the business promotion
-   * @param {Number} promotionId promotion id
-   */
-
-
-  var handleDeletePromotion = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(promotionId) {
-      var requestOptions, response, content, _promotions;
-
-      return _regenerator.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context3.next = 6;
-              return fetch("".concat(ordering.root, "/offers/").concat(promotionId), requestOptions);
-
-            case 6:
-              response = _context3.sent;
-              _context3.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context3.sent;
-
-              if (!content.error) {
-                _promotions = promotionListState.promotions.filter(function (promotion) {
-                  return promotion.id !== promotionId;
-                });
-                setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-                  promotions: _promotions
-                }));
-                setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
-                  to: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.to) - 1,
-                  total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) - 1
-                }));
-                showToast(_ToastContext.ToastType.Success, t('OFFER_DELETED', 'Offer deleted'));
-              }
-
-              _context3.next = 16;
-              break;
-
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context3.t0.message]
-              });
-
-            case 16:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 13]]);
-    }));
-
-    return function handleDeletePromotion(_x5) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
    * Method to handle drag start
    */
 
@@ -467,13 +402,13 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
 
 
   var handleChangeCategoryRank = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(transferCategoryId, params) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(transferCategoryId, params) {
       var requestOptions, response, content;
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context4.prev = 0;
+              _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
@@ -486,42 +421,42 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
                 },
                 body: JSON.stringify(params)
               };
-              _context4.next = 6;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/offers/").concat(transferCategoryId), requestOptions);
 
             case 6:
-              response = _context4.sent;
-              _context4.next = 9;
+              response = _context3.sent;
+              _context3.next = 9;
               return response.json();
 
             case 9:
-              content = _context4.sent;
+              content = _context3.sent;
 
               if (!content.error) {
                 showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
               }
 
-              _context4.next = 16;
+              _context3.next = 16;
               break;
 
             case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](0);
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
               setActionState({
                 loading: false,
-                error: [_context4.t0.message]
+                error: [_context3.t0.message]
               });
 
             case 16:
             case "end":
-              return _context4.stop();
+              return _context3.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleChangeCategoryRank(_x6, _x7) {
-      return _ref4.apply(this, arguments);
+    return function handleChangeCategoryRank(_x5, _x6) {
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -551,18 +486,35 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
     }));
   };
   /**
+   * Method to delete the promotion in the promotion list
+   * @param {Number} promotionId promotion to delete
+   */
+
+
+  var handleSuccessDeletePromotion = function handleSuccessDeletePromotion(promotionId) {
+    var promotions = promotionListState.promotions.filter(function (promotion) {
+      return promotion.id !== promotionId;
+    });
+    setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+      total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) - 1
+    }));
+    setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
+      promotions: promotions
+    }));
+  };
+  /**
    * Method to get all the sites from API
    */
 
 
   var getSites = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
       var requestOptions, response, content;
-      return _regenerator.default.wrap(function _callee5$(_context5) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context5.prev = 0;
+              _context4.prev = 0;
               setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
                 loading: true
               }));
@@ -573,8 +525,75 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context5.next = 5;
+              _context4.next = 5;
               return fetch("".concat(ordering.root, "/sites"), requestOptions);
+
+            case 5:
+              response = _context4.sent;
+              _context4.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context4.sent;
+
+              if (!content.error) {
+                setSitesState({
+                  sites: content.result,
+                  loading: false,
+                  error: null
+                });
+              }
+
+              _context4.next = 15;
+              break;
+
+            case 12:
+              _context4.prev = 12;
+              _context4.t0 = _context4["catch"](0);
+              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                loading: false,
+                error: [_context4.t0.message]
+              }));
+
+            case 15:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 12]]);
+    }));
+
+    return function getSites() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to get all the paymethods from API
+   */
+
+
+  var getPaymethods = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context5.next = 5;
+              return fetch("".concat(ordering.root, "/paymethods?where=").concat(JSON.stringify({
+                enabled: true
+              })), requestOptions);
 
             case 5:
               response = _context5.sent;
@@ -585,8 +604,8 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
               content = _context5.sent;
 
               if (!content.error) {
-                setSitesState({
-                  sites: content.result,
+                setPaymethodsState({
+                  paymethods: content.result,
                   loading: false,
                   error: null
                 });
@@ -598,7 +617,7 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
             case 12:
               _context5.prev = 12;
               _context5.t0 = _context5["catch"](0);
-              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
                 loading: false,
                 error: [_context5.t0.message]
               }));
@@ -611,74 +630,63 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
       }, _callee5, null, [[0, 12]]);
     }));
 
-    return function getSites() {
+    return function getPaymethods() {
       return _ref5.apply(this, arguments);
     };
   }();
   /**
-   * Method to get all the paymethods from API
+   * Method to get businesses from API
    */
 
 
-  var getPaymethods = /*#__PURE__*/function () {
+  var getBusinesses = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
-      var requestOptions, response, content;
+      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result;
+
       return _regenerator.default.wrap(function _callee6$(_context6) {
         while (1) {
           switch (_context6.prev = _context6.next) {
             case 0:
               _context6.prev = 0;
-              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
-                loading: true
+              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
+                loading: false
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context6.next = 5;
-              return fetch("".concat(ordering.root, "/paymethods?where=").concat(JSON.stringify({
-                enabled: true
-              })), requestOptions);
+              _context6.next = 4;
+              return ordering.setAccessToken(token).businesses().select(['name', 'logo']).asDashboard().get();
 
-            case 5:
-              response = _context6.sent;
-              _context6.next = 8;
-              return response.json();
+            case 4:
+              _yield$ordering$setAc = _context6.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              error = _yield$ordering$setAc2.error;
+              result = _yield$ordering$setAc2.result;
 
-            case 8:
-              content = _context6.sent;
-
-              if (!content.error) {
-                setPaymethodsState({
-                  paymethods: content.result,
+              if (!error) {
+                setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
                   loading: false,
-                  error: null
-                });
+                  businesses: result
+                }));
               }
 
-              _context6.next = 15;
+              _context6.next = 14;
               break;
 
-            case 12:
-              _context6.prev = 12;
+            case 11:
+              _context6.prev = 11;
               _context6.t0 = _context6["catch"](0);
-              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
+              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
                 loading: false,
                 error: [_context6.t0.message]
               }));
 
-            case 15:
+            case 14:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, null, [[0, 12]]);
+      }, _callee6, null, [[0, 11]]);
     }));
 
-    return function getPaymethods() {
+    return function getBusinesses() {
       return _ref6.apply(this, arguments);
     };
   }();
@@ -689,10 +697,12 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
   }, [searchValue]);
   (0, _react.useEffect)(function () {
     getSites();
+    getBusinesses();
     getPaymethods();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     sitesState: sitesState,
+    businessesList: businessesList,
     paymethodsState: paymethodsState,
     promotionListState: promotionListState,
     paginationProps: paginationProps,
@@ -706,9 +716,9 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
     handleDrop: handleDrop,
     handleDragEnd: handleDragEnd,
     handleEnablePromotion: handleEnablePromotion,
-    handleDeletePromotion: handleDeletePromotion,
     handleSuccessUpdatePromotions: handleSuccessUpdatePromotions,
-    handleSuccessAddPromotion: handleSuccessAddPromotion
+    handleSuccessAddPromotion: handleSuccessAddPromotion,
+    handleSuccessDeletePromotion: handleSuccessDeletePromotion
   })));
 };
 
