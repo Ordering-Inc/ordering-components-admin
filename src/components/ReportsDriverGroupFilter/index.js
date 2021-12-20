@@ -18,6 +18,8 @@ export const ReportsDriverGroupFilter = (props) => {
   const [driverGroupIds, setDriverGroupIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
   const [{ token, loading }] = useSession()
+  const [searchValue, setSearchValue] = useState(null)
+  const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
    * Method to change driver group id
@@ -87,6 +89,32 @@ export const ReportsDriverGroupFilter = (props) => {
     if (loading) return
     try {
       setDriverGroupList({ ...driverGroupList, loading: true })
+      let where = null
+      const conditions = []
+      if (searchValue) {
+        const searchConditions = []
+        const isSpecialCharacter = rex.test(searchValue)
+        searchConditions.push(
+          {
+            attribute: 'name',
+            value: {
+              condition: 'ilike',
+              value: !isSpecialCharacter ? `%${searchValue}%` : encodeURI(`%${searchValue}%`)
+            }
+          }
+        )
+        conditions.push({
+          conector: 'AND',
+          conditions: searchConditions
+        })
+      }
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -94,7 +122,10 @@ export const ReportsDriverGroupFilter = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = `${ordering.root}/drivergroups?params=${propsToFetch}`
+
+      const functionFetch = where
+        ? `${ordering.root}/drivergroups?params=${propsToFetch}&where=${JSON.stringify(conditions[0])}`
+        : `${ordering.root}/drivergroups?params=${propsToFetch}`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result, pagination } = await response.json()
@@ -135,6 +166,12 @@ export const ReportsDriverGroupFilter = (props) => {
     if (!filterList?.driver_groups_ids || filterList?.driver_groups_ids?.length === driverGroupList?.driverGroups.length) setIsAllCheck(true)
   }, [driverGroupList?.driverGroups])
 
+  useEffect(() => {
+    const controller = new AbortController()
+    getDriverGroups()
+    return controller.abort()
+  }, [searchValue])
+
   return (
     <>
       {UIComponent && (
@@ -146,6 +183,8 @@ export const ReportsDriverGroupFilter = (props) => {
           handleClickFilterButton={handleClickFilterButton}
           isAllCheck={isAllCheck}
           handleChangeAllCheck={handleChangeAllCheck}
+          searchValue={searchValue}
+          onSearch={setSearchValue}
         />
       )}
     </>
