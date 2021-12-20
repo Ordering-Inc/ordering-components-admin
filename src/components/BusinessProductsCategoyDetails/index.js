@@ -212,7 +212,7 @@ export const BusinessProductsCategoyDetails = (props) => {
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
           } else {
-            _categories.push({ ...content.result, products: [] })
+            _categories.push({ ...content.result, products: [], subcategories: [] })
           }
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
@@ -248,7 +248,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         return []
       }
       (category?.subcategories || []).some(child =>
-        path = getParentCategories(child, id)
+        (path = getParentCategories(child, id))
       )
       return path && [item, ...path]
     }
