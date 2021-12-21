@@ -103,6 +103,14 @@ var ProductDetatils = function ProductDetatils(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       formState = _useState4[0],
       setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    ingredients: {},
+    options: {}
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      productCart = _useState6[0],
+      setProductCart = _useState6[1];
   /**
    * Clean formState
    */
@@ -344,21 +352,126 @@ var ProductDetatils = function ProductDetatils(props) {
       return console.log(error);
     };
   };
+  /**
+   * Init product cart status
+   * @param {object} product Product to init product cart status
+   */
+
+
+  var initProductCart = function initProductCart(product) {
+    var _props$productCart, _props$productCart2, _props$productCart3, _props$productCart4;
+
+    var ingredients = {};
+
+    for (var key in product.ingredients) {
+      var ingredient = product.ingredients[key];
+      ingredients["id:".concat(ingredient.id)] = {
+        selected: true
+      };
+    }
+
+    var newProductCart = _objectSpread(_objectSpread({}, props.productCart), {}, {
+      id: product.id,
+      price: product.price,
+      name: product.name,
+      businessId: props.businessId,
+      categoryId: product.category_id,
+      inventoried: product.inventoried,
+      stock: product.quantity,
+      ingredients: ((_props$productCart = props.productCart) === null || _props$productCart === void 0 ? void 0 : _props$productCart.ingredients) || ingredients,
+      options: ((_props$productCart2 = props.productCart) === null || _props$productCart2 === void 0 ? void 0 : _props$productCart2.options) || {},
+      comment: ((_props$productCart3 = props.productCart) === null || _props$productCart3 === void 0 ? void 0 : _props$productCart3.comment) || null,
+      quantity: ((_props$productCart4 = props.productCart) === null || _props$productCart4 === void 0 ? void 0 : _props$productCart4.quantity) || 1
+    });
+
+    newProductCart.unitTotal = getUnitTotal(newProductCart);
+    newProductCart.total = newProductCart.unitTotal * newProductCart.quantity;
+    setProductCart(newProductCart);
+  };
+  /**
+   * Get unit total for product cart
+   * @param {object} productCart Current product status
+   */
+
+
+  var getUnitTotal = function getUnitTotal(productCart) {
+    var subtotal = 0;
+
+    for (var i = 0; i < (product === null || product === void 0 ? void 0 : (_product$extras = product.extras) === null || _product$extras === void 0 ? void 0 : _product$extras.length); i++) {
+      var _product$extras;
+
+      var extra = product === null || product === void 0 ? void 0 : product.extras[i];
+
+      for (var j = 0; j < ((_extra$options = extra.options) === null || _extra$options === void 0 ? void 0 : _extra$options.length); j++) {
+        var _extra$options;
+
+        var option = extra.options[j];
+
+        for (var k = 0; k < ((_option$suboptions = option.suboptions) === null || _option$suboptions === void 0 ? void 0 : _option$suboptions.length); k++) {
+          var _option$suboptions, _productCart$options$, _productCart$options$2;
+
+          var suboption = option.suboptions[k];
+
+          if ((_productCart$options$ = productCart.options["id:".concat(option.id)]) !== null && _productCart$options$ !== void 0 && (_productCart$options$2 = _productCart$options$.suboptions["id:".concat(suboption.id)]) !== null && _productCart$options$2 !== void 0 && _productCart$options$2.selected) {
+            var suboptionState = productCart.options["id:".concat(option.id)].suboptions["id:".concat(suboption.id)];
+            var quantity = option.allow_suboption_quantity ? suboptionState.quantity : 1;
+            var price = option.with_half_option && suboption.half_price && suboptionState.position !== 'whole' ? suboption.half_price : suboption.price;
+            subtotal += price * quantity;
+          }
+        }
+      }
+    }
+
+    return (product === null || product === void 0 ? void 0 : product.price) + subtotal;
+  };
+  /**
+   * Check if option must show
+   * @param {object} option Option to check
+   */
+
+
+  var showProductOption = function showProductOption(option) {
+    var showOption = true;
+
+    if (option.respect_to) {
+      showOption = false;
+
+      if (productCart.options) {
+        var options = productCart.options;
+
+        for (var key in options) {
+          var _option$suboptions$;
+
+          var _option = options[key];
+
+          if ((_option$suboptions$ = _option.suboptions["id:".concat(option.respect_to)]) !== null && _option$suboptions$ !== void 0 && _option$suboptions$.selected) {
+            showOption = true;
+            break;
+          }
+        }
+      }
+    }
+
+    return showOption;
+  };
 
   (0, _react.useEffect)(function () {
     setProductState(_objectSpread(_objectSpread({}, productState), {}, {
       product: product
     }));
+    initProductCart(product);
   }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
+    productCart: productCart,
     formState: formState,
     cleanFormState: cleanFormState,
     handleChangeProductActiveState: handleChangeProductActiveState,
     handleChangeInput: handleChangeInput,
     handlechangeImage: handlechangeImage,
     handleUpdateClick: handleUpdateClick,
-    handleDeleteProduct: handleDeleteProduct
+    handleDeleteProduct: handleDeleteProduct,
+    showProductOption: showProductOption
   })));
 };
 
