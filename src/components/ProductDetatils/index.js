@@ -167,6 +167,20 @@ export const ProductDetatils = (props) => {
   }
 
   /**
+   * Update credential data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeFormState = (changes) => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        ...changes
+      }
+    })
+  }
+
+  /**
    * Update business photo data
    * @param {File} file Image to change business photo
    */
@@ -282,6 +296,7 @@ export const ProductDetatils = (props) => {
           handleUpdateClick={handleUpdateClick}
           handleDeleteProduct={handleDeleteProduct}
           showProductOption={showProductOption}
+          handleChangeFormState={handleChangeFormState}
         />
       )}
     </>
