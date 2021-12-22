@@ -221,7 +221,11 @@ export const ProductIngredient = (props) => {
       ...ingredientState,
       ingredient: ingredient
     })
-    if (!ingredient) setIsAddMode(true)
+    if (ingredient) {
+      setIsAddMode(false)
+    } else {
+      setIsAddMode(true)
+    }
   }, [ingredient])
 
   return (
