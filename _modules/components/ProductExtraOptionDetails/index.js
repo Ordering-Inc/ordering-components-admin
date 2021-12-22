@@ -66,7 +66,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       business = props.business,
       extra = props.extra,
       option = props.option,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      handleSucccessDeleteOption = props.handleSucccessDeleteOption;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -805,6 +806,70 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     };
   }();
   /**
+   * Method to delete the extra
+   */
+
+
+  var handleDeteteOption = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context6.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id), requestOptions);
+
+            case 6:
+              response = _context6.sent;
+              _context6.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context6.sent;
+
+              if (!content.error) {
+                handleSucccessDeleteOption && handleSucccessDeleteOption(option.id);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_DELETED', 'Option deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context6.next = 16;
+              break;
+
+            case 13:
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](0);
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: false,
+                error: _context6.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[0, 13]]);
+    }));
+
+    return function handleDeteteOption() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+  /**
    * Method to change the conditional option
    * @param {Number} optionId
    */
@@ -878,7 +943,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     conditionalSubOptionId: conditionalSubOptionId,
     handleChangeConditionalOption: handleChangeConditionalOption,
     handleChangeConditionalSubOption: handleChangeConditionalSubOption,
-    handleAddOption: handleAddOption
+    handleAddOption: handleAddOption,
+    handleDeteteOption: handleDeteteOption
   })));
 };
 

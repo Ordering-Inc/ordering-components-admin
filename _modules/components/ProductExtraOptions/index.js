@@ -511,6 +511,116 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete the extra
+   */
+
+
+  var handleDeleteExtra = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, content, extras, businessState, categories, updatedBusiness;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context4.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id), requestOptions);
+
+            case 6:
+              response = _context4.sent;
+              _context4.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context4.sent;
+
+              if (!content.error) {
+                extras = business.extras.filter(function (_extra) {
+                  return _extra.id !== extra.id;
+                });
+
+                if (handleUpdateBusinessState) {
+                  businessState = _objectSpread(_objectSpread({}, business), {}, {
+                    extras: extras
+                  });
+                  categories = businessState.categories.map(function (item) {
+                    var _products = item.products.map(function (prod) {
+                      var _extras = prod.extras.filter(function (_extra) {
+                        return _extra.id !== extra.id;
+                      });
+
+                      return _objectSpread(_objectSpread({}, prod), {}, {
+                        extras: _extras
+                      });
+                    });
+
+                    var _item = _objectSpread(_objectSpread({}, item), {}, {
+                      products: _products
+                    });
+
+                    return _item;
+                  });
+                  updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
+                    categories: categories
+                  });
+                  handleUpdateBusinessState(updatedBusiness);
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+                loading: false,
+                error: _context4.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleDeleteExtra() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  var handleSucccessDeleteOption = function handleSucccessDeleteOption(optionId) {
+    var options = extraState.extra.options.filter(function (option) {
+      return option.id !== optionId;
+    });
+
+    var updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
+      options: options
+    });
+
+    setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+      loading: false,
+      extra: updatedExtra
+    }));
+    handleSuccessUpdateBusiness(updatedExtra);
+  };
 
   (0, _react.useEffect)(function () {
     var _changesState$changes, _changesState$changes2, _changesState$changes3;
@@ -554,7 +664,9 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleAddOption: handleAddOption,
     handleChangeAddOption: handleChangeAddOption,
     handleChangeAddOptionEnable: handleChangeAddOptionEnable,
-    handleDeteteOption: handleDeteteOption
+    handleDeteteOption: handleDeteteOption,
+    handleDeleteExtra: handleDeleteExtra,
+    handleSucccessDeleteOption: handleSucccessDeleteOption
   })));
 };
 
