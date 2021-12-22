@@ -241,7 +241,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('driver_orders');
+              functionFetch = paramsForAPI('driver_orders_v2');
               _context.next = 8;
               return fetch(functionFetch, requestOptions);
 
@@ -322,7 +322,7 @@ var DriverAnalytics = function DriverAnalytics(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = paramsForAPI('driver_sales');
+              functionFetch = paramsForAPI('driver_sales_v2');
               _context2.next = 8;
               return fetch(functionFetch, requestOptions);
 

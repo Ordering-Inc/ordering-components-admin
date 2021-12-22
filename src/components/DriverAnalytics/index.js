@@ -58,7 +58,7 @@ export const DriverAnalytics = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = paramsForAPI('driver_orders')
+      const functionFetch = paramsForAPI('driver_orders_v2')
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
@@ -98,7 +98,7 @@ export const DriverAnalytics = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = paramsForAPI('driver_sales')
+      const functionFetch = paramsForAPI('driver_sales_v2')
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
