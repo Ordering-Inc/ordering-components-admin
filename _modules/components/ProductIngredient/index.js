@@ -435,7 +435,12 @@ var ProductIngredient = function ProductIngredient(props) {
     setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
       ingredient: ingredient
     }));
-    if (!ingredient) setIsAddMode(true);
+
+    if (ingredient) {
+      setIsAddMode(false);
+    } else {
+      setIsAddMode(true);
+    }
   }, [ingredient]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     ingredientState: ingredientState,
