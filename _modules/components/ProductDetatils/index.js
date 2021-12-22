@@ -331,6 +331,17 @@ var ProductDetatils = function ProductDetatils(props) {
     }));
   };
   /**
+   * Update credential data
+   * @param {Object} changes Related HTML event
+   */
+
+
+  var handleChangeFormState = function handleChangeFormState(changes) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), changes)
+    }));
+  };
+  /**
    * Update business photo data
    * @param {File} file Image to change business photo
    */
@@ -471,7 +482,8 @@ var ProductDetatils = function ProductDetatils(props) {
     handlechangeImage: handlechangeImage,
     handleUpdateClick: handleUpdateClick,
     handleDeleteProduct: handleDeleteProduct,
-    showProductOption: showProductOption
+    showProductOption: showProductOption,
+    handleChangeFormState: handleChangeFormState
   })));
 };
 
