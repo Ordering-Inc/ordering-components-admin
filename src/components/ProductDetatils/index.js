@@ -23,6 +23,7 @@ export const ProductDetatils = (props) => {
 
   const [productState, setProductState] = useState({ loading: false, product: null, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [productCart, setProductCart] = useState({ ingredients: {}, options: {} })
 
   /**
    * Clean formState
@@ -89,6 +90,61 @@ export const ProductDetatils = (props) => {
   }
 
   /**
+ * Method to edit a product
+ */
+  const handleDeleteProduct = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({
+        ...formState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(product?.id).delete()
+      if (!error) {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: false,
+            result: result
+          }
+        })
+        if (handleUpdateBusinessState) {
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.filter(_product => _product.id !== product.id)
+              category.products = [..._products]
+            }
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
+        showToast(ToastType.Success, t('PRODUCT_DELETED', 'Product deleted'))
+        props.onClose && props.onClose()
+      } else {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
+      })
+    }
+  }
+
+  /**
    * Method to change the product enabled state
    */
   const handleChangeProductActiveState = () => {
@@ -106,6 +162,20 @@ export const ProductDetatils = (props) => {
       changes: {
         ...formState.changes,
         [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  /**
+   * Update credential data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeFormState = (changes) => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        ...changes
       }
     })
   }
@@ -129,8 +199,86 @@ export const ProductDetatils = (props) => {
     reader.onerror = error => console.log(error)
   }
 
+  /**
+   * Init product cart status
+   * @param {object} product Product to init product cart status
+   */
+  const initProductCart = (product) => {
+    const ingredients = {}
+    for (const key in product.ingredients) {
+      const ingredient = product.ingredients[key]
+      ingredients[`id:${ingredient.id}`] = {
+        selected: true
+      }
+    }
+    const newProductCart = {
+      ...props.productCart,
+      id: product.id,
+      price: product.price,
+      name: product.name,
+      businessId: props.businessId,
+      categoryId: product.category_id,
+      inventoried: product.inventoried,
+      stock: product.quantity,
+      ingredients: props.productCart?.ingredients || ingredients,
+      options: props.productCart?.options || {},
+      comment: props.productCart?.comment || null,
+      quantity: props.productCart?.quantity || 1
+    }
+    newProductCart.unitTotal = getUnitTotal(newProductCart)
+    newProductCart.total = newProductCart.unitTotal * newProductCart.quantity
+    setProductCart(newProductCart)
+  }
+
+  /**
+   * Get unit total for product cart
+   * @param {object} productCart Current product status
+   */
+  const getUnitTotal = (productCart) => {
+    let subtotal = 0
+    for (let i = 0; i < product?.extras?.length; i++) {
+      const extra = product?.extras[i]
+      for (let j = 0; j < extra.options?.length; j++) {
+        const option = extra.options[j]
+        for (let k = 0; k < option.suboptions?.length; k++) {
+          const suboption = option.suboptions[k]
+          if (productCart.options[`id:${option.id}`]?.suboptions[`id:${suboption.id}`]?.selected) {
+            const suboptionState = productCart.options[`id:${option.id}`].suboptions[`id:${suboption.id}`]
+            const quantity = option.allow_suboption_quantity ? suboptionState.quantity : 1
+            const price = option.with_half_option && suboption.half_price && suboptionState.position !== 'whole' ? suboption.half_price : suboption.price
+            subtotal += price * quantity
+          }
+        }
+      }
+    }
+    return product?.price + subtotal
+  }
+
+  /**
+   * Check if option must show
+   * @param {object} option Option to check
+   */
+  const showProductOption = (option) => {
+    let showOption = true
+    if (option.respect_to) {
+      showOption = false
+      if (productCart.options) {
+        const options = productCart.options
+        for (const key in options) {
+          const _option = options[key]
+          if (_option.suboptions[`id:${option.respect_to}`]?.selected) {
+            showOption = true
+            break
+          }
+        }
+      }
+    }
+    return showOption
+  }
+
   useEffect(() => {
     setProductState({ ...productState, product: product })
+    initProductCart(product)
   }, [product])
 
   return (
@@ -139,12 +287,16 @@ export const ProductDetatils = (props) => {
         <UIComponent
           {...props}
           productState={productState}
+          productCart={productCart}
           formState={formState}
           cleanFormState={cleanFormState}
           handleChangeProductActiveState={handleChangeProductActiveState}
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           handleUpdateClick={handleUpdateClick}
+          handleDeleteProduct={handleDeleteProduct}
+          showProductOption={showProductOption}
+          handleChangeFormState={handleChangeFormState}
         />
       )}
     </>

@@ -238,6 +238,63 @@ export const BusinessProductsCategoyDetails = (props) => {
     }
   }
 
+  /**
+ * Method to edit a category
+ */
+  const handleDeleteCategory = async () => {
+    if (loading) return
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({
+        ...formState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering.businesses(parseInt(businessState.business?.id)).categories(parseInt(category.id)).delete()
+      if (!error) {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: false,
+            result: result
+          }
+        })
+        if (handleUpdateBusinessState) {
+          const _categories = [...businessState.business.categories]
+          _categories.forEach(function iterate (_category, index, object) {
+            if (_category.id === category.id) {
+              object.splice(index, 1)
+            }
+            Array.isArray(_category?.subcategories) && _category.subcategories.forEach(iterate)
+          })
+
+          handleUpdateBusinessState({ ...businessState.business, categories: _categories })
+          if (category.id === categorySelected.id) setCategorySelected(_categories[0])
+        }
+        showToast(ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'))
+        props.onClose && props.onClose(category.id)
+      } else {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: err
+        }
+      })
+    }
+  }
+
   useEffect(() => {
     if (businessState.loading || !categorySelected) return
     const getParentCategories = (category, id) => {
@@ -271,9 +328,10 @@ export const BusinessProductsCategoyDetails = (props) => {
           parentCategories={parentCategories}
           handlechangeImage={handlechangeImage}
           handleChangeInput={handleChangeInput}
-          handleUpdateClick={handleUpdateClick}
           handleChangeCheckBox={handleChangeCheckBox}
           handleChangeItem={handleChangeItem}
+          handleUpdateClick={handleUpdateClick}
+          handleDeleteCategory={handleDeleteCategory}
         />
       )}
     </>

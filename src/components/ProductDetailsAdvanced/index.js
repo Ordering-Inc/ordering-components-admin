@@ -9,7 +9,7 @@ import { useEvent } from '../../contexts/EventContext'
 /**
  * Component to manage product properties behavior without UI component
  */
-export const ProductProperties = (props) => {
+export const ProductDetailsAdvanced = (props) => {
   const {
     business,
     UIComponent,
@@ -33,7 +33,6 @@ export const ProductProperties = (props) => {
   const [formTaxChanges, setFormTaxChanges] = useState({})
   const [taxToEdit, setTaxToEdit] = useState({ action: null, payload: null })
   const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [timeout, setTimeoutCustom] = useState(null)
 
   /**
    * Method to update the product details from API
@@ -244,15 +243,6 @@ export const ProductProperties = (props) => {
     setProductState(product)
   }, [product])
 
-  useEffect(() => {
-    if (Object.keys(formState.changes).length > 0) {
-      clearInterval(timeout)
-      setTimeoutCustom(setTimeout(function () {
-        handleUpdateClick()
-      }, 1000))
-    }
-  }, [formState.changes])
-
   return (
     <>
       {UIComponent && (
@@ -278,34 +268,34 @@ export const ProductProperties = (props) => {
   )
 }
 
-ProductProperties.propTypes = {
+ProductDetailsAdvanced.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: PropTypes.elementType,
   /**
-   * Components types before product properties
+   * Components types before product details advanced
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Components types after product properties
+   * Components types after product details advanced
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: PropTypes.arrayOf(PropTypes.elementType),
   /**
-   * Elements before product properties
+   * Elements before product details advanced
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: PropTypes.arrayOf(PropTypes.element),
   /**
-   * Elements after product properties
+   * Elements after product details advanced
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-ProductProperties.defaultProps = {
+ProductDetailsAdvanced.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
