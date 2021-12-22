@@ -21,9 +21,9 @@ var _ToastContext = require("../../contexts/ToastContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
 
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function _getRequireWildcardCache() { return cache; }; return cache; }
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33,7 +33,7 @@ function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableTo
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
@@ -41,7 +41,7 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
@@ -55,7 +55,7 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -511,6 +511,116 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete the extra
+   */
+
+
+  var handleDeleteExtra = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, content, extras, businessState, categories, updatedBusiness;
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context4.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id), requestOptions);
+
+            case 6:
+              response = _context4.sent;
+              _context4.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context4.sent;
+
+              if (!content.error) {
+                extras = business.extras.filter(function (_extra) {
+                  return _extra.id !== extra.id;
+                });
+
+                if (handleUpdateBusinessState) {
+                  businessState = _objectSpread(_objectSpread({}, business), {}, {
+                    extras: extras
+                  });
+                  categories = businessState.categories.map(function (item) {
+                    var _products = item.products.map(function (prod) {
+                      var _extras = prod.extras.filter(function (_extra) {
+                        return _extra.id !== extra.id;
+                      });
+
+                      return _objectSpread(_objectSpread({}, prod), {}, {
+                        extras: _extras
+                      });
+                    });
+
+                    var _item = _objectSpread(_objectSpread({}, item), {}, {
+                      products: _products
+                    });
+
+                    return _item;
+                  });
+                  updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
+                    categories: categories
+                  });
+                  handleUpdateBusinessState(updatedBusiness);
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+                loading: false,
+                error: _context4.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleDeleteExtra() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  var handleSucccessDeleteOption = function handleSucccessDeleteOption(optionId) {
+    var options = extraState.extra.options.filter(function (option) {
+      return option.id !== optionId;
+    });
+
+    var updatedExtra = _objectSpread(_objectSpread({}, extraState.extra), {}, {
+      options: options
+    });
+
+    setExtraState(_objectSpread(_objectSpread({}, extraState), {}, {
+      loading: false,
+      extra: updatedExtra
+    }));
+    handleSuccessUpdateBusiness(updatedExtra);
+  };
 
   (0, _react.useEffect)(function () {
     var _changesState$changes, _changesState$changes2, _changesState$changes3;
@@ -554,7 +664,9 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleAddOption: handleAddOption,
     handleChangeAddOption: handleChangeAddOption,
     handleChangeAddOptionEnable: handleChangeAddOptionEnable,
-    handleDeteteOption: handleDeteteOption
+    handleDeteteOption: handleDeteteOption,
+    handleDeleteExtra: handleDeleteExtra,
+    handleSucccessDeleteOption: handleSucccessDeleteOption
   })));
 };
 
