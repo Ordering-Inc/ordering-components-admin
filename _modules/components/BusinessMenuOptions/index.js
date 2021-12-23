@@ -108,6 +108,11 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       selectedProductsIds = _useState8[0],
       setSelectedProductsIds = _useState8[1];
+
+  var _useState9 = (0, _react.useState)([]),
+      _useState10 = _slicedToArray(_useState9, 2),
+      selectedProducts = _useState10[0],
+      setSelectedProducts = _useState10[1];
   /**
    * Update business menu name and comment
    * @param {EventTarget} e Related HTML event
@@ -195,6 +200,11 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
                 _business.menus.filter(function (menu) {
                   if (menu.id === content.result.id) {
                     Object.assign(menu, content.result);
+                    var isUpdatedProducts = typeof (changes === null || changes === void 0 ? void 0 : changes.products) !== 'undefined';
+
+                    if (isUpdatedProducts) {
+                      menu.products = _toConsumableArray(selectedProducts);
+                    }
                   }
 
                   return true;
@@ -392,8 +402,10 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       }, []);
 
       setSelectedProductsIds(_selectedProductsIds);
+      setSelectedProducts(menu.products);
     } else {
       setSelectedProductsIds([]);
+      setSelectedProducts([]);
       setOrderTypeSate({
         delivery: true,
         pickup: true,
@@ -414,6 +426,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     formState: formState,
     selectedProductsIds: selectedProductsIds,
     setSelectedProductsIds: setSelectedProductsIds,
+    selectedProducts: selectedProducts,
+    setSelectedProducts: setSelectedProducts,
     handleChangeInput: handleChangeInput,
     handleCheckOrderType: handleCheckOrderType,
     handleUpdateBusinessMenuOption: handleUpdateBusinessMenuOption,

@@ -65,6 +65,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var ProductIngredient = function ProductIngredient(props) {
   var business = props.business,
       product = props.product,
+      ingredient = props.ingredient,
       UIComponent = props.UIComponent,
       handleUpdateBusinessState = props.handleUpdateBusinessState;
 
@@ -85,13 +86,13 @@ var ProductIngredient = function ProductIngredient(props) {
       t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
-    product: product,
+    ingredient: ingredient,
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      productState = _useState2[0],
-      setProductState = _useState2[1];
+      ingredientState = _useState2[0],
+      setIngredientState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({}),
       _useState4 = _slicedToArray(_useState3, 2),
@@ -102,19 +103,13 @@ var ProductIngredient = function ProductIngredient(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       isAddMode = _useState6[0],
       setIsAddMode = _useState6[1];
-
-  var _useState7 = (0, _react.useState)(null),
-      _useState8 = _slicedToArray(_useState7, 2),
-      editIngredientId = _useState8[0],
-      setEditIngredientId = _useState8[1];
   /**
    * Method to change the ingredient name
    * @param {EventTarget} e Related HTML event
    */
 
 
-  var handleChangeInput = function handleChangeInput(e, ingredientId) {
-    setEditIngredientId(ingredientId);
+  var handleChangeInput = function handleChangeInput(e) {
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
   /**
@@ -129,16 +124,7 @@ var ProductIngredient = function ProductIngredient(props) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!(Object.keys(changesState).length === 0)) {
-                _context.next = 3;
-                break;
-              }
-
-              setIsAddMode(false);
-              return _context.abrupt("return");
-
-            case 3:
-              _context.prev = 3;
+              _context.prev = 0;
               changes = {
                 business_id: business === null || business === void 0 ? void 0 : business.id,
                 category_id: product === null || product === void 0 ? void 0 : product.category_id,
@@ -146,7 +132,7 @@ var ProductIngredient = function ProductIngredient(props) {
               };
               changes = _objectSpread(_objectSpread({}, changes), changesState);
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -157,34 +143,33 @@ var ProductIngredient = function ProductIngredient(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context.next = 11;
+              _context.next = 8;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients"), requestOptions);
 
-            case 11:
+            case 8:
               response = _context.sent;
-              _context.next = 14;
+              _context.next = 11;
               return response.json();
 
-            case 14:
+            case 11:
               content = _context.sent;
 
               if (!content.error) {
                 setChangesState({});
-                setIsAddMode(false);
+                setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
+                  loading: false,
+                  ingredient: content.result
+                }));
 
-                if (productState === null || productState === void 0 ? void 0 : productState.product.ingredients) {
-                  ingredients = [].concat(_toConsumableArray(productState === null || productState === void 0 ? void 0 : productState.product.ingredients), [content.result]);
+                if (product.ingredients) {
+                  ingredients = [].concat(_toConsumableArray(product.ingredients), [content.result]);
                 } else {
                   ingredients = [content.result];
                 }
 
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  loading: false,
-                  product: updatedProduct
-                }));
 
                 if (handleUpdateBusinessState) {
                   categories = business.categories.map(function (item) {
@@ -211,25 +196,26 @@ var ProductIngredient = function ProductIngredient(props) {
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'));
+                props.onClose && props.onClose();
               }
 
-              _context.next = 21;
+              _context.next = 18;
               break;
 
-            case 18:
-              _context.prev = 18;
-              _context.t0 = _context["catch"](3);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context["catch"](0);
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: false,
                 error: _context.t0.message
               }));
 
-            case 21:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[3, 18]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
     return function handleAddIngredient() {
@@ -256,7 +242,7 @@ var ProductIngredient = function ProductIngredient(props) {
               };
               changes = _objectSpread(_objectSpread({}, changes), changesState);
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -268,7 +254,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 body: JSON.stringify(changes)
               };
               _context2.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(editIngredientId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(ingredient.id), requestOptions);
 
             case 8:
               response = _context2.sent;
@@ -280,20 +266,20 @@ var ProductIngredient = function ProductIngredient(props) {
 
               if (!content.error) {
                 setChangesState({});
-                ingredients = productState === null || productState === void 0 ? void 0 : productState.product.ingredients.filter(function (ingredient) {
-                  if (ingredient.id === editIngredientId) {
-                    Object.assign(ingredient, content.result);
+                setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
+                  loading: false,
+                  ingredient: content.result
+                }));
+                ingredients = product.ingredients.filter(function (_ingredient) {
+                  if (_ingredient.id === ingredient.id) {
+                    Object.assign(_ingredient, content.result);
                   }
 
                   return true;
                 });
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  loading: false,
-                  product: updatedProduct
-                }));
 
                 if (handleUpdateBusinessState) {
                   categories = business.categories.map(function (item) {
@@ -328,7 +314,7 @@ var ProductIngredient = function ProductIngredient(props) {
             case 15:
               _context2.prev = 15;
               _context2.t0 = _context2["catch"](0);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: false,
                 error: _context2.t0.message
               }));
@@ -347,12 +333,11 @@ var ProductIngredient = function ProductIngredient(props) {
   }();
   /**
    * Method to delete the product ingredient
-   * @param {Number} ingredientId id to delete the ingredient
    */
 
 
   var handleDeleteIngredient = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(ingredientId) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
       var requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -360,7 +345,7 @@ var ProductIngredient = function ProductIngredient(props) {
             case 0:
               _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: false
               }));
               requestOptions = {
@@ -371,7 +356,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(ingredientId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/categories/").concat(product === null || product === void 0 ? void 0 : product.category_id, "/products/").concat(product.id, "/ingredients/").concat(ingredient.id), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -382,16 +367,16 @@ var ProductIngredient = function ProductIngredient(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                ingredients = productState === null || productState === void 0 ? void 0 : productState.product.ingredients.filter(function (ingredient) {
-                  return ingredient.id !== ingredientId;
+                setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
+                  loading: false,
+                  ingredient: content.result
+                }));
+                ingredients = product.ingredients.filter(function (_ingredient) {
+                  return _ingredient.id !== ingredient.id;
                 });
-                updatedProduct = _objectSpread(_objectSpread({}, productState.product), {}, {
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  loading: false,
-                  product: updatedProduct
-                }));
 
                 if (handleUpdateBusinessState) {
                   categories = business.categories.map(function (item) {
@@ -418,6 +403,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('INGREDIENT_DELETED', 'Ingredient deleted'));
+                props.onClose && props.onClose();
               }
 
               _context3.next = 16;
@@ -426,7 +412,7 @@ var ProductIngredient = function ProductIngredient(props) {
             case 13:
               _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
-              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+              setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
                 loading: false,
                 error: _context3.t0.message
               }));
@@ -439,37 +425,31 @@ var ProductIngredient = function ProductIngredient(props) {
       }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeleteIngredient(_x) {
+    return function handleDeleteIngredient() {
       return _ref3.apply(this, arguments);
     };
   }();
-  /**
-   * Method to open the ingredient add form
-   */
-
-
-  var handleOpenAddForm = function handleOpenAddForm() {
-    setIsAddMode(true);
-  };
 
   (0, _react.useEffect)(function () {
-    if (Object.keys(changesState).length > 0 && !isAddMode && editIngredientId) {
-      handleUpdateIngredient();
-    }
-  }, [changesState, isAddMode, editIngredientId]);
-  (0, _react.useEffect)(function () {
-    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-      product: product
+    setChangesState({});
+    setIngredientState(_objectSpread(_objectSpread({}, ingredientState), {}, {
+      ingredient: ingredient
     }));
-  }, [product]);
+
+    if (ingredient) {
+      setIsAddMode(false);
+    } else {
+      setIsAddMode(true);
+    }
+  }, [ingredient]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    productState: productState,
+    ingredientState: ingredientState,
     changesState: changesState,
     isAddMode: isAddMode,
     handleChangeInput: handleChangeInput,
-    handleOpenAddForm: handleOpenAddForm,
     handleDeleteIngredient: handleDeleteIngredient,
-    handleAddIngredient: handleAddIngredient
+    handleAddIngredient: handleAddIngredient,
+    handleUpdateIngredient: handleUpdateIngredient
   })));
 };
 
