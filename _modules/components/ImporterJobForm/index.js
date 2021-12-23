@@ -101,21 +101,11 @@ var ImporterJobForm = function ImporterJobForm(props) {
 
   var handleUploadCsv = function handleUploadCsv(file) {
     if (file) {
-      var reader = new window.FileReader();
-      reader.readAsDataURL(file);
-
-      reader.onload = function () {
-        setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
-          fileName: file.name,
-          fileType: file.type,
-          csvFile: reader.result,
-          importOptions: {}
-        }));
-      };
-
-      reader.onerror = function (error) {
-        return console.log(error);
-      };
+      setFileState(_objectSpread(_objectSpread({}, fileState), {}, {
+        fileName: file.name,
+        fileType: file.type,
+        csvFile: file
+      }));
     }
   };
   /**
@@ -146,38 +136,36 @@ var ImporterJobForm = function ImporterJobForm(props) {
 
   var handleCreateImporterJob = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id) {
-      var data, requestOptions, response, _yield$response$json, error, result;
+      var formData, requestOptions, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              data = {
-                file: fileState === null || fileState === void 0 ? void 0 : fileState.csvFile,
-                import_options: JSON.stringify(fileState === null || fileState === void 0 ? void 0 : fileState.importOptions)
-              };
-              _context.prev = 2;
+              formData = new FormData();
+              formData.append('file', fileState === null || fileState === void 0 ? void 0 : fileState.csvFile);
+              formData.append('import_options', JSON.stringify(fileState === null || fileState === void 0 ? void 0 : fileState.importOptions));
+              _context.prev = 4;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               requestOptions = {
                 method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(session.token)
                 },
-                body: JSON.stringify(data)
+                body: formData
               };
-              _context.next = 7;
+              _context.next = 9;
               return fetch("".concat(ordering.root, "/importers/").concat(id, "/jobs"), requestOptions);
 
-            case 7:
+            case 9:
               response = _context.sent;
-              _context.next = 10;
+              _context.next = 12;
               return response.json();
 
-            case 10:
+            case 12:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -202,12 +190,12 @@ var ImporterJobForm = function ImporterJobForm(props) {
                 });
               }
 
-              _context.next = 19;
+              _context.next = 21;
               break;
 
-            case 16:
-              _context.prev = 16;
-              _context.t0 = _context["catch"](2);
+            case 18:
+              _context.prev = 18;
+              _context.t0 = _context["catch"](4);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
@@ -216,12 +204,12 @@ var ImporterJobForm = function ImporterJobForm(props) {
                 loading: false
               }));
 
-            case 19:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 16]]);
+      }, _callee, null, [[4, 18]]);
     }));
 
     return function handleCreateImporterJob(_x) {
@@ -232,6 +220,7 @@ var ImporterJobForm = function ImporterJobForm(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     fileState: fileState,
+    setFileState: setFileState,
     handleChangeInput: handleChangeInput,
     handleUploadCsv: handleUploadCsv,
     handleCreateImporterJob: handleCreateImporterJob
