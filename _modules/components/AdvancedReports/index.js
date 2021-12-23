@@ -226,18 +226,20 @@ var AdvancedReports = function AdvancedReports(props) {
               if (filterList !== null && filterList !== void 0 && filterList.businessIds && (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.length) > 0) params = "".concat(params, "&businesses_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds));
               if (filterList !== null && filterList !== void 0 && filterList.drivers_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&drivers_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids));
               if (filterList !== null && filterList !== void 0 && filterList.franchises_id && (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.length) > 0) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
-              if (filterList !== null && filterList !== void 0 && filterList.driver_companies_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
+              if (filterList !== null && filterList !== void 0 && filterList.driver_companies_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
+              if (filterList !== null && filterList !== void 0 && filterList.driver_groups_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids.length) > 0) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
               if (filterList !== null && filterList !== void 0 && filterList.delivery_types_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids.length) > 0) params = "".concat(params, "&delivery_types_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids));
+              if (filterList !== null && filterList !== void 0 && filterList.app_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.app_ids.length) > 0) params = "".concat(params, "&app_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.app_ids));
               functionFetch = "".concat(ordering.root, "/reports/").concat(endpoint1, "?").concat(params);
-              _context2.next = 15;
+              _context2.next = 17;
               return fetch(functionFetch, requestOptions);
 
-            case 15:
+            case 17:
               response = _context2.sent;
-              _context2.next = 18;
+              _context2.next = 20;
               return response.json();
 
-            case 18:
+            case 20:
               _yield$response$json2 = _context2.sent;
               error = _yield$response$json2.error;
               result = _yield$response$json2.result;
@@ -254,23 +256,23 @@ var AdvancedReports = function AdvancedReports(props) {
                 }));
               }
 
-              _context2.next = 27;
+              _context2.next = 29;
               break;
 
-            case 24:
-              _context2.prev = 24;
+            case 26:
+              _context2.prev = 26;
               _context2.t0 = _context2["catch"](2);
               setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
                 loading: false,
                 error: _context2.t0
               }));
 
-            case 27:
+            case 29:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 24]]);
+      }, _callee2, null, [[2, 26]]);
     }));
 
     return function getReportsData() {
