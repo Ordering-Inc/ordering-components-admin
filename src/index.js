@@ -123,7 +123,7 @@ import { ProductExtras } from './components/ProductExtras'
 import { ProductForm } from './components/ProductForm'
 import { ProductGallery } from './components/ProductGallery'
 import { ProductMetaFields } from './components/ProductMetaFields'
-import { ProductProperties } from './components/ProductProperties'
+import { ProductDetailsAdvanced } from './components/ProductDetailsAdvanced'
 import { ProductReviews } from './components/ProductReviews'
 import { ProductShare } from './components/ProductShare'
 import { ProductImages } from './components/ProductImages'
@@ -303,6 +303,7 @@ export {
   Popup,
   ProductComponent,
   ProductDetatils,
+  ProductDetailsAdvanced,
   ProductExtraMetaFields,
   ProductExtraOptions,
   ProductExtraOptionDetails,
@@ -312,7 +313,6 @@ export {
   ProductForm,
   ProductGallery,
   ProductMetaFields,
-  ProductProperties,
   ProductShare,
   ProductImages,
   ProductIngredient,

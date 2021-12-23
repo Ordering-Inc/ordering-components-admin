@@ -264,6 +264,52 @@ export const ProductExtraOptions = (props) => {
     }
   }
 
+  /**
+   * Method to delete the extra
+   */
+  const handleDeleteExtra = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setExtraState({ ...extraState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        const extras = business.extras.filter(_extra => _extra.id !== extra.id)
+        if (handleUpdateBusinessState) {
+          const businessState = { ...business, extras: extras }
+          const categories = businessState.categories.map(item => {
+            const _products = item.products.map(prod => {
+              const _extras = prod.extras.filter(_extra => _extra.id !== extra.id)
+              return { ...prod, extras: _extras }
+            })
+            const _item = { ...item, products: _products }
+            return _item
+          })
+          const updatedBusiness = { ...businessState, categories: categories }
+          handleUpdateBusinessState(updatedBusiness)
+        }
+        showToast(ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'))
+        props.onClose && props.onClose()
+      }
+    } catch (err) {
+      setExtraState({ ...extraState, loading: false, error: err.message })
+    }
+  }
+
+  const handleSucccessDeleteOption = (optionId) => {
+    const options = extraState.extra.options.filter(option => option.id !== optionId)
+    const updatedExtra = { ...extraState.extra, options: options }
+    setExtraState({ ...extraState, loading: false, extra: updatedExtra })
+    handleSuccessUpdateBusiness(updatedExtra)
+  }
+
   useEffect(() => {
     if (!Object.keys(changesState.changes).length) return
     if (changesState?.changes?.name === '' || changesState?.changes?.min === '' || changesState?.changes?.max === '') {
@@ -301,6 +347,8 @@ export const ProductExtraOptions = (props) => {
           handleChangeAddOption={handleChangeAddOption}
           handleChangeAddOptionEnable={handleChangeAddOptionEnable}
           handleDeteteOption={handleDeteteOption}
+          handleDeleteExtra={handleDeleteExtra}
+          handleSucccessDeleteOption={handleSucccessDeleteOption}
         />
       )}
     </>
