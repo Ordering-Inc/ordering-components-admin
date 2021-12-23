@@ -11,7 +11,8 @@ export const ProductExtraOptionDetails = (props) => {
     business,
     extra,
     option,
-    handleUpdateBusinessState
+    handleUpdateBusinessState,
+    handleSucccessDeleteOption
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -383,6 +384,32 @@ export const ProductExtraOptionDetails = (props) => {
   }
 
   /**
+   * Method to delete the extra
+   */
+  const handleDeteteOption = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setOptionState({ ...optionState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        handleSucccessDeleteOption && handleSucccessDeleteOption(option.id)
+        showToast(ToastType.Success, t('OPTION_DELETED', 'Option deleted'))
+        props.onClose && props.onClose()
+      }
+    } catch (err) {
+      setOptionState({ ...optionState, loading: false, error: err.message })
+    }
+  }
+
+  /**
    * Method to change the conditional option
    * @param {Number} optionId
    */
@@ -450,6 +477,7 @@ export const ProductExtraOptionDetails = (props) => {
           handleChangeConditionalOption={handleChangeConditionalOption}
           handleChangeConditionalSubOption={handleChangeConditionalSubOption}
           handleAddOption={handleAddOption}
+          handleDeteteOption={handleDeteteOption}
         />
       )}
     </>

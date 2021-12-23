@@ -21,6 +21,7 @@ export const BusinessMenuOptions = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [orderTypeState, setOrderTypeSate] = useState({})
   const [selectedProductsIds, setSelectedProductsIds] = useState([])
+  const [selectedProducts, setSelectedProducts] = useState([])
 
   /**
    * Update business menu name and comment
@@ -91,6 +92,10 @@ export const BusinessMenuOptions = (props) => {
         _business.menus.filter(menu => {
           if (menu.id === content.result.id) {
             Object.assign(menu, content.result)
+            const isUpdatedProducts = typeof (changes?.products) !== 'undefined'
+            if (isUpdatedProducts) {
+              menu.products = [...selectedProducts]
+            }
           }
           return true
         })
@@ -207,8 +212,10 @@ export const BusinessMenuOptions = (props) => {
     if (Object.keys(menu).length) {
       const _selectedProductsIds = menu.products.reduce((ids, product) => [...ids, product.id], [])
       setSelectedProductsIds(_selectedProductsIds)
+      setSelectedProducts(menu.products)
     } else {
       setSelectedProductsIds([])
+      setSelectedProducts([])
       setOrderTypeSate({
         delivery: true,
         pickup: true,
@@ -225,6 +232,7 @@ export const BusinessMenuOptions = (props) => {
       })
     }
   }, [menu])
+
   return (
     <>
       {
@@ -235,6 +243,9 @@ export const BusinessMenuOptions = (props) => {
             formState={formState}
             selectedProductsIds={selectedProductsIds}
             setSelectedProductsIds={setSelectedProductsIds}
+
+            selectedProducts={selectedProducts}
+            setSelectedProducts={setSelectedProducts}
             handleChangeInput={handleChangeInput}
             handleCheckOrderType={handleCheckOrderType}
             handleUpdateBusinessMenuOption={handleUpdateBusinessMenuOption}
