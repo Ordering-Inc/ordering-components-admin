@@ -9,7 +9,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
  * Component to create importerJob form without UI component
  */
 
-export const ImporterJobForm = (props) => {
+ export const ImporterJobForm = (props) => {
   const {
     UIComponent
   } = props
@@ -27,18 +27,12 @@ export const ImporterJobForm = (props) => {
 
   const handleUploadCsv = (file) => {
     if (file) {
-      const reader = new window.FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        setFileState({
-          ...fileState,
-          fileName: file.name,
-          fileType: file.type,
-          csvFile: reader.result,
-          importOptions: {}
-        })
-      }
-      reader.onerror = error => console.log(error)
+      setFileState({
+        ...fileState,
+        fileName: file.name,
+        fileType: file.type,
+        csvFile: file
+      })
     }
   }
 
@@ -72,23 +66,21 @@ export const ImporterJobForm = (props) => {
 
   const handleCreateImporterJob = async (id) => {
     showToast(ToastType.Info, t('LOADING', 'Loading'))
-    const data = {
-      file: fileState?.csvFile,
-      import_options: JSON.stringify(fileState?.importOptions)
-    }
+    const formData = new FormData()
+    formData.append('file', fileState?.csvFile)
+    formData.append('import_options', JSON.stringify(fileState?.importOptions))
+
     try {
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${session.token}`
         },
-        body: JSON.stringify(data)
+        body: formData
       }
       const response = await fetch(`${ordering.root}/importers/${id}/jobs`, requestOptions)
       const { error, result } = await response.json()
-
       if (error) {
         setFormState({
           ...formState,
@@ -128,6 +120,7 @@ export const ImporterJobForm = (props) => {
           {...props}
           formState={formState}
           fileState={fileState}
+          setFileState={setFileState}
           handleChangeInput={handleChangeInput}
           handleUploadCsv={handleUploadCsv}
           handleCreateImporterJob={handleCreateImporterJob}
