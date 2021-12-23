@@ -12,6 +12,7 @@ export const ProductIngredient = (props) => {
   const {
     business,
     product,
+    ingredient,
     UIComponent,
     handleUpdateBusinessState
   } = props
@@ -20,17 +21,15 @@ export const ProductIngredient = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
-  const [productState, setProductState] = useState({ product: product, loading: false, error: null })
+  const [ingredientState, setIngredientState] = useState({ ingredient: ingredient, loading: false, error: null })
   const [changesState, setChangesState] = useState({})
   const [isAddMode, setIsAddMode] = useState(false)
-  const [editIngredientId, setEditIngredientId] = useState(null)
 
   /**
    * Method to change the ingredient name
    * @param {EventTarget} e Related HTML event
    */
-  const handleChangeInput = (e, ingredientId) => {
-    setEditIngredientId(ingredientId)
+  const handleChangeInput = (e) => {
     setChangesState({
       ...changesState,
       [e.target.name]: e.target.value
@@ -41,10 +40,6 @@ export const ProductIngredient = (props) => {
    * Method to save the new ingredient from API
    */
   const handleAddIngredient = async () => {
-    if (Object.keys(changesState).length === 0) {
-      setIsAddMode(false)
-      return
-    }
     try {
       let changes = {
         business_id: business?.id,
@@ -53,7 +48,7 @@ export const ProductIngredient = (props) => {
       }
       changes = { ...changes, ...changesState }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setProductState({ ...productState, loading: true })
+      setIngredientState({ ...ingredientState, loading: true })
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -66,19 +61,18 @@ export const ProductIngredient = (props) => {
       const content = await response.json()
       if (!content.error) {
         setChangesState({})
-        setIsAddMode(false)
+        setIngredientState({
+          ...ingredientState,
+          loading: false,
+          ingredient: content.result
+        })
         let ingredients
-        if (productState?.product.ingredients) {
-          ingredients = [...productState?.product.ingredients, content.result]
+        if (product.ingredients) {
+          ingredients = [...product.ingredients, content.result]
         } else {
           ingredients = [content.result]
         }
-        const updatedProduct = { ...productState.product, ingredients: ingredients }
-        setProductState({
-          ...productState,
-          loading: false,
-          product: updatedProduct
-        })
+        const updatedProduct = { ...product, ingredients: ingredients }
         if (handleUpdateBusinessState) {
           const categories = business.categories.map(item => {
             if (item.id === parseInt(product?.category_id)) {
@@ -99,9 +93,10 @@ export const ProductIngredient = (props) => {
           handleUpdateBusinessState(updatedBusiness)
         }
         showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
+        props.onClose && props.onClose()
       }
     } catch (err) {
-      setProductState({ ...productState, loading: false, error: err.message })
+      setIngredientState({ ...ingredientState, loading: false, error: err.message })
     }
   }
 
@@ -118,7 +113,7 @@ export const ProductIngredient = (props) => {
 
       changes = { ...changes, ...changesState }
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setProductState({ ...productState, loading: true })
+      setIngredientState({ ...ingredientState, loading: true })
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -127,22 +122,22 @@ export const ProductIngredient = (props) => {
         },
         body: JSON.stringify(changes)
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${editIngredientId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${ingredient.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setChangesState({})
-        const ingredients = productState?.product.ingredients.filter(ingredient => {
-          if (ingredient.id === editIngredientId) {
-            Object.assign(ingredient, content.result)
+        setIngredientState({
+          ...ingredientState,
+          loading: false,
+          ingredient: content.result
+        })
+        const ingredients = product.ingredients.filter(_ingredient => {
+          if (_ingredient.id === ingredient.id) {
+            Object.assign(_ingredient, content.result)
           }
           return true
         })
-        const updatedProduct = { ...productState.product, ingredients: ingredients }
-        setProductState({
-          ...productState,
-          loading: false,
-          product: updatedProduct
-        })
+        const updatedProduct = { ...product, ingredients: ingredients }
         if (handleUpdateBusinessState) {
           const categories = business.categories.map(item => {
             if (item.id === parseInt(product?.category_id)) {
@@ -165,18 +160,17 @@ export const ProductIngredient = (props) => {
         showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
       }
     } catch (err) {
-      setProductState({ ...productState, loading: false, error: err.message })
+      setIngredientState({ ...ingredientState, loading: false, error: err.message })
     }
   }
 
   /**
    * Method to delete the product ingredient
-   * @param {Number} ingredientId id to delete the ingredient
    */
-  const handleDeleteIngredient = async (ingredientId) => {
+  const handleDeleteIngredient = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setProductState({ ...productState, loading: false })
+      setIngredientState({ ...ingredientState, loading: false })
       const requestOptions = {
         method: 'DELETE',
         headers: {
@@ -184,16 +178,16 @@ export const ProductIngredient = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${ingredientId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/categories/${product?.category_id}/products/${product.id}/ingredients/${ingredient.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const ingredients = productState?.product.ingredients.filter(ingredient => ingredient.id !== ingredientId)
-        const updatedProduct = { ...productState.product, ingredients: ingredients }
-        setProductState({
-          ...productState,
+        setIngredientState({
+          ...ingredientState,
           loading: false,
-          product: updatedProduct
+          ingredient: content.result
         })
+        const ingredients = product.ingredients.filter(_ingredient => _ingredient.id !== ingredient.id)
+        const updatedProduct = { ...product, ingredients: ingredients }
         if (handleUpdateBusinessState) {
           const categories = business.categories.map(item => {
             if (item.id === parseInt(product?.category_id)) {
@@ -214,44 +208,38 @@ export const ProductIngredient = (props) => {
           handleUpdateBusinessState(updatedBusiness)
         }
         showToast(ToastType.Success, t('INGREDIENT_DELETED', 'Ingredient deleted'))
+        props.onClose && props.onClose()
       }
     } catch (err) {
-      setProductState({ ...productState, loading: false, error: err.message })
+      setIngredientState({ ...ingredientState, loading: false, error: err.message })
     }
   }
 
-  /**
-   * Method to open the ingredient add form
-   */
-  const handleOpenAddForm = () => {
-    setIsAddMode(true)
-  }
-
   useEffect(() => {
-    if (Object.keys(changesState).length > 0 && !isAddMode && editIngredientId) {
-      handleUpdateIngredient()
-    }
-  }, [changesState, isAddMode, editIngredientId])
-
-  useEffect(() => {
-    setProductState({
-      ...productState,
-      product: product
+    setChangesState({})
+    setIngredientState({
+      ...ingredientState,
+      ingredient: ingredient
     })
-  }, [product])
+    if (ingredient) {
+      setIsAddMode(false)
+    } else {
+      setIsAddMode(true)
+    }
+  }, [ingredient])
 
   return (
     <>
       {UIComponent && (
         <UIComponent
           {...props}
-          productState={productState}
+          ingredientState={ingredientState}
           changesState={changesState}
           isAddMode={isAddMode}
           handleChangeInput={handleChangeInput}
-          handleOpenAddForm={handleOpenAddForm}
           handleDeleteIngredient={handleDeleteIngredient}
           handleAddIngredient={handleAddIngredient}
+          handleUpdateIngredient={handleUpdateIngredient}
         />
       )}
     </>
