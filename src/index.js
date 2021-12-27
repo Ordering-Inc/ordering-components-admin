@@ -69,7 +69,7 @@ import { DriversGroupLogs } from './components/DriversGroupLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
-import { EnterprisePromontionList } from './components/EnterprisePromontionList'
+import { EnterprisePromotionList } from './components/EnterprisePromotionList'
 import { EnterprisePromotionDetails } from './components/EnterprisePromotionDetails'
 import { ExamineClick } from './components/ExamineClick'
 import { ExportCSV } from './components/ExportCSV'
@@ -257,7 +257,7 @@ export {
   DriversGroupOrders,
   DriversGroupsList,
   DriversGroupLogs,
-  EnterprisePromontionList,
+  EnterprisePromotionList,
   EnterprisePromotionDetails,
   ExamineClick,
   ExportCSV,
