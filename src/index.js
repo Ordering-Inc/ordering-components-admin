@@ -166,6 +166,7 @@ import { PaymentOptionStripe } from './components/PaymentOptionStripe'
 import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirect'
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
 import { ReportsDriverFilter } from './components/ReportsDriverFilter'
+import { ReviewCustomer } from './components/ReviewCustomer'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleBusinessCategory } from './components/SingleBusinessCategory'
@@ -353,6 +354,7 @@ export {
   ReportsBrandFilter,
   ReportsAppIdFilter,
   ReportsDriverGroupFilter,
+  ReviewCustomer,
   Analytics,
   UsersList,
   UserTypeFilter,
