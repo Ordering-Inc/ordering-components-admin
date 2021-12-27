@@ -69,7 +69,7 @@ import { DriversGroupLogs } from './components/DriversGroupLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
-import { EnterprisePromontionList } from './components/EnterprisePromontionList'
+import { EnterprisePromotionList } from './components/EnterprisePromotionList'
 import { EnterprisePromotionDetails } from './components/EnterprisePromotionDetails'
 import { ExamineClick } from './components/ExamineClick'
 import { ExportCSV } from './components/ExportCSV'
@@ -166,6 +166,7 @@ import { PaymentOptionStripe } from './components/PaymentOptionStripe'
 import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirect'
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
 import { ReportsDriverFilter } from './components/ReportsDriverFilter'
+import { ReviewCustomer } from './components/ReviewCustomer'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleBusinessCategory } from './components/SingleBusinessCategory'
@@ -256,7 +257,7 @@ export {
   DriversGroupOrders,
   DriversGroupsList,
   DriversGroupLogs,
-  EnterprisePromontionList,
+  EnterprisePromotionList,
   EnterprisePromotionDetails,
   ExamineClick,
   ExportCSV,
@@ -353,6 +354,7 @@ export {
   ReportsBrandFilter,
   ReportsAppIdFilter,
   ReportsDriverGroupFilter,
+  ReviewCustomer,
   Analytics,
   UsersList,
   UserTypeFilter,

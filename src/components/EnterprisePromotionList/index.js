@@ -5,7 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
-export const EnterprisePromontionList = (props) => {
+export const EnterprisePromotionList = (props) => {
   const {
     UIComponent,
     paginationSettings,
@@ -260,7 +260,7 @@ export const EnterprisePromontionList = (props) => {
       ...paginationProps,
       total: paginationProps?.total - 1
     })
-    setPromotionListState({ ...promotionListState, promotions })
+    setPromotionListState({ ...promotionListState, promotions: promotions })
   }
 
   /**
@@ -326,7 +326,7 @@ export const EnterprisePromontionList = (props) => {
       const { content: { error, result } } = await ordering
         .setAccessToken(token)
         .businesses()
-        .select(['name', 'logo'])
+        .select(['name', 'logo', 'slug'])
         .asDashboard()
         .get()
       if (!error) {
@@ -379,7 +379,7 @@ export const EnterprisePromontionList = (props) => {
   )
 }
 
-EnterprisePromontionList.propTypes = {
+EnterprisePromotionList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -410,7 +410,7 @@ EnterprisePromontionList.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-EnterprisePromontionList.defaultProps = {
+EnterprisePromotionList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
