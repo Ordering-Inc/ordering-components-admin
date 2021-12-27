@@ -495,16 +495,16 @@ Object.defineProperty(exports, "DriversList", {
     return _DriversList.DriversList;
   }
 });
-Object.defineProperty(exports, "EnterprisePromontionList", {
-  enumerable: true,
-  get: function get() {
-    return _EnterprisePromontionList.EnterprisePromontionList;
-  }
-});
 Object.defineProperty(exports, "EnterprisePromotionDetails", {
   enumerable: true,
   get: function get() {
     return _EnterprisePromotionDetails.EnterprisePromotionDetails;
+  }
+});
+Object.defineProperty(exports, "EnterprisePromotionList", {
+  enumerable: true,
+  get: function get() {
+    return _EnterprisePromotionList.EnterprisePromotionList;
   }
 });
 Object.defineProperty(exports, "EventContext", {
@@ -1017,6 +1017,12 @@ Object.defineProperty(exports, "ResetPassword", {
     return _ResetPassword.ResetPassword;
   }
 });
+Object.defineProperty(exports, "ReviewCustomer", {
+  enumerable: true,
+  get: function get() {
+    return _ReviewCustomer.ReviewCustomer;
+  }
+});
 Object.defineProperty(exports, "Schedule", {
   enumerable: true,
   get: function get() {
@@ -1424,7 +1430,7 @@ var _DriversList = require("./components/DriversList");
 
 var _DriverAnalytics = require("./components/DriverAnalytics");
 
-var _EnterprisePromontionList = require("./components/EnterprisePromontionList");
+var _EnterprisePromotionList = require("./components/EnterprisePromotionList");
 
 var _EnterprisePromotionDetails = require("./components/EnterprisePromotionDetails");
 
@@ -1617,6 +1623,8 @@ var _PaymentOptionStripeDirect = require("./components/PaymentOptionStripeDirect
 var _PaymentOptionStripeRedirect = require("./components/PaymentOptionStripeRedirect");
 
 var _ReportsDriverFilter = require("./components/ReportsDriverFilter");
+
+var _ReviewCustomer = require("./components/ReviewCustomer");
 
 var _StripeElementsForm = require("./components/StripeElementsForm");
 

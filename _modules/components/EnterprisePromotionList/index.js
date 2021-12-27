@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.EnterprisePromontionList = void 0;
+exports.EnterprisePromotionList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -59,7 +59,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var EnterprisePromontionList = function EnterprisePromontionList(props) {
+var EnterprisePromotionList = function EnterprisePromotionList(props) {
   var _paginationSettings$p;
 
   var UIComponent = props.UIComponent,
@@ -652,7 +652,7 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
                 loading: false
               }));
               _context6.next = 4;
-              return ordering.setAccessToken(token).businesses().select(['name', 'logo']).asDashboard().get();
+              return ordering.setAccessToken(token).businesses().select(['name', 'logo', 'slug']).asDashboard().get();
 
             case 4:
               _yield$ordering$setAc = _context6.sent;
@@ -722,8 +722,8 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
   })));
 };
 
-exports.EnterprisePromontionList = EnterprisePromontionList;
-EnterprisePromontionList.propTypes = {
+exports.EnterprisePromotionList = EnterprisePromotionList;
+EnterprisePromotionList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -758,7 +758,7 @@ EnterprisePromontionList.propTypes = {
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-EnterprisePromontionList.defaultProps = {
+EnterprisePromotionList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

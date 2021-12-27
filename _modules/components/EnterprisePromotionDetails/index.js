@@ -1,7 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -28,6 +26,8 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -124,6 +124,16 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       _useState12 = _slicedToArray(_useState11, 2),
       selectedSitesIds = _useState12[0],
       setSelectedSitesIds = _useState12[1];
+
+  var _useState13 = (0, _react.useState)([]),
+      _useState14 = _slicedToArray(_useState13, 2),
+      selectedProductsIds = _useState14[0],
+      setSelectedProductsIds = _useState14[1];
+
+  var _useState15 = (0, _react.useState)([]),
+      _useState16 = _slicedToArray(_useState15, 2),
+      selectedCategoryIds = _useState16[0],
+      setSelectedCategoryIds = _useState16[1];
   /**
    * Clean formState
    */
@@ -286,7 +296,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var changes, requestOptions, response, content, updatedPromotions;
+      var changes, key, requestOptions, response, content, updatedPromotions;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -299,8 +309,10 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
               });
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
 
-              if (changes !== null && changes !== void 0 && changes.schedule) {
-                changes.schedule = JSON.stringify(changes.schedule);
+              for (key in changes) {
+                if (_typeof(changes[key]) === 'object' && changes[key] !== null || Array.isArray(changes[key])) {
+                  changes[key] = JSON.stringify(changes[key]);
+                }
               }
 
               requestOptions = {
@@ -533,9 +545,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
           target: 1,
           rate_type: 1,
           stackable: false,
-          rate: 5 // products: [{ id: 220, is_condition: true }],
-          // categories: [11]
-
+          rate: 5
         }
       }));
     } else {
@@ -551,6 +561,18 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
         return [].concat(_toConsumableArray(ids), [site.id]);
       }, []);
       setSelectedSitesIds(sitesIds || []);
+
+      var _selectedProductsIds = promotion === null || promotion === void 0 ? void 0 : promotion.products.reduce(function (ids, product) {
+        return [].concat(_toConsumableArray(ids), [product.id]);
+      }, []);
+
+      setSelectedProductsIds(_selectedProductsIds);
+
+      var _selectedCategoryIds = promotion === null || promotion === void 0 ? void 0 : promotion.categories.reduce(function (ids, category) {
+        return [].concat(_toConsumableArray(ids), [category.id]);
+      }, []);
+
+      setSelectedCategoryIds(_selectedCategoryIds);
     }
 
     setPromotionState(_objectSpread(_objectSpread({}, promotionState), {}, {
@@ -564,6 +586,10 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     actionState: actionState,
     selectedBusinessIds: selectedBusinessIds,
     selectedSitesIds: selectedSitesIds,
+    selectedProductsIds: selectedProductsIds,
+    setSelectedProductsIds: setSelectedProductsIds,
+    selectedCategoryIds: selectedCategoryIds,
+    setSelectedCategoryIds: setSelectedCategoryIds,
     handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
     handleUpdateClick: handleUpdateClick,
