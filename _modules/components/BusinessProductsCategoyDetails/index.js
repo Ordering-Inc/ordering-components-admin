@@ -437,6 +437,105 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+  * Method to edit a category
+  */
+
+
+  var handleDeleteCategory = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var _businessState$busine3, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!loading) {
+                _context3.next = 2;
+                break;
+              }
+
+              return _context3.abrupt("return");
+
+            case 2:
+              _context3.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              _context3.next = 7;
+              return ordering.businesses(parseInt((_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.id)).categories(parseInt(category.id)).delete();
+
+            case 7:
+              _yield$ordering$busin3 = _context3.sent;
+              _yield$ordering$busin4 = _yield$ordering$busin3.content;
+              error = _yield$ordering$busin4.error;
+              result = _yield$ordering$busin4.result;
+
+              if (!error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: false,
+                    result: result
+                  }
+                }));
+
+                if (handleUpdateBusinessState) {
+                  _categories = _toConsumableArray(businessState.business.categories);
+
+                  _categories.forEach(function iterate(_category, index, object) {
+                    if (_category.id === category.id) {
+                      object.splice(index, 1);
+                    }
+
+                    Array.isArray(_category === null || _category === void 0 ? void 0 : _category.subcategories) && _category.subcategories.forEach(iterate);
+                  });
+
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, businessState.business), {}, {
+                    categories: _categories
+                  }));
+                  if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'));
+                props.onClose && props.onClose(category.id);
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
+                }));
+              }
+
+              _context3.next = 17;
+              break;
+
+            case 14:
+              _context3.prev = 14;
+              _context3.t0 = _context3["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                result: {
+                  error: true,
+                  result: _context3.t0
+                }
+              }));
+
+            case 17:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[2, 14]]);
+    }));
+
+    return function handleDeleteCategory() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (businessState.loading || !categorySelected) return;
@@ -474,9 +573,10 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
     parentCategories: parentCategories,
     handlechangeImage: handlechangeImage,
     handleChangeInput: handleChangeInput,
-    handleUpdateClick: handleUpdateClick,
     handleChangeCheckBox: handleChangeCheckBox,
-    handleChangeItem: handleChangeItem
+    handleChangeItem: handleChangeItem,
+    handleUpdateClick: handleUpdateClick,
+    handleDeleteCategory: handleDeleteCategory
   })));
 };
 

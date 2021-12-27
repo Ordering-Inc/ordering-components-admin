@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ProductProperties = void 0;
+exports.ProductDetailsAdvanced = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -56,7 +56,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 /**
  * Component to manage product properties behavior without UI component
  */
-var ProductProperties = function ProductProperties(props) {
+var ProductDetailsAdvanced = function ProductDetailsAdvanced(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
@@ -124,11 +124,6 @@ var ProductProperties = function ProductProperties(props) {
       _useState10 = _slicedToArray(_useState9, 2),
       alertState = _useState10[0],
       setAlertState = _useState10[1];
-
-  var _useState11 = (0, _react.useState)(null),
-      _useState12 = _slicedToArray(_useState11, 2),
-      timeout = _useState12[0],
-      setTimeoutCustom = _useState12[1];
   /**
    * Method to update the product details from API
    */
@@ -462,14 +457,6 @@ var ProductProperties = function ProductProperties(props) {
   (0, _react.useEffect)(function () {
     setProductState(product);
   }, [product]);
-  (0, _react.useEffect)(function () {
-    if (Object.keys(formState.changes).length > 0) {
-      clearInterval(timeout);
-      setTimeoutCustom(setTimeout(function () {
-        handleUpdateClick();
-      }, 1000));
-    }
-  }, [formState.changes]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
     taxes: taxes,
@@ -488,38 +475,38 @@ var ProductProperties = function ProductProperties(props) {
   })));
 };
 
-exports.ProductProperties = ProductProperties;
-ProductProperties.propTypes = {
+exports.ProductDetailsAdvanced = ProductDetailsAdvanced;
+ProductDetailsAdvanced.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before product properties
+   * Components types before product details advanced
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after product properties
+   * Components types after product details advanced
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before product properties
+   * Elements before product details advanced
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after product properties
+   * Elements after product details advanced
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ProductProperties.defaultProps = {
+ProductDetailsAdvanced.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
