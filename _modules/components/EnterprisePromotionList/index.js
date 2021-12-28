@@ -1,11 +1,11 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.EnterprisePromontionList = void 0;
+exports.EnterprisePromotionList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -37,9 +37,9 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -59,7 +59,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var EnterprisePromontionList = function EnterprisePromontionList(props) {
+var EnterprisePromotionList = function EnterprisePromotionList(props) {
   var _paginationSettings$p;
 
   var UIComponent = props.UIComponent,
@@ -652,7 +652,7 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
                 loading: false
               }));
               _context6.next = 4;
-              return ordering.setAccessToken(token).businesses().select(['name', 'logo']).asDashboard().get();
+              return ordering.setAccessToken(token).businesses().select(['name', 'logo', 'slug']).asDashboard().get();
 
             case 4:
               _yield$ordering$setAc = _context6.sent;
@@ -722,8 +722,8 @@ var EnterprisePromontionList = function EnterprisePromontionList(props) {
   })));
 };
 
-exports.EnterprisePromontionList = EnterprisePromontionList;
-EnterprisePromontionList.propTypes = {
+exports.EnterprisePromotionList = EnterprisePromotionList;
+EnterprisePromotionList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -758,7 +758,7 @@ EnterprisePromontionList.propTypes = {
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-EnterprisePromontionList.defaultProps = {
+EnterprisePromotionList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

@@ -5,17 +5,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Logistics = void 0;
+exports.ReviewCustomer = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -47,9 +51,9 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var Logistics = function Logistics(props) {
-  var orderId = props.orderId,
-      UIComponent = props.UIComponent;
+var ReviewCustomer = function ReviewCustomer(props) {
+  var UIComponent = props.UIComponent,
+      order = props.order;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -58,127 +62,155 @@ var Logistics = function Logistics(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
-  /**
-   * Array to save logistics
-   */
 
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
-    logs: [],
-    loading: true,
-    error: null
+    qualification: 0,
+    comment: '',
+    order_id: order === null || order === void 0 ? void 0 : order.id,
+    user_id: order === null || order === void 0 ? void 0 : order.customer_id
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      logisticList = _useState2[0],
-      setLogisticList = _useState2[1];
+      reviewState = _useState2[0],
+      setReviewState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to get logistics from API
+   * Function that load and send the customer review to ordering
    */
 
 
-  var getLogistics = /*#__PURE__*/function () {
+  var handleSendCustomerReview = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, _yield$response$json, result;
+      var response, _yield$response$json, result, error;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.prev = 0;
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
+              setActionState({
+                loading: true,
+                error: null
+              });
+              _context.prev = 1;
+              _context.next = 4;
+              return fetch("".concat(ordering.root, "/users/").concat(order === null || order === void 0 ? void 0 : order.customer_id, "/user_reviews"), {
+                method: 'POST',
                 headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(session.token)
-                }
-              };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/logs?order_id=").concat(orderId), requestOptions);
+                  Authorization: "Bearer ".concat(session.token),
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(reviewState)
+              });
 
-            case 5:
+            case 4:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 7;
               return response.json();
 
-            case 8:
+            case 7:
               _yield$response$json = _context.sent;
               result = _yield$response$json.result;
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
-                loading: false,
-                logs: result
-              }));
+              error = _yield$response$json.error;
+
+              if (!error) {
+                setActionState(_objectSpread(_objectSpread({}, reviewState), {}, {
+                  loading: false
+                }));
+                showToast(_ToastContext.ToastType.Success, t('CUSTOMER_REVIEW_SUCCESS_CONTENT', 'Thank you, Customer review successfully submitted!'));
+                props.onClose && props.onClose();
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
+                });
+              }
+
               _context.next = 16;
               break;
 
             case 13:
               _context.prev = 13;
-              _context.t0 = _context["catch"](0);
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
+              _context.t0 = _context["catch"](1);
+              setActionState({
                 loading: false,
-                error: _context.t0.message
-              }));
+                error: [_context.t0.message]
+              });
 
             case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[1, 13]]);
     }));
 
-    return function getLogistics() {
+    return function handleSendCustomerReview() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  (0, _react.useEffect)(function () {
-    getLogistics();
-  }, []);
+  var handleChangeQualification = function handleChangeQualification(index) {
+    if (index) setReviewState(_objectSpread(_objectSpread({}, reviewState), {}, {
+      qualification: index
+    }));
+  };
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    logisticList: logisticList
+    reviewState: reviewState,
+    setReviewState: setReviewState,
+    actionState: actionState,
+    handleChangeQualification: handleChangeQualification,
+    handleSendCustomerReview: handleSendCustomerReview
   })));
 };
 
-exports.Logistics = Logistics;
-Logistics.propTypes = {
+exports.ReviewCustomer = ReviewCustomer;
+ReviewCustomer.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array of drivers props to fetch
-   */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
-
-  /**
-   * Components types before my orders
+   * Components types before review customer
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
+   * Components types after review customer
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
+   * Elements before review customer
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
+   * Elements after review customer
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Logistics.defaultProps = {
+ReviewCustomer.defaultProps = {
+  order: {},
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
