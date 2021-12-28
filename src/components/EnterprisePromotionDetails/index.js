@@ -28,6 +28,8 @@ export const EnterprisePromotionDetails = (props) => {
   const [isAddMode, setIsAddMode] = useState(false)
   const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
   const [selectedSitesIds, setSelectedSitesIds] = useState([])
+  const [selectedProductsIds, setSelectedProductsIds] = useState([])
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
 
   /**
    * Clean formState
@@ -165,8 +167,10 @@ export const EnterprisePromotionDetails = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
       const changes = { ...formState?.changes }
-      if (changes?.schedule) {
-        changes.schedule = JSON.stringify(changes.schedule)
+      for (const key in changes) {
+        if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
+          changes[key] = JSON.stringify(changes[key])
+        }
       }
       const requestOptions = {
         method: 'POST',
@@ -294,8 +298,6 @@ export const EnterprisePromotionDetails = (props) => {
           rate_type: 1,
           stackable: false,
           rate: 5
-          // products: [{ id: 220, is_condition: true }],
-          // categories: [11]
         }
       })
     } else {
@@ -305,6 +307,10 @@ export const EnterprisePromotionDetails = (props) => {
       setSelectedBusinessIds(businessIds || [])
       const sitesIds = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
       setSelectedSitesIds(sitesIds || [])
+      const _selectedProductsIds = promotion?.products.reduce((ids, product) => [...ids, product.id], [])
+      setSelectedProductsIds(_selectedProductsIds)
+      const _selectedCategoryIds = promotion?.categories.reduce((ids, category) => [...ids, category.id], [])
+      setSelectedCategoryIds(_selectedCategoryIds)
     }
     setPromotionState({ ...promotionState, promotion: promotion })
   }, [promotion])
@@ -321,6 +327,10 @@ export const EnterprisePromotionDetails = (props) => {
             actionState={actionState}
             selectedBusinessIds={selectedBusinessIds}
             selectedSitesIds={selectedSitesIds}
+            selectedProductsIds={selectedProductsIds}
+            setSelectedProductsIds={setSelectedProductsIds}
+            selectedCategoryIds={selectedCategoryIds}
+            setSelectedCategoryIds={setSelectedCategoryIds}
             handleChangeImage={handleChangeImage}
             handleChangeInput={handleChangeInput}
             handleUpdateClick={handleUpdateClick}
