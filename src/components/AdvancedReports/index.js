@@ -101,8 +101,10 @@ export const AdvancedReports = (props) => {
       if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses_ids=${JSON.stringify(filterList?.businessIds)}`
       if (filterList?.drivers_ids && filterList?.drivers_ids.length > 0) params = `${params}&drivers_ids=${JSON.stringify(filterList?.drivers_ids)}`
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
-      if (filterList?.driver_companies_ids && filterList?.drivers_ids.length > 0) params = `${params}&driver_companies_ids=${JSON.stringify(filterList?.driver_companies_ids)}`
+      if (filterList?.driver_companies_ids && filterList?.driver_companies_ids.length > 0) params = `${params}&driver_companies_ids=${JSON.stringify(filterList?.driver_companies_ids)}`
+      if (filterList?.driver_groups_ids && filterList?.driver_groups_ids.length > 0) params = `${params}&driver_groups_ids=${JSON.stringify(filterList?.driver_groups_ids)}`
       if (filterList?.delivery_types_ids && filterList?.delivery_types_ids.length > 0) params = `${params}&delivery_types_ids=${JSON.stringify(filterList?.delivery_types_ids)}`
+      if (filterList?.app_ids && filterList?.app_ids.length > 0) params = `${params}&app_ids=${JSON.stringify(filterList?.app_ids)}`
 
       const functionFetch = `${ordering.root}/reports/${endpoint1}?${params}`
 
