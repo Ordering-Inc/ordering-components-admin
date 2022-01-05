@@ -88,7 +88,9 @@ export const EnterprisePromotionDetails = (props) => {
     if (formState.changes?.sites) {
       sites = [...formState.changes?.sites]
     } else {
-      sites = promotion?.sites.reduce((ids, site) => [...ids, site.id], [])
+      if (promotion?.sites) {
+        sites = promotion?.sites.reduce((ids, site) => [...ids, site.id], [])
+      }
     }
     if (checked) {
       sites.push(siteId)
@@ -154,7 +156,7 @@ export const EnterprisePromotionDetails = (props) => {
       ...formState,
       changes: {
         ...formState.changes,
-        sties: filteredIds
+        sites: filteredIds
       }
     })
   }
@@ -189,7 +191,7 @@ export const EnterprisePromotionDetails = (props) => {
           ...promotionState,
           promotion: content.result
         })
-        setActionState({ ...actionState, loading: false })
+        setActionState({ loading: false, error: null })
         if (handleSuccessUpdatePromotions) {
           const updatedPromotions = promotionsList.filter(_promotion => {
             if (_promotion.id === promotion.id) {
