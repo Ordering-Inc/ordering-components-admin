@@ -417,6 +417,12 @@ Object.defineProperty(exports, "DashboardOrdersList", {
     return _DashboardOrdersList.DashboardOrdersList;
   }
 });
+Object.defineProperty(exports, "DeliveryzoneList", {
+  enumerable: true,
+  get: function get() {
+    return _DeliveryzoneList.DeliveryzoneList;
+  }
+});
 Object.defineProperty(exports, "DragAndDrop", {
   enumerable: true,
   get: function get() {
@@ -1403,6 +1409,8 @@ var _CouponControl = require("./components/CouponControl");
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
 var _DashboardOrdersList = require("./components/DashboardOrdersList");
+
+var _DeliveryzoneList = require("./components/DeliveryzoneList");
 
 var _DragAndDrop = require("./components/DragAndDrop");
 
