@@ -56,6 +56,7 @@ import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
+import { DeliveryzoneList } from './components/DeliveryzoneList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriversCompanyDetails } from './components/DriversCompanyDetails'
 import { DriverGroupSetting } from './components/DriverGroupSetting'
@@ -244,6 +245,7 @@ export {
   CouponControl,
   DashboardBusinessList,
   DashboardOrdersList,
+  DeliveryzoneList,
   DragAndDrop,
   DriversCompanyDetails,
   DriverGroupSetting,
