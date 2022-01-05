@@ -204,9 +204,11 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
 
       sites = _toConsumableArray((_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.sites);
     } else {
-      sites = promotion === null || promotion === void 0 ? void 0 : promotion.sites.reduce(function (ids, site) {
-        return [].concat(_toConsumableArray(ids), [site.id]);
-      }, []);
+      if (promotion !== null && promotion !== void 0 && promotion.sites) {
+        sites = promotion === null || promotion === void 0 ? void 0 : promotion.sites.reduce(function (ids, site) {
+          return [].concat(_toConsumableArray(ids), [site.id]);
+        }, []);
+      }
     }
 
     if (checked) {
@@ -285,7 +287,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     setSelectedSitesIds(filteredIds);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        sties: filteredIds
+        sites: filteredIds
       })
     }));
   };
@@ -338,9 +340,10 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
                 setPromotionState(_objectSpread(_objectSpread({}, promotionState), {}, {
                   promotion: content.result
                 }));
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
 
                 if (handleSuccessUpdatePromotions) {
                   updatedPromotions = promotionsList.filter(function (_promotion) {
