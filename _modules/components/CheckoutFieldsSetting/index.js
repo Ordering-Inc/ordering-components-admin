@@ -21,6 +21,8 @@ var _ToastContext = require("../../contexts/ToastContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
 
+var _ValidationsFieldsContext = require("../../contexts/ValidationsFieldsContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -69,6 +71,10 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
+
+  var _useValidationFields = (0, _ValidationsFieldsContext.useValidationFields)(),
+      _useValidationFields2 = _slicedToArray(_useValidationFields, 2),
+      loadValidationFields = _useValidationFields2[1].loadValidationFields;
 
   var hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes'];
 
@@ -222,6 +228,7 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
                 setCheckoutFieldsState(_objectSpread(_objectSpread({}, checkoutFieldsState), {}, {
                   fields: fields
                 }));
+                loadValidationFields && loadValidationFields();
               } else {
                 setActionState({
                   loading: false,
