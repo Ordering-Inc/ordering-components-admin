@@ -68,6 +68,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     const _language = { id: language.id, code: language.code, rtl: language.rtl }
     await strategy.setItem('language', _language, true)
     setState({ ...state, loading: true, language: _language })
+    location.reload()
   }
 
   /**
