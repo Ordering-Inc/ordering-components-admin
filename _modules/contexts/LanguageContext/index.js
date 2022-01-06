@@ -252,8 +252,9 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 loading: true,
                 language: _language
               }));
+              location.reload();
 
-            case 6:
+            case 7:
             case "end":
               return _context4.stop();
           }
