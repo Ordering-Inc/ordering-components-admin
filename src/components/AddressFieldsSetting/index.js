@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useValidationFields } from '../../contexts/ValidationsFieldsContext'
 
 /**
  * Component to manage address field behavior without UI component
@@ -15,6 +16,7 @@ export const AddressFieldsSetting = (props) => {
   const [ordering] = useApi()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
+  const [, { loadValidationFields }] = useValidationFields()
 
   const [addressFieldsState, setAddressFieldsState] = useState({ fields: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
@@ -66,6 +68,7 @@ export const AddressFieldsSetting = (props) => {
           return true
         })
         setAddressFieldsState({ ...addressFieldsState, fields: fields })
+        loadValidationFields && loadValidationFields()
       } else {
         setActionState({ loading: false, error: result })
       }
