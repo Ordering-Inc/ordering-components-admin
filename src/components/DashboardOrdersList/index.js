@@ -27,6 +27,7 @@ export const DashboardOrdersList = (props) => {
     isSearchByOrderId,
     isSearchByCustomerEmail,
     isSearchByCustomerPhone,
+    isSearchByBusinessName,
     orderIdForUnreadCountUpdate
   } = props
 
@@ -210,6 +211,24 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+
+      if (isSearchByBusinessName) {
+        searchConditions.push(
+          {
+            attribute: 'business',
+            conditions: [
+              {
+                attribute: 'name',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${searchValue}%`)
+                }
+              }
+            ]
+          }
+        )
+      }
+
       conditions.push({
         conector: 'OR',
         conditions: searchConditions
