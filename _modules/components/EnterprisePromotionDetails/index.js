@@ -190,6 +190,20 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     }));
   };
   /**
+   * Method to remove the key of changes
+   * @param {String} key
+   */
+
+
+  var handleRemoveKey = function handleRemoveKey(key) {
+    var _changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+
+    delete _changes[key];
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _changes
+    }));
+  };
+  /**
    * Method to change the sites
    */
 
@@ -599,6 +613,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     handleAddPromotion: handleAddPromotion,
     handleDeletePromotion: handleDeletePromotion,
     handleChangeItem: handleChangeItem,
+    handleRemoveKey: handleRemoveKey,
     handleSelectSite: handleSelectSite,
     handleSelectAllBusiness: handleSelectAllBusiness,
     handleSelectBusiness: handleSelectBusiness,
