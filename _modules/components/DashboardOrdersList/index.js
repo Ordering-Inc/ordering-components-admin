@@ -81,6 +81,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       isSearchByOrderId = props.isSearchByOrderId,
       isSearchByCustomerEmail = props.isSearchByCustomerEmail,
       isSearchByCustomerPhone = props.isSearchByCustomerPhone,
+      isSearchByBusinessName = props.isSearchByBusinessName,
       orderIdForUnreadCountUpdate = props.orderIdForUnreadCountUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -337,6 +338,19 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                     attribute: 'customer',
                     conditions: [{
                       attribute: 'cellphone',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    }]
+                  });
+                }
+
+                if (isSearchByBusinessName) {
+                  searchConditions.push({
+                    attribute: 'business',
+                    conditions: [{
+                      attribute: 'name',
                       value: {
                         condition: 'ilike',
                         value: encodeURI("%".concat(searchValue, "%"))
