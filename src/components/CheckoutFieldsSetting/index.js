@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useValidationFields } from '../../contexts/ValidationsFieldsContext'
 
 export const CheckoutFieldsSetting = (props) => {
   const {
@@ -14,6 +15,7 @@ export const CheckoutFieldsSetting = (props) => {
   const [{ token }] = useSession()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
+  const [, { loadValidationFields }] = useValidationFields()
 
   const hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes']
 
@@ -85,6 +87,7 @@ export const CheckoutFieldsSetting = (props) => {
           return true
         })
         setCheckoutFieldsState({ ...checkoutFieldsState, fields: fields })
+        loadValidationFields && loadValidationFields()
       } else {
         setActionState({ loading: false, error: content.result })
       }
