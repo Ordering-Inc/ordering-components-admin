@@ -81,6 +81,19 @@ export const EnterprisePromotionDetails = (props) => {
   }
 
   /**
+   * Method to remove the key of changes
+   * @param {String} key
+   */
+  const handleRemoveKey = (key) => {
+    const _changes = { ...formState?.changes }
+    delete _changes[key]
+    setFormState({
+      ...formState,
+      changes: _changes
+    })
+  }
+
+  /**
    * Method to change the sites
    */
   const handleSelectSite = (checked, siteId) => {
@@ -339,6 +352,7 @@ export const EnterprisePromotionDetails = (props) => {
             handleAddPromotion={handleAddPromotion}
             handleDeletePromotion={handleDeletePromotion}
             handleChangeItem={handleChangeItem}
+            handleRemoveKey={handleRemoveKey}
             handleSelectSite={handleSelectSite}
             handleSelectAllBusiness={handleSelectAllBusiness}
             handleSelectBusiness={handleSelectBusiness}
