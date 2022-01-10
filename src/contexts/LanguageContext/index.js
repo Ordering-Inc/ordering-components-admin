@@ -93,7 +93,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     setLanguageFromLocalStorage()
     if (ordering?.project === null) return
     refreshLanguages()
-  }, [ordering])
+  }, [ordering?.language])
 
   useEffect(() => {
     apiHelper.setLanguage(state?.language?.code)
