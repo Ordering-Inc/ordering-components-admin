@@ -168,7 +168,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(language) {
       var _state$language;
 
-      var defaultLanguage, _languageList, _yield$ordering$langu, _yield$ordering$langu2, error, result;
+      var _yield$ordering$langu, _yield$ordering$langu2, error, result, defaultLanguage, _languageList;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -182,15 +182,32 @@ var LanguageProvider = function LanguageProvider(_ref) {
               return _context3.abrupt("return");
 
             case 2:
-              defaultLanguage = {
-                id: language.id,
-                code: language.code,
-                rtl: language.rtl
-              };
+              _context3.prev = 2;
               _context3.next = 5;
-              return strategy.setItem('language', language, true);
+              return ordering.languages(language.id).save({
+                default: true
+              });
 
             case 5:
+              _yield$ordering$langu = _context3.sent;
+              _yield$ordering$langu2 = _yield$ordering$langu.content;
+              error = _yield$ordering$langu2.error;
+              result = _yield$ordering$langu2.result;
+
+              if (error) {
+                _context3.next = 16;
+                break;
+              }
+
+              defaultLanguage = {
+                id: result.id,
+                code: result.code,
+                rtl: result.rtl
+              };
+              _context3.next = 13;
+              return strategy.setItem('language', language, true);
+
+            case 13:
               _languageList = state.languageList.filter(function (_language) {
                 if (_language.id === language.id) {
                   Object.assign(_language, language);
@@ -203,34 +220,14 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 languageList: _languageList
               }));
               apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
-              _context3.prev = 8;
-              _context3.next = 11;
-              return ordering.languages(language.id).save({
-                default: true
-              });
 
-            case 11:
-              _yield$ordering$langu = _context3.sent;
-              _yield$ordering$langu2 = _yield$ordering$langu.content;
-              error = _yield$ordering$langu2.error;
-              result = _yield$ordering$langu2.result;
-
-              if (!error) {
-                setState(_objectSpread(_objectSpread({}, state), {}, {
-                  language: {
-                    id: result.id,
-                    code: result.code,
-                    rtl: result.rtl
-                  }
-                }));
-              }
-
+            case 16:
               _context3.next = 21;
               break;
 
             case 18:
               _context3.prev = 18;
-              _context3.t0 = _context3["catch"](8);
+              _context3.t0 = _context3["catch"](2);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
@@ -243,7 +240,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[8, 18]]);
+      }, _callee3, null, [[2, 18]]);
     }));
 
     return function setLanguage(_x) {
@@ -322,13 +319,17 @@ var LanguageProvider = function LanguageProvider(_ref) {
   }();
 
   var updateLanguageListState = function updateLanguageListState(updatedLanguage) {
-    state.languageList.filter(function (language) {
+    var _languageList = state.languageList.filter(function (language) {
       if (language.id === updatedLanguage.id) {
         Object.assign(language, updatedLanguage);
       }
 
       return true;
     });
+
+    setState(_objectSpread(_objectSpread({}, state), {}, {
+      languageList: _languageList
+    }));
   };
   /**
    * Refresh translation when change language from ordering
