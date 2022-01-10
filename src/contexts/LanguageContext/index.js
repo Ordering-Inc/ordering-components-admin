@@ -48,28 +48,24 @@ export const LanguageProvider = ({ children, strategy }) => {
 
   const setLanguage = async (language) => {
     if (!language || language.id === state.language?.id) return
-    const defaultLanguage = { id: language.id, code: language.code, rtl: language.rtl }
-    await strategy.setItem('language', language, true)
-    const _languageList = state.languageList.filter(_language => {
-      if (_language.id === language.id) {
-        Object.assign(_language, language)
-      }
-      return true
-    })
-    setState({ ...state, language: defaultLanguage, languageList: _languageList })
-    apiHelper.setLanguage(language?.code)
-
     try {
       const { content: { error, result } } = await ordering.languages(language.id).save({ default: true })
       if (!error) {
-        setState({
-          ...state,
-          language: { id: result.id, code: result.code, rtl: result.rtl }
+        const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
+        await strategy.setItem('language', language, true)
+        const _languageList = state.languageList.filter(_language => {
+          if (_language.id === language.id) {
+            Object.assign(_language, language)
+          }
+          return true
         })
+        setState({ ...state, language: defaultLanguage, languageList: _languageList })
+        apiHelper.setLanguage(language?.code)
       }
     } catch (err) {
       setState({ ...state, loading: false })
     }
+
     location.reload()
   }
 
@@ -94,11 +90,15 @@ export const LanguageProvider = ({ children, strategy }) => {
   }
 
   const updateLanguageListState = (updatedLanguage) => {
-    state.languageList.filter(language => {
+    const _languageList = state.languageList.filter(language => {
       if (language.id === updatedLanguage.id) {
         Object.assign(language, updatedLanguage)
       }
       return true
+    })
+    setState({
+      ...state,
+      languageList: _languageList
     })
   }
 
