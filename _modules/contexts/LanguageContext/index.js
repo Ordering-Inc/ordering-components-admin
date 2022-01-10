@@ -287,7 +287,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
     setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
     refreshLanguages();
-  }, [ordering]);
+  }, [ordering === null || ordering === void 0 ? void 0 : ordering.language]);
   (0, _react.useEffect)(function () {
     var _state$language5;
 
