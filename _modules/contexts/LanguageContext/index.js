@@ -205,7 +205,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 rtl: result.rtl
               };
               _context3.next = 13;
-              return strategy.setItem('language', language, true);
+              return strategy.setItem('language', defaultLanguage, true);
 
             case 13:
               _languageList = state.languageList.filter(function (_language) {
