@@ -48,6 +48,7 @@ export const LanguageProvider = ({ children, strategy }) => {
 
   const setLanguage = async (language) => {
     if (!language || language.id === state.language?.id) return
+    const defaultLanguage = { id: language.id, code: language.code, rtl: language.rtl }
     await strategy.setItem('language', language, true)
     const _languageList = state.languageList.filter(_language => {
       if (_language.id === language.id) {
@@ -55,7 +56,7 @@ export const LanguageProvider = ({ children, strategy }) => {
       }
       return true
     })
-    setState({ ...state, language: language, languageList: _languageList })
+    setState({ ...state, language: defaultLanguage, languageList: _languageList })
     apiHelper.setLanguage(language?.code)
     location.reload()
   }
@@ -65,7 +66,8 @@ export const LanguageProvider = ({ children, strategy }) => {
       setState({ ...state, loading: true })
       const { content: { error, result } } = await ordering.languages().get()
       if (!error) {
-        const defaultLanguage = result.find(language => language.default)
+        const _defaultLanguage = result.find(language => language.default)
+        const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
         await strategy.setItem('language', defaultLanguage, true)
         setState({
           ...state,
@@ -94,10 +96,6 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (ordering?.project === null) return
     refreshLanguages()
   }, [ordering?.language])
-
-  useEffect(() => {
-    apiHelper.setLanguage(state?.language?.code)
-  }, [state.language])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key
