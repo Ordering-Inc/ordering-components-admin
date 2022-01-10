@@ -10,11 +10,9 @@ export const DashboardOrdersList = (props) => {
     propsToFetch,
     orders,
     isOnlyDelivery,
-    initialPageSize,
     driverId,
     customerId,
     businessId,
-    loadMorePageSize,
     orderIds,
     deletedOrderId,
     orderStatus,
@@ -376,7 +374,7 @@ export const DashboardOrdersList = (props) => {
     if (!session.token) return
     try {
       setOrderList({ ...orderList, loading: true })
-      const response = await getOrders(initialPageSize, 1)
+      const response = await getOrders(pagination.pageSize, 1)
 
       setOrderList({
         loading: false,
@@ -386,7 +384,7 @@ export const DashboardOrdersList = (props) => {
 
       if (!response.content.error) {
         setPagination({
-          currentPage: initialPageSize / loadMorePageSize,
+          currentPage: response.content.pagination.current_page,
           pageSize: response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
@@ -403,7 +401,7 @@ export const DashboardOrdersList = (props) => {
   const loadMoreOrders = async () => {
     setOrderList({ ...orderList, loading: true })
     try {
-      const response = await getOrders(loadMorePageSize, pagination.currentPage + 1)
+      const response = await getOrders(pagination.pageSize, pagination.currentPage + 1)
       setOrderList({
         loading: false,
         orders: response.content.error ? orderList.orders : orderList.orders.concat(response.content.result),

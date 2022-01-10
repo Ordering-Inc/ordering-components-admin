@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 
-export const DriverReviewDetails = (props) => {
+export const UserReviewDetails = (props) => {
   const {
     userId,
     UIComponent
@@ -12,14 +12,14 @@ export const DriverReviewDetails = (props) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
 
-  const [driverReviewState, setDriverReviewState] = useState({ reviews: [], loading: false, error: null })
+  const [userReviewState, setUserReviewState] = useState({ reviews: [], loading: false, error: null })
 
   /**
    * Method to get the driver reviews from API
    */
-  const getDriverReviews = async () => {
+  const getUserReviews = async () => {
     try {
-      setDriverReviewState({ ...driverReviewState, loading: true })
+      setUserReviewState({ ...userReviewState, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -31,11 +31,11 @@ export const DriverReviewDetails = (props) => {
       const response = await fetch(`${ordering.root}/users/${userId}/user_reviews`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setDriverReviewState({ reviews: content.result, loading: false, error: null })
+        setUserReviewState({ reviews: content.result, loading: false, error: null })
       }
     } catch (err) {
-      setDriverReviewState({
-        ...driverReviewState,
+      setUserReviewState({
+        ...userReviewState,
         loading: false,
         error: [err.message]
       })
@@ -44,7 +44,7 @@ export const DriverReviewDetails = (props) => {
 
   useEffect(() => {
     if (!userId) return
-    getDriverReviews()
+    getUserReviews()
   }, [userId])
 
   return (
@@ -53,7 +53,7 @@ export const DriverReviewDetails = (props) => {
         UIComponent && (
           <UIComponent
             {...props}
-            driverReviewState={driverReviewState}
+            userReviewState={userReviewState}
           />
         )
       }
@@ -61,7 +61,7 @@ export const DriverReviewDetails = (props) => {
   )
 }
 
-DriverReviewDetails.propTypes = {
+UserReviewDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -88,7 +88,7 @@ DriverReviewDetails.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-DriverReviewDetails.defaultProps = {
+UserReviewDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

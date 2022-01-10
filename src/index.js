@@ -60,7 +60,7 @@ import { DeliveryzoneList } from './components/DeliveryzoneList'
 import { DragAndDrop } from './components/DragAndDrop'
 import { DriversCompanyDetails } from './components/DriversCompanyDetails'
 import { DriverGroupSetting } from './components/DriverGroupSetting'
-import { DriverReviewDetails } from './components/DriverReviewDetails'
+import { UserReviewDetails } from './components/UserReviewDetails'
 import { DriversCompaniesList } from './components/DriversCompaniesList'
 import { DriversGroupAutoassign } from './components/DriversGroupAutoassign'
 import { DriversGroupDetails } from './components/DriversGroupDetails'
@@ -249,7 +249,7 @@ export {
   DragAndDrop,
   DriversCompanyDetails,
   DriverGroupSetting,
-  DriverReviewDetails,
+  UserReviewDetails,
   DriverTips,
   DriversList,
   DriverAnalytics,

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -14,38 +13,11 @@ export const LanguageSetting = (props) => {
   } = props
 
   const [ordering] = useApi()
-  const [{ token }] = useSession()
   const [, { showToast }] = useToast()
-  const [, t] = useLanguage()
+  const [languageState, t, { updateLanguageListState }] = useLanguage()
 
   const [languageFiledsState, setLanguageFiledsState] = useState({ fields: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
-  const [defaultLanguage, setDefaultLanguage] = useState({})
-
-  /**
-   * Method to get the language fields from API
-   */
-  const getLanguageFields = async () => {
-    try {
-      setLanguageFiledsState({ ...languageFiledsState, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const response = await fetch(`${ordering.root}/languages`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        setLanguageFiledsState({ fields: content.result, loading: false })
-        const _defaultLanguage = content.result.find(language => language.default)
-        setDefaultLanguage(_defaultLanguage)
-      }
-    } catch (err) {
-      setLanguageFiledsState({ ...languageFiledsState, loading: false, error: [err.message] })
-    }
-  }
 
   /**
    * Method to update the language fields setting from API
@@ -56,28 +28,20 @@ export const LanguageSetting = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
-      const requestOptions = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(changes)
-      }
-      const response = await fetch(`${ordering.root}/languages/${fieldId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
+      const { content: { error, result } } = await ordering.languages(fieldId).save(changes)
+      if (!error) {
         setActionState({ loading: false, error: null })
-        showToast(ToastType.Success, t('FIELD_SAVED', 'Field saved'))
+        showToast(ToastType.Success, t('WEB_APP_LANG_SAVED', 'Language change saved'))
         const fields = languageFiledsState.fields.filter(field => {
           if (field.id === fieldId) {
-            Object.assign(field, content.result)
+            Object.assign(field, result)
           }
           return true
         })
         setLanguageFiledsState({ ...languageFiledsState, fields: fields })
+        updateLanguageListState(result)
       } else {
-        setActionState({ loading: false, error: content.result })
+        setActionState({ loading: false, error: result })
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
@@ -85,8 +49,13 @@ export const LanguageSetting = (props) => {
   }
 
   useEffect(() => {
-    getLanguageFields()
-  }, [])
+    if (languageState.loading) return
+    setLanguageFiledsState({
+      ...languageFiledsState,
+      loading: false,
+      fields: languageState.languageList
+    })
+  }, [languageState.languageList])
 
   return (
     <>
@@ -94,8 +63,6 @@ export const LanguageSetting = (props) => {
         <UIComponent
           {...props}
           languageFiledsState={languageFiledsState}
-          defaultLanguage={defaultLanguage}
-          setDefaultLanguage={setDefaultLanguage}
           handleChangeFieldSetting={handleChangeFieldSetting}
         />
       )}
