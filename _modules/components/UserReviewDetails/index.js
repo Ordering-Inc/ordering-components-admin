@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "functi
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DriverReviewDetails = void 0;
+exports.UserReviewDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -47,7 +47,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var DriverReviewDetails = function DriverReviewDetails(props) {
+var UserReviewDetails = function UserReviewDetails(props) {
   var userId = props.userId,
       UIComponent = props.UIComponent;
 
@@ -65,14 +65,14 @@ var DriverReviewDetails = function DriverReviewDetails(props) {
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      driverReviewState = _useState2[0],
-      setDriverReviewState = _useState2[1];
+      userReviewState = _useState2[0],
+      setUserReviewState = _useState2[1];
   /**
    * Method to get the driver reviews from API
    */
 
 
-  var getDriverReviews = /*#__PURE__*/function () {
+  var getUserReviews = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
       var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
@@ -80,7 +80,7 @@ var DriverReviewDetails = function DriverReviewDetails(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setDriverReviewState(_objectSpread(_objectSpread({}, driverReviewState), {}, {
+              setUserReviewState(_objectSpread(_objectSpread({}, userReviewState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -102,7 +102,7 @@ var DriverReviewDetails = function DriverReviewDetails(props) {
               content = _context.sent;
 
               if (!content.error) {
-                setDriverReviewState({
+                setUserReviewState({
                   reviews: content.result,
                   loading: false,
                   error: null
@@ -115,7 +115,7 @@ var DriverReviewDetails = function DriverReviewDetails(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setDriverReviewState(_objectSpread(_objectSpread({}, driverReviewState), {}, {
+              setUserReviewState(_objectSpread(_objectSpread({}, userReviewState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
@@ -128,22 +128,22 @@ var DriverReviewDetails = function DriverReviewDetails(props) {
       }, _callee, null, [[0, 12]]);
     }));
 
-    return function getDriverReviews() {
+    return function getUserReviews() {
       return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
     if (!userId) return;
-    getDriverReviews();
+    getUserReviews();
   }, [userId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    driverReviewState: driverReviewState
+    userReviewState: userReviewState
   })));
 };
 
-exports.DriverReviewDetails = DriverReviewDetails;
-DriverReviewDetails.propTypes = {
+exports.UserReviewDetails = UserReviewDetails;
+UserReviewDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -173,7 +173,7 @@ DriverReviewDetails.propTypes = {
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-DriverReviewDetails.defaultProps = {
+UserReviewDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

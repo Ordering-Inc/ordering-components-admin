@@ -64,11 +64,9 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       propsToFetch = props.propsToFetch,
       orders = props.orders,
       isOnlyDelivery = props.isOnlyDelivery,
-      initialPageSize = props.initialPageSize,
       driverId = props.driverId,
       customerId = props.customerId,
       businessId = props.businessId,
-      loadMorePageSize = props.loadMorePageSize,
       orderIds = props.orderIds,
       deletedOrderId = props.deletedOrderId,
       orderStatus = props.orderStatus,
@@ -538,7 +536,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 loading: true
               }));
               _context3.next = 6;
-              return getOrders(initialPageSize, 1);
+              return getOrders(pagination.pageSize, 1);
 
             case 6:
               response = _context3.sent;
@@ -550,7 +548,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
 
               if (!response.content.error) {
                 setPagination({
-                  currentPage: initialPageSize / loadMorePageSize,
+                  currentPage: response.content.pagination.current_page,
                   pageSize: response.content.pagination.page_size,
                   totalPages: response.content.pagination.total_pages,
                   total: response.content.pagination.total,
@@ -598,7 +596,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
               }));
               _context4.prev = 1;
               _context4.next = 4;
-              return getOrders(loadMorePageSize, pagination.currentPage + 1);
+              return getOrders(pagination.pageSize, pagination.currentPage + 1);
 
             case 4:
               response = _context4.sent;

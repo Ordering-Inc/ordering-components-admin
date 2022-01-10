@@ -206,7 +206,7 @@ var ConfigProvider = function ConfigProvider(_ref) {
     if (!languageState.loading && token) {
       refreshConfigs();
     }
-  }, [languageState, ordering, token]);
+  }, [languageState.loading, ordering, token]);
   return /*#__PURE__*/_react.default.createElement(ConfigContext.Provider, {
     value: [state, functions]
   }, children);

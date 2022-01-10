@@ -7,21 +7,17 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.LanguageSelector = void 0;
 
-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
-
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _LanguageContext = require("../../contexts/LanguageContext");
 
-var _ApiContext = require("../../contexts/ApiContext");
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -30,10 +26,6 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -57,23 +49,19 @@ var LanguageSelector = function LanguageSelector(props) {
       languages = props.languages,
       UIComponent = props.UIComponent;
 
-  var _useApi = (0, _ApiContext.useApi)(),
-      _useApi2 = _slicedToArray(_useApi, 1),
-      ordering = _useApi2[0];
-
   var _useState = (0, _react.useState)({
     loading: !languages,
     languages: languages,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      languagesState = _useState2[0],
-      setLanguageState = _useState2[1];
+      languageListState = _useState2[0],
+      setLanguageListState = _useState2[1];
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 3),
       languageState = _useLanguage2[0],
-      setLanguage = _useLanguage2[2];
+      setLanguage = _useLanguage2[2].setLanguage;
 
   var _useState3 = (0, _react.useState)(null),
       _useState4 = _slicedToArray(_useState3, 2),
@@ -86,7 +74,7 @@ var LanguageSelector = function LanguageSelector(props) {
    */
 
   var onChangeLanguage = function onChangeLanguage(code) {
-    var language = languagesState.languages.find(function (language) {
+    var language = languageListState.languages.find(function (language) {
       return language.code === code;
     });
 
@@ -99,77 +87,24 @@ var LanguageSelector = function LanguageSelector(props) {
     props.onChangeLanguage && props.onChangeLanguage(language);
     setLanguage(language);
   };
-  /**
-   * this method is used for load languages from API
-   */
-
-
-  var loadLanguages = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var source, _yield$ordering$langu, _yield$ordering$langu2, error, result;
-
-      return _regenerator.default.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.prev = 0;
-              setLanguageState(_objectSpread(_objectSpread({}, languagesState), {}, {
-                loading: true
-              }));
-              source = {};
-              requestsState.languages = source;
-              _context.next = 6;
-              return ordering.languages().where([{
-                attribute: 'enabled',
-                value: true
-              }]).get({
-                cancelToken: source
-              });
-
-            case 6:
-              _yield$ordering$langu = _context.sent;
-              _yield$ordering$langu2 = _yield$ordering$langu.content;
-              error = _yield$ordering$langu2.error;
-              result = _yield$ordering$langu2.result;
-              setLanguageState(_objectSpread(_objectSpread({}, languagesState), {}, {
-                loading: false,
-                languages: error ? [] : result
-              }));
-              _context.next = 16;
-              break;
-
-            case 13:
-              _context.prev = 13;
-              _context.t0 = _context["catch"](0);
-
-              if (_context.t0.constructor.name !== 'Cancel') {
-                setLanguageState(_objectSpread(_objectSpread({}, languagesState), {}, {
-                  loading: false,
-                  error: [_context.t0]
-                }));
-              }
-
-            case 16:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, null, [[0, 13]]);
-    }));
-
-    return function loadLanguages() {
-      return _ref.apply(this, arguments);
-    };
-  }();
 
   (0, _react.useEffect)(function () {
+    if (languageState.loading) return;
+
     if ((languages === null || languages === void 0 ? void 0 : languages.length) > 0) {
-      setLanguageState(_objectSpread(_objectSpread({}, languagesState), {}, {
+      setLanguageListState(_objectSpread(_objectSpread({}, languageListState), {}, {
         loading: false,
         languages: languages
       }));
     } else {
-      loadLanguages();
+      var _languages = languageState.languageList.filter(function (lang) {
+        return lang.enabled;
+      });
+
+      setLanguageListState(_objectSpread(_objectSpread({}, languageListState), {}, {
+        loading: false,
+        languages: _languages
+      }));
     }
 
     return function () {
@@ -177,7 +112,7 @@ var LanguageSelector = function LanguageSelector(props) {
         requestsState.languages.cancel();
       }
     };
-  }, []);
+  }, [languageState.languageList]);
   /**
    * Selecting default if exist and there is not one in local storage
    */
@@ -192,9 +127,9 @@ var LanguageSelector = function LanguageSelector(props) {
       setLanguage(language);
       setLanguageSelected(language);
     } else if (!(languageState !== null && languageState !== void 0 && (_languageState$langua = languageState.language) !== null && _languageState$langua !== void 0 && _languageState$langua.code) || !(languageSelected !== null && languageSelected !== void 0 && languageSelected.code)) {
-      var _languageState$langua2, _languagesState$langu;
+      var _languageState$langua2, _languageListState$la;
 
-      var _language = languageState !== null && languageState !== void 0 && (_languageState$langua2 = languageState.language) !== null && _languageState$langua2 !== void 0 && _languageState$langua2.code ? languageState === null || languageState === void 0 ? void 0 : languageState.language : languagesState === null || languagesState === void 0 ? void 0 : (_languagesState$langu = languagesState.languages) === null || _languagesState$langu === void 0 ? void 0 : _languagesState$langu.find(function (language) {
+      var _language = languageState !== null && languageState !== void 0 && (_languageState$langua2 = languageState.language) !== null && _languageState$langua2 !== void 0 && _languageState$langua2.code ? languageState === null || languageState === void 0 ? void 0 : languageState.language : languageListState === null || languageListState === void 0 ? void 0 : (_languageListState$la = languageListState.languages) === null || _languageListState$la === void 0 ? void 0 : _languageListState$la.find(function (language) {
         return language.default;
       });
 
@@ -203,10 +138,10 @@ var LanguageSelector = function LanguageSelector(props) {
         setLanguageSelected(_language);
       }
     }
-  }, [languages, languagesState]);
+  }, [languages, languageListState]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     currentLanguage: props.handlerCustomChangeLanguage ? languageSelected === null || languageSelected === void 0 ? void 0 : languageSelected.code : languageState === null || languageState === void 0 ? void 0 : (_languageState$langua3 = languageState.language) === null || _languageState$langua3 === void 0 ? void 0 : _languageState$langua3.code,
-    languagesState: languagesState,
+    languagesState: languageListState,
     handleChangeLanguage: onChangeLanguage
   })));
 };
