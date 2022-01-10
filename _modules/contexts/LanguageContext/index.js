@@ -87,9 +87,11 @@ var LanguageProvider = function LanguageProvider(_ref) {
               language = _context.sent;
 
               if (language) {
-                setState(_objectSpread(_objectSpread({}, state), {}, {
-                  language: language
-                }));
+                setState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    language: language
+                  });
+                });
                 apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
               }
 
@@ -131,19 +133,23 @@ var LanguageProvider = function LanguageProvider(_ref) {
               _yield$ordering$trans2 = _yield$ordering$trans.content;
               error = _yield$ordering$trans2.error;
               result = _yield$ordering$trans2.result;
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false,
-                dictionary: error ? {} : result
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false,
+                  dictionary: error ? {} : result
+                });
+              });
               _context2.next = 14;
               break;
 
             case 11:
               _context2.prev = 11;
               _context2.t0 = _context2["catch"](0);
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false
+                });
+              });
 
             case 14:
             case "end":
@@ -250,11 +256,13 @@ var LanguageProvider = function LanguageProvider(_ref) {
               return strategy.setItem('language', defaultLanguage, true);
 
             case 13:
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false,
-                language: defaultLanguage,
-                languageList: result
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false,
+                  language: defaultLanguage,
+                  languageList: result
+                });
+              });
 
             case 14:
               _context4.next = 19;
