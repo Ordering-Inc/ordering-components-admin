@@ -236,6 +236,7 @@ export const UsersList = (props) => {
       setPaginationProps({
         ...paginationProps,
         currentPage: pagination.current_page,
+        pageSize: pagination.page_size,
         totalPages: pagination.total_pages,
         totalItems: pagination.total,
         from: pagination.from,

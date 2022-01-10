@@ -97,7 +97,7 @@ export const ConfigProvider = ({ children }) => {
     if (!languageState.loading && token) {
       refreshConfigs()
     }
-  }, [languageState, ordering, token])
+  }, [languageState.loading, ordering, token])
 
   return (
     <ConfigContext.Provider value={[state, functions]}>

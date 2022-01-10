@@ -15,7 +15,8 @@ export const LanguageContext = createContext()
 export const LanguageProvider = ({ children, strategy }) => {
   const [state, setState] = useState({
     loading: true,
-    dictionary: {}
+    dictionary: {},
+    languageList: []
   })
 
   /**
@@ -23,12 +24,8 @@ export const LanguageProvider = ({ children, strategy }) => {
    */
   const setLanguageFromLocalStorage = async () => {
     const language = await strategy.getItem('language', true)
-    if (!language) {
-      if (ordering?.project !== null) {
-        loadDefaultLanguage()
-      }
-    } else {
-      setState({ ...state, language })
+    if (language) {
+      setState(prevState => ({ ...prevState, language }))
       apiHelper.setLanguage(language?.code)
     }
   }
@@ -39,36 +36,70 @@ export const LanguageProvider = ({ children, strategy }) => {
     try {
       !state.loading && setState({ ...state, loading: true })
       const { content: { error, result } } = await ordering.translations().asDictionary().get()
-      setState({
-        ...state,
+      setState(prevState => ({
+        ...prevState,
         loading: false,
         dictionary: error ? {} : result
-      })
+      }))
+    } catch (err) {
+      setState(prevState => ({ ...prevState, loading: false }))
+    }
+  }
+
+  const setLanguage = async (language) => {
+    if (!language || language.id === state.language?.id) return
+    try {
+      const { content: { error, result } } = await ordering.languages(language.id).save({ default: true })
+      if (!error) {
+        const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
+        await strategy.setItem('language', defaultLanguage, true)
+        const _languageList = state.languageList.filter(_language => {
+          if (_language.id === language.id) {
+            Object.assign(_language, language)
+          }
+          return true
+        })
+        setState({ ...state, language: defaultLanguage, languageList: _languageList })
+        apiHelper.setLanguage(language?.code)
+      }
+    } catch (err) {
+      setState({ ...state, loading: false })
+    }
+
+    location.reload()
+  }
+
+  const refreshLanguages = async () => {
+    try {
+      setState({ ...state, loading: true })
+      const { content: { error, result } } = await ordering.languages().get()
+      if (!error) {
+        const _defaultLanguage = result.find(language => language.default)
+        const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
+        await strategy.setItem('language', defaultLanguage, true)
+        setState(prevState => ({
+          ...prevState,
+          loading: false,
+          language: defaultLanguage,
+          languageList: result
+        }))
+      }
     } catch (err) {
       setState({ ...state, loading: false })
     }
   }
 
-  const loadDefaultLanguage = async () => {
-    try {
-      const { content: { error, result } } = await ordering.languages().where([{ attribute: 'default', value: true }]).get()
-      if (!error) {
-        const language = { id: result[0].id, code: result[0].code, rtl: result[0].rtl }
-        await strategy.setItem('language', language, true)
-        setState({
-          ...state,
-          language
-        })
+  const updateLanguageListState = (updatedLanguage) => {
+    const _languageList = state.languageList.filter(language => {
+      if (language.id === updatedLanguage.id) {
+        Object.assign(language, updatedLanguage)
       }
-    } catch (err) {}
-  }
-
-  const setLanguage = async (language) => {
-    if (!language || language.id === state.language?.id) return
-    const _language = { id: language.id, code: language.code, rtl: language.rtl }
-    await strategy.setItem('language', _language, true)
-    setState({ ...state, loading: true, language: _language })
-    location.reload()
+      return true
+    })
+    setState({
+      ...state,
+      languageList: _languageList
+    })
   }
 
   /**
@@ -83,18 +114,22 @@ export const LanguageProvider = ({ children, strategy }) => {
 
   useEffect(() => {
     setLanguageFromLocalStorage()
-  }, [ordering])
-
-  useEffect(() => {
-    apiHelper.setLanguage(state?.language?.code)
-  }, [state.language])
+    if (ordering?.project === null) return
+    refreshLanguages()
+  }, [ordering?.language])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key
   }
 
+  const functions = {
+    setLanguage,
+    updateLanguageListState,
+    refreshTranslations
+  }
+
   return (
-    <LanguageContext.Provider value={[state, t, setLanguage, refreshTranslations]}>
+    <LanguageContext.Provider value={[state, t, functions]}>
       {children}
     </LanguageContext.Provider>
   )

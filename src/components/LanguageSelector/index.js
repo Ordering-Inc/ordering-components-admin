@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-
 import { useLanguage } from '../../contexts/LanguageContext'
-import { useApi } from '../../contexts/ApiContext'
 
 /**
  * Component to manage LanguageSelector behavior without UI component
@@ -14,9 +12,8 @@ export const LanguageSelector = (props) => {
     UIComponent
   } = props
 
-  const [ordering] = useApi()
-  const [languagesState, setLanguageState] = useState({ loading: !languages, languages, error: null })
-  const [languageState, , setLanguage] = useLanguage()
+  const [languageListState, setLanguageListState] = useState({ loading: !languages, languages, error: null })
+  const [languageState, , { setLanguage }] = useLanguage()
   const [languageSelected, setLanguageSelected] = useState(null)
   const requestsState = {}
 
@@ -24,7 +21,7 @@ export const LanguageSelector = (props) => {
    * This method is used for change the current language
    */
   const onChangeLanguage = (code) => {
-    const language = languagesState.languages.find(language => language.code === code)
+    const language = languageListState.languages.find(language => language.code === code)
     if (props.handlerCustomChangeLanguage) {
       props.handlerCustomChangeLanguage(language)
       setLanguageSelected(language)
@@ -34,47 +31,28 @@ export const LanguageSelector = (props) => {
     setLanguage(language)
   }
 
-  /**
-   * this method is used for load languages from API
-   */
-  const loadLanguages = async () => {
-    try {
-      setLanguageState({ ...languagesState, loading: true })
-      const source = {}
-      requestsState.languages = source
-      const { content: { error, result } } = await ordering
-        .languages()
-        .where([{ attribute: 'enabled', value: true }])
-        .get({ cancelToken: source })
-
-      setLanguageState({
-        ...languagesState,
-        loading: false,
-        languages: error ? [] : result
-      })
-    } catch (err) {
-      if (err.constructor.name !== 'Cancel') {
-        setLanguageState({ ...languagesState, loading: false, error: [err] })
-      }
-    }
-  }
-
   useEffect(() => {
+    if (languageState.loading) return
     if (languages?.length > 0) {
-      setLanguageState({
-        ...languagesState,
+      setLanguageListState({
+        ...languageListState,
         loading: false,
         languages
       })
     } else {
-      loadLanguages()
+      const _languages = languageState.languageList.filter(lang => lang.enabled)
+      setLanguageListState({
+        ...languageListState,
+        loading: false,
+        languages: _languages
+      })
     }
     return () => {
       if (requestsState.languages) {
         requestsState.languages.cancel()
       }
     }
-  }, [])
+  }, [languageState.languageList])
 
   /**
    * Selecting default if exist and there is not one in local storage
@@ -87,13 +65,13 @@ export const LanguageSelector = (props) => {
     } else if (!languageState?.language?.code || !languageSelected?.code) {
       const language = languageState?.language?.code
         ? languageState?.language
-        : languagesState?.languages?.find(language => language.default)
+        : languageListState?.languages?.find(language => language.default)
       if (language) {
         setLanguage(language)
         setLanguageSelected(language)
       }
     }
-  }, [languages, languagesState])
+  }, [languages, languageListState])
 
   return (
     <>
@@ -101,7 +79,7 @@ export const LanguageSelector = (props) => {
         <UIComponent
           {...props}
           currentLanguage={props.handlerCustomChangeLanguage ? languageSelected?.code : languageState?.language?.code}
-          languagesState={languagesState}
+          languagesState={languageListState}
           handleChangeLanguage={onChangeLanguage}
         />
       )}
