@@ -13,8 +13,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _SessionContext = require("../../contexts/SessionContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
@@ -61,17 +59,15 @@ var LanguageSetting = function LanguageSetting(props) {
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      token = _useSession2[0].token;
-
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
+      _useLanguage2 = _slicedToArray(_useLanguage, 3),
+      languageState = _useLanguage2[0],
+      t = _useLanguage2[1],
+      updateLanguageListState = _useLanguage2[2].updateLanguageListState;
 
   var _useState = (0, _react.useState)({
     fields: [],
@@ -89,55 +85,57 @@ var LanguageSetting = function LanguageSetting(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       actionState = _useState4[0],
       setActionState = _useState4[1];
-
-  var _useState5 = (0, _react.useState)({}),
-      _useState6 = _slicedToArray(_useState5, 2),
-      defaultLanguage = _useState6[0],
-      setDefaultLanguage = _useState6[1];
   /**
-   * Method to get the language fields from API
+   * Method to update the language fields setting from API
+   * @param {Number} fieldId selected field id
+   * @param {Object} changes changes
    */
 
 
-  var getLanguageFields = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content, _defaultLanguage;
+  var handleChangeFieldSetting = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(fieldId, changes) {
+      var _yield$ordering$langu, _yield$ordering$langu2, error, result, fields;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setLanguageFiledsState(_objectSpread(_objectSpread({}, languageFiledsState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
               _context.next = 5;
-              return fetch("".concat(ordering.root, "/languages"), requestOptions);
+              return ordering.languages(fieldId).save(changes);
 
             case 5:
-              response = _context.sent;
-              _context.next = 8;
-              return response.json();
+              _yield$ordering$langu = _context.sent;
+              _yield$ordering$langu2 = _yield$ordering$langu.content;
+              error = _yield$ordering$langu2.error;
+              result = _yield$ordering$langu2.result;
 
-            case 8:
-              content = _context.sent;
+              if (!error) {
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                showToast(_ToastContext.ToastType.Success, t('WEB_APP_LANG_SAVED', 'Language change saved'));
+                fields = languageFiledsState.fields.filter(function (field) {
+                  if (field.id === fieldId) {
+                    Object.assign(field, result);
+                  }
 
-              if (!content.error) {
-                setLanguageFiledsState({
-                  fields: content.result,
-                  loading: false
+                  return true;
                 });
-                _defaultLanguage = content.result.find(function (language) {
-                  return language.default;
+                setLanguageFiledsState(_objectSpread(_objectSpread({}, languageFiledsState), {}, {
+                  fields: fields
+                }));
+                updateLanguageListState(result);
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
                 });
-                setDefaultLanguage(_defaultLanguage);
               }
 
               _context.next = 15;
@@ -146,10 +144,10 @@ var LanguageSetting = function LanguageSetting(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setLanguageFiledsState(_objectSpread(_objectSpread({}, languageFiledsState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context.t0.message]
-              }));
+              });
 
             case 15:
             case "end":
@@ -159,102 +157,20 @@ var LanguageSetting = function LanguageSetting(props) {
       }, _callee, null, [[0, 12]]);
     }));
 
-    return function getLanguageFields() {
-      return _ref.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to update the language fields setting from API
-   * @param {Number} fieldId selected field id
-   * @param {Object} changes changes
-   */
-
-
-  var handleChangeFieldSetting = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(fieldId, changes) {
-      var requestOptions, response, content, fields;
-      return _regenerator.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'PUT',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
-              };
-              _context2.next = 6;
-              return fetch("".concat(ordering.root, "/languages/").concat(fieldId), requestOptions);
-
-            case 6:
-              response = _context2.sent;
-              _context2.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context2.sent;
-
-              if (!content.error) {
-                setActionState({
-                  loading: false,
-                  error: null
-                });
-                showToast(_ToastContext.ToastType.Success, t('FIELD_SAVED', 'Field saved'));
-                fields = languageFiledsState.fields.filter(function (field) {
-                  if (field.id === fieldId) {
-                    Object.assign(field, content.result);
-                  }
-
-                  return true;
-                });
-                setLanguageFiledsState(_objectSpread(_objectSpread({}, languageFiledsState), {}, {
-                  fields: fields
-                }));
-              } else {
-                setActionState({
-                  loading: false,
-                  error: content.result
-                });
-              }
-
-              _context2.next = 16;
-              break;
-
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context2.t0.message]
-              });
-
-            case 16:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[0, 13]]);
-    }));
-
     return function handleChangeFieldSetting(_x, _x2) {
-      return _ref2.apply(this, arguments);
+      return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getLanguageFields();
-  }, []);
+    if (languageState.loading) return;
+    setLanguageFiledsState(_objectSpread(_objectSpread({}, languageFiledsState), {}, {
+      loading: false,
+      fields: languageState.languageList
+    }));
+  }, [languageState.languageList]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     languageFiledsState: languageFiledsState,
-    defaultLanguage: defaultLanguage,
-    setDefaultLanguage: setDefaultLanguage,
     handleChangeFieldSetting: handleChangeFieldSetting
   })));
 };

@@ -441,12 +441,6 @@ Object.defineProperty(exports, "DriverGroupSetting", {
     return _DriverGroupSetting.DriverGroupSetting;
   }
 });
-Object.defineProperty(exports, "DriverReviewDetails", {
-  enumerable: true,
-  get: function get() {
-    return _DriverReviewDetails.DriverReviewDetails;
-  }
-});
 Object.defineProperty(exports, "DriverTips", {
   enumerable: true,
   get: function get() {
@@ -1155,6 +1149,12 @@ Object.defineProperty(exports, "UserMetaFields", {
     return _UserMetaFields.UserMetaFields;
   }
 });
+Object.defineProperty(exports, "UserReviewDetails", {
+  enumerable: true,
+  get: function get() {
+    return _UserReviewDetails.UserReviewDetails;
+  }
+});
 Object.defineProperty(exports, "UserTypeFilter", {
   enumerable: true,
   get: function get() {
@@ -1418,7 +1418,7 @@ var _DriversCompanyDetails = require("./components/DriversCompanyDetails");
 
 var _DriverGroupSetting = require("./components/DriverGroupSetting");
 
-var _DriverReviewDetails = require("./components/DriverReviewDetails");
+var _UserReviewDetails = require("./components/UserReviewDetails");
 
 var _DriversCompaniesList = require("./components/DriversCompaniesList");
 

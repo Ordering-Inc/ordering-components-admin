@@ -62,7 +62,8 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
   var _useState = (0, _react.useState)({
     loading: true,
-    dictionary: {}
+    dictionary: {},
+    languageList: []
   }),
       _useState2 = _slicedToArray(_useState, 2),
       state = _useState2[0],
@@ -85,14 +86,12 @@ var LanguageProvider = function LanguageProvider(_ref) {
             case 2:
               language = _context.sent;
 
-              if (!language) {
-                if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) !== null) {
-                  loadDefaultLanguage();
-                }
-              } else {
-                setState(_objectSpread(_objectSpread({}, state), {}, {
-                  language: language
-                }));
+              if (language) {
+                setState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    language: language
+                  });
+                });
                 apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
               }
 
@@ -134,19 +133,23 @@ var LanguageProvider = function LanguageProvider(_ref) {
               _yield$ordering$trans2 = _yield$ordering$trans.content;
               error = _yield$ordering$trans2.error;
               result = _yield$ordering$trans2.result;
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false,
-                dictionary: error ? {} : result
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false,
+                  dictionary: error ? {} : result
+                });
+              });
               _context2.next = 14;
               break;
 
             case 11:
               _context2.prev = 11;
               _context2.t0 = _context2["catch"](0);
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false
+                });
+              });
 
             case 14:
             case "end":
@@ -161,111 +164,173 @@ var LanguageProvider = function LanguageProvider(_ref) {
     };
   }();
 
-  var loadDefaultLanguage = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _yield$ordering$langu, _yield$ordering$langu2, error, result, language;
+  var setLanguage = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(language) {
+      var _state$language;
+
+      var _yield$ordering$langu, _yield$ordering$langu2, error, result, defaultLanguage, _languageList;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
             case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return ordering.languages().where([{
-                attribute: 'default',
-                value: true
-              }]).get();
+              if (!(!language || language.id === ((_state$language = state.language) === null || _state$language === void 0 ? void 0 : _state$language.id))) {
+                _context3.next = 2;
+                break;
+              }
 
-            case 3:
+              return _context3.abrupt("return");
+
+            case 2:
+              _context3.prev = 2;
+              _context3.next = 5;
+              return ordering.languages(language.id).save({
+                default: true
+              });
+
+            case 5:
               _yield$ordering$langu = _context3.sent;
               _yield$ordering$langu2 = _yield$ordering$langu.content;
               error = _yield$ordering$langu2.error;
               result = _yield$ordering$langu2.result;
 
               if (error) {
-                _context3.next = 12;
+                _context3.next = 16;
                 break;
               }
 
-              language = {
-                id: result[0].id,
-                code: result[0].code,
-                rtl: result[0].rtl
+              defaultLanguage = {
+                id: result.id,
+                code: result.code,
+                rtl: result.rtl
               };
-              _context3.next = 11;
-              return strategy.setItem('language', language, true);
+              _context3.next = 13;
+              return strategy.setItem('language', defaultLanguage, true);
 
-            case 11:
+            case 13:
+              _languageList = state.languageList.filter(function (_language) {
+                if (_language.id === language.id) {
+                  Object.assign(_language, language);
+                }
+
+                return true;
+              });
               setState(_objectSpread(_objectSpread({}, state), {}, {
-                language: language
+                language: defaultLanguage,
+                languageList: _languageList
               }));
-
-            case 12:
-              _context3.next = 16;
-              break;
-
-            case 14:
-              _context3.prev = 14;
-              _context3.t0 = _context3["catch"](0);
+              apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
 
             case 16:
+              _context3.next = 21;
+              break;
+
+            case 18:
+              _context3.prev = 18;
+              _context3.t0 = _context3["catch"](2);
+              setState(_objectSpread(_objectSpread({}, state), {}, {
+                loading: false
+              }));
+
+            case 21:
+              location.reload();
+
+            case 22:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 14]]);
+      }, _callee3, null, [[2, 18]]);
     }));
 
-    return function loadDefaultLanguage() {
+    return function setLanguage(_x) {
       return _ref4.apply(this, arguments);
     };
   }();
 
-  var setLanguage = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(language) {
-      var _state$language;
-
-      var _language;
+  var refreshLanguages = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var _yield$ordering$langu3, _yield$ordering$langu4, error, result, _defaultLanguage, defaultLanguage;
 
       return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
-              if (!(!language || language.id === ((_state$language = state.language) === null || _state$language === void 0 ? void 0 : _state$language.id))) {
-                _context4.next = 2;
+              _context4.prev = 0;
+              setState(_objectSpread(_objectSpread({}, state), {}, {
+                loading: true
+              }));
+              _context4.next = 4;
+              return ordering.languages().get();
+
+            case 4:
+              _yield$ordering$langu3 = _context4.sent;
+              _yield$ordering$langu4 = _yield$ordering$langu3.content;
+              error = _yield$ordering$langu4.error;
+              result = _yield$ordering$langu4.result;
+
+              if (error) {
+                _context4.next = 14;
                 break;
               }
 
-              return _context4.abrupt("return");
-
-            case 2:
-              _language = {
-                id: language.id,
-                code: language.code,
-                rtl: language.rtl
+              _defaultLanguage = result.find(function (language) {
+                return language.default;
+              });
+              defaultLanguage = {
+                id: _defaultLanguage.id,
+                code: _defaultLanguage.code,
+                rtl: _defaultLanguage.rtl
               };
-              _context4.next = 5;
-              return strategy.setItem('language', _language, true);
+              _context4.next = 13;
+              return strategy.setItem('language', defaultLanguage, true);
 
-            case 5:
+            case 13:
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false,
+                  language: defaultLanguage,
+                  languageList: result
+                });
+              });
+
+            case 14:
+              _context4.next = 19;
+              break;
+
+            case 16:
+              _context4.prev = 16;
+              _context4.t0 = _context4["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: true,
-                language: _language
+                loading: false
               }));
-              location.reload();
 
-            case 7:
+            case 19:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4);
+      }, _callee4, null, [[0, 16]]);
     }));
 
-    return function setLanguage(_x) {
+    return function refreshLanguages() {
       return _ref5.apply(this, arguments);
     };
   }();
+
+  var updateLanguageListState = function updateLanguageListState(updatedLanguage) {
+    var _languageList = state.languageList.filter(function (language) {
+      if (language.id === updatedLanguage.id) {
+        Object.assign(language, updatedLanguage);
+      }
+
+      return true;
+    });
+
+    setState(_objectSpread(_objectSpread({}, state), {}, {
+      languageList: _languageList
+    }));
+  };
   /**
    * Refresh translation when change language from ordering
    */
@@ -282,20 +347,22 @@ var LanguageProvider = function LanguageProvider(_ref) {
   }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering]);
   (0, _react.useEffect)(function () {
     setLanguageFromLocalStorage();
-  }, [ordering]);
-  (0, _react.useEffect)(function () {
-    var _state$language5;
-
-    apiHelper.setLanguage(state === null || state === void 0 ? void 0 : (_state$language5 = state.language) === null || _state$language5 === void 0 ? void 0 : _state$language5.code);
-  }, [state.language]);
+    if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
+    refreshLanguages();
+  }, [ordering === null || ordering === void 0 ? void 0 : ordering.language]);
 
   var t = function t(key) {
     var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
     return (state === null || state === void 0 ? void 0 : state.dictionary) && Object.keys(state === null || state === void 0 ? void 0 : state.dictionary).length > 0 && state.dictionary[key] || fallback || key;
   };
 
+  var functions = {
+    setLanguage: setLanguage,
+    updateLanguageListState: updateLanguageListState,
+    refreshTranslations: refreshTranslations
+  };
   return /*#__PURE__*/_react.default.createElement(LanguageContext.Provider, {
-    value: [state, t, setLanguage, refreshTranslations]
+    value: [state, t, functions]
   }, children);
 };
 /**
