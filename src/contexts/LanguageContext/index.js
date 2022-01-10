@@ -52,7 +52,7 @@ export const LanguageProvider = ({ children, strategy }) => {
       const { content: { error, result } } = await ordering.languages(language.id).save({ default: true })
       if (!error) {
         const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
-        await strategy.setItem('language', language, true)
+        await strategy.setItem('language', defaultLanguage, true)
         const _languageList = state.languageList.filter(_language => {
           if (_language.id === language.id) {
             Object.assign(_language, language)
