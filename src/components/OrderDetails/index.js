@@ -228,7 +228,7 @@ export const OrderDetails = (props) => {
     const handleCustomerReviewed = (review) => {
       setOrderState({
         ...orderState,
-        user_review: review
+        order: { ...orderState.order, user_review: review }
       })
     }
     events.on('customer_reviewed', handleCustomerReviewed)
