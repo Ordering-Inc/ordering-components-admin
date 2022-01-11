@@ -19,6 +19,8 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _WebsocketContext = require("../../contexts/WebsocketContext");
 
+var _EventContext = require("../../contexts/EventContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -85,6 +87,10 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useEvent = (0, _EventContext.useEvent)(),
+      _useEvent2 = _slicedToArray(_useEvent, 1),
+      events = _useEvent2[0];
 
   var _useState = (0, _react.useState)({
     loading: !orders,
@@ -906,7 +912,30 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('orders_register', handleRegisterOrder);
       socket.off('message', handleNewMessage);
     };
-  }, [orderList.orders, pagination, orderBy, socket]);
+  }, [orderList.orders, pagination, orderBy, socket]); // Listening for customer rating
+
+  (0, _react.useEffect)(function () {
+    var handleCustomerReviewed = function handleCustomerReviewed(review) {
+      var orders = orderList.orders.filter(function (_order) {
+        if (_order.id === review.order_id) {
+          _order.user_review = review;
+        }
+
+        return true;
+      });
+
+      var _orders = sortOrdersArray(orderBy, orders);
+
+      setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
+        orders: _orders
+      }));
+    };
+
+    events.on('customer_reviewed', handleCustomerReviewed);
+    return function () {
+      events.off('customer_reviewed', handleCustomerReviewed);
+    };
+  }, [orderList, orderBy]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     orderList: orderList,
     pagination: pagination,
