@@ -3,6 +3,7 @@ import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const OrderDetails = (props) => {
   const {
@@ -16,6 +17,8 @@ export const OrderDetails = (props) => {
 
   const [{ user, token, loading }] = useSession()
   const [ordering] = useApi()
+  const [events] = useEvent()
+
   const [orderState, setOrderState] = useState({ order: null, loading: !props.order, error: null })
   const [messageErrors, setMessageErrors] = useState({ status: null, loading: false, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
@@ -220,6 +223,19 @@ export const OrderDetails = (props) => {
       socket.off('update_order', handleUpdateOrder)
     }
   }, [orderState.order, socket, loading])
+
+  useEffect(() => {
+    const handleCustomerReviewed = (review) => {
+      setOrderState({
+        ...orderState,
+        user_review: review
+      })
+    }
+    events.on('customer_reviewed', handleCustomerReviewed)
+    return () => {
+      events.off('customer_reviewed', handleCustomerReviewed)
+    }
+  }, [orderState])
 
   useEffect(() => {
     loadMessages()
