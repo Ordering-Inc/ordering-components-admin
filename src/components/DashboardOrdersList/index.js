@@ -3,6 +3,7 @@ import PropTypes, { string, object, number } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const DashboardOrdersList = (props) => {
   const {
@@ -30,6 +31,8 @@ export const DashboardOrdersList = (props) => {
   } = props
 
   const [ordering] = useApi()
+  const [events] = useEvent()
+
   const [orderList, setOrderList] = useState({ loading: !orders, error: null, orders: [] })
   const [pagination, setPagination] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
@@ -448,6 +451,7 @@ export const DashboardOrdersList = (props) => {
       }
     }
   }
+
   /**
    * Listening order id to update for unread_count parameter
    */
@@ -618,6 +622,27 @@ export const DashboardOrdersList = (props) => {
       socket.off('message', handleNewMessage)
     }
   }, [orderList.orders, pagination, orderBy, socket])
+
+  // Listening for customer rating
+  useEffect(() => {
+    const handleCustomerReviewed = (review) => {
+      const orders = orderList.orders.filter(_order => {
+        if (_order.id === review.order_id) {
+          _order.user_review = review
+        }
+        return true
+      })
+      const _orders = sortOrdersArray(orderBy, orders)
+      setOrderList({
+        ...orderList,
+        orders: _orders
+      })
+    }
+    events.on('customer_reviewed', handleCustomerReviewed)
+    return () => {
+      events.off('customer_reviewed', handleCustomerReviewed)
+    }
+  }, [orderList, orderBy])
 
   return (
     <>
