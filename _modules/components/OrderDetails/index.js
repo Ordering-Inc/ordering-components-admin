@@ -489,7 +489,9 @@ var OrderDetails = function OrderDetails(props) {
   (0, _react.useEffect)(function () {
     var handleCustomerReviewed = function handleCustomerReviewed(review) {
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
-        user_review: review
+        order: _objectSpread(_objectSpread({}, orderState.order), {}, {
+          user_review: review
+        })
       }));
     };
 
