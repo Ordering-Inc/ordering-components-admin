@@ -322,12 +322,14 @@ var BusinessMenuShare = function BusinessMenuShare(props) {
     }
   }, [businesses]);
   (0, _react.useEffect)(function () {
-    var _menu$businesses;
+    if (menu !== null && menu !== void 0 && menu.businesses) {
+      var _menu$businesses;
 
-    var businessIds = (_menu$businesses = menu.businesses) === null || _menu$businesses === void 0 ? void 0 : _menu$businesses.reduce(function (ids, business) {
-      return [].concat(_toConsumableArray(ids), [business.id]);
-    }, []);
-    setSelectedBusinessIds(businessIds);
+      var businessIds = (_menu$businesses = menu.businesses) === null || _menu$businesses === void 0 ? void 0 : _menu$businesses.reduce(function (ids, business) {
+        return [].concat(_toConsumableArray(ids), [business.id]);
+      }, []);
+      setSelectedBusinessIds(businessIds);
+    }
   }, [menu]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessesState: businessesState,
