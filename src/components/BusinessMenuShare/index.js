@@ -115,8 +115,10 @@ export const BusinessMenuShare = (props) => {
   }, [businesses])
 
   useEffect(() => {
-    const businessIds = menu.businesses?.reduce((ids, business) => [...ids, business.id], [])
-    setSelectedBusinessIds(businessIds)
+    if (menu?.businesses) {
+      const businessIds = menu.businesses?.reduce((ids, business) => [...ids, business.id], [])
+      setSelectedBusinessIds(businessIds)
+    }
   }, [menu])
 
   return (
