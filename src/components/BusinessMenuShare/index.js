@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessMenuShare = (props) => {
   const {
@@ -15,19 +17,24 @@ export const BusinessMenuShare = (props) => {
 
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, t] = useLanguage()
+  const [, { showToast }] = useToast()
+
   const [businessesState, setBusinessesState] = useState({ businesses: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, result: { error: false } })
+  const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
 
   /**
    * Method to get all the business list from API
    */
   const getAllBusinesses = async () => {
     try {
-      setBusinessesState({ ...businessesState, loading: false })
+      setBusinessesState({ ...businessesState, loading: true })
       const functionFetch = ordering.setAccessToken(token).businesses().select(busienssesPropsToFetch).asDashboard()
       const { content: { error, result } } = await functionFetch.get()
       if (!error) {
-        setBusinessesState({ ...businessesState, businesses: result, loading: false })
+        const _businesses = result.filter(_business => _business.id !== business.id)
+        setBusinessesState({ ...businessesState, businesses: _businesses, loading: false })
       }
     } catch (err) {
       setBusinessesState({ ...businessesState, loading: false, error: err.message })
@@ -37,32 +44,45 @@ export const BusinessMenuShare = (props) => {
   /**
    * Method to share the business menu
    * @param {Number} businessId business id
+   * @param {Boolean} checked checked state
    */
-  const handleShareBusinessMenuClick = async (businessId) => {
+  const handleSelectBusiness = (businessId, checked) => {
+    if (checked) {
+      setSelectedBusinessIds([...selectedBusinessIds, businessId])
+    } else {
+      const _selectedBusinessIds = selectedBusinessIds.filter(id => id !== businessId)
+      setSelectedBusinessIds(_selectedBusinessIds)
+    }
+  }
+
+  /**
+   * Method to share the business menu
+   * @param {Boolean} isAll state if all or none
+   */
+  const handleSelectAllBusiness = (isAll) => {
+    if (isAll) {
+      const businessIds = businessesState.businesses?.reduce((ids, business) => [...ids, business.id], [])
+      setSelectedBusinessIds(businessIds)
+    } else {
+      setSelectedBusinessIds([])
+    }
+  }
+
+  /**
+   * Method to share the business menu
+   */
+  const handleShareBusinesses = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
-      let ids = menu?.businesses.reduce((ids, _business) => [...ids, _business.id], [])
-      if (businessId) {
-        if (ids.includes(businessId)) {
-          ids = ids.filter(id => id !== businessId)
-        } else {
-          ids.push(businessId)
-        }
-      } else {
-        if (ids.length === businessesState.businesses.length) {
-          ids = []
-        } else {
-          ids = businessesState.businesses.reduce((_ids, _business) => [..._ids, _business.id], [])
-        }
-      }
       const changes = {
         business_id: business.id,
-        shared: ids
+        shared: selectedBusinessIds
       }
       const content = await ordering.businesses(business.id).menus(menu.id).save(changes)
       if (!content.error) {
         const menuBusinesses = []
-        for (const id of ids) {
+        for (const id of selectedBusinessIds) {
           menuBusinesses.push({
             id: id,
             name: businessesState.businesses.find(_business => _business.id === id)?.name,
@@ -79,6 +99,7 @@ export const BusinessMenuShare = (props) => {
         const _business = { ...business, menus: menus }
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
         setActionState({ loading: false, result: { error: false } })
+        showToast(ToastType.Success, t('BUSINESS_SAVED', 'Business saved'))
       }
     } catch (err) {
       setActionState({ loading: false, result: { error: false } })
@@ -92,6 +113,14 @@ export const BusinessMenuShare = (props) => {
       getAllBusinesses()
     }
   }, [businesses])
+
+  useEffect(() => {
+    if (menu?.businesses) {
+      const businessIds = menu.businesses?.reduce((ids, business) => [...ids, business.id], [])
+      setSelectedBusinessIds(businessIds)
+    }
+  }, [menu])
+
   return (
     <>
       {UIComponent && (
@@ -99,7 +128,10 @@ export const BusinessMenuShare = (props) => {
           {...props}
           businessesState={businessesState}
           actionState={actionState}
-          handleShareBusinessMenuClick={handleShareBusinessMenuClick}
+          selectedBusinessIds={selectedBusinessIds}
+          handleSelectBusiness={handleSelectBusiness}
+          handleSelectAllBusiness={handleSelectAllBusiness}
+          handleShareBusinesses={handleShareBusinesses}
         />
       )}
     </>
@@ -138,5 +170,5 @@ BusinessMenuShare.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  busienssesPropsToFetch: ['id', 'name']
+  busienssesPropsToFetch: ['id', 'name', 'logo']
 }
