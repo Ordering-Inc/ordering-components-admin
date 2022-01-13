@@ -40,6 +40,7 @@ import { BusinessPromotionMetaFields } from './components/BusinessPromotionMetaF
 import { BusinessReviews } from './components/BusinessReviews'
 import { BusinessReviewsList } from './components/BusinessReviewsList'
 import { BusinessSchedule } from './components/BusinessSchedule'
+import { BusinessSharedMenuProductDetails } from './components/BusinessSharedMenuProductDetails'
 import { BusinessSharedMenuProducts } from './components/BusinessSharedMenuProducts'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
@@ -230,6 +231,7 @@ export {
   BusinessReviews,
   BusinessReviewsList,
   BusinessSchedule,
+  BusinessSharedMenuProductDetails,
   BusinessSharedMenuProducts,
   BusinessSortControl,
   BusinessSpreadSheet,
