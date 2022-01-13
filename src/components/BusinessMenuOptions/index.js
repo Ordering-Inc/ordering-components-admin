@@ -10,7 +10,8 @@ export const BusinessMenuOptions = (props) => {
     business,
     menu,
     UIComponent,
-    handleUpdateBusinessState
+    handleUpdateBusinessState,
+    isSelectedSharedMenus
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -179,6 +180,55 @@ export const BusinessMenuOptions = (props) => {
     }
   }
 
+  const handleDeleteMenu = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const endPoint = isSelectedSharedMenus
+        ? `${ordering.root}/business/${business.id}/menus_shared/${menu.id}`
+        : `${ordering.root}/business/${business.id}/menus/${menu.id}`
+      const response = await fetch(endPoint, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setFormState({
+          ...formState,
+          loading: false,
+          error: null
+        })
+        let _business = null
+        if (isSelectedSharedMenus) {
+          const menusShared = business.menus_shared.filter(_menu => _menu.id !== menu.id)
+          _business = { ...business, menus_shared: menusShared }
+        } else {
+          const menus = business.menus.filter(_menu => _menu.id !== menu.id)
+          _business = { ...business, menus: menus }
+        }
+        handleUpdateBusinessState && handleUpdateBusinessState(_business)
+        showToast(ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'))
+        props.onClose && props.onClose()
+      } else {
+        setFormState({
+          ...formState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        error: err
+      })
+    }
+  }
+
   const handleChangeScheduleState = (scheduleChanges) => {
     setFormState({
       ...formState,
@@ -251,6 +301,7 @@ export const BusinessMenuOptions = (props) => {
             handleUpdateBusinessMenuOption={handleUpdateBusinessMenuOption}
             handleAddBusinessMenuOption={handleAddBusinessMenuOption}
             handleChangeScheduleState={handleChangeScheduleState}
+            handleDeleteMenu={handleDeleteMenu}
           />
         )
       }
