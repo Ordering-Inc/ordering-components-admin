@@ -63,7 +63,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
   var business = props.business,
       menu = props.menu,
       UIComponent = props.UIComponent,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      isSelectedSharedMenus = props.isSelectedSharedMenus;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -366,6 +367,95 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     };
   }();
 
+  var handleDeleteMenu = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, endPoint, response, content, _business, menusShared, menus;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              endPoint = isSelectedSharedMenus ? "".concat(ordering.root, "/business/").concat(business.id, "/menus_shared/").concat(menu.id) : "".concat(ordering.root, "/business/").concat(business.id, "/menus/").concat(menu.id);
+              _context3.next = 7;
+              return fetch(endPoint, requestOptions);
+
+            case 7:
+              response = _context3.sent;
+              _context3.next = 10;
+              return response.json();
+
+            case 10:
+              content = _context3.sent;
+
+              if (!content.error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: null
+                }));
+                _business = null;
+
+                if (isSelectedSharedMenus) {
+                  menusShared = business.menus_shared.filter(function (_menu) {
+                    return _menu.id !== menu.id;
+                  });
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus_shared: menusShared
+                  });
+                } else {
+                  menus = business.menus.filter(function (_menu) {
+                    return _menu.id !== menu.id;
+                  });
+                  _business = _objectSpread(_objectSpread({}, business), {}, {
+                    menus: menus
+                  });
+                }
+
+                handleUpdateBusinessState && handleUpdateBusinessState(_business);
+                showToast(_ToastContext.ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'));
+                props.onClose && props.onClose();
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context3.next = 17;
+              break;
+
+            case 14:
+              _context3.prev = 14;
+              _context3.t0 = _context3["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                error: _context3.t0
+              }));
+
+            case 17:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 14]]);
+    }));
+
+    return function handleDeleteMenu() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
   var handleChangeScheduleState = function handleChangeScheduleState(scheduleChanges) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
@@ -432,7 +522,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     handleCheckOrderType: handleCheckOrderType,
     handleUpdateBusinessMenuOption: handleUpdateBusinessMenuOption,
     handleAddBusinessMenuOption: handleAddBusinessMenuOption,
-    handleChangeScheduleState: handleChangeScheduleState
+    handleChangeScheduleState: handleChangeScheduleState,
+    handleDeleteMenu: handleDeleteMenu
   })));
 };
 
