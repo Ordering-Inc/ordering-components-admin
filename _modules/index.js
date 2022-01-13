@@ -285,6 +285,18 @@ Object.defineProperty(exports, "BusinessSchedule", {
     return _BusinessSchedule.BusinessSchedule;
   }
 });
+Object.defineProperty(exports, "BusinessSharedMenuProductDetails", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSharedMenuProductDetails.BusinessSharedMenuProductDetails;
+  }
+});
+Object.defineProperty(exports, "BusinessSharedMenuProducts", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessSharedMenuProducts.BusinessSharedMenuProducts;
+  }
+});
 Object.defineProperty(exports, "BusinessSortControl", {
   enumerable: true,
   get: function get() {
@@ -1377,6 +1389,10 @@ var _BusinessReviews = require("./components/BusinessReviews");
 var _BusinessReviewsList = require("./components/BusinessReviewsList");
 
 var _BusinessSchedule = require("./components/BusinessSchedule");
+
+var _BusinessSharedMenuProductDetails = require("./components/BusinessSharedMenuProductDetails");
+
+var _BusinessSharedMenuProducts = require("./components/BusinessSharedMenuProducts");
 
 var _BusinessSortControl = require("./components/BusinessSortControl");
 
