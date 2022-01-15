@@ -50,7 +50,8 @@ var ApiProvider = function ApiProvider(_ref) {
       children = _ref.children;
 
   var _useState = (0, _react.useState)(Object.assign(settings.api, {
-    project: settings.project
+    project: settings.project,
+    appId: settings.app_id
   })),
       _useState2 = _slicedToArray(_useState, 2),
       apiSettings = _useState2[0],
@@ -73,10 +74,12 @@ var ApiProvider = function ApiProvider(_ref) {
 
   (0, _react.useEffect)(function () {
     setApiSettings(Object.assign(settings.api, {
-      project: settings.project
+      project: settings.project,
+      appId: settings.app_id
     }));
     setOrdering(new _orderingApiSdk.Ordering(Object.assign(settings.api, {
-      project: settings.project
+      project: settings.project,
+      appId: settings.app_id
     })));
   }, [settings]);
   (0, _react.useEffect)(function () {
