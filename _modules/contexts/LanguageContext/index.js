@@ -274,6 +274,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 break;
               }
 
+              console.log('result', result);
               _defaultLanguage = result.find(function (language) {
                 return language.default;
               });
@@ -283,7 +284,6 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 rtl: _defaultLanguage.rtl
               };
               console.log('defaultLanguage', defaultLanguage);
-              console.log('result', result);
               _context4.next = 15;
               return strategy.setItem('language', defaultLanguage, true);
 
