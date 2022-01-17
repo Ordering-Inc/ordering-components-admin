@@ -76,6 +76,8 @@ export const LanguageProvider = ({ children, strategy }) => {
       if (!error) {
         const _defaultLanguage = result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
+        console.log('defaultLanguage', defaultLanguage)
+        console.log('result', result)
         await strategy.setItem('language', defaultLanguage, true)
         setState(prevState => ({
           ...prevState,
