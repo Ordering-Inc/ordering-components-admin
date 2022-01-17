@@ -116,7 +116,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     setLanguageFromLocalStorage()
     if (ordering?.project === null) return
     refreshLanguages()
-  }, [ordering?.language])
+  }, [ordering?.language, ordering?.project])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key
