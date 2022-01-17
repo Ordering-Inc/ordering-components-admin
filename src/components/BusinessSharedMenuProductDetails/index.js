@@ -29,7 +29,10 @@ export const BusinessSharedMenuProductDetails = (props) => {
   const handleUpdateBusinessSharedMenuProduct = async (changes) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
+      setFormState(prevState => ({
+        ...prevState,
+        loading: false
+      }))
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -41,16 +44,14 @@ export const BusinessSharedMenuProductDetails = (props) => {
       const response = await fetch(`${ordering.root}/business/${business.id}/menus_shared/${menu.id}/products/${product.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const updatedProduct = { ...content.result }
-        delete updatedProduct.id
         setProductState({
           ...productState,
-          product: { ...productState.product, ...updatedProduct }
+          product: { ...productState.product, ...changes }
         })
         const menusShared = business.menus_shared.filter(sharedMenu => {
           const products = sharedMenu.products.map(_product => {
             if (_product.id === product.id) {
-              return Object.assign(_product, updatedProduct)
+              return Object.assign(_product, changes)
             }
             return _product
           })
@@ -225,7 +226,10 @@ export const BusinessSharedMenuProductDetails = (props) => {
   const handleUpdateSuboption = async (suboptionId, enabled) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
+      setFormState(prevState => ({
+        ...prevState,
+        loading: false
+      }))
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -295,13 +299,13 @@ export const BusinessSharedMenuProductDetails = (props) => {
 
   const handleChangeInput = (e) => {
     e.persist()
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       changes: {
         ...formState.changes,
         [e.target.name]: e.target.value
       }
-    })
+    }))
     clearTimeout(timeoutState)
     setTimeoutState(
       setTimeout(function () {
@@ -311,13 +315,13 @@ export const BusinessSharedMenuProductDetails = (props) => {
   }
 
   const handleChangeItem = (itemChange) => {
-    setFormState({
-      ...formState,
+    setFormState(prevState => ({
+      ...prevState,
       changes: {
         ...formState.changes,
         ...itemChange
       }
-    })
+    }))
     handleUpdateBusinessSharedMenuProduct(itemChange)
   }
 
