@@ -268,9 +268,10 @@ var LanguageProvider = function LanguageProvider(_ref) {
               _yield$ordering$langu4 = _yield$ordering$langu3.content;
               error = _yield$ordering$langu4.error;
               result = _yield$ordering$langu4.result;
+              console.log('loading');
 
               if (error) {
-                _context4.next = 16;
+                _context4.next = 17;
                 break;
               }
 
@@ -284,10 +285,10 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 rtl: _defaultLanguage.rtl
               };
               console.log('defaultLanguage', defaultLanguage);
-              _context4.next = 15;
+              _context4.next = 16;
               return strategy.setItem('language', defaultLanguage, true);
 
-            case 15:
+            case 16:
               setState(function (prevState) {
                 return _objectSpread(_objectSpread({}, prevState), {}, {
                   loading: false,
@@ -296,23 +297,23 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 });
               });
 
-            case 16:
-              _context4.next = 21;
+            case 17:
+              _context4.next = 22;
               break;
 
-            case 18:
-              _context4.prev = 18;
+            case 19:
+              _context4.prev = 19;
               _context4.t0 = _context4["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 21:
+            case 22:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 18]]);
+      }, _callee4, null, [[0, 19]]);
     }));
 
     return function refreshLanguages() {
