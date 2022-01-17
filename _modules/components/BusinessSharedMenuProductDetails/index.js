@@ -112,7 +112,7 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
 
   var handleUpdateBusinessSharedMenuProduct = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(changes) {
-      var requestOptions, response, content, updatedProduct, menusShared, _business;
+      var requestOptions, response, content, menusShared, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -120,9 +120,11 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
             case 0:
               _context.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
+              setFormState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false
+                });
+              });
               requestOptions = {
                 method: 'PUT',
                 headers: {
@@ -143,15 +145,13 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
               content = _context.sent;
 
               if (!content.error) {
-                updatedProduct = _objectSpread({}, content.result);
-                delete updatedProduct.id;
                 setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  product: _objectSpread(_objectSpread({}, productState.product), updatedProduct)
+                  product: _objectSpread(_objectSpread({}, productState.product), changes)
                 }));
                 menusShared = business.menus_shared.filter(function (sharedMenu) {
                   var products = sharedMenu.products.map(function (_product) {
                     if (_product.id === product.id) {
-                      return Object.assign(_product, updatedProduct);
+                      return Object.assign(_product, changes);
                     }
 
                     return _product;
@@ -434,9 +434,11 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
             case 0:
               _context4.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
+              setFormState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false
+                });
+              });
               requestOptions = {
                 method: 'PUT',
                 headers: {
@@ -536,9 +538,11 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
 
   var handleChangeInput = function handleChangeInput(e) {
     e.persist();
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
-    }));
+    setFormState(function (prevState) {
+      return _objectSpread(_objectSpread({}, prevState), {}, {
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+      });
+    });
     clearTimeout(timeoutState);
     setTimeoutState(setTimeout(function () {
       handleUpdateBusinessSharedMenuProduct(_defineProperty({}, e.target.name, e.target.value));
@@ -546,9 +550,11 @@ var BusinessSharedMenuProductDetails = function BusinessSharedMenuProductDetails
   };
 
   var handleChangeItem = function handleChangeItem(itemChange) {
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), itemChange)
-    }));
+    setFormState(function (prevState) {
+      return _objectSpread(_objectSpread({}, prevState), {}, {
+        changes: _objectSpread(_objectSpread({}, formState.changes), itemChange)
+      });
+    });
     handleUpdateBusinessSharedMenuProduct(itemChange);
   };
 
