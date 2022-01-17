@@ -112,7 +112,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (state.language?.code && state.language?.code === ordering.language) {
       refreshTranslations()
     }
-  }, [state.language?.code, ordering])
+  }, [state.language?.code, ordering?.project])
 
   useEffect(() => {
     setLanguageFromLocalStorage()
