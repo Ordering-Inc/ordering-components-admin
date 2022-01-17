@@ -346,7 +346,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
     if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
       refreshTranslations();
     }
-  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering]);
+  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
   (0, _react.useEffect)(function () {
     setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
