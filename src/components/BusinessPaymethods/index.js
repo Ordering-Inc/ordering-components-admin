@@ -18,6 +18,7 @@ export const BusinessPaymethods = (props) => {
   const [configState] = useConfig()
 
   const [businessPaymethodsState, setBusinessPaymethodsState] = useState({ paymethods: [], loading: true, error: null })
+  const [sitesState, setSitesState] = useState({ sites: [], loading: true, error: null })
   const [paymethodsList, setPaymethodsList] = useState({ paymethods: [], loading: true, error: null })
   const sandboxRequiredGateways = defaultSandboxRequiredGateways || ['paypal', 'stripe_direct', 'paypal_express', 'stripe_connect', 'stripe_redirect', 'carlos_payment', 'ivr']
   const [actionState, setActionState] = useState({ loading: false, result: { error: false } })
@@ -42,8 +43,33 @@ export const BusinessPaymethods = (props) => {
    */
   const getBusinessPaymethods = async () => {
     try {
-      const response = await fetch(`${ordering.root}/business/${business.id}/paymethods`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } })
+      const response = await fetch(`${ordering.root}/business/${business.id}/paymethods?params=sites`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            'x-app-x': ordering?.appId
+          }
+        }
+      )
       const { result } = await response.json()
+      try {
+        const response2 = await fetch(`${ordering.root}/sites`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+              'x-app-x': ordering?.appId
+            }
+          }
+        )
+        const { result: sitesResult } = await response2.json()
+        setSitesState({ ...sitesState, loading: false, sites: sitesResult })
+      } catch (err) {
+        setSitesState({ ...sitesState, loading: false, sites: err.message })
+      }
       setBusinessPaymethodsState({ ...paymethodsList, loading: false, paymethods: result })
     } catch (err) {
       setBusinessPaymethodsState({ ...paymethodsList, loading: false, error: err.message })
@@ -55,7 +81,12 @@ export const BusinessPaymethods = (props) => {
    */
   const getAllPaymethods = async () => {
     try {
-      const response = await fetch(`${ordering.root}/paymethods?where=[{%22attribute%22:%22enabled%22,%22value%22:true}]`, { method: 'GET', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` } })
+      const response = await fetch(`${ordering.root}/paymethods?where=[{%22attribute%22:%22enabled%22,%22value%22:true}]`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}`, 'x-app-x': ordering?.appId }
+        }
+      )
       const { result } = await response.json()
       setPaymethodsList({ ...paymethodsList, loading: false, paymethods: parsePaymethods(result) })
     } catch (err) {
@@ -80,7 +111,8 @@ export const BusinessPaymethods = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'x-app-x': ordering?.appId
         },
         body: JSON.stringify(params)
       }
@@ -113,7 +145,8 @@ export const BusinessPaymethods = (props) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'x-app-x': ordering?.appId
         },
         body: JSON.stringify(options)
       }
@@ -145,7 +178,8 @@ export const BusinessPaymethods = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'x-app-x': ordering?.appId
         },
         body: JSON.stringify(changesState)
       }
@@ -173,7 +207,8 @@ export const BusinessPaymethods = (props) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          Authorization: `Bearer ${token}`,
+          'x-app-x': ordering?.appId
         }
       }
       const response = await fetch(`${ordering.root}/business/${business.id}/paymethods/${businessPaymethodId}`, requestOptions)
@@ -282,9 +317,24 @@ export const BusinessPaymethods = (props) => {
    * @param {Number} paymethodId id of payment method
    */
   const handleStripeSave = (paymethodId) => {
-    const requestionOptions = {
+    let requestionOptions = {
+      ...stripeConnectData,
       sandbox: true,
       data_sandbox: JSON.stringify(stripeConnectData?.data)
+    }
+    if (requestionOptions?.allowed_order_types) {
+      requestionOptions = {
+        ...requestionOptions,
+        allowed_order_types: requestionOptions.allowed_order_types.length > 0
+          ? JSON.stringify(requestionOptions.allowed_order_types)
+          : null
+      }
+    }
+    if (requestionOptions?.sites) {
+      requestionOptions = {
+        ...requestionOptions,
+        sites: JSON.stringify(requestionOptions.sites)
+      }
     }
     if (Object.keys(stripeConnectData).length) {
       handleUpdateBusinessPaymethodOpton(paymethodId, requestionOptions)
@@ -303,6 +353,15 @@ export const BusinessPaymethods = (props) => {
     })
   }
 
+
+  const handleChangeBusinessPaymentState = (values) => {
+    setChangesState({ ...changesState, ...values })
+  }
+
+  const handleChangeStripeConnectData = (values) => {
+    setStripeConnectData({ ...stripeConnectData, ...values })
+  }
+
   /**
    * Method to save the form state
    * @param {Number} paymethodId id to save the change state
@@ -314,6 +373,20 @@ export const BusinessPaymethods = (props) => {
     }
     if (changes?.data_sandbox) {
       changes = { ...changes, data_sandbox: JSON.stringify(changes.data_sandbox) }
+    }
+    if (changes?.allowed_order_types) {
+      changes = {
+        ...changes,
+        allowed_order_types: changes.allowed_order_types.length > 0
+          ? JSON.stringify(changes.allowed_order_types)
+          : null
+      }
+    }
+    if (changes?.sites) {
+      changes = {
+        ...changes,
+        sites: JSON.stringify(changes.sites)
+      }
     }
     handleUpdateBusinessPaymethodOpton(paymethodId, changes)
     handleUpdateBusiness()
@@ -333,8 +406,12 @@ export const BusinessPaymethods = (props) => {
           paymethodsList={paymethodsList}
           handleClickPayment={handleClickPayment}
           actionState={actionState}
+          sitesState={sitesState}
           handleDeleteBusinessPaymethodOption={handleDeleteBusinessPaymethodOption}
           changesState={changesState}
+          handleChangeBusinessPaymentState={handleChangeBusinessPaymentState}
+          stripeConnectData={stripeConnectData}
+          handleChangeStripeConnectData={handleChangeStripeConnectData}
           cleanChangesState={cleanChangesState}
           handleChangeSandbox={handleChangeSandbox}
           handleChangeInput={handleChangeInput}
