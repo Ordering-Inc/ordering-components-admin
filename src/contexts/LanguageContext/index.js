@@ -73,13 +73,9 @@ export const LanguageProvider = ({ children, strategy }) => {
     try {
       setState({ ...state, loading: true })
       const { content: { error, result } } = await ordering.languages().get()
-      console.log('loading')
       if (!error) {
-        console.log('result', result)
         const _defaultLanguage = result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
-        console.log('defaultLanguage', defaultLanguage)
-        await strategy.setItem('language', defaultLanguage, true)
         setState(prevState => ({
           ...prevState,
           loading: false,
@@ -130,6 +126,11 @@ export const LanguageProvider = ({ children, strategy }) => {
     updateLanguageListState,
     refreshTranslations
   }
+
+  useEffect(() => {
+    if (!state.language) return
+    strategy.setItem('language', state.language, true)
+  }, [state.language])
 
   return (
     <LanguageContext.Provider value={[state, t, functions]}>

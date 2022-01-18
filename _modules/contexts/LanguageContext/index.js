@@ -268,52 +268,41 @@ var LanguageProvider = function LanguageProvider(_ref) {
               _yield$ordering$langu4 = _yield$ordering$langu3.content;
               error = _yield$ordering$langu4.error;
               result = _yield$ordering$langu4.result;
-              console.log('loading');
 
-              if (error) {
-                _context4.next = 17;
-                break;
+              if (!error) {
+                _defaultLanguage = result.find(function (language) {
+                  return language.default;
+                });
+                defaultLanguage = {
+                  id: _defaultLanguage.id,
+                  code: _defaultLanguage.code,
+                  rtl: _defaultLanguage.rtl
+                };
+                setState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    loading: false,
+                    language: defaultLanguage,
+                    languageList: result
+                  });
+                });
               }
 
-              console.log('result', result);
-              _defaultLanguage = result.find(function (language) {
-                return language.default;
-              });
-              defaultLanguage = {
-                id: _defaultLanguage.id,
-                code: _defaultLanguage.code,
-                rtl: _defaultLanguage.rtl
-              };
-              console.log('defaultLanguage', defaultLanguage);
-              _context4.next = 16;
-              return strategy.setItem('language', defaultLanguage, true);
-
-            case 16:
-              setState(function (prevState) {
-                return _objectSpread(_objectSpread({}, prevState), {}, {
-                  loading: false,
-                  language: defaultLanguage,
-                  languageList: result
-                });
-              });
-
-            case 17:
-              _context4.next = 22;
+              _context4.next = 14;
               break;
 
-            case 19:
-              _context4.prev = 19;
+            case 11:
+              _context4.prev = 11;
               _context4.t0 = _context4["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 22:
+            case 14:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 19]]);
+      }, _callee4, null, [[0, 11]]);
     }));
 
     return function refreshLanguages() {
@@ -364,6 +353,10 @@ var LanguageProvider = function LanguageProvider(_ref) {
     updateLanguageListState: updateLanguageListState,
     refreshTranslations: refreshTranslations
   };
+  (0, _react.useEffect)(function () {
+    if (!state.language) return;
+    strategy.setItem('language', state.language, true);
+  }, [state.language]);
   return /*#__PURE__*/_react.default.createElement(LanguageContext.Provider, {
     value: [state, t, functions]
   }, children);
