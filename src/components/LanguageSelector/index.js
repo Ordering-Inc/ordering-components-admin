@@ -52,7 +52,7 @@ export const LanguageSelector = (props) => {
         requestsState.languages.cancel()
       }
     }
-  }, [languageState.languageList])
+  }, [languageState])
 
   /**
    * Selecting default if exist and there is not one in local storage
@@ -72,6 +72,8 @@ export const LanguageSelector = (props) => {
       }
     }
   }, [languages, languageListState])
+
+  console.log(languageState)
 
   return (
     <>
