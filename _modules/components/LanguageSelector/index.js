@@ -139,7 +139,6 @@ var LanguageSelector = function LanguageSelector(props) {
       }
     }
   }, [languages, languageListState]);
-  console.log(languageState);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     currentLanguage: props.handlerCustomChangeLanguage ? languageSelected === null || languageSelected === void 0 ? void 0 : languageSelected.code : languageState === null || languageState === void 0 ? void 0 : (_languageState$langua3 = languageState.language) === null || _languageState$langua3 === void 0 ? void 0 : _languageState$langua3.code,
     languagesState: languageListState,
