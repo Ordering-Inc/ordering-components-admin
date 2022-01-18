@@ -73,8 +73,6 @@ export const LanguageSelector = (props) => {
     }
   }, [languages, languageListState])
 
-  console.log(languageState)
-
   return (
     <>
       {UIComponent && (
