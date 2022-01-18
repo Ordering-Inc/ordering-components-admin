@@ -72,9 +72,7 @@ export const LanguageProvider = ({ children, strategy }) => {
   const refreshLanguages = async () => {
     try {
       setState({ ...state, loading: true })
-      console.log('loading')
       const { content: { error, result } } = await ordering.languages().get()
-      console.log('result', result)
       if (!error) {
         const _defaultLanguage = result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
