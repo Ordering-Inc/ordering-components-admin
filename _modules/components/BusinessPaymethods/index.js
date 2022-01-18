@@ -89,35 +89,44 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
       setBusinessPaymethodsState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
-    paymethods: [],
+    sites: [],
     loading: true,
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      paymethodsList = _useState4[0],
-      setPaymethodsList = _useState4[1];
+      sitesState = _useState4[0],
+      setSitesState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    paymethods: [],
+    loading: true,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      paymethodsList = _useState6[0],
+      setPaymethodsList = _useState6[1];
 
   var sandboxRequiredGateways = defaultSandboxRequiredGateways || ['paypal', 'stripe_direct', 'paypal_express', 'stripe_connect', 'stripe_redirect', 'carlos_payment', 'ivr'];
 
-  var _useState5 = (0, _react.useState)({
+  var _useState7 = (0, _react.useState)({
     loading: false,
     result: {
       error: false
     }
   }),
-      _useState6 = _slicedToArray(_useState5, 2),
-      actionState = _useState6[0],
-      setActionState = _useState6[1];
-
-  var _useState7 = (0, _react.useState)({}),
       _useState8 = _slicedToArray(_useState7, 2),
-      changesState = _useState8[0],
-      setChangesState = _useState8[1];
+      actionState = _useState8[0],
+      setActionState = _useState8[1];
 
   var _useState9 = (0, _react.useState)({}),
       _useState10 = _slicedToArray(_useState9, 2),
-      stripeConnectData = _useState10[0],
-      setStripeConnectData = _useState10[1];
+      changesState = _useState10[0],
+      setChangesState = _useState10[1];
+
+  var _useState11 = (0, _react.useState)({}),
+      _useState12 = _slicedToArray(_useState11, 2),
+      stripeConnectData = _useState12[0],
+      setStripeConnectData = _useState12[1];
 
   var stripeClientId = (configState === null || configState === void 0 ? void 0 : (_configState$configs = configState.configs) === null || _configState$configs === void 0 ? void 0 : (_configState$configs$ = _configState$configs.stripe_connect_sandbox) === null || _configState$configs$ === void 0 ? void 0 : _configState$configs$.value) === '1' ? configState === null || configState === void 0 ? void 0 : (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 ? void 0 : (_configState$configs3 = _configState$configs2.stripe_connect_client_id_sandbox) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value : configState === null || configState === void 0 ? void 0 : (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 ? void 0 : (_configState$configs5 = _configState$configs4.stripe_connect_client_id) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value;
   /**
@@ -142,7 +151,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
   var getBusinessPaymethods = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var response, _yield$response$json, result;
+      var response, _yield$response$json, result, response2, _yield$response2$json, sitesResult;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -150,11 +159,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
             case 0:
               _context.prev = 0;
               _context.next = 3;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods"), {
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods?params=sites"), {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 }
               });
 
@@ -166,27 +176,62 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
             case 6:
               _yield$response$json = _context.sent;
               result = _yield$response$json.result;
+              _context.prev = 8;
+              _context.next = 11;
+              return fetch("".concat(ordering.root, "/sites"), {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
+                }
+              });
+
+            case 11:
+              response2 = _context.sent;
+              _context.next = 14;
+              return response2.json();
+
+            case 14:
+              _yield$response2$json = _context.sent;
+              sitesResult = _yield$response2$json.result;
+              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                loading: false,
+                sites: sitesResult
+              }));
+              _context.next = 22;
+              break;
+
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](8);
+              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                loading: false,
+                sites: _context.t0.message
+              }));
+
+            case 22:
               setBusinessPaymethodsState(_objectSpread(_objectSpread({}, paymethodsList), {}, {
                 loading: false,
                 paymethods: result
               }));
-              _context.next = 14;
+              _context.next = 28;
               break;
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](0);
+            case 25:
+              _context.prev = 25;
+              _context.t1 = _context["catch"](0);
               setBusinessPaymethodsState(_objectSpread(_objectSpread({}, paymethodsList), {}, {
                 loading: false,
-                error: _context.t0.message
+                error: _context.t1.message
               }));
 
-            case 14:
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 25], [8, 19]]);
     }));
 
     return function getBusinessPaymethods() {
@@ -212,7 +257,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 }
               });
 
@@ -280,7 +326,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 },
                 body: JSON.stringify(params)
               };
@@ -357,7 +404,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 },
                 body: JSON.stringify(options)
               };
@@ -435,7 +483,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 },
                 body: JSON.stringify(changesState)
               };
@@ -508,7 +557,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 }
               };
               _context6.next = 6;
@@ -660,10 +710,24 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
 
   var handleStripeSave = function handleStripeSave(paymethodId) {
-    var requestionOptions = {
+    var _requestionOptions, _requestionOptions2;
+
+    var requestionOptions = _objectSpread(_objectSpread({}, stripeConnectData), {}, {
       sandbox: true,
       data_sandbox: JSON.stringify(stripeConnectData === null || stripeConnectData === void 0 ? void 0 : stripeConnectData.data)
-    };
+    });
+
+    if ((_requestionOptions = requestionOptions) !== null && _requestionOptions !== void 0 && _requestionOptions.allowed_order_types) {
+      requestionOptions = _objectSpread(_objectSpread({}, requestionOptions), {}, {
+        allowed_order_types: requestionOptions.allowed_order_types.length > 0 ? JSON.stringify(requestionOptions.allowed_order_types) : null
+      });
+    }
+
+    if ((_requestionOptions2 = requestionOptions) !== null && _requestionOptions2 !== void 0 && _requestionOptions2.sites) {
+      requestionOptions = _objectSpread(_objectSpread({}, requestionOptions), {}, {
+        sites: JSON.stringify(requestionOptions.sites)
+      });
+    }
 
     if (Object.keys(stripeConnectData).length) {
       handleUpdateBusinessPaymethodOpton(paymethodId, requestionOptions);
@@ -680,6 +744,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
   var handleChangeStripeInput = function handleChangeStripeInput(e) {
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
+
+  var handleChangeBusinessPaymentState = function handleChangeBusinessPaymentState(values) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), values));
+  };
+
+  var handleChangeStripeConnectData = function handleChangeStripeConnectData(values) {
+    setStripeConnectData(_objectSpread(_objectSpread({}, stripeConnectData), values));
+  };
   /**
    * Method to save the form state
    * @param {Number} paymethodId id to save the change state
@@ -687,7 +759,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
 
   var handleSaveClick = function handleSaveClick(paymethodId) {
-    var _changes, _changes2;
+    var _changes, _changes2, _changes3, _changes4;
 
     var changes = _objectSpread({}, changesState);
 
@@ -700,6 +772,18 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     if ((_changes2 = changes) !== null && _changes2 !== void 0 && _changes2.data_sandbox) {
       changes = _objectSpread(_objectSpread({}, changes), {}, {
         data_sandbox: JSON.stringify(changes.data_sandbox)
+      });
+    }
+
+    if ((_changes3 = changes) !== null && _changes3 !== void 0 && _changes3.allowed_order_types) {
+      changes = _objectSpread(_objectSpread({}, changes), {}, {
+        allowed_order_types: changes.allowed_order_types.length > 0 ? JSON.stringify(changes.allowed_order_types) : null
+      });
+    }
+
+    if ((_changes4 = changes) !== null && _changes4 !== void 0 && _changes4.sites) {
+      changes = _objectSpread(_objectSpread({}, changes), {}, {
+        sites: JSON.stringify(changes.sites)
       });
     }
 
@@ -716,8 +800,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     paymethodsList: paymethodsList,
     handleClickPayment: handleClickPayment,
     actionState: actionState,
+    sitesState: sitesState,
     handleDeleteBusinessPaymethodOption: handleDeleteBusinessPaymethodOption,
     changesState: changesState,
+    handleChangeBusinessPaymentState: handleChangeBusinessPaymentState,
+    stripeConnectData: stripeConnectData,
+    handleChangeStripeConnectData: handleChangeStripeConnectData,
     cleanChangesState: cleanChangesState,
     handleChangeSandbox: handleChangeSandbox,
     handleChangeInput: handleChangeInput,
