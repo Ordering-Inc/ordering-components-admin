@@ -110,13 +110,13 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (state.language?.code && state.language?.code === ordering.language) {
       refreshTranslations()
     }
-  }, [state.language?.code, ordering])
+  }, [state.language?.code, ordering?.project])
 
   useEffect(() => {
     setLanguageFromLocalStorage()
     if (ordering?.project === null) return
     refreshLanguages()
-  }, [ordering?.language])
+  }, [ordering?.language, ordering?.project])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key
