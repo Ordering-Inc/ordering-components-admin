@@ -181,6 +181,7 @@ import { ResetPassword } from './components/ResetPassword'
 import { ReportsBrandFilter } from './components/ReportsBrandFilter'
 import { ReportsAppIdFilter } from './components/ReportsAppIdFilter'
 import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
+import { SiteDetails } from './components/SiteDetails'
 import { SitesList } from './components/SitesList'
 import { Analytics } from './components/Analitycs'
 import { UsersList } from './components/UsersList'
@@ -362,6 +363,7 @@ export {
   ReportsAppIdFilter,
   ReportsDriverGroupFilter,
   ReviewCustomer,
+  SiteDetails,
   SitesList,
   Analytics,
   UsersList,
