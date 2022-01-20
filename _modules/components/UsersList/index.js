@@ -358,7 +358,7 @@ var UsersList = function UsersList(props) {
 
               setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
                 currentPage: pagination.current_page,
-                pageSize: pagination.page_size,
+                pageSize: pagination.page_size === 0 ? paginationProps.pageSize : pagination.page_size,
                 totalPages: pagination.total_pages,
                 totalItems: pagination.total,
                 from: pagination.from,
