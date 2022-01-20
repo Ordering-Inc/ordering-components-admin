@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Logistics = void 0;
+exports.SitesList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -47,9 +47,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var Logistics = function Logistics(props) {
-  var orderId = props.orderId,
-      UIComponent = props.UIComponent;
+var SitesList = function SitesList(props) {
+  var _paginationSettings$p;
+
+  var UIComponent = props.UIComponent,
+      paginationSettings = props.paginationSettings,
+      isSearchByName = props.isSearchByName,
+      isSearchByDescription = props.isSearchByDescription;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -57,93 +61,177 @@ var Logistics = function Logistics(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      session = _useSession2[0];
-  /**
-   * Array to save logistics
-   */
-
+      token = _useSession2[0].token;
 
   var _useState = (0, _react.useState)({
-    logs: [],
-    loading: true,
+    loading: false,
+    sites: [],
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      logisticList = _useState2[0],
-      setLogisticList = _useState2[1];
+      sitesListState = _useState2[0],
+      setSitesListState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+    pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
+    totalItems: null,
+    totalPages: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      paginationProps = _useState4[0],
+      setPaginationProps = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(null),
+      _useState6 = _slicedToArray(_useState5, 2),
+      searchValue = _useState6[0],
+      setSearchValue = _useState6[1];
   /**
-   * Method to get logistics from API
+   * Method to get the sites from API
    */
 
 
-  var getLogistics = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, _yield$response$json, result;
-
+  var getSites = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page, pageSize) {
+      var where, conditions, searchConditions, requestOptions, fetchEndpoint, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
+              setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
                 loading: true
               }));
+              where = null;
+              conditions = [];
+
+              if (searchValue) {
+                searchConditions = [];
+
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByDescription) {
+                  searchConditions.push({
+                    attribute: 'description',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
               requestOptions = {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(session.token)
+                  Authorization: "Bearer ".concat(token)
                 }
               };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/logs?order_id=").concat(orderId), requestOptions);
+              fetchEndpoint = where ? "".concat(ordering.root, "/sites?page=").concat(page, "&page_size=").concat(pageSize, "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/sites?page=").concat(page, "&page_size=").concat(pageSize);
+              _context.next = 10;
+              return fetch(fetchEndpoint, requestOptions);
 
-            case 5:
+            case 10:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 13;
               return response.json();
 
-            case 8:
-              _yield$response$json = _context.sent;
-              result = _yield$response$json.result;
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
-                loading: false,
-                logs: result
-              }));
-              _context.next = 16;
+            case 13:
+              content = _context.sent;
+
+              if (!content.error) {
+                setSitesListState({
+                  loading: false,
+                  sites: content.result,
+                  error: null
+                });
+                setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+                  currentPage: content.pagination.current_page,
+                  totalPages: content.pagination.total_pages,
+                  totalItems: content.pagination.total,
+                  from: content.pagination.from,
+                  to: content.pagination.to
+                }));
+              } else {
+                setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context.next = 21;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
-              setLogisticList(_objectSpread(_objectSpread({}, logisticList), {}, {
+              console.log(_context.t0);
+              setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
                 loading: false,
-                error: _context.t0.message
+                error: [_context.t0.message]
               }));
 
-            case 16:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
-    return function getLogistics() {
+    return function getSites(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Function to update the site list
+   */
+
+
+  var handleSuccessUpdateSites = function handleSuccessUpdateSites(updateSites) {
+    setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
+      sites: updateSites
+    }));
+  };
 
   (0, _react.useEffect)(function () {
-    getLogistics();
-  }, []);
+    if (sitesListState.loading) return;
+    getSites(1, paginationProps.pageSize);
+  }, [searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    logisticList: logisticList
+    paginationProps: paginationProps,
+    setPaginationProps: setPaginationProps,
+    sitesListState: sitesListState,
+    searchValue: searchValue,
+    onSearch: setSearchValue,
+    getSites: getSites,
+    handleSuccessUpdateSites: handleSuccessUpdateSites
   })));
 };
 
-exports.Logistics = Logistics;
-Logistics.propTypes = {
+exports.SitesList = SitesList;
+SitesList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -155,32 +243,37 @@ Logistics.propTypes = {
   propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
 
   /**
-   * Components types before my orders
+   * Components types before sites list
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
+   * Components types after sites list
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
+   * Elements before sites list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
+   * Elements after sites list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Logistics.defaultProps = {
+SitesList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  paginationSettings: {
+    initialPage: 1,
+    pageSize: 10,
+    controlType: 'infinity'
+  }
 };

@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DriverGroupSetting = void 0;
+exports.SiteDetails = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,13 +13,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _ApiContext = require("../../contexts/ApiContext");
-
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _ToastContext = require("../../contexts/ToastContext");
+var _ApiContext = require("../../contexts/ApiContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -59,9 +59,15 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var DriverGroupSetting = function DriverGroupSetting(props) {
-  var userId = props.userId,
-      UIComponent = props.UIComponent;
+var SiteDetails = function SiteDetails(props) {
+  var site = props.site,
+      sitesList = props.sitesList,
+      UIComponent = props.UIComponent,
+      handleSuccessUpdateSites = props.handleSuccessUpdateSites;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -75,125 +81,181 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
   var _useState = (0, _react.useState)({
-    groups: [],
+    site: site || {},
     loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      driversGroupsState = _useState2[0],
-      setDriversGroupsState = _useState2[1];
+      siteState = _useState2[0],
+      setSiteState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
+    changes: {},
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionState = _useState4[0],
-      setActionState = _useState4[1];
+      formState = _useState4[0],
+      setFormState = _useState4[1];
 
-  var _useState5 = (0, _react.useState)([]),
+  var _useState5 = (0, _react.useState)(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      includedGroupIds = _useState6[0],
-      setIncludedGroupIds = _useState6[1];
+      isAddMode = _useState6[0],
+      setIsAddMode = _useState6[1];
   /**
-   * Method to get the drivers groups from API
+   * Clean formState
    */
 
 
-  var getDriversGroups = /*#__PURE__*/function () {
+  var cleanFormState = function cleanFormState() {
+    return setFormState({
+      loading: false,
+      changes: {},
+      error: null
+    });
+  };
+  /**
+   * Update form data
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeInput = function handleChangeInput(e) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+    }));
+  };
+  /**
+   * Update business photo data
+   * @param {File} file Image to change business photo
+   */
+
+
+  var handlechangeImage = function handlechangeImage(file, name) {
+    var reader = new window.FileReader();
+    reader.readAsDataURL(file);
+
+    reader.onload = function () {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, reader.result))
+      }));
+    };
+
+    reader.onerror = function (error) {
+      return console.log(error);
+    };
+  };
+  /**
+   * Function to update site details from API
+   */
+
+
+  var handleUpdateSite = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+      var requestOptions, response, content, updatedSites;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(formState.changes)
               };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/drivergroups?params=name,drivers"), requestOptions);
+              _context.next = 6;
+              return fetch("".concat(ordering.root, "/sites/").concat(site.id), requestOptions);
 
-            case 5:
+            case 6:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context.sent;
 
               if (!content.error) {
-                setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                  groups: content.result,
-                  loading: false
+                setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
+                  site: content.result
+                }));
+                cleanFormState();
+
+                if (handleSuccessUpdateSites) {
+                  updatedSites = sitesList.filter(function (_site) {
+                    if (_site.id === site.id) {
+                      Object.assign(_site, content.result);
+                    }
+
+                    return true;
+                  });
+                  handleSuccessUpdateSites(updatedSites);
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('SITE_SAVED', 'Site saved'));
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: content.result
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 16;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
-              setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
-    return function getDriversGroups() {
+    return function handleUpdateSite() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to update selected drivers group from API
-   * @param {Number} driverGroupId
-   * @param {Object} changes
+   * Function to delete the site from API
    */
 
 
-  var handleUpdateDriversGroup = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(driverGroupId, changes) {
-      var requestOptions, response, content, groups;
+  var handleDeleteSite = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var requestOptions, response, content, updatedSites;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true,
-                error: null
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
               }));
               requestOptions = {
-                method: 'PUT',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
+                }
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/drivergroups/").concat(driverGroupId), requestOptions);
+              return fetch("".concat(ordering.root, "/sites/").concat(site.id), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -204,23 +266,17 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
               content = _context2.sent;
 
               if (!content.error) {
-                setActionState({
-                  error: null,
-                  loading: false
-                });
-                groups = driversGroupsState.groups.filter(function (group) {
-                  if (group.id === driverGroupId) {
-                    Object.assign(group, content.result);
-                  }
+                if (handleSuccessUpdateSites) {
+                  updatedSites = sitesList.filter(function (_site) {
+                    return _site.id === site.id;
+                  });
+                  handleSuccessUpdateSites(updatedSites);
+                }
 
-                  return true;
-                });
-                setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                  groups: groups
-                }));
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                showToast(_ToastContext.ToastType.Success, t('SITE_DELETED', 'Site deleted'));
+                props.onClose && props.onClose();
               } else {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
@@ -232,10 +288,10 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
             case 13:
               _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
-              setActionState({
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context2.t0.message]
-              });
+              }));
 
             case 16:
             case "end":
@@ -245,90 +301,144 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function handleUpdateDriversGroup(_x, _x2) {
+    return function handleDeleteSite() {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+   * Function to add new site from API
+   */
 
-  var handleCheckboxClick = function handleCheckboxClick(groupId) {
-    var selectedGroup = driversGroupsState.groups.find(function (group) {
-      return group.id === groupId;
-    });
-    var driverIds = selectedGroup.drivers.reduce(function (ids, driver) {
-      return [].concat(_toConsumableArray(ids), [driver.id]);
-    }, []);
-    var changedDriverIds = [];
 
-    if (driverIds.includes(userId)) {
-      console.log(userId, driverIds);
-      changedDriverIds = driverIds.filter(function (id) {
-        return id !== userId;
-      });
-    } else {
-      console.log('else');
-      changedDriverIds = [].concat(_toConsumableArray(driverIds), [userId]);
-    }
+  var handleAddSite = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(formState.changes)
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/sites"), requestOptions);
 
-    console.log(changedDriverIds);
-    var changes = {
-      drivers: JSON.stringify(changedDriverIds)
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                cleanFormState();
+                showToast(_ToastContext.ToastType.Success, t('SITE_ADDED', 'Site added'));
+
+                if (handleSuccessUpdateSites) {
+                  handleSuccessUpdateSites([].concat(_toConsumableArray(sitesList), [content.result]));
+                }
+
+                props.onClose && props.onClose();
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                error: [_context3.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleAddSite() {
+      return _ref3.apply(this, arguments);
     };
-    handleUpdateDriversGroup(groupId, changes);
-  };
+  }();
 
   (0, _react.useEffect)(function () {
-    if (driversGroupsState.loading) return;
-    var groupIds = driversGroupsState.groups.reduce(function (ids, group) {
-      var found = group.drivers.find(function (driver) {
-        return driver.id === userId;
-      });
-      if (found) return [].concat(_toConsumableArray(ids), [group.id]);else return _toConsumableArray(ids);
-    }, []);
-    setIncludedGroupIds(groupIds);
-  }, [userId, driversGroupsState]);
-  (0, _react.useEffect)(function () {
-    getDriversGroups();
-  }, []);
+    if (site) {
+      setIsAddMode(false);
+      cleanFormState();
+      setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
+        site: site
+      }));
+    } else {
+      setIsAddMode(true);
+      setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
+        site: {}
+      }));
+    }
+  }, [site]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    driversGroupsState: driversGroupsState,
-    includedGroupIds: includedGroupIds,
-    actionState: actionState,
-    handleCheckboxClick: handleCheckboxClick
+    siteState: siteState,
+    formState: formState,
+    isAddMode: isAddMode,
+    handleChangeInput: handleChangeInput,
+    handlechangeImage: handlechangeImage,
+    handleUpdateSite: handleUpdateSite,
+    handleDeleteSite: handleDeleteSite,
+    handleAddSite: handleAddSite
   })));
 };
 
-exports.DriverGroupSetting = DriverGroupSetting;
-DriverGroupSetting.propTypes = {
+exports.SiteDetails = SiteDetails;
+SiteDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before drivers group setting
+   * Components types before sitedetails
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after drivers group setting
-   * Array of type components, the parent props will pass to these components
-   */
+  * Components types after sitedetails
+  * Array of type components, the parent props will pass to these components
+  */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before drivers group setting
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements before sitedetails
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after drivers group setting
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements after sitedetails
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-DriverGroupSetting.defaultProps = {
+SiteDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
