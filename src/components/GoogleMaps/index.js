@@ -168,6 +168,12 @@ export const GoogleMaps = (props) => {
       } else {
         markerCluster.addMarkers(markers)
       }
+      if (locations?.length > 0) {
+        const bound = new window.google.maps.LatLngBounds()
+        locations.forEach(loc => bound.extend(new window.google.maps.LatLng(loc.lat, loc.lng)))
+        googleMapMarker.setPosition(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()))
+        googleMap.panTo(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()))
+      }
     }
   }, [isHeat])
 
@@ -307,10 +313,12 @@ export const GoogleMaps = (props) => {
       if (businessMap && googleMap) {
         generateMarkers(googleMap)
       }
-      center.lat = location?.lat
-      center.lng = location?.lng
-      googleMapMarker && googleMapMarker.setPosition(new window.google.maps.LatLng(center?.lat, center?.lng))
-      googleMap && googleMap.panTo(new window.google.maps.LatLng(center?.lat, center?.lng))
+      if (!(isHeatMap && locations?.length > 0)) {
+        center.lat = location?.lat
+        center.lng = location?.lng
+        googleMapMarker && googleMapMarker.setPosition(new window.google.maps.LatLng(center?.lat, center?.lng))
+        googleMap && googleMap.panTo(new window.google.maps.LatLng(center?.lat, center?.lng))
+      }
     }
   }, [location])
 
