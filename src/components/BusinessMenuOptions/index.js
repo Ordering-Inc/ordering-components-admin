@@ -23,6 +23,7 @@ export const BusinessMenuOptions = (props) => {
   const [orderTypeState, setOrderTypeSate] = useState({})
   const [selectedProductsIds, setSelectedProductsIds] = useState([])
   const [selectedProducts, setSelectedProducts] = useState([])
+  const [subCategoriesList, setSubCategoriesList] = useState([])
 
   /**
    * Update business menu name and comment
@@ -259,8 +260,9 @@ export const BusinessMenuOptions = (props) => {
       curbside: menu?.curbside,
       driver_thru: menu?.driver_thru
     })
+    let _selectedProductsIds = []
     if (Object.keys(menu).length) {
-      const _selectedProductsIds = menu.products.reduce((ids, product) => [...ids, product.id], [])
+      _selectedProductsIds = menu.products.reduce((ids, product) => [...ids, product.id], [])
       setSelectedProductsIds(_selectedProductsIds)
       setSelectedProducts(menu.products)
     } else {
@@ -281,7 +283,43 @@ export const BusinessMenuOptions = (props) => {
         }
       })
     }
+    handleSetSubCategoryList(_selectedProductsIds)
   }, [menu])
+
+  const handleSetSubCategoryList = (_selectedProductsIds) => {
+    if (business?.categories.length) {
+      const _subCategoriesList = []
+      const iterateCategories = (categories) => {
+        return (
+          categories?.length > 0 && categories?.forEach(category => {
+            let productIds = []
+            const _productIds = category.products.reduce((ids, product) => [...ids, product.id], [])
+            productIds = [...productIds, ..._productIds]
+            if (category?.subcategories?.length) {
+              category.subcategories.forEach(function iterate (category) {
+                const _productIds = category.products.reduce((ids, product) => [...ids, product.id], [])
+                productIds = [...productIds, ..._productIds]
+                Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+              })
+            }
+
+            _subCategoriesList.push({
+              id: category.id,
+              name: category.name,
+              productIds: productIds,
+              isChecked:
+                productIds.length === 0
+                  ? false
+                  : productIds.every(id => _selectedProductsIds.includes(id))
+            })
+            iterateCategories(category.subcategories)
+          })
+        )
+      }
+      setSubCategoriesList(_subCategoriesList)
+      iterateCategories(business?.categories)
+    }
+  }
 
   return (
     <>
@@ -302,6 +340,8 @@ export const BusinessMenuOptions = (props) => {
             handleAddBusinessMenuOption={handleAddBusinessMenuOption}
             handleChangeScheduleState={handleChangeScheduleState}
             handleDeleteMenu={handleDeleteMenu}
+
+            subCategoriesList={subCategoriesList}
           />
         )
       }
