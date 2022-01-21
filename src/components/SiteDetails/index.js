@@ -124,7 +124,7 @@ export const SiteDetails = (props) => {
         loading: true
       })
       const requestOptions = {
-        method: 'POST',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
