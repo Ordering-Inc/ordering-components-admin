@@ -168,12 +168,6 @@ export const GoogleMaps = (props) => {
       } else {
         markerCluster.addMarkers(markers)
       }
-      if (locations?.length > 0) {
-        const bound = new window.google.maps.LatLngBounds()
-        locations.forEach(loc => bound.extend(new window.google.maps.LatLng(loc.lat, loc.lng)))
-        googleMapMarker.setPosition(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()))
-        googleMap.panTo(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()))
-      }
     }
   }, [isHeat])
 
