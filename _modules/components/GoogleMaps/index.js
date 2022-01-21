@@ -293,15 +293,6 @@ var GoogleMaps = function GoogleMaps(props) {
       } else {
         markerCluster.addMarkers(markers);
       }
-
-      if ((locations === null || locations === void 0 ? void 0 : locations.length) > 0) {
-        var bound = new window.google.maps.LatLngBounds();
-        locations.forEach(function (loc) {
-          return bound.extend(new window.google.maps.LatLng(loc.lat, loc.lng));
-        });
-        googleMapMarker.setPosition(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()));
-        googleMap.panTo(new window.google.maps.LatLng(bound.getCenter().lat(), bound.getCenter().lng()));
-      }
     }
   }, [isHeat]);
   (0, _react.useEffect)(function () {

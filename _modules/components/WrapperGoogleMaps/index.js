@@ -60,7 +60,7 @@ var WrapperGoogleMaps = function WrapperGoogleMaps(Child) {
         window.document.body.appendChild(js1);
       }
 
-      if (window.document.getElementById('google-maps-sdk')) {
+      if (window.document.getElementById('google-maps-sdk') && window.document.getElementById('google-maps-cluster')) {
         if (typeof google !== 'undefined') {
           setGoogleReady(true);
         } else {
