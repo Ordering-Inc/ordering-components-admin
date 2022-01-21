@@ -248,7 +248,7 @@ var SiteDetails = function SiteDetails(props) {
                 loading: true
               }));
               requestOptions = {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)

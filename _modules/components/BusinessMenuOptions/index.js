@@ -114,6 +114,11 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       _useState10 = _slicedToArray(_useState9, 2),
       selectedProducts = _useState10[0],
       setSelectedProducts = _useState10[1];
+
+  var _useState11 = (0, _react.useState)([]),
+      _useState12 = _slicedToArray(_useState11, 2),
+      subCategoriesList = _useState12[0],
+      setSubCategoriesList = _useState12[1];
   /**
    * Update business menu name and comment
    * @param {EventTarget} e Related HTML event
@@ -485,12 +490,12 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       curbside: menu === null || menu === void 0 ? void 0 : menu.curbside,
       driver_thru: menu === null || menu === void 0 ? void 0 : menu.driver_thru
     });
+    var _selectedProductsIds = [];
 
     if (Object.keys(menu).length) {
-      var _selectedProductsIds = menu.products.reduce(function (ids, product) {
+      _selectedProductsIds = menu.products.reduce(function (ids, product) {
         return [].concat(_toConsumableArray(ids), [product.id]);
       }, []);
-
       setSelectedProductsIds(_selectedProductsIds);
       setSelectedProducts(menu.products);
     } else {
@@ -510,7 +515,55 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
         }
       }));
     }
+
+    handleSetSubCategoryList(_selectedProductsIds);
   }, [menu]);
+
+  var handleSetSubCategoryList = function handleSetSubCategoryList(_selectedProductsIds) {
+    if (business !== null && business !== void 0 && business.categories.length) {
+      var _subCategoriesList = [];
+
+      var iterateCategories = function iterateCategories(categories) {
+        return (categories === null || categories === void 0 ? void 0 : categories.length) > 0 && (categories === null || categories === void 0 ? void 0 : categories.forEach(function (category) {
+          var _category$subcategori;
+
+          var productIds = [];
+
+          var _productIds = category.products.reduce(function (ids, product) {
+            return [].concat(_toConsumableArray(ids), [product.id]);
+          }, []);
+
+          productIds = [].concat(_toConsumableArray(productIds), _toConsumableArray(_productIds));
+
+          if (category !== null && category !== void 0 && (_category$subcategori = category.subcategories) !== null && _category$subcategori !== void 0 && _category$subcategori.length) {
+            category.subcategories.forEach(function iterate(category) {
+              var _productIds = category.products.reduce(function (ids, product) {
+                return [].concat(_toConsumableArray(ids), [product.id]);
+              }, []);
+
+              productIds = [].concat(_toConsumableArray(productIds), _toConsumableArray(_productIds));
+              Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+            });
+          }
+
+          _subCategoriesList.push({
+            id: category.id,
+            name: category.name,
+            productIds: productIds,
+            isChecked: productIds.length === 0 ? false : productIds.every(function (id) {
+              return _selectedProductsIds.includes(id);
+            })
+          });
+
+          iterateCategories(category.subcategories);
+        }));
+      };
+
+      setSubCategoriesList(_subCategoriesList);
+      iterateCategories(business === null || business === void 0 ? void 0 : business.categories);
+    }
+  };
+
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessMenuState: businessMenuState,
     formState: formState,
@@ -523,7 +576,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     handleUpdateBusinessMenuOption: handleUpdateBusinessMenuOption,
     handleAddBusinessMenuOption: handleAddBusinessMenuOption,
     handleChangeScheduleState: handleChangeScheduleState,
-    handleDeleteMenu: handleDeleteMenu
+    handleDeleteMenu: handleDeleteMenu,
+    subCategoriesList: subCategoriesList
   })));
 };
 
