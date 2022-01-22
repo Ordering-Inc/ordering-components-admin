@@ -39,6 +39,10 @@ export const LanguageManager = (props) => {
       return translation
     })
 
+    if (searchValue) {
+      setSearchValue(key)
+    }
+
     handleUpdateTranslationList && handleUpdateTranslationList(translations)
     setFormState({ ...formState, changes: { id: id, key: key, text: text } })
   }
@@ -134,6 +138,7 @@ export const LanguageManager = (props) => {
           {...props}
           translationList={translationList}
           handleUpdateTranslationList={handleUpdateTranslationList}
+          textEditState={formState.changes}
           searchValue={searchValue}
           onSearch={setSearchValue}
           handleChangeText={handleChangeText}
