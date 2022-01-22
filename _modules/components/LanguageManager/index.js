@@ -117,6 +117,11 @@ var LanguageManager = function LanguageManager(props) {
 
       return translation;
     });
+
+    if (searchValue) {
+      setSearchValue(key);
+    }
+
     handleUpdateTranslationList && handleUpdateTranslationList(translations);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {
@@ -280,6 +285,7 @@ var LanguageManager = function LanguageManager(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     translationList: translationList,
     handleUpdateTranslationList: handleUpdateTranslationList,
+    textEditState: formState.changes,
     searchValue: searchValue,
     onSearch: setSearchValue,
     handleChangeText: handleChangeText,
