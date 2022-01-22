@@ -197,6 +197,14 @@ var LanguageTransSpread = function LanguageTransSpread(props) {
     }
 
     if (itemToUpdate.length > 0) {
+      var _itemToUpdate$;
+
+      if ((_itemToUpdate$ = itemToUpdate[0]) !== null && _itemToUpdate$ !== void 0 && _itemToUpdate$.key) {
+        var _itemToUpdate$2;
+
+        props.onSearch && props.onSearch((_itemToUpdate$2 = itemToUpdate[0]) === null || _itemToUpdate$2 === void 0 ? void 0 : _itemToUpdate$2.key);
+      }
+
       createBulkTranslations(itemToUpdate, false, hotTableObj);
     }
 
