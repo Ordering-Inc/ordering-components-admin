@@ -307,9 +307,10 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
             case 0:
               _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
+              setActionState({
+                loading: true,
+                error: null
+              });
               extraAttributes = {
                 enabled: true,
                 autoassign_amount_drivers: 1,
@@ -355,9 +356,10 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
                 newGroup = _objectSpread({}, content.result);
 
                 if (!((_content$result = content.result) !== null && _content$result !== void 0 && _content$result.administrator) && driversManagers.length > 0) {
