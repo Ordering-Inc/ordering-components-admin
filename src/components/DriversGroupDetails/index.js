@@ -108,7 +108,7 @@ export const DriversGroupDetails = (props) => {
   const handleAddDriversGroup = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ ...actionState, loading: true })
+      setActionState({ loading: true, error: null })
       const extraAttributes = {
         enabled: true,
         autoassign_amount_drivers: 1,
@@ -145,7 +145,7 @@ export const DriversGroupDetails = (props) => {
       const response = await fetch(`${ordering.root}/drivergroups`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setActionState({ ...actionState, loading: false })
+        setActionState({ loading: false, error: null })
         let newGroup = { ...content.result }
         if (!content.result?.administrator && driversManagers.length > 0) {
           const newAdmin = driversManagers.find(manager => manager.id === content.result?.administrator_id)
