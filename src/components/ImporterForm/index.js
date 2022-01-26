@@ -222,9 +222,10 @@ export const ImporterForm = (props) => {
       })
     }
   }
-/**
- * Function to update importer
- */
+
+  /**
+   * Function to update importer
+   */
   const editImporter = async () => {
     showToast(ToastType.Info, t('LOADING', 'Loading'))
     const data = { ...formState.changes }
@@ -341,7 +342,7 @@ ImporterForm.propTypes = {
   /**
    * Function to update importer list
    */
-   handleSuccessUpdateImporter: PropTypes.func,
+  handleSuccessUpdateImporter: PropTypes.func,
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
