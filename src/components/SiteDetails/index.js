@@ -134,7 +134,7 @@ export const SiteDetails = (props) => {
       const content = await response.json()
       if (!content.error) {
         if (handleSuccessUpdateSites) {
-          const updatedSites = sitesList.filter(_site => _site.id === site.id)
+          const updatedSites = sitesList.filter(_site => _site.id !== site.id)
           handleSuccessUpdateSites(updatedSites)
         }
         showToast(ToastType.Success, t('SITE_DELETED', 'Site deleted'))
