@@ -268,7 +268,7 @@ var SiteDetails = function SiteDetails(props) {
               if (!content.error) {
                 if (handleSuccessUpdateSites) {
                   updatedSites = sitesList.filter(function (_site) {
-                    return _site.id === site.id;
+                    return _site.id !== site.id;
                   });
                   handleSuccessUpdateSites(updatedSites);
                 }
