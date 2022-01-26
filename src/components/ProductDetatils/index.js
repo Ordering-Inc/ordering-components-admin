@@ -184,17 +184,24 @@ export const ProductDetatils = (props) => {
    * Update business photo data
    * @param {File} file Image to change business photo
    */
-  const handlechangeImage = (file) => {
+  const handlechangeImage = (file, isSeo) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setFormState({
+      const changes = isSeo ? ({
         ...formState,
         changes: {
           ...formState.changes,
-          images: reader.result
+          seo_image: reader.result
+        }
+      }) : ({
+        ...formState,
+        changes: {
+          ...formState.changes,
+          image: reader.result
         }
       })
+      setFormState(changes)
     }
     reader.onerror = error => console.log(error)
   }
