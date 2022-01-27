@@ -27,9 +27,6 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (language) {
       setState(prevState => ({ ...prevState, language }))
       apiHelper.setLanguage(language?.code)
-    } else {
-      apiHelper.setLanguage('en')
-      setState(prevState => ({ ...prevState, language: 'en' }))
     }
   }
 
@@ -109,8 +106,8 @@ export const LanguageProvider = ({ children, strategy }) => {
    * Refresh translation when change language from ordering
    */
   useEffect(() => {
-    setLanguageFromLocalStorage()
     if (ordering?.project === null) return
+    refreshLanguages()
     if (state.language?.code && state.language?.code === ordering.language) {
       refreshTranslations()
     }

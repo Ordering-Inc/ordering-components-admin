@@ -93,13 +93,6 @@ var LanguageProvider = function LanguageProvider(_ref) {
                   });
                 });
                 apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
-              } else {
-                apiHelper.setLanguage('en');
-                setState(function (prevState) {
-                  return _objectSpread(_objectSpread({}, prevState), {}, {
-                    language: 'en'
-                  });
-                });
               }
 
             case 4:
@@ -346,8 +339,8 @@ var LanguageProvider = function LanguageProvider(_ref) {
   (0, _react.useEffect)(function () {
     var _state$language2, _state$language3;
 
-    setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
+    refreshLanguages();
 
     if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
       refreshTranslations();
