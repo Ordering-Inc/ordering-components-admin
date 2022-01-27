@@ -93,6 +93,13 @@ var LanguageProvider = function LanguageProvider(_ref) {
                   });
                 });
                 apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
+              } else {
+                apiHelper.setLanguage('en');
+                setState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    language: 'en'
+                  });
+                });
               }
 
             case 4:

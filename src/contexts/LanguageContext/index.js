@@ -27,6 +27,9 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (language) {
       setState(prevState => ({ ...prevState, language }))
       apiHelper.setLanguage(language?.code)
+    } else {
+      apiHelper.setLanguage('en')
+      setState(prevState => ({ ...prevState, language: 'en' }))
     }
   }
 
