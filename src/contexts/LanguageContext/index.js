@@ -107,8 +107,7 @@ export const LanguageProvider = ({ children, strategy }) => {
    */
   useEffect(() => {
     if (ordering?.project === null) return
-    refreshLanguages()
-    if (state.language?.code && state.language?.code === ordering.language) {
+    if (state.language?.code) {
       refreshTranslations()
     }
   }, [state.language?.code, ordering?.project])

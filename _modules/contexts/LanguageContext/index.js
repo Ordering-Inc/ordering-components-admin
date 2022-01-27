@@ -55,7 +55,7 @@ var LanguageContext = /*#__PURE__*/(0, _react.createContext)();
 exports.LanguageContext = LanguageContext;
 
 var LanguageProvider = function LanguageProvider(_ref) {
-  var _state$language4;
+  var _state$language3;
 
   var children = _ref.children,
       strategy = _ref.strategy;
@@ -337,15 +337,14 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
 
   (0, _react.useEffect)(function () {
-    var _state$language2, _state$language3;
+    var _state$language2;
 
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
-    refreshLanguages();
 
-    if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
+    if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code) {
       refreshTranslations();
     }
-  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
+  }, [(_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
   (0, _react.useEffect)(function () {
     setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
