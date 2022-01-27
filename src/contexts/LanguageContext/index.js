@@ -107,7 +107,7 @@ export const LanguageProvider = ({ children, strategy }) => {
    */
   useEffect(() => {
     if (ordering?.project === null) return
-    if (state.language?.code && state.language?.code === ordering.language) {
+    if (state.language?.code) {
       refreshTranslations()
     }
   }, [state.language?.code, ordering?.project])
@@ -116,7 +116,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     setLanguageFromLocalStorage()
     if (ordering?.project === null) return
     refreshLanguages()
-    refreshTranslations()
+    // refreshTranslations()
   }, [ordering?.language, ordering?.project])
 
   const t = (key, fallback = null) => {
