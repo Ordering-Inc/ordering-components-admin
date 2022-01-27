@@ -55,7 +55,7 @@ var LanguageContext = /*#__PURE__*/(0, _react.createContext)();
 exports.LanguageContext = LanguageContext;
 
 var LanguageProvider = function LanguageProvider(_ref) {
-  var _state$language3;
+  var _state$language4;
 
   var children = _ref.children,
       strategy = _ref.strategy;
@@ -85,6 +85,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
             case 2:
               language = _context.sent;
+              console.log(language, 'this is language');
 
               if (language) {
                 setState(function (prevState) {
@@ -95,7 +96,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
               }
 
-            case 4:
+            case 5:
             case "end":
               return _context.stop();
           }
@@ -337,14 +338,14 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
 
   (0, _react.useEffect)(function () {
-    var _state$language2;
+    var _state$language2, _state$language3;
 
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
 
-    if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code) {
+    if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
       refreshTranslations();
     }
-  }, [(_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
+  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
   (0, _react.useEffect)(function () {
     setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;

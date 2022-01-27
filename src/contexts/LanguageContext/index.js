@@ -24,6 +24,7 @@ export const LanguageProvider = ({ children, strategy }) => {
    */
   const setLanguageFromLocalStorage = async () => {
     const language = await strategy.getItem('language', true)
+    console.log(language, 'this is language')
     if (language) {
       setState(prevState => ({ ...prevState, language }))
       apiHelper.setLanguage(language?.code)
@@ -107,7 +108,7 @@ export const LanguageProvider = ({ children, strategy }) => {
    */
   useEffect(() => {
     if (ordering?.project === null) return
-    if (state.language?.code) {
+    if (state.language?.code && state.language?.code === ordering.language) {
       refreshTranslations()
     }
   }, [state.language?.code, ordering?.project])
