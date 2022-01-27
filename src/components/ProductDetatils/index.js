@@ -188,20 +188,13 @@ export const ProductDetatils = (props) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      const changes = isSeo ? ({
+      setFormState({
         ...formState,
         changes: {
           ...formState.changes,
-          seo_image: reader.result
-        }
-      }) : ({
-        ...formState,
-        changes: {
-          ...formState.changes,
-          image: reader.result
+          [isSeo ? 'seo_image'  :  'images']:  reader.result
         }
       })
-      setFormState(changes)
     }
     reader.onerror = error => console.log(error)
   }
