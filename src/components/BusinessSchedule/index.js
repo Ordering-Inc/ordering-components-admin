@@ -9,7 +9,7 @@ export const BusinessSchedule = (props) => {
   const {
     business,
     UIComponent,
-    handleSuccessBusinessScheduleUpdate
+    handleSuccessUpdate
   } = props
 
   const [ordering] = useApi()
@@ -33,7 +33,7 @@ export const BusinessSchedule = (props) => {
         accessToken: session.token
       })
       if (!error) {
-        handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result)
+        handleSuccessUpdate && handleSuccessUpdate(result)
         showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
       }
       setFormState({
@@ -50,7 +50,7 @@ export const BusinessSchedule = (props) => {
         ...formState,
         result: {
           error: true,
-          result: err.message
+          result: [err.message]
         },
         loading: false
       })

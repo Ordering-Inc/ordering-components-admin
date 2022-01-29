@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 const paymethodsNotAllowed = ['paypal_express', 'authorize']
 
@@ -16,6 +18,8 @@ export const BusinessPaymethods = (props) => {
   const [ordering] = useApi()
   const [{ token }] = useSession()
   const [configState] = useConfig()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
 
   const [businessPaymethodsState, setBusinessPaymethodsState] = useState({ paymethods: [], loading: true, error: null })
   const [sitesState, setSitesState] = useState({ sites: [], loading: true, error: null })
@@ -106,6 +110,7 @@ export const BusinessPaymethods = (props) => {
       sandbox: sandboxRequiredGateways.includes(paymethod.gateway)
     }
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -127,6 +132,7 @@ export const BusinessPaymethods = (props) => {
           ]
         })
         setActionState({ loading: false, result: { error: false } })
+        showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
@@ -140,6 +146,7 @@ export const BusinessPaymethods = (props) => {
    */
   const handleUpdateBusinessPaymethodOpton = async (paymethodId, options) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'PUT',
@@ -162,6 +169,7 @@ export const BusinessPaymethods = (props) => {
           return true
         })
         setBusinessPaymethodsState({ ...businessPaymethodsState, paymethods: updatedPaymethods })
+        showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
@@ -173,6 +181,7 @@ export const BusinessPaymethods = (props) => {
    */
   const handleUpdateBusiness = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -202,6 +211,7 @@ export const BusinessPaymethods = (props) => {
   const handleDeleteBusinessPaymethodOption = async (paymethodId) => {
     const businessPaymethodId = businessPaymethodsState.paymethods.find(paymethod => paymethod.paymethod_id === paymethodId).id
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -217,6 +227,7 @@ export const BusinessPaymethods = (props) => {
         setActionState({ ...actionState, loading: false })
         const updatedPaymethods = businessPaymethodsState.paymethods.filter(paymethod => paymethod.paymethod_id !== paymethodId)
         setBusinessPaymethodsState({ ...businessPaymethodsState, paymethods: updatedPaymethods })
+        showToast(ToastType.Success, t('PAYMETHOD_DELETED', 'Payment method deleted'))
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
@@ -352,7 +363,6 @@ export const BusinessPaymethods = (props) => {
       [e.target.name]: e.target.value
     })
   }
-
 
   const handleChangeBusinessPaymentState = (values) => {
     setChangesState({ ...changesState, ...values })
