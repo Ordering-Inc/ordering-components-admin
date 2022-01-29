@@ -63,9 +63,9 @@ export const BusinessProductsCategoyDetails = (props) => {
       currentChanges = { enabled: isChecked.enabled }
     }
     if (isChecked.enabledParent) {
-      currentChanges = { parent_category_id: categorySelected.id }
+      currentChanges = { ...currentChanges, parent_category_id: categorySelected.id }
     } else {
-      currentChanges = { parent_category_id: null }
+      currentChanges = { ...currentChanges, parent_category_id: null }
     }
 
     setFormState({
@@ -88,7 +88,7 @@ export const BusinessProductsCategoyDetails = (props) => {
  * Update business photo data
  * @param {File} file Image to change business photo
  */
-  const handlechangeImage = (file) => {
+  const handlechangeImage = (file, isSeo) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
@@ -96,7 +96,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          image: reader.result
+          [isSeo ? 'seo_image' : 'image']: reader.result
         }
       })
     }
