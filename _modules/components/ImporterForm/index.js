@@ -31,11 +31,11 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) { symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); } keys.push.apply(keys, symbols); } return keys; }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
@@ -56,7 +56,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var ImporterForm = function ImporterForm(props) {
   var UIComponent = props.UIComponent,
-      handleSuccessAdd = props.handleSuccessAdd;
+      handleSuccessAdd = props.handleSuccessAdd,
+      handleSuccessUpdateImporter = props.handleSuccessUpdateImporter,
+      selectedImporter = props.selectedImporter;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -236,7 +238,7 @@ var ImporterForm = function ImporterForm(props) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
         name: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.name,
-        slug: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.slug,
+        // slug: seletedImpoter?.slug,
         type: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type
       })
     }));
@@ -332,6 +334,95 @@ var ImporterForm = function ImporterForm(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Function to update importer
+   */
+
+
+  var editImporter = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var data, requestOptions, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              data = _objectSpread({}, formState.changes);
+              _context2.prev = 2;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                },
+                body: JSON.stringify(data)
+              };
+              _context2.next = 7;
+              return fetch("".concat(ordering.root, "/importers/").concat(selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.id), requestOptions);
+
+            case 7:
+              response = _context2.sent;
+              _context2.next = 10;
+              return response.json();
+
+            case 10:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
+                }));
+              } else {
+                showToast(_ToastContext.ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'));
+                clearImorterForm();
+                setFormState({
+                  loading: false,
+                  changes: {},
+                  result: {
+                    error: false,
+                    result: result
+                  }
+                });
+                handleSuccessUpdateImporter && handleSuccessUpdateImporter(result);
+                props.onClos && props.onClos();
+              }
+
+              _context2.next = 19;
+              break;
+
+            case 16:
+              _context2.prev = 16;
+              _context2.t0 = _context2["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: [_context2.t0.message]
+                },
+                loading: false
+              }));
+
+            case 19:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[2, 16]]);
+    }));
+
+    return function editImporter() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (Object.keys(metafieldList).length !== 0) {
@@ -375,12 +466,18 @@ var ImporterForm = function ImporterForm(props) {
     clearImorterForm: clearImorterForm,
     setIsEdit: setIsEdit,
     handleCreateImporter: handleCreateImporter,
-    handleEditState: handleEditState
+    handleEditState: handleEditState,
+    editImporter: editImporter
   })));
 };
 
 exports.ImporterForm = ImporterForm;
 ImporterForm.propTypes = {
+  /**
+   * Function to update importer list
+   */
+  handleSuccessUpdateImporter: _propTypes.default.func,
+
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
