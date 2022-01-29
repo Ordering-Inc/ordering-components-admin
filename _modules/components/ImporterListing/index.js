@@ -262,6 +262,24 @@ var ImporterListing = function ImporterListing(props) {
       total: paginationDetail !== null && paginationDetail !== void 0 && paginationDetail.total ? (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) + 1 : 1
     }));
   };
+  /**
+  * Method to update importers
+  * @param {Object} updatedImporter updated importer
+  */
+
+
+  var handleSuccessUpdateImporter = function handleSuccessUpdateImporter(updatedImporter) {
+    var importers = importerList.importers.map(function (importer) {
+      if (importer.id === updatedImporter.id) {
+        return updatedImporter;
+      }
+
+      return importer;
+    });
+    setImporterList(_objectSpread(_objectSpread({}, importerList), {}, {
+      importers: importers
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     getImporters(1, null);
@@ -273,7 +291,8 @@ var ImporterListing = function ImporterListing(props) {
     paginationProps: paginationProps,
     paginationDetail: paginationDetail,
     handleDeleteImporter: handleDeleteImporter,
-    handleSuccessAddImporter: handleSuccessAddImporter
+    handleSuccessAddImporter: handleSuccessAddImporter,
+    handleSuccessUpdateImporter: handleSuccessUpdateImporter
   })));
 };
 

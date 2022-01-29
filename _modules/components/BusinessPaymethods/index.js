@@ -19,6 +19,10 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _ConfigContext = require("../../contexts/ConfigContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -78,6 +82,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
   var _useConfig = (0, _ConfigContext.useConfig)(),
       _useConfig2 = _slicedToArray(_useConfig, 1),
       configState = _useConfig2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     paymethods: [],
@@ -319,6 +331,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 sandbox: sandboxRequiredGateways.includes(paymethod.gateway)
               };
               _context3.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -331,15 +344,15 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 },
                 body: JSON.stringify(params)
               };
-              _context3.next = 7;
+              _context3.next = 8;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods"), requestOptions);
 
-            case 7:
+            case 8:
               response = _context3.sent;
-              _context3.next = 10;
+              _context3.next = 11;
               return response.json();
 
-            case 10:
+            case 11:
               content = _context3.sent;
 
               if (!content.error) {
@@ -354,13 +367,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                     error: false
                   }
                 });
+                showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'));
               }
 
-              _context3.next = 17;
+              _context3.next = 18;
               break;
 
-            case 14:
-              _context3.prev = 14;
+            case 15:
+              _context3.prev = 15;
               _context3.t0 = _context3["catch"](2);
               setActionState({
                 result: {
@@ -370,12 +384,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 loading: false
               });
 
-            case 17:
+            case 18:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[2, 14]]);
+      }, _callee3, null, [[2, 15]]);
     }));
 
     return function handleCreateBusinessPaymentOption(_x) {
@@ -397,6 +411,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -409,15 +424,15 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 },
                 body: JSON.stringify(options)
               };
-              _context4.next = 5;
+              _context4.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods/").concat(paymethodId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context4.sent;
-              _context4.next = 8;
+              _context4.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context4.sent;
               setChangesState(content.error ? changesState : {});
 
@@ -435,13 +450,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
                   paymethods: updatedPaymethods
                 }));
+                showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'));
               }
 
-              _context4.next = 16;
+              _context4.next = 17;
               break;
 
-            case 13:
-              _context4.prev = 13;
+            case 14:
+              _context4.prev = 14;
               _context4.t0 = _context4["catch"](0);
               setActionState({
                 result: {
@@ -451,12 +467,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 loading: false
               });
 
-            case 16:
+            case 17:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee4, null, [[0, 14]]);
     }));
 
     return function handleUpdateBusinessPaymethodOpton(_x2, _x3) {
@@ -476,6 +492,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -488,15 +505,15 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 },
                 body: JSON.stringify(changesState)
               };
-              _context5.next = 5;
+              _context5.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id), requestOptions);
 
-            case 5:
+            case 6:
               response = _context5.sent;
-              _context5.next = 8;
+              _context5.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context5.sent;
               setChangesState(content.error ? changesState : {});
 
@@ -507,11 +524,11 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 handleSuccessUpdate && handleSuccessUpdate(content.result);
               }
 
-              _context5.next = 16;
+              _context5.next = 17;
               break;
 
-            case 13:
-              _context5.prev = 13;
+            case 14:
+              _context5.prev = 14;
               _context5.t0 = _context5["catch"](0);
               setActionState({
                 result: {
@@ -521,12 +538,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 loading: false
               });
 
-            case 16:
+            case 17:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[0, 13]]);
+      }, _callee5, null, [[0, 14]]);
     }));
 
     return function handleUpdateBusiness() {
@@ -550,6 +567,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 return paymethod.paymethod_id === paymethodId;
               }).id;
               _context6.prev = 1;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -561,15 +579,15 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                   'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
                 }
               };
-              _context6.next = 6;
+              _context6.next = 7;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods/").concat(businessPaymethodId), requestOptions);
 
-            case 6:
+            case 7:
               response = _context6.sent;
-              _context6.next = 9;
+              _context6.next = 10;
               return response.json();
 
-            case 9:
+            case 10:
               content = _context6.sent;
 
               if (!content.error) {
@@ -582,13 +600,14 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
                   paymethods: updatedPaymethods
                 }));
+                showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_DELETED', 'Payment method deleted'));
               }
 
-              _context6.next = 16;
+              _context6.next = 17;
               break;
 
-            case 13:
-              _context6.prev = 13;
+            case 14:
+              _context6.prev = 14;
               _context6.t0 = _context6["catch"](1);
               setActionState({
                 result: {
@@ -598,12 +617,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 loading: false
               });
 
-            case 16:
+            case 17:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, null, [[1, 13]]);
+      }, _callee6, null, [[1, 14]]);
     }));
 
     return function handleDeleteBusinessPaymethodOption(_x4) {

@@ -56,7 +56,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  */
 var ImporterForm = function ImporterForm(props) {
   var UIComponent = props.UIComponent,
-      handleSuccessAdd = props.handleSuccessAdd;
+      handleSuccessAdd = props.handleSuccessAdd,
+      handleSuccessUpdateImporter = props.handleSuccessUpdateImporter,
+      selectedImporter = props.selectedImporter;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -236,7 +238,7 @@ var ImporterForm = function ImporterForm(props) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
         name: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.name,
-        slug: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.slug,
+        // slug: seletedImpoter?.slug,
         type: seletedImpoter === null || seletedImpoter === void 0 ? void 0 : seletedImpoter.type
       })
     }));
@@ -332,6 +334,95 @@ var ImporterForm = function ImporterForm(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Function to update importer
+   */
+
+
+  var editImporter = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var data, requestOptions, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              data = _objectSpread({}, formState.changes);
+              _context2.prev = 2;
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                },
+                body: JSON.stringify(data)
+              };
+              _context2.next = 7;
+              return fetch("".concat(ordering.root, "/importers/").concat(selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.id), requestOptions);
+
+            case 7:
+              response = _context2.sent;
+              _context2.next = 10;
+              return response.json();
+
+            case 10:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (error) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
+                }));
+              } else {
+                showToast(_ToastContext.ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'));
+                clearImorterForm();
+                setFormState({
+                  loading: false,
+                  changes: {},
+                  result: {
+                    error: false,
+                    result: result
+                  }
+                });
+                handleSuccessUpdateImporter && handleSuccessUpdateImporter(result);
+                props.onClos && props.onClos();
+              }
+
+              _context2.next = 19;
+              break;
+
+            case 16:
+              _context2.prev = 16;
+              _context2.t0 = _context2["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                result: {
+                  error: true,
+                  result: [_context2.t0.message]
+                },
+                loading: false
+              }));
+
+            case 19:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[2, 16]]);
+    }));
+
+    return function editImporter() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (Object.keys(metafieldList).length !== 0) {
@@ -375,12 +466,18 @@ var ImporterForm = function ImporterForm(props) {
     clearImorterForm: clearImorterForm,
     setIsEdit: setIsEdit,
     handleCreateImporter: handleCreateImporter,
-    handleEditState: handleEditState
+    handleEditState: handleEditState,
+    editImporter: editImporter
   })));
 };
 
 exports.ImporterForm = ImporterForm;
 ImporterForm.propTypes = {
+  /**
+   * Function to update importer list
+   */
+  handleSuccessUpdateImporter: _propTypes.default.func,
+
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */

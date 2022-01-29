@@ -153,13 +153,13 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
     }
 
     if (isChecked.enabledParent) {
-      currentChanges = {
+      currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, {
         parent_category_id: categorySelected.id
-      };
+      });
     } else {
-      currentChanges = {
+      currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, {
         parent_category_id: null
-      };
+      });
     }
 
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -182,15 +182,13 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
   */
 
 
-  var handlechangeImage = function handlechangeImage(file) {
+  var handlechangeImage = function handlechangeImage(file, isSeo) {
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
     reader.onload = function () {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          image: reader.result
-        })
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, isSeo ? 'seo_image' : 'image', reader.result))
       }));
     };
 

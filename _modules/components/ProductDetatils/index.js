@@ -347,15 +347,13 @@ var ProductDetatils = function ProductDetatils(props) {
    */
 
 
-  var handlechangeImage = function handlechangeImage(file) {
+  var handlechangeImage = function handlechangeImage(file, isSeo) {
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
     reader.onload = function () {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          images: reader.result
-        })
+        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, isSeo ? 'seo_image' : 'images', reader.result))
       }));
     };
 

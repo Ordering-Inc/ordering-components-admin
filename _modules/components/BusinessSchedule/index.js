@@ -54,7 +54,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var BusinessSchedule = function BusinessSchedule(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
-      handleSuccessBusinessScheduleUpdate = props.handleSuccessBusinessScheduleUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -118,7 +118,7 @@ var BusinessSchedule = function BusinessSchedule(props) {
               result = _yield$ordering$busin2.result;
 
               if (!error) {
-                handleSuccessBusinessScheduleUpdate && handleSuccessBusinessScheduleUpdate(result);
+                handleSuccessUpdate && handleSuccessUpdate(result);
                 showToast(_ToastContext.ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'));
               }
 
@@ -139,7 +139,7 @@ var BusinessSchedule = function BusinessSchedule(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
-                  result: _context.t0.message
+                  result: [_context.t0.message]
                 },
                 loading: false
               }));
