@@ -173,7 +173,7 @@ export const BusinessProductsCategoyDetails = (props) => {
           ...formState,
           result: {
             error: true,
-            result: err.message
+            result: [err.message]
           },
           loading: false
         })
@@ -203,7 +203,7 @@ export const BusinessProductsCategoyDetails = (props) => {
           loading: false
         })
         if (handleUpdateBusinessState) {
-          const _categories = businessState.business.categories
+          const _categories = businessState.business?.categories || []
           if (content?.result.parent_category_id) {
             _categories.forEach(function iterate (category) {
               if (category.id === content?.result.parent_category_id) {
@@ -217,7 +217,7 @@ export const BusinessProductsCategoyDetails = (props) => {
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
         showToast(ToastType.Success, t('CATEOGORY_CREATED', 'Category created'))
-        onClose()
+        onClose && onClose()
       } else {
         setFormState({
           ...formState,
