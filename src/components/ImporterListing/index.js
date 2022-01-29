@@ -111,6 +111,23 @@ export const ImporterListing = (props) => {
     })
   }
 
+  /**
+ * Method to update importers
+ * @param {Object} updatedImporter updated importer
+ */
+  const handleSuccessUpdateImporter = (updatedImporter) => {
+    const importers = importerList.importers.map(importer => {
+      if (importer.id === updatedImporter.id) {
+        return updatedImporter
+      }
+      return importer
+    })
+    setImporterList({
+      ...importerList,
+      importers: importers
+    })
+  }
+
   useEffect(() => {
     getImporters(1, null)
   }, [])
@@ -127,6 +144,7 @@ export const ImporterListing = (props) => {
           paginationDetail={paginationDetail}
           handleDeleteImporter={handleDeleteImporter}
           handleSuccessAddImporter={handleSuccessAddImporter}
+          handleSuccessUpdateImporter={handleSuccessUpdateImporter}
         />
       )}
     </>

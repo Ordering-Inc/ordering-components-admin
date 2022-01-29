@@ -96,7 +96,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          [isSeo ? 'seo_image'  :  'image']:  reader.result
+          [isSeo ? 'seo_image' : 'image']: reader.result
         }
       })
     }

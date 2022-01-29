@@ -9,10 +9,12 @@ import { useLanguage } from '../../contexts/LanguageContext'
  * Component to create importer form without UI component
  */
 
- export const ImporterForm = (props) => {
+export const ImporterForm = (props) => {
   const {
     UIComponent,
-    handleSuccessAdd
+    handleSuccessAdd,
+    handleSuccessUpdateImporter,
+    selectedImporter
   } = props
   const [ordering] = useApi()
   const [session] = useSession()
@@ -160,7 +162,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
       changes: {
         ...formState.changes,
         name: seletedImpoter?.name,
-        slug: seletedImpoter?.slug,
+        // slug: seletedImpoter?.slug,
         type: seletedImpoter?.type
       }
     })
@@ -208,6 +210,61 @@ import { useLanguage } from '../../contexts/LanguageContext'
         if (props.onClose) {
           props.onClose()
         }
+      }
+    } catch (error) {
+      setFormState({
+        ...formState,
+        result: {
+          error: true,
+          result: [error.message]
+        },
+        loading: false
+      })
+    }
+  }
+
+  /**
+   * Function to update importer
+   */
+  const editImporter = async () => {
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    const data = { ...formState.changes }
+    try {
+      setFormState({ ...formState, loading: true })
+      const requestOptions = {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        },
+        body: JSON.stringify(data)
+      }
+      const response = await fetch(`${ordering.root}/importers/${selectedImporter?.id}`, requestOptions)
+      const { error, result } = await response.json()
+
+      if (error) {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      } else {
+        showToast(ToastType.Success, t('IMPORTER_SAVED', 'Importer saved'))
+        clearImorterForm()
+        setFormState({
+          loading: false,
+          changes: {},
+          result: {
+            error: false,
+            result: result
+          }
+        })
+
+        handleSuccessUpdateImporter && handleSuccessUpdateImporter(result)
+        props.onClos && props.onClos()
       }
     } catch (error) {
       setFormState({
@@ -274,6 +331,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
           setIsEdit={setIsEdit}
           handleCreateImporter={handleCreateImporter}
           handleEditState={handleEditState}
+          editImporter={editImporter}
         />
       )}
     </>
@@ -281,6 +339,10 @@ import { useLanguage } from '../../contexts/LanguageContext'
 }
 
 ImporterForm.propTypes = {
+  /**
+   * Function to update importer list
+   */
+  handleSuccessUpdateImporter: PropTypes.func,
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
