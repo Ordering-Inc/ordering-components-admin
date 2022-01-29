@@ -310,7 +310,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
-                  result: _context.t0.message
+                  result: [_context.t0.message]
                 },
                 loading: false
               }));
@@ -337,7 +337,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var createBusinessCategory = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _businessState$busine2, _yield$ordering$busin2, content, _categories;
+      var _businessState$busine2, _yield$ordering$busin2, content, _businessState$busine3, _categories;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -374,7 +374,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = businessState.business.categories;
+                  _categories = ((_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.categories) || [];
 
                   if (content !== null && content !== void 0 && content.result.parent_category_id) {
                     _categories.forEach(function iterate(category) {
@@ -400,7 +400,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('CATEOGORY_CREATED', 'Category created'));
-                onClose();
+                onClose && onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   changes: formState.changes,
@@ -442,7 +442,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var handleDeleteCategory = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _businessState$busine3, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
+      var _businessState$busine4, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -462,7 +462,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 loading: true
               }));
               _context3.next = 7;
-              return ordering.businesses(parseInt((_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.id)).categories(parseInt(category.id)).delete();
+              return ordering.businesses(parseInt((_businessState$busine4 = businessState.business) === null || _businessState$busine4 === void 0 ? void 0 : _businessState$busine4.id)).categories(parseInt(category.id)).delete();
 
             case 7:
               _yield$ordering$busin3 = _context3.sent;
