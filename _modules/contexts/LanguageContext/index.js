@@ -270,7 +270,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
               result = _yield$ordering$langu4.result;
 
               if (error) {
-                _context4.next = 14;
+                _context4.next = 15;
                 break;
               }
 
@@ -286,6 +286,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
               return strategy.setItem('language', defaultLanguage, true);
 
             case 13:
+              apiHelper.setLanguage(defaultLanguage === null || defaultLanguage === void 0 ? void 0 : defaultLanguage.code);
               setState(function (prevState) {
                 return _objectSpread(_objectSpread({}, prevState), {}, {
                   loading: false,
@@ -294,23 +295,23 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 });
               });
 
-            case 14:
-              _context4.next = 19;
+            case 15:
+              _context4.next = 20;
               break;
 
-            case 16:
-              _context4.prev = 16;
+            case 17:
+              _context4.prev = 17;
               _context4.t0 = _context4["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 19:
+            case 20:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 16]]);
+      }, _callee4, null, [[0, 17]]);
     }));
 
     return function refreshLanguages() {
@@ -344,7 +345,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
     if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
       refreshTranslations();
     }
-  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
+  }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project, ordering.language]);
   (0, _react.useEffect)(function () {
     setLanguageFromLocalStorage();
     if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) return;
