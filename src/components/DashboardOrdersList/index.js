@@ -388,7 +388,7 @@ export const DashboardOrdersList = (props) => {
       if (!response.content.error) {
         setPagination({
           currentPage: response.content.pagination.current_page,
-          pageSize: response.content.pagination.page_size,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
@@ -413,7 +413,7 @@ export const DashboardOrdersList = (props) => {
       if (!response.content.error) {
         setPagination({
           currentPage: response.content.pagination.current_page,
-          pageSize: response.content.pagination.page_size,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
@@ -438,7 +438,7 @@ export const DashboardOrdersList = (props) => {
       if (!response.content.error) {
         setPagination({
           currentPage: response.content.pagination.current_page,
-          pageSize: response.content.pagination.page_size,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
