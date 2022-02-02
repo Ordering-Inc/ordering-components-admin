@@ -145,10 +145,13 @@ export const BusinessProductsCategoyDetails = (props) => {
                   }
                 }
               }
+              const categoryKeyOptions = ['name', 'enabled', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description']
               if (category.id === content?.result.id && category.parent_category_id === content?.result.parent_category_id) {
-                category.name = content?.result?.name
-                category.enabled = content?.result?.enabled
-                category.image = content?.result?.image
+                Object.keys(category).forEach( key => {
+                  if (categoryKeyOptions.includes(key) && content.result[key]) {
+                    category[key] = content?.result[key]
+                  }
+                })
               }
               if (category.id === content?.result.id && category.parent_category_id !== content?.result.parent_category_id) {
                 object.splice(index, 1)
