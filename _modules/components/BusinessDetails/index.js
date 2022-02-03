@@ -278,6 +278,7 @@ var BusinessDetails = function BusinessDetails(props) {
               if (!content.error) {
                 showToast(_ToastContext.ToastType.Success, t('BUSINESS_DELETED', 'Business deleted'));
                 handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId);
+                props.onClose && props.onClose();
               }
 
               _context3.next = 17;
