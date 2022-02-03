@@ -361,6 +361,19 @@ var UserFormDetails = function UserFormDetails(props) {
   };
   /**
    * Update credential data
+   * @param {string} type user filed name
+   */
+
+
+  var handleChangeSwtich = function handleChangeSwtich(type, value) {
+    var currentChanges = _defineProperty({}, type, value);
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
+    }));
+  };
+  /**
+   * Update credential data
    * @param {number} level user level
    */
 
@@ -426,6 +439,7 @@ var UserFormDetails = function UserFormDetails(props) {
     validationFields: validationFields,
     showField: showField,
     setFormState: setFormState,
+    handleChangeSwtich: handleChangeSwtich,
     isRequiredField: isRequiredField,
     handleChangeInput: handleChangeInput,
     handleButtonUpdateClick: handleUpdateClick,
