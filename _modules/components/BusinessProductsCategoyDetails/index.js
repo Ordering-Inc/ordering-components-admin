@@ -271,12 +271,14 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                       }
                     }
 
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
-                      var _content$result, _content$result2, _content$result3;
+                    var categoryKeyOptions = ['name', 'enabled', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description'];
 
-                      category.name = content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.name;
-                      category.enabled = content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.enabled;
-                      category.image = content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.image;
+                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                      Object.keys(category).forEach(function (key) {
+                        if (categoryKeyOptions.includes(key) && content.result[key]) {
+                          category[key] = content === null || content === void 0 ? void 0 : content.result[key];
+                        }
+                      });
                     }
 
                     if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id !== (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
