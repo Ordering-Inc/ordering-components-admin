@@ -536,7 +536,7 @@ UsersList.defaultProps = {
   propsToFetch: [
     'name', 'lastname', 'email', 'phone', 'photo', 'cellphone',
     'country_phone_code', 'city_id', 'city', 'address', 'addresses',
-    'address_notes', 'dropdown_option_id', 'dropdown_option', 'location',
+    'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location',
     'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups'
   ],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' },
