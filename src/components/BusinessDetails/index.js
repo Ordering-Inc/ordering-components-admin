@@ -111,6 +111,7 @@ export const BusinessDetails = (props) => {
       if (!content.error) {
         showToast(ToastType.Success, t('BUSINESS_DELETED', 'Business deleted'))
         handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId)
+        props.onClose && props.onClose()
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
