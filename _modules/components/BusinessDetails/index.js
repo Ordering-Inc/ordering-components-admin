@@ -187,15 +187,16 @@ var BusinessDetails = function BusinessDetails(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context2.next = 4;
+              _context2.next = 5;
               return ordering.setAccessToken(session.token).businesses(businessId).save({
                 enabled: enabled
               });
 
-            case 4:
+            case 5:
               _yield$ordering$setAc = _context2.sent;
               _yield$ordering$setAc2 = _yield$ordering$setAc.content;
               error = _yield$ordering$setAc2.error;
@@ -209,25 +210,26 @@ var BusinessDetails = function BusinessDetails(props) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                   business: result
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
     return function handleChangeActiveBusiness(_x) {
@@ -247,6 +249,7 @@ var BusinessDetails = function BusinessDetails(props) {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
@@ -257,15 +260,15 @@ var BusinessDetails = function BusinessDetails(props) {
                   Authorization: "Bearer ".concat(session.token)
                 }
               };
-              _context3.next = 5;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(businessId), requestOptions);
 
-            case 5:
+            case 6:
               response = _context3.sent;
-              _context3.next = 8;
+              _context3.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context3.sent;
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
@@ -273,26 +276,28 @@ var BusinessDetails = function BusinessDetails(props) {
               }));
 
               if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_DELETED', 'Business deleted'));
                 handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId);
+                props.onClose && props.onClose();
               }
 
-              _context3.next = 16;
+              _context3.next = 17;
               break;
 
-            case 13:
-              _context3.prev = 13;
+            case 14:
+              _context3.prev = 14;
               _context3.t0 = _context3["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 13]]);
+      }, _callee3, null, [[0, 14]]);
     }));
 
     return function handleDeleteBusiness() {
@@ -312,6 +317,7 @@ var BusinessDetails = function BusinessDetails(props) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
@@ -322,15 +328,15 @@ var BusinessDetails = function BusinessDetails(props) {
                   Authorization: "Bearer ".concat(session.token)
                 }
               };
-              _context4.next = 5;
+              _context4.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(businessId, "/duplicate"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context4.sent;
-              _context4.next = 8;
+              _context4.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context4.sent;
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
@@ -339,25 +345,26 @@ var BusinessDetails = function BusinessDetails(props) {
 
               if (!content.error) {
                 handleSucessAddBusiness && handleSucessAddBusiness(content === null || content === void 0 ? void 0 : content.result);
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_DUPLICATED', 'Business duplicated'));
               }
 
-              _context4.next = 16;
+              _context4.next = 17;
               break;
 
-            case 13:
-              _context4.prev = 13;
+            case 14:
+              _context4.prev = 14;
               _context4.t0 = _context4["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context4.t0.message]
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee4, null, [[0, 14]]);
     }));
 
     return function handleDuplicateBusiness() {
@@ -378,15 +385,16 @@ var BusinessDetails = function BusinessDetails(props) {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context5.next = 4;
+              _context5.next = 5;
               return ordering.setAccessToken(session.token).businesses(businessId).save({
                 owners: owners
               });
 
-            case 4:
+            case 5:
               _yield$ordering$setAc3 = _context5.sent;
               _yield$ordering$setAc4 = _yield$ordering$setAc3.content;
               error = _yield$ordering$setAc4.error;
@@ -406,25 +414,26 @@ var BusinessDetails = function BusinessDetails(props) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                   business: _business
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_OWNER_DELETED', 'Business owner deleted'));
               }
 
-              _context5.next = 15;
+              _context5.next = 16;
               break;
 
-            case 12:
-              _context5.prev = 12;
+            case 13:
+              _context5.prev = 13;
               _context5.t0 = _context5["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context5.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[0, 12]]);
+      }, _callee5, null, [[0, 13]]);
     }));
 
     return function handleDeleteBusinessOwner(_x2) {
@@ -445,15 +454,16 @@ var BusinessDetails = function BusinessDetails(props) {
           switch (_context6.prev = _context6.next) {
             case 0:
               _context6.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context6.next = 4;
+              _context6.next = 5;
               return ordering.setAccessToken(session.token).businesses(businessId).save({
                 owners: owners
               });
 
-            case 4:
+            case 5:
               _yield$ordering$setAc5 = _context6.sent;
               _yield$ordering$setAc6 = _yield$ordering$setAc5.content;
               error = _yield$ordering$setAc6.error;
@@ -471,25 +481,26 @@ var BusinessDetails = function BusinessDetails(props) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                   business: _business
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_OWNER_ADDED', 'Business owner added'));
               }
 
-              _context6.next = 15;
+              _context6.next = 16;
               break;
 
-            case 12:
-              _context6.prev = 12;
+            case 13:
+              _context6.prev = 13;
               _context6.t0 = _context6["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context6.t0.message]
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, null, [[0, 12]]);
+      }, _callee6, null, [[0, 13]]);
     }));
 
     return function handleAddBusinessOwner(_x3, _x4) {
