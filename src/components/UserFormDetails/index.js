@@ -213,6 +213,20 @@ export const UserFormDetails = (props) => {
 
   /**
    * Update credential data
+   * @param {string} type user filed name
+   */
+  const handleChangeSwtich = (type, value) => {
+    const currentChanges = {
+      [type]: value
+    }
+    setFormState({
+      ...formState,
+      changes: { ...formState.changes, ...currentChanges }
+    })
+  }
+
+  /**
+   * Update credential data
    * @param {number} level user level
    */
   const handleChangeUserType = (level) => {
@@ -279,6 +293,7 @@ export const UserFormDetails = (props) => {
           validationFields={validationFields}
           showField={showField}
           setFormState={setFormState}
+          handleChangeSwtich={handleChangeSwtich}
           isRequiredField={isRequiredField}
           handleChangeInput={handleChangeInput}
           handleButtonUpdateClick={handleUpdateClick}
