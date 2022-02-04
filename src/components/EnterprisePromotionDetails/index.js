@@ -28,8 +28,8 @@ export const EnterprisePromotionDetails = (props) => {
   const [isAddMode, setIsAddMode] = useState(false)
   const [selectedBusinessIds, setSelectedBusinessIds] = useState([])
   const [selectedSitesIds, setSelectedSitesIds] = useState([])
-  const [selectedProductsIds, setSelectedProductsIds] = useState([])
-  const [selectedCategoryIds, setSelectedCategoryIds] = useState([])
+  const [selectedProductsIds, setSelectedProductsIds] = useState({})
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState({})
 
   /**
    * Clean formState
