@@ -65,6 +65,7 @@ export const BusinessDetails = (props) => {
 
   const handleChangeActiveBusiness = async (enabled) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ enabled: enabled })
       setActionStatus({
@@ -78,6 +79,7 @@ export const BusinessDetails = (props) => {
           ...businessState,
           business: result
         })
+        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -89,6 +91,7 @@ export const BusinessDetails = (props) => {
    */
   const handleDeleteBusiness = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -106,7 +109,9 @@ export const BusinessDetails = (props) => {
         error: content.error ? content.result : null
       })
       if (!content.error) {
+        showToast(ToastType.Success, t('BUSINESS_DELETED', 'Business deleted'))
         handleSucessRemoveBusiness && handleSucessRemoveBusiness(businessId)
+        props.onClose && props.onClose()
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -118,6 +123,7 @@ export const BusinessDetails = (props) => {
    */
   const handleDuplicateBusiness = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -137,6 +143,7 @@ export const BusinessDetails = (props) => {
 
       if (!content.error) {
         handleSucessAddBusiness && handleSucessAddBusiness(content?.result)
+        showToast(ToastType.Success, t('BUSINESS_DUPLICATED', 'Business duplicated'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -148,6 +155,7 @@ export const BusinessDetails = (props) => {
    */
   const handleDeleteBusinessOwner = async (owners) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
       setActionStatus({
@@ -165,6 +173,7 @@ export const BusinessDetails = (props) => {
           ...businessState,
           business: _business
         })
+        showToast(ToastType.Success, t('BUSINESS_OWNER_DELETED', 'Business owner deleted'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -176,6 +185,7 @@ export const BusinessDetails = (props) => {
    */
   const handleAddBusinessOwner = async (owners, newOwner) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
       const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
       setActionStatus({
@@ -193,6 +203,7 @@ export const BusinessDetails = (props) => {
           ...businessState,
           business: _business
         })
+        showToast(ToastType.Success, t('BUSINESS_OWNER_ADDED', 'Business owner added'))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
