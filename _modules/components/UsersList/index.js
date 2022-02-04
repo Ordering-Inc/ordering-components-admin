@@ -722,6 +722,24 @@ var UsersList = function UsersList(props) {
     }
   };
   /**
+   * Method to delete user
+   * @param {Object} user new user to delete
+   */
+
+
+  var handleSuccessDeleteUser = function handleSuccessDeleteUser(user) {
+    if (userTypesSelected.includes(user === null || user === void 0 ? void 0 : user.level)) {
+      setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+        users: usersList.users.filter(function (_user) {
+          return _user.id !== user.id;
+        })
+      }));
+      setPaginationDetail(_objectSpread(_objectSpread({}, paginationDetail), {}, {
+        total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) - 1
+      }));
+    }
+  };
+  /**
    * Method to update addresses of selected user
    * @param {number, Array} useId and addresses updated addresses
    */
@@ -778,6 +796,7 @@ var UsersList = function UsersList(props) {
     handleDeleteSeveralUsers: handleDeleteSeveralUsers,
     handleSuccessUpdate: handleSuccessUpdate,
     handleSuccessAddUser: handleSuccessAddUser,
+    handleSuccessDeleteUser: handleSuccessDeleteUser,
     handleSuccessAddressesUpdate: handleSuccessAddressesUpdate
   })));
 };

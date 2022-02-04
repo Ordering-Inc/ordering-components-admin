@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -51,7 +55,8 @@ var UserDetails = function UserDetails(props) {
   var userId = props.userId,
       propsToFetch = props.propsToFetch,
       UIComponent = props.UIComponent,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      handleSuccessDeleteUser = props.handleSuccessDeleteUser;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -61,6 +66,14 @@ var UserDetails = function UserDetails(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
 
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
     user: null,
     loading: false,
@@ -69,6 +82,14 @@ var UserDetails = function UserDetails(props) {
       _useState2 = _slicedToArray(_useState, 2),
       userState = _useState2[0],
       setUserState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionStatus = _useState4[0],
+      setActionStatus = _useState4[1];
   /**
    * Method to get user from API
    */
@@ -121,6 +142,65 @@ var UserDetails = function UserDetails(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete users from API
+   */
+
+
+  var handleDeleteUser = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var _yield$ordering$setAc, content;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionStatus({
+                loading: true,
+                error: null
+              });
+              _context2.next = 5;
+              return ordering.setAccessToken(session.token).users(userId).delete();
+
+            case 5:
+              _yield$ordering$setAc = _context2.sent;
+              content = _yield$ordering$setAc.content;
+              setActionStatus({
+                loading: false,
+                error: content.error ? content.result : null
+              });
+
+              if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('USER_DELETED', 'User deleted'));
+                handleSuccessDeleteUser && handleSuccessDeleteUser(userState.user);
+                props.onClose && props.onClose();
+              }
+
+              _context2.next = 14;
+              break;
+
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](0);
+              setActionStatus({
+                loading: false,
+                error: [_context2.t0.message]
+              });
+
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 11]]);
+    }));
+
+    return function handleDeleteUser() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (props.user) {
@@ -141,6 +221,8 @@ var UserDetails = function UserDetails(props) {
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     userState: userState,
+    actionStatus: actionStatus,
+    handleDeleteUser: handleDeleteUser,
     handleSuccessUserUpdate: handleSuccessUserUpdate
   })));
 };
@@ -196,5 +278,5 @@ UserDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname']
+  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified']
 };
