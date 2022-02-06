@@ -19,6 +19,10 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _WebsocketContext = require("../../contexts/WebsocketContext");
 
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -68,6 +72,14 @@ var DriversList = function DriversList(props) {
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var requestsState = {};
 
@@ -174,42 +186,52 @@ var DriversList = function DriversList(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setDriverActionStatus(_objectSpread(_objectSpread({}, driverActionStatus), {}, {
                 loading: true
               }));
               source = {};
               requestsState.assignDriver = source;
-              _context.next = 6;
+              _context.next = 7;
               return ordering.setAccessToken(session.token).orders(assign.orderId).save({
                 driver_id: assign.driverId
               }, {
                 cancelToken: source
               });
 
-            case 6:
+            case 7:
               _yield$ordering$setAc = _context.sent;
               content = _yield$ordering$setAc.content;
               setDriverActionStatus({
                 loading: false,
                 error: content.error ? content.result : null
               });
-              _context.next = 14;
+
+              if (!content.error) {
+                if (assign.driverId) {
+                  showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'));
+                } else {
+                  showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'));
+                }
+              }
+
+              _context.next = 16;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
               setDriverActionStatus(_objectSpread(_objectSpread({}, driverActionStatus), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 14:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
     return function handleAssignDriver(_x) {
