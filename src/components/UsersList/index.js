@@ -435,7 +435,22 @@ export const UsersList = (props) => {
       })
     }
   }
-
+  /**
+   * Method to delete user
+   * @param {Object} user new user to delete
+   */
+  const handleSuccessDeleteUser = (user) => {
+    if (userTypesSelected.includes(user?.level)) {
+      setUsersList({
+        ...usersList,
+        users: usersList.users.filter(_user => _user.id !== user.id)
+      })
+      setPaginationDetail({
+        ...paginationDetail,
+        total: paginationDetail?.total - 1
+      })
+    }
+  }
   /**
    * Method to update addresses of selected user
    * @param {number, Array} useId and addresses updated addresses
@@ -498,6 +513,7 @@ export const UsersList = (props) => {
             handleDeleteSeveralUsers={handleDeleteSeveralUsers}
             handleSuccessUpdate={handleSuccessUpdate}
             handleSuccessAddUser={handleSuccessAddUser}
+            handleSuccessDeleteUser={handleSuccessDeleteUser}
             handleSuccessAddressesUpdate={handleSuccessAddressesUpdate}
           />
         )

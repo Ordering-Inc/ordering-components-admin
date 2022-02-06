@@ -3,6 +3,8 @@ import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const DriversList = (props) => {
   const {
@@ -15,6 +17,8 @@ export const DriversList = (props) => {
   } = props
 
   const [ordering] = useApi()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
   const requestsState = {}
   const [driverActionStatus, setDriverActionStatus] = useState({ loading: true, error: null })
   const socket = useWebsocket()
@@ -68,6 +72,7 @@ export const DriversList = (props) => {
    */
   const handleAssignDriver = async (assign) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setDriverActionStatus({ ...driverActionStatus, loading: true })
 
       const source = {}
@@ -78,6 +83,14 @@ export const DriversList = (props) => {
         loading: false,
         error: content.error ? content.result : null
       })
+
+      if (!content.error) {
+        if (assign.driverId) {
+          showToast(ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'))
+        } else {
+          showToast(ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'))
+        }
+      }
     } catch (err) {
       setDriverActionStatus({ ...driverActionStatus, loading: false, error: [err.message] })
     }
