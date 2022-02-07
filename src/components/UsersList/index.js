@@ -27,6 +27,7 @@ export const UsersList = (props) => {
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
   const [searchValue, setSearchValue] = useState(null)
+  const [isVerified, setIsVerified] = useState(false)
   const [userTypesSelected, setUserTypesSelected] = useState(deafultUserTypesSelected)
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
@@ -63,6 +64,26 @@ export const UsersList = (props) => {
 
       if (!disabledActiveStateCondition) {
         conditions.push({ attribute: 'enabled', value: selectedUserActiveState })
+      }
+
+      if (isVerified) {
+        const verifiedConditions = []
+        verifiedConditions.push(
+          {
+            attribute: 'email_verified',
+            value: true
+          }
+        )
+        verifiedConditions.push(
+          {
+            attribute: 'phone_verified',
+            value: true
+          }
+        )
+        conditions.push({
+          conector: 'OR',
+          conditions: verifiedConditions
+        })
       }
 
       if (userTypesSelected.length > 0) {
@@ -479,7 +500,7 @@ export const UsersList = (props) => {
   useEffect(() => {
     if (usersList.loading) return
     getUsers(1, null)
-  }, [userTypesSelected, selectedUserActiveState, searchValue])
+  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified])
 
   useEffect(() => {
     if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null)
@@ -503,6 +524,8 @@ export const UsersList = (props) => {
             onSearch={setSearchValue}
             paginationDetail={paginationDetail}
             selectedUserActiveState={selectedUserActiveState}
+            isVerified={isVerified}
+            setIsVerified={setIsVerified}
             handleChangeUserActiveState={handleChangeUserActiveState}
             handleChangeUserType={handleChangeUserType}
             handleChangeActiveUser={handleChangeActiveUser}
