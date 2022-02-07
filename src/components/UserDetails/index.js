@@ -2,18 +2,25 @@ import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const UserDetails = (props) => {
   const {
     userId,
     propsToFetch,
     UIComponent,
-    handleSuccessUpdate
+    handleSuccessUpdate,
+    handleSuccessDeleteUser
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [userState, setUserState] = useState({ user: null, loading: false, error: null })
+  const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
 
   /**
    * Method to get user from API
@@ -38,6 +45,28 @@ export const UserDetails = (props) => {
         loading: false,
         error: [err.message]
       })
+    }
+  }
+
+  /**
+   * Method to delete users from API
+   */
+  const handleDeleteUser = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionStatus({ loading: true, error: null })
+      const { content } = await ordering.setAccessToken(session.token).users(userId).delete()
+      setActionStatus({
+        loading: false,
+        error: content.error ? content.result : null
+      })
+      if (!content.error) {
+        showToast(ToastType.Success, t('USER_DELETED', 'User deleted'))
+        handleSuccessDeleteUser && handleSuccessDeleteUser(userState.user)
+        props.onClose && props.onClose()
+      }
+    } catch (err) {
+      setActionStatus({ loading: false, error: [err.message] })
     }
   }
 
@@ -67,6 +96,8 @@ export const UserDetails = (props) => {
           <UIComponent
             {...props}
             userState={userState}
+            actionStatus={actionStatus}
+            handleDeleteUser={handleDeleteUser}
             handleSuccessUserUpdate={handleSuccessUserUpdate}
           />
         )
@@ -122,5 +153,9 @@ UserDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname']
+  propsToFetch: [
+    'name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address',
+    'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location',
+    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified'
+  ]
 }
