@@ -125,12 +125,12 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       selectedSitesIds = _useState12[0],
       setSelectedSitesIds = _useState12[1];
 
-  var _useState13 = (0, _react.useState)([]),
+  var _useState13 = (0, _react.useState)({}),
       _useState14 = _slicedToArray(_useState13, 2),
       selectedProductsIds = _useState14[0],
       setSelectedProductsIds = _useState14[1];
 
-  var _useState15 = (0, _react.useState)([]),
+  var _useState15 = (0, _react.useState)({}),
       _useState16 = _slicedToArray(_useState15, 2),
       selectedCategoryIds = _useState16[0],
       setSelectedCategoryIds = _useState16[1];
