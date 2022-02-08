@@ -126,7 +126,7 @@ var ProductDetatils = function ProductDetatils(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var _productState$product, _productState$product2, changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, categories, updatedBusiness;
+      var _productState$product, _productState$product2, changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, _categories, updatedBusiness;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -160,25 +160,26 @@ var ProductDetatils = function ProductDetatils(props) {
                 }));
 
                 if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, result);
+                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+                      var _products = category.products.map(function (_product) {
+                        if (_product.id === product.id) {
+                          return _objectSpread(_objectSpread({}, _product), result);
                         }
 
-                        return prod;
+                        return _product;
                       });
 
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
+                      category.products = _toConsumableArray(_products);
                     }
 
-                    return item;
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                   });
+
                   updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
+                    categories: _categories
                   });
                   handleUpdateBusinessState(updatedBusiness);
                 }
@@ -463,6 +464,42 @@ var ProductDetatils = function ProductDetatils(props) {
 
     return showOption;
   };
+  /**
+   * Function to update the product state
+   */
+
+
+  var handleSuccessUpdate = function handleSuccessUpdate(updatedProduct) {
+    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+      product: _objectSpread(_objectSpread({}, productState.product), updatedProduct)
+    }));
+
+    if (handleUpdateBusinessState) {
+      var _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+
+      _categories.forEach(function iterate(category) {
+        if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+          var _products = category.products.map(function (_product) {
+            if (_product.id === product.id) {
+              return _objectSpread(_objectSpread({}, _product), updatedProduct);
+            }
+
+            return _product;
+          });
+
+          category.products = _toConsumableArray(_products);
+        }
+
+        Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+      });
+
+      var updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
+        categories: _categories
+      });
+
+      handleUpdateBusinessState(updatedBusiness);
+    }
+  };
 
   (0, _react.useEffect)(function () {
     setProductState(_objectSpread(_objectSpread({}, productState), {}, {
@@ -481,7 +518,8 @@ var ProductDetatils = function ProductDetatils(props) {
     handleUpdateClick: handleUpdateClick,
     handleDeleteProduct: handleDeleteProduct,
     showProductOption: showProductOption,
-    handleChangeFormState: handleChangeFormState
+    handleChangeFormState: handleChangeFormState,
+    handleSuccessUpdate: handleSuccessUpdate
   })));
 };
 
