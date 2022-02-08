@@ -110,7 +110,7 @@ export const SingleBusinessProduct = (props) => {
         })
         if (handleUpdateBusinessState) {
           const _categories = [...business?.categories]
-          _categories.forEach(function iterate (category) {
+          _categories.forEach(function iterate(category) {
             if (category.id === product?.category_id) {
               const _products = category.products.map(_product => {
                 if (_product.id === product.id) {
