@@ -14,7 +14,8 @@ export const SingleBusinessProduct = (props) => {
     business,
     handleUpdateBusinessState,
     product,
-    businessState
+    businessState,
+    setDataSelected
   } = props
 
   const [{ loading }] = useSession()
@@ -109,7 +110,7 @@ export const SingleBusinessProduct = (props) => {
         })
         if (handleUpdateBusinessState) {
           const _categories = [...business?.categories]
-          _categories.forEach(function iterate (category) {
+          _categories.forEach(function iterate(category) {
             if (category.id === product?.category_id) {
               const _products = category.products.map(_product => {
                 if (_product.id === product.id) {
@@ -205,6 +206,101 @@ export const SingleBusinessProduct = (props) => {
     }
   }
 
+  /**
+ * Method to handle drag start
+ */
+  const handleDragStart = (event, productId) => {
+    event.dataTransfer.setData('transferProductId', productId)
+    const ghostEle = document.createElement('div')
+    ghostEle.classList.add('ghostDragging')
+    ghostEle.innerHTML = product?.name
+    document.body.appendChild(ghostEle)
+    event.dataTransfer.setDragImage(ghostEle, 0, 0)
+  }
+
+  /**
+   * Method to handle drag over
+   */
+  const handleDragOver = (event) => {
+    event.preventDefault()
+    const element = event.target.closest('.draggable-product')
+    if (element) {
+      setDataSelected(element.dataset.index)
+    }
+  }
+
+  /**
+   * Method to handle drag drop
+   */
+  const handleDrop = (event) => {
+    event.preventDefault()
+    const transferProductId = parseInt(event.dataTransfer.getData('transferProductId'))
+    const dropProductRank = product?.rank
+    handleChangeProductRank(transferProductId, { rank: dropProductRank })
+  }
+
+  /**
+   * Method to change the rank of transfer category
+   */
+  const handleChangeProductRank = async (transferProductId, params) => {
+    if (loading) return
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(transferProductId).save(params)
+      if (!error) {
+        if (handleUpdateBusinessState) {
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.map(_product => {
+                if (_product.id === transferProductId) {
+                  return {
+                    ..._product,
+                    rank: result?.rank
+                  }
+                }
+                return _product
+              })
+              category.products = [..._products]
+            }
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+          })
+          handleUpdateBusinessState({ ...business, categories: _categories })
+        }
+        showToast(ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'))
+      } else {
+        setFormState({
+          ...formState,
+          loading: false,
+          result: {
+            error: true,
+            result: result
+          }
+        })
+      }
+    } catch (err) {
+      setFormState({
+        ...formState,
+        loading: false,
+        result: {
+          error: true,
+          result: [err.message]
+        }
+      })
+    }
+  }
+
+  /**
+   * Method to handle drag end
+   */
+  const handleDragEnd = () => {
+    const elements = document.getElementsByClassName('ghostDragging')
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0])
+    }
+    setDataSelected('')
+  }
+
   useEffect(() => {
     if (product) {
       setFormState({
@@ -226,6 +322,10 @@ export const SingleBusinessProduct = (props) => {
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           isEditMode={isEditMode}
+          handleDragStart={handleDragStart}
+          handleDragOver={handleDragOver}
+          handleDrop={handleDrop}
+          handleDragEnd={handleDragEnd}
         />
       )}
     </>
