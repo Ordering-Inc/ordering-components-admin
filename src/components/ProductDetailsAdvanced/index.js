@@ -14,7 +14,7 @@ export const ProductDetailsAdvanced = (props) => {
     business,
     UIComponent,
     product,
-    handleUpdateBusinessState,
+    handleSuccessUpdate,
     setFormTaxState,
     formTaxState,
     taxes,
@@ -48,25 +48,7 @@ export const ProductDetailsAdvanced = (props) => {
       if (!error) {
         setProductState({ ...productState, ...result })
         setFormState({ ...formState, loading: false, changes: {} })
-        if (handleUpdateBusinessState) {
-          const categories = business.categories.map(item => {
-            if (item.id === parseInt(product?.category_id)) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product?.id) {
-                  Object.assign(prod, result)
-                }
-                return prod
-              })
-              return {
-                ...item,
-                products: _products
-              }
-            }
-            return item
-          })
-          const updatedBusiness = { ...business, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(result)
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       } else {
         setFormState({ ...formState, loading: false })

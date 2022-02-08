@@ -192,7 +192,7 @@ export const ProductDetatils = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          [isSeo ? 'seo_image'  :  'images']:  reader.result
+          [isSeo ? 'seo_image' : 'images']: reader.result
         }
       })
     }
