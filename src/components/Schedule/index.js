@@ -13,7 +13,7 @@ export const Schedule = (props) => {
   const [isTimeChangeError, setIsTimeChangeError] = useState(false)
   const [addScheduleTime, setAddScheduleTime] = useState({
     open: { hour: 0, minute: 0 },
-    close: { hour: 23, minute: 45 }
+    close: { hour: 23, minute: 59 }
   })
   const [openAddSchedule, setOpenAddSchedule] = useState({})
   const [selectedCopyDays, setSelectedCopyDays] = useState([])
