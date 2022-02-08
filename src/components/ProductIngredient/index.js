@@ -14,7 +14,7 @@ export const ProductIngredient = (props) => {
     product,
     ingredient,
     UIComponent,
-    handleUpdateBusinessState
+    handleSuccessUpdate
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -73,25 +73,7 @@ export const ProductIngredient = (props) => {
           ingredients = [content.result]
         }
         const updatedProduct = { ...product, ingredients: ingredients }
-        if (handleUpdateBusinessState) {
-          const categories = business.categories.map(item => {
-            if (item.id === parseInt(product?.category_id)) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product?.id) {
-                  Object.assign(prod, updatedProduct)
-                }
-                return prod
-              })
-              return {
-                ...item,
-                products: _products
-              }
-            }
-            return item
-          })
-          const updatedBusiness = { ...business, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
         props.onClose && props.onClose()
       }
@@ -138,25 +120,7 @@ export const ProductIngredient = (props) => {
           return true
         })
         const updatedProduct = { ...product, ingredients: ingredients }
-        if (handleUpdateBusinessState) {
-          const categories = business.categories.map(item => {
-            if (item.id === parseInt(product?.category_id)) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product?.id) {
-                  Object.assign(prod, updatedProduct)
-                }
-                return prod
-              })
-              return {
-                ...item,
-                products: _products
-              }
-            }
-            return item
-          })
-          const updatedBusiness = { ...business, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'))
       }
     } catch (err) {
@@ -188,25 +152,7 @@ export const ProductIngredient = (props) => {
         })
         const ingredients = product.ingredients.filter(_ingredient => _ingredient.id !== ingredient.id)
         const updatedProduct = { ...product, ingredients: ingredients }
-        if (handleUpdateBusinessState) {
-          const categories = business.categories.map(item => {
-            if (item.id === parseInt(product?.category_id)) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product?.id) {
-                  Object.assign(prod, updatedProduct)
-                }
-                return prod
-              })
-              return {
-                ...item,
-                products: _products
-              }
-            }
-            return item
-          })
-          const updatedBusiness = { ...business, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('INGREDIENT_DELETED', 'Ingredient deleted'))
         props.onClose && props.onClose()
       }
