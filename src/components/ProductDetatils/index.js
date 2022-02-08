@@ -57,22 +57,23 @@ export const ProductDetatils = (props) => {
           }
         })
         if (handleUpdateBusinessState) {
-          const categories = business.categories.map(item => {
-            if (item.id === parseInt(product?.category_id)) {
-              const _products = item.products.map(prod => {
-                if (prod.id === product?.id) {
-                  Object.assign(prod, result)
+          const _categories = [...business?.categories]
+          _categories.forEach(function iterate (category) {
+            if (category.id === product?.category_id) {
+              const _products = category.products.map(_product => {
+                if (_product.id === product.id) {
+                  return {
+                    ..._product,
+                    ...result
+                  }
                 }
-                return prod
+                return _product
               })
-              return {
-                ...item,
-                products: _products
-              }
+              category.products = [..._products]
             }
-            return item
+            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
           })
-          const updatedBusiness = { ...business, categories: categories }
+          const updatedBusiness = { ...business, categories: _categories }
           handleUpdateBusinessState(updatedBusiness)
         }
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
@@ -276,6 +277,39 @@ export const ProductDetatils = (props) => {
     return showOption
   }
 
+  /**
+   * Function to update the product state
+   */
+  const handleSuccessUpdate = (updatedProduct) => {
+    setProductState({
+      ...productState,
+      product: {
+        ...productState.product,
+        ...updatedProduct
+      }
+    })
+    if (handleUpdateBusinessState) {
+      const _categories = [...business?.categories]
+      _categories.forEach(function iterate (category) {
+        if (category.id === product?.category_id) {
+          const _products = category.products.map(_product => {
+            if (_product.id === product.id) {
+              return {
+                ..._product,
+                ...updatedProduct
+              }
+            }
+            return _product
+          })
+          category.products = [..._products]
+        }
+        Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+      })
+      const updatedBusiness = { ...business, categories: _categories }
+      handleUpdateBusinessState(updatedBusiness)
+    }
+  }
+
   useEffect(() => {
     setProductState({ ...productState, product: product })
     initProductCart(product)
@@ -297,6 +331,7 @@ export const ProductDetatils = (props) => {
           handleDeleteProduct={handleDeleteProduct}
           showProductOption={showProductOption}
           handleChangeFormState={handleChangeFormState}
+          handleSuccessUpdate={handleSuccessUpdate}
         />
       )}
     </>
