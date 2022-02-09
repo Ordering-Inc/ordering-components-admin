@@ -95,7 +95,7 @@ export const BusinessManagerBusinesses = (props) => {
   const handleUpdateBusinesses = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setActionState({ loading: false, error: null })
+      setActionState({ loading: true, error: null })
       const { content: { error, result } } = await ordering.setAccessToken(token).users(userId).save({ businesses: selectedBusinessIds })
       if (!error) {
         setActionState({ loading: false, error: null })
