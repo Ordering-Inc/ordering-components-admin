@@ -316,6 +316,10 @@ export const BusinessProductsListing = (props) => {
     }
   }, [JSON.stringify(businessState.business?.id), isInitialRender])
 
+  useEffect(() => {
+    setBusinessSlug(slug)
+  }, [slug])
+
   const getBusiness = async () => {
     try {
       setBusinessState({ ...businessState, loading: true })
