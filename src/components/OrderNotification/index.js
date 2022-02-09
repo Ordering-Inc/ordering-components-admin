@@ -16,7 +16,7 @@ export const OrderNotification = (props) => {
   useEffect(() => {
     if (!user) return
     const handleRegisterOrder = (order) => {
-      events.emit('order_added', order.id)
+      events.emit('order_added', order)
     }
     if (user.level === 0) {
       socket.join('orders')
