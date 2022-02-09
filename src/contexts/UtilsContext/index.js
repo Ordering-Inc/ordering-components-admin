@@ -265,7 +265,7 @@ export const UtilsProviders = ({ children }) => {
       case 21:
         return t('ORDER_CUSTOMER_ARRIVED_BUSINESS', 'Customer arrived to business')
       default:
-        return "N/A"
+        return 'N/A'
     }
   }
 
