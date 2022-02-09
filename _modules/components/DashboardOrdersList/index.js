@@ -833,7 +833,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
             pagination.total++;
             setPagination(_objectSpread({}, pagination));
             setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
-              orders: _orders3
+              orders: _orders3.slice(0, pagination.pageSize)
             }));
           }
         }
@@ -857,7 +857,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
           pagination.total++;
           setPagination(_objectSpread({}, pagination));
           setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
-            orders: _orders
+            orders: _orders.slice(0, pagination.pageSize)
           }));
         }
       }
@@ -905,6 +905,16 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         }));
       }
     };
+
+    if (!orderList.loading && orderList.orders.length === 0) {
+      if ((pagination === null || pagination === void 0 ? void 0 : pagination.currentPage) !== 0 && (pagination === null || pagination === void 0 ? void 0 : pagination.total) !== 0) {
+        if (Math.ceil((pagination === null || pagination === void 0 ? void 0 : pagination.total) / pagination.pageSize) >= (pagination === null || pagination === void 0 ? void 0 : pagination.currentPage)) {
+          getPageOrders(pagination.pageSize, pagination.currentPage);
+        } else {
+          getPageOrders(pagination.pageSize, pagination.currentPage - 1);
+        }
+      }
+    }
 
     socket.on('update_order', handleUpdateOrder);
     socket.on('orders_register', handleRegisterOrder);

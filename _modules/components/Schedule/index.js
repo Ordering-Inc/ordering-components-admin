@@ -72,7 +72,7 @@ var Schedule = function Schedule(props) {
     },
     close: {
       hour: 23,
-      minute: 45
+      minute: 59
     }
   }),
       _useState8 = _slicedToArray(_useState7, 2),
@@ -234,7 +234,7 @@ var Schedule = function Schedule(props) {
       },
       close: {
         hour: 23,
-        minute: 45
+        minute: 59
       }
     });
     setOpenAddSchedule(_defineProperty({}, daysOfWeekIndex, true));
