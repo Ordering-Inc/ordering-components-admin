@@ -33,18 +33,23 @@ export const BusinessSchedule = (props) => {
         accessToken: session.token
       })
       if (!error) {
+        setFormState({
+          loading: false,
+          changes: {},
+          result: { error: false }
+        })
         handleSuccessUpdate && handleSuccessUpdate(result)
         showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
+      } else {
+        setFormState({
+          changes: formState.changes,
+          result: {
+            error: false,
+            result: result
+          },
+          loading: false
+        })
       }
-      setFormState({
-        ...formState,
-        changes: error ? formState.changes : {},
-        result: {
-          error: false,
-          result: result
-        },
-        loading: false
-      })
     } catch (err) {
       setFormState({
         ...formState,
