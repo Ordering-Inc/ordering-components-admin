@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
-import { useEvent } from '../../contexts/EventContext'
 export const OrdersManage = (props) => {
   const {
     UIComponent,
@@ -14,7 +13,6 @@ export const OrdersManage = (props) => {
   const [ordering] = useApi()
   const socket = useWebsocket()
   const [{ user, token, loading }] = useSession()
-  const [events] = useEvent()
 
   const requestsState = {}
   const [searchValue, setSearchValue] = useState(null)
@@ -304,9 +302,6 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     if (!user) return
-    const handleRegisterOrder = (order) => {
-      events.emit('order_added', order.id)
-    }
     socket.join('drivers')
     if (user.level === 0) {
       socket.join('orders')
@@ -315,7 +310,6 @@ export const OrdersManage = (props) => {
       socket.join(`orders_${user?.id}`)
       socket.join(`messages_orders_${user?.id}`)
     }
-    socket.on('orders_register', handleRegisterOrder)
   }, [socket, loading, user])
 
   /**
