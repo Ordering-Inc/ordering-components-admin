@@ -791,6 +791,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderList.loading) return;
 
     var handleUpdateOrder = function handleUpdateOrder(order) {
+      if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
         return _order.id === order.id;
       });
@@ -840,6 +841,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     };
 
     var handleRegisterOrder = function handleRegisterOrder(order) {
+      if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
         return _order.id === order.id;
       });
