@@ -234,7 +234,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -246,7 +246,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -258,7 +258,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -270,7 +270,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -282,7 +282,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -294,7 +294,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }, {
@@ -306,7 +306,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                     },
                     close: {
                       hour: 23,
-                      minute: 45
+                      minute: 59
                     }
                   }]
                 }])

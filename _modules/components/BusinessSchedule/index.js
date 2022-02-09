@@ -118,23 +118,31 @@ var BusinessSchedule = function BusinessSchedule(props) {
               result = _yield$ordering$busin2.result;
 
               if (!error) {
+                setFormState({
+                  loading: false,
+                  changes: {},
+                  result: {
+                    error: false
+                  }
+                });
                 handleSuccessUpdate && handleSuccessUpdate(result);
                 showToast(_ToastContext.ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'));
+              } else {
+                setFormState({
+                  changes: formState.changes,
+                  result: {
+                    error: false,
+                    result: result
+                  },
+                  loading: false
+                });
               }
 
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: error ? formState.changes : {},
-                result: {
-                  error: false,
-                  result: result
-                },
-                loading: false
-              }));
-              _context.next = 18;
+              _context.next = 17;
               break;
 
-            case 15:
-              _context.prev = 15;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -144,12 +152,12 @@ var BusinessSchedule = function BusinessSchedule(props) {
                 loading: false
               }));
 
-            case 18:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 15]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function handleUpdateSchedule() {
