@@ -24,6 +24,7 @@ import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessGprsPrinters } from './components/BusinessGprsPrinters'
 import { BusinessInformation } from './components/BusinessInformation'
 import { BusinessList } from './components/BusinessList'
+import { BusinessManagerBusinesses } from './components/BusinessManagerBusinesses'
 import { BusinessMenu } from './components/BusinessMenu'
 import { BusinessProductsListing } from './components/BusinessProductsListing'
 import { BusinessMenuMetaFields } from './components/BusinessMenuMetaFields'
@@ -216,6 +217,7 @@ export {
   BusinessGallery,
   BusinessGprsPrinters,
   BusinessInformation,
+  BusinessManagerBusinesses,
   BusinessList,
   BusinessMenu,
   BusinessMenuMetaFields,
