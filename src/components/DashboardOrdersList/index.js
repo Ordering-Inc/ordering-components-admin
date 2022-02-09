@@ -521,6 +521,7 @@ export const DashboardOrdersList = (props) => {
   useEffect(() => {
     if (orderList.loading) return
     const handleUpdateOrder = (order) => {
+      if (isOnlyDelivery && order?.delivery_type !== 1) return
       const found = orderList.orders.find(_order => _order.id === order.id)
       let orders = []
       if (found) {
@@ -564,6 +565,7 @@ export const DashboardOrdersList = (props) => {
       }
     }
     const handleRegisterOrder = (order) => {
+      if (isOnlyDelivery && order?.delivery_type !== 1) return
       const found = orderList.orders.find(_order => _order.id === order.id)
       if (found) return
       let orders = []
