@@ -354,6 +354,14 @@ export const BusinessProductsListing = (props) => {
     setIsUpdateMode(true)
     const business = { ...businessState?.business }
     Object.assign(business, result)
+    if (categorySelected) {
+      business.categories.forEach(function iterate (category) {
+        if (category.id === categorySelected.id) {
+          setCategorySelected(category)
+        }
+        Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+      })
+    }
     setBusinessState({
       ...businessState,
       business: business
