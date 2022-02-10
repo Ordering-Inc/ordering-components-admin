@@ -14,7 +14,7 @@ export const ProductGallery = (props) => {
     business,
     categoryId,
     product,
-    handleUpdateBusinessState
+    handleSuccessUpdate
   } = props
 
   const [ordering] = useApi()
@@ -24,32 +24,6 @@ export const ProductGallery = (props) => {
 
   const [productGalleryState, setProductGalleryState] = useState({ loading: false, gallery: [], photos: [], videos: [], error: null })
   const [changesState, setChangesState] = useState({ changes: {}, itemId: null, loading: false, error: null })
-
-  /**
-   * Method to update the business state from updated product
-   * @param {Object} updatedProduct
-   */
-  const updateBusinessState = (updatedProduct, businessState) => {
-    if (handleUpdateBusinessState) {
-      const categories = businessState.categories.map(item => {
-        if (item.id === parseInt(product?.category_id)) {
-          const _products = item.products.map(prod => {
-            if (prod.id === product?.id) {
-              Object.assign(prod, updatedProduct)
-            }
-            return prod
-          })
-          return {
-            ...item,
-            products: _products
-          }
-        }
-        return item
-      })
-      const updatedBusiness = { ...businessState, categories: categories }
-      handleUpdateBusinessState(updatedBusiness)
-    }
-  }
 
   /**
    * Method to get the product gallery from API
@@ -128,10 +102,8 @@ export const ProductGallery = (props) => {
             videos: [...productGalleryState.videos, content.result]
           })
         }
-        if (handleUpdateBusinessState) {
-          const updatedProduct = { ...product, gallery: gallery }
-          updateBusinessState(updatedProduct, business)
-        }
+        const updatedProduct = { ...product, gallery: gallery }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
       }
@@ -191,10 +163,9 @@ export const ProductGallery = (props) => {
             videos: videos
           })
         }
-        if (handleUpdateBusinessState) {
-          const updatedProduct = { ...product, gallery: gallery }
-          updateBusinessState(updatedProduct, business)
-        }
+        const updatedProduct = { ...product, gallery: gallery }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
+
         showToast(ToastType.Success, t('PRODUCT_GALLERY_ITEM_SAVED', 'Product gallery item saved'))
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
@@ -241,10 +212,9 @@ export const ProductGallery = (props) => {
             videos: videos
           })
         }
-        if (handleUpdateBusinessState) {
-          const updatedProduct = { ...product, gallery: gallery }
-          updateBusinessState(updatedProduct, business)
-        }
+        const updatedProduct = { ...product, gallery: gallery }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
+
         showToast(ToastType.Success, t('PRODUCT_GALLERY_ITEM_DELETED', 'Product gallery item deleted'))
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
