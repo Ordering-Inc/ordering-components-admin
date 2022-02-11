@@ -30,11 +30,22 @@ export const ProductExtraOptions = (props) => {
     min: 1,
     max: 1
   })
+  const [curOption, setCurOption] = useState(null)
+  const [openModal, setOpenModal] = useState({})
 
   /**
    * Clean changesState
    */
   const cleanChangesState = (values) => setChangesState({ ...values })
+
+  /**
+   * Method to open the modal
+   */
+  const handleOpenModal = (option, name) => {
+    cleanChangesState({ ...changesState, changes: {} })
+    setCurOption(option)
+    setOpenModal({ ...openModal, [name]: true })
+  }
 
   /**
    * Method to change the option input
@@ -230,6 +241,7 @@ export const ProductExtraOptions = (props) => {
         setExtraState({ ...extraState, loading: false, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)
         showToast(ToastType.Success, t('OPTION_ADDED', 'Option added'))
+        handleOpenModal({ ...content.result, suboptions: [] }, 'edit')
       }
     } catch (err) {
       setExtraState({ ...extraState, loading: false, error: err.message })
@@ -349,6 +361,11 @@ export const ProductExtraOptions = (props) => {
           handleDeteteOption={handleDeteteOption}
           handleDeleteExtra={handleDeleteExtra}
           handleSucccessDeleteOption={handleSucccessDeleteOption}
+
+          curOption={curOption}
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          handleOpenModal={handleOpenModal}
         />
       )}
     </>
