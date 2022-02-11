@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 export const BusinessDeliveryZone = (props) => {
   const {
@@ -12,6 +14,9 @@ export const BusinessDeliveryZone = (props) => {
 
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
+
   const [businessDeliveryZonesState, setBusinessDeliveryZonesState] = useState({ zones: [], loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [zoneId, setZoneId] = useState(null)
@@ -19,6 +24,11 @@ export const BusinessDeliveryZone = (props) => {
   const [isEdit, setIsEdit] = useState(false)
   const [isAddMode, setIsAddMode] = useState(false)
   const [isAddValid, setIsAddValid] = useState(false)
+
+  /**
+   * Clean formState
+   */
+  const cleanFormState = () => setFormState({ ...formState, changes: {} })
 
   /**
    * Method to update the business delivery zone from API
@@ -30,6 +40,7 @@ export const BusinessDeliveryZone = (props) => {
         ...currentChanges,
         data: JSON.stringify(formState.changes.data)
       }
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'PUT',
@@ -61,6 +72,7 @@ export const BusinessDeliveryZone = (props) => {
         })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
+        showToast(ToastType.Success, t('DELIVERYZONE_SAVED', 'Delivery zone saved'))
       } else {
         setBusinessDeliveryZonesState({
           ...setBusinessDeliveryZonesState,
@@ -101,6 +113,7 @@ export const BusinessDeliveryZone = (props) => {
           { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] }
         ])
       }
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -133,6 +146,7 @@ export const BusinessDeliveryZone = (props) => {
         })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
+        showToast(ToastType.Success, t('DELIVERYZONE_ADDED', 'Delivery zone added'))
       } else {
         setBusinessDeliveryZonesState({
           ...setBusinessDeliveryZonesState,
@@ -158,6 +172,7 @@ export const BusinessDeliveryZone = (props) => {
    */
   const handleDeleteBusinessDeliveryZone = async (zoneId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setBusinessDeliveryZonesState({ ...businessDeliveryZonesState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -177,6 +192,7 @@ export const BusinessDeliveryZone = (props) => {
         })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
+        showToast(ToastType.Success, t('DELIVERYZONE_DELETED', 'Business delivery zone deleted'))
       } else {
         setBusinessDeliveryZonesState({
           ...setBusinessDeliveryZonesState,
@@ -301,6 +317,7 @@ export const BusinessDeliveryZone = (props) => {
             setIsAddValid={setIsAddValid}
             handleUpdateBusinessDeliveryZone={handleUpdateBusinessDeliveryZone}
             handleAddBusinessDeliveryZone={handleAddBusinessDeliveryZone}
+            cleanFormState={cleanFormState}
           />
         )
       }
