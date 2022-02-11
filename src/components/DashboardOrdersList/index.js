@@ -521,6 +521,7 @@ export const DashboardOrdersList = (props) => {
   useEffect(() => {
     if (orderList.loading) return
     const handleUpdateOrder = (order) => {
+      if (isOnlyDelivery && order?.delivery_type !== 1) return
       const found = orderList.orders.find(_order => _order.id === order.id)
       let orders = []
       if (found) {
@@ -557,13 +558,14 @@ export const DashboardOrdersList = (props) => {
             })
             setOrderList({
               ...orderList,
-              orders: _orders
+              orders: _orders.slice(0, pagination.pageSize)
             })
           }
         }
       }
     }
     const handleRegisterOrder = (order) => {
+      if (isOnlyDelivery && order?.delivery_type !== 1) return
       const found = orderList.orders.find(_order => _order.id === order.id)
       if (found) return
       let orders = []
@@ -577,7 +579,7 @@ export const DashboardOrdersList = (props) => {
           })
           setOrderList({
             ...orderList,
-            orders: _orders
+            orders: _orders.slice(0, pagination.pageSize)
           })
         }
       }
@@ -611,6 +613,16 @@ export const DashboardOrdersList = (props) => {
         })
         const _sortedOrders = sortOrdersArray(orderBy, _orders)
         setOrderList({ ...orderList, orders: _sortedOrders })
+      }
+    }
+
+    if (!orderList.loading && orderList.orders.length === 0) {
+      if (pagination?.currentPage !== 0 && pagination?.total !== 0) {
+        if (Math.ceil(pagination?.total / pagination.pageSize) >= pagination?.currentPage) {
+          getPageOrders(pagination.pageSize, pagination.currentPage)
+        } else {
+          getPageOrders(pagination.pageSize, pagination.currentPage - 1)
+        }
       }
     }
     socket.on('update_order', handleUpdateOrder)

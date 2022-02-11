@@ -43,13 +43,13 @@ export const BusinessFormDetails = (props) => {
     enabled: true,
     owner_id: session?.user?.id,
     schedule: [
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] },
-      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 45 } }] }
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] },
+      { enabled: true, lapses: [{ open: { hour: 0, minute: 0 }, close: { hour: 23, minute: 59 } }] }
     ]
   }
 
