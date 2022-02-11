@@ -245,7 +245,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 loading: true
               }));
               _context2.next = 6;
-              return getBusinesses(initialPageSize, 1);
+              return getBusinesses(initialPageSize || pagination.pageSize, 1);
 
             case 6:
               response = _context2.sent;
@@ -257,8 +257,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
 
               if (!response.content.error) {
                 setPagination({
-                  currentPage: initialPageSize / loadMorePageSize,
-                  pageSize: response.content.pagination.page_size,
+                  currentPage: response.content.pagination.current_page,
+                  pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
                   totalPages: response.content.pagination.total_pages,
                   total: response.content.pagination.total,
                   from: response.content.pagination.from,
@@ -309,7 +309,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
               }));
               _context3.prev = 1;
               _context3.next = 4;
-              return getBusinesses(loadMorePageSize, pagination.currentPage + 1);
+              return getBusinesses(loadMorePageSize, Math.ceil((pagination === null || pagination === void 0 ? void 0 : pagination.to) / loadMorePageSize) + 1);
 
             case 4:
               response = _context3.sent;
@@ -322,7 +322,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
               if (!response.content.error) {
                 setPagination({
                   currentPage: response.content.pagination.current_page,
-                  pageSize: response.content.pagination.page_size,
+                  pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
                   totalPages: response.content.pagination.total_pages,
                   total: response.content.pagination.total,
                   from: response.content.pagination.from,
@@ -386,7 +386,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
               if (!response.content.error) {
                 setPagination({
                   currentPage: response.content.pagination.current_page,
-                  pageSize: response.content.pagination.page_size,
+                  pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
                   totalPages: response.content.pagination.total_pages,
                   total: response.content.pagination.total,
                   from: response.content.pagination.from,
@@ -572,7 +572,6 @@ DashboardBusinessList.propTypes = {
   propsToFetch: _propTypes.default.arrayOf(_propTypes.string)
 };
 DashboardBusinessList.defaultProps = {
-  initialPageSize: 10,
   loadMorePageSize: 10,
   propsToFetch: ['id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'reviews'],
   paginationSettings: {

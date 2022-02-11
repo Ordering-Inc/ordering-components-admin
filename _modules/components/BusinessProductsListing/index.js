@@ -673,6 +673,17 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     var business = _objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business);
 
     Object.assign(business, result);
+
+    if (categorySelected) {
+      business.categories.forEach(function iterate(category) {
+        if (category.id === categorySelected.id) {
+          setCategorySelected(category);
+        }
+
+        Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+      });
+    }
+
     setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
       business: business
     }));

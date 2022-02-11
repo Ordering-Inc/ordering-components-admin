@@ -120,6 +120,16 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       _useState10 = _slicedToArray(_useState9, 2),
       addChangesState = _useState10[0],
       setAddChangesState = _useState10[1];
+
+  var _useState11 = (0, _react.useState)(null),
+      _useState12 = _slicedToArray(_useState11, 2),
+      curOption = _useState12[0],
+      setCurOption = _useState12[1];
+
+  var _useState13 = (0, _react.useState)({}),
+      _useState14 = _slicedToArray(_useState13, 2),
+      openModal = _useState14[0],
+      setOpenModal = _useState14[1];
   /**
    * Clean changesState
    */
@@ -127,6 +137,18 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
 
   var cleanChangesState = function cleanChangesState(values) {
     return setChangesState(_objectSpread({}, values));
+  };
+  /**
+   * Method to open the modal
+   */
+
+
+  var handleOpenModal = function handleOpenModal(option, name) {
+    cleanChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      changes: {}
+    }));
+    setCurOption(option);
+    setOpenModal(_objectSpread(_objectSpread({}, openModal), {}, _defineProperty({}, name, true)));
   };
   /**
    * Method to change the option input
@@ -412,6 +434,9 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                 }));
                 handleSuccessUpdateBusiness(updatedExtra);
                 showToast(_ToastContext.ToastType.Success, t('OPTION_ADDED', 'Option added'));
+                handleOpenModal(_objectSpread(_objectSpread({}, content.result), {}, {
+                  suboptions: []
+                }), 'edit');
               }
 
               _context2.next = 16;
@@ -666,7 +691,11 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleChangeAddOptionEnable: handleChangeAddOptionEnable,
     handleDeteteOption: handleDeteteOption,
     handleDeleteExtra: handleDeleteExtra,
-    handleSucccessDeleteOption: handleSucccessDeleteOption
+    handleSucccessDeleteOption: handleSucccessDeleteOption,
+    curOption: curOption,
+    openModal: openModal,
+    setOpenModal: setOpenModal,
+    handleOpenModal: handleOpenModal
   })));
 };
 
