@@ -227,6 +227,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
    */
 
   (0, _react.useEffect)(function () {
+    var _window$google;
+
+    if (!((_window$google = window.google) !== null && _window$google !== void 0 && _window$google.maps)) return;
+
     if (clearState) {
       if (circleZone) {
         circleZone.setMap(null);
