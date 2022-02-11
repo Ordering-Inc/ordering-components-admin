@@ -133,6 +133,7 @@ export const BusinessZoneGoogleMaps = (props) => {
    * clear all the shapes
    */
   useEffect(() => {
+    if (!window.google?.maps) return
     if (clearState) {
       if (circleZone) {
         circleZone.setMap(null)
