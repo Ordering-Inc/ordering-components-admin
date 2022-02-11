@@ -132,7 +132,7 @@ export const DashboardBusinessList = (props) => {
     if (!session.token) return
     try {
       setBusinessList({ ...businessList, loading: true })
-      const response = await getBusinesses(initialPageSize, 1)
+      const response = await getBusinesses((initialPageSize || pagination.pageSize), 1)
 
       setBusinessList({
         loading: false,
@@ -142,8 +142,8 @@ export const DashboardBusinessList = (props) => {
 
       if (!response.content.error) {
         setPagination({
-          currentPage: initialPageSize / loadMorePageSize,
-          pageSize: response.content.pagination.page_size,
+          currentPage: response.content.pagination.current_page,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
@@ -163,7 +163,7 @@ export const DashboardBusinessList = (props) => {
   const loadMoreBusinesses = async () => {
     setBusinessList({ ...businessList, loading: true })
     try {
-      const response = await getBusinesses(loadMorePageSize, pagination.currentPage + 1)
+      const response = await getBusinesses(loadMorePageSize, Math.ceil(pagination?.to / loadMorePageSize) + 1)
       setBusinessList({
         loading: false,
         businesses: response.content.error ? businessList.businesses : businessList.businesses.concat(response.content.result),
@@ -172,7 +172,7 @@ export const DashboardBusinessList = (props) => {
       if (!response.content.error) {
         setPagination({
           currentPage: response.content.pagination.current_page,
-          pageSize: response.content.pagination.page_size,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
@@ -201,7 +201,7 @@ export const DashboardBusinessList = (props) => {
       if (!response.content.error) {
         setPagination({
           currentPage: response.content.pagination.current_page,
-          pageSize: response.content.pagination.page_size,
+          pageSize: response.content.pagination.page_size === 0 ? pagination.pageSize : response.content.pagination.page_size,
           totalPages: response.content.pagination.total_pages,
           total: response.content.pagination.total,
           from: response.content.pagination.from,
@@ -358,7 +358,6 @@ DashboardBusinessList.propTypes = {
 }
 
 DashboardBusinessList.defaultProps = {
-  initialPageSize: 10,
   loadMorePageSize: 10,
   propsToFetch: ['id', 'alcohol', 'city', 'delivery_price', 'distance', 'delivery_time', 'enabled', 'featured', 'food', 'groceries', 'header', 'laundry', 'logo', 'minimum', 'name', 'pickup_time', 'slug', 'reviews'],
   paginationSettings: { initialPage: 1, pageSize: 10, controlType: 'infinity' }
