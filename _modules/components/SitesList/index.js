@@ -180,19 +180,18 @@ var SitesList = function SitesList(props) {
                 }));
               }
 
-              _context.next = 21;
+              _context.next = 20;
               break;
 
             case 17:
               _context.prev = 17;
               _context.t0 = _context["catch"](0);
-              console.log(_context.t0);
               setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 21:
+            case 20:
             case "end":
               return _context.stop();
           }

@@ -19,8 +19,6 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _WebsocketContext = require("../../contexts/WebsocketContext");
 
-var _EventContext = require("../../contexts/EventContext");
-
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -76,10 +74,6 @@ var OrdersManage = function OrdersManage(props) {
       user = _useSession2$.user,
       token = _useSession2$.token,
       loading = _useSession2$.loading;
-
-  var _useEvent = (0, _EventContext.useEvent)(),
-      _useEvent2 = _slicedToArray(_useEvent, 1),
-      events = _useEvent2[0];
 
   var requestsState = {};
 
@@ -634,11 +628,6 @@ var OrdersManage = function OrdersManage(props) {
   }, [socket, loading, driversList.drivers]);
   (0, _react.useEffect)(function () {
     if (!user) return;
-
-    var handleRegisterOrder = function handleRegisterOrder(order) {
-      events.emit('order_added', order.id);
-    };
-
     socket.join('drivers');
 
     if (user.level === 0) {
@@ -648,8 +637,6 @@ var OrdersManage = function OrdersManage(props) {
       socket.join("orders_".concat(user === null || user === void 0 ? void 0 : user.id));
       socket.join("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
     }
-
-    socket.on('orders_register', handleRegisterOrder);
   }, [socket, loading, user]);
   /**
    * Listening multi orders action start to change status

@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -67,7 +67,7 @@ var ProductGallery = function ProductGallery(props) {
       business = props.business,
       categoryId = props.categoryId,
       product = props.product,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -105,39 +105,6 @@ var ProductGallery = function ProductGallery(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       changesState = _useState4[0],
       setChangesState = _useState4[1];
-  /**
-   * Method to update the business state from updated product
-   * @param {Object} updatedProduct
-   */
-
-
-  var updateBusinessState = function updateBusinessState(updatedProduct, businessState) {
-    if (handleUpdateBusinessState) {
-      var categories = businessState.categories.map(function (item) {
-        if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-          var _products = item.products.map(function (prod) {
-            if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-              Object.assign(prod, updatedProduct);
-            }
-
-            return prod;
-          });
-
-          return _objectSpread(_objectSpread({}, item), {}, {
-            products: _products
-          });
-        }
-
-        return item;
-      });
-
-      var updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
-        categories: categories
-      });
-
-      handleUpdateBusinessState(updatedBusiness);
-    }
-  };
   /**
    * Method to get the product gallery from API
    */
@@ -275,12 +242,10 @@ var ProductGallery = function ProductGallery(props) {
                   }));
                 }
 
-                if (handleUpdateBusinessState) {
-                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
-                    gallery: gallery
-                  });
-                  updateBusinessState(updatedProduct, business);
-                }
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                  gallery: gallery
+                });
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
                   loading: false,
@@ -389,13 +354,10 @@ var ProductGallery = function ProductGallery(props) {
                   }));
                 }
 
-                if (handleUpdateBusinessState) {
-                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
-                    gallery: gallery
-                  });
-                  updateBusinessState(updatedProduct, business);
-                }
-
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                  gallery: gallery
+                });
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_GALLERY_ITEM_SAVED', 'Product gallery item saved'));
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
@@ -493,13 +455,10 @@ var ProductGallery = function ProductGallery(props) {
                   }));
                 }
 
-                if (handleUpdateBusinessState) {
-                  updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
-                    gallery: gallery
-                  });
-                  updateBusinessState(updatedProduct, business);
-                }
-
+                updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
+                  gallery: gallery
+                });
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_GALLERY_ITEM_DELETED', 'Product gallery item deleted'));
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {

@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _UtilsContext = require("../../contexts/UtilsContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -58,6 +62,16 @@ var Logistics = function Logistics(props) {
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       session = _useSession2[0];
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useUtils = (0, _UtilsContext.useUtils)(),
+      _useUtils2 = _slicedToArray(_useUtils, 1),
+      _useUtils2$ = _useUtils2[0],
+      getOrderState = _useUtils2$.getOrderState,
+      parseDistance = _useUtils2$.parseDistance;
   /**
    * Array to save logistics
    */
@@ -134,11 +148,62 @@ var Logistics = function Logistics(props) {
     };
   }();
 
+  var parseLog = function parseLog(log) {
+    var driverEvents = ['logistic_driver_found', 'logistic_driver_found_group', 'logistic_driver_not_found', 'logistic_driver_not_found_group', 'logistic_driver_found_in_coverage', 'logistic_driver_found_in_coverage_group', 'logistic_driver_found_out_coverage', 'logistic_driver_found_out_coverage_group', 'logistic_driver_autoaccepted', 'logistic_driver_autoaccepted_group', 'logistic_request_autorejected', 'logistic_request_autorejected_group', 'logistic_assign_request_accepted', 'logistic_assign_request_accepted_group', 'logistic_assign_request_rejected', 'logistic_assign_request_rejected_group', 'logistic_manual_driver_assignment', 'logistic_manual_driver_unassignment', 'logistic_driver_autoassigned_group'];
+    var generalEvents = ['logistic_started', 'logistic_finished', 'logistic_expired', 'logistic_resolved', 'logistic_reset', 'logistic_grouped', 'logistic_cancelled', 'logistic_not_grouped', 'logistic_order_queued', 'logistic_order_out_queued', 'logistic_driver_company_not_found'];
+
+    var parseLogData = function parseLogData(eventName, data) {
+      var message = t('LOG_' + eventName.toUpperCase());
+
+      for (var key in data) {
+        var replaceBy = data[key];
+
+        if (key === 'distance' || key === 'coverage') {
+          replaceBy = parseDistance(data[key]);
+        } else if (key === 'with_orders') {
+          replaceBy = data[key].join(', ');
+          key = 'orders';
+        } else if (key === 'status') {
+          replaceBy = getOrderState(data[key]);
+        }
+
+        message = message.replace('_' + key + '_', replaceBy);
+      }
+
+      return message;
+    };
+
+    var logData = log.data ? log.data : {};
+
+    if (driverEvents.indexOf(log.event) !== -1 || log.driver_id) {
+      if (log.driver) {
+        logData.driver = log.driver.name + (log.driver.lastname ? log.driver.lastname : '');
+      }
+
+      return parseLogData(log.event, logData);
+    } else if (log.driver_company_id || log.external_driver_id) {
+      if (log.driver_company) {
+        logData.driver_company = log.driver_company.name;
+      }
+
+      if (log.external_driver) {
+        logData.external_driver = log.external_driver.name;
+      }
+
+      return parseLogData(log.event, logData);
+    } else if (generalEvents.indexOf(log.event) !== -1) {
+      return parseLogData(log.event, logData);
+    }
+
+    return t(log.event.toUpperCase()) + '<br />' + JSON.stringify(log.data);
+  };
+
   (0, _react.useEffect)(function () {
     getLogistics();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    logisticList: logisticList
+    logisticList: logisticList,
+    parseLog: parseLog
   })));
 };
 

@@ -67,7 +67,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
       business = props.business,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
       product = props.product,
-      businessState = props.businessState;
+      businessState = props.businessState,
+      setDataSelected = props.setDataSelected;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -381,6 +382,155 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+  * Method to handle drag start
+  */
+
+
+  var handleDragStart = function handleDragStart(event, productId) {
+    event.dataTransfer.setData('transferProductId', productId);
+    var ghostEle = document.createElement('div');
+    ghostEle.classList.add('ghostDragging');
+    ghostEle.innerHTML = product === null || product === void 0 ? void 0 : product.name;
+    document.body.appendChild(ghostEle);
+    event.dataTransfer.setDragImage(ghostEle, 0, 0);
+  };
+  /**
+   * Method to handle drag over
+   */
+
+
+  var handleDragOver = function handleDragOver(event) {
+    event.preventDefault();
+    var element = event.target.closest('.draggable-product');
+
+    if (element) {
+      setDataSelected(element.dataset.index);
+    }
+  };
+  /**
+   * Method to handle drag drop
+   */
+
+
+  var handleDrop = function handleDrop(event) {
+    event.preventDefault();
+    var transferProductId = parseInt(event.dataTransfer.getData('transferProductId'));
+    var dropProductRank = product === null || product === void 0 ? void 0 : product.rank;
+    handleChangeProductRank(transferProductId, {
+      rank: dropProductRank
+    });
+  };
+  /**
+   * Method to change the rank of transfer category
+   */
+
+
+  var handleChangeProductRank = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(transferProductId, params) {
+      var _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              if (!loading) {
+                _context3.next = 2;
+                break;
+              }
+
+              return _context3.abrupt("return");
+
+            case 2:
+              _context3.prev = 2;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              _context3.next = 6;
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(product === null || product === void 0 ? void 0 : product.category_id)).products(transferProductId).save(params);
+
+            case 6:
+              _yield$ordering$busin5 = _context3.sent;
+              _yield$ordering$busin6 = _yield$ordering$busin5.content;
+              error = _yield$ordering$busin6.error;
+              result = _yield$ordering$busin6.result;
+
+              if (!error) {
+                if (handleUpdateBusinessState) {
+                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+
+                  _categories.forEach(function iterate(category) {
+                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+                      var _products = category.products.map(function (_product) {
+                        if (_product.id === transferProductId) {
+                          return _objectSpread(_objectSpread({}, _product), {}, {
+                            rank: result === null || result === void 0 ? void 0 : result.rank
+                          });
+                        }
+
+                        return _product;
+                      });
+
+                      category.products = _toConsumableArray(_products);
+                    }
+
+                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+                  });
+
+                  handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+                    categories: _categories
+                  }));
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'));
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  result: {
+                    error: true,
+                    result: result
+                  }
+                }));
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](2);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                result: {
+                  error: true,
+                  result: [_context3.t0.message]
+                }
+              }));
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[2, 13]]);
+    }));
+
+    return function handleChangeProductRank(_x2, _x3) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to handle drag end
+   */
+
+
+  var handleDragEnd = function handleDragEnd() {
+    var elements = document.getElementsByClassName('ghostDragging');
+
+    while (elements.length > 0) {
+      elements[0].parentNode.removeChild(elements[0]);
+    }
+
+    setDataSelected('');
+  };
 
   (0, _react.useEffect)(function () {
     if (product) {
@@ -396,7 +546,11 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
     productFormState: formState,
     handleChangeInput: handleChangeInput,
     handlechangeImage: handlechangeImage,
-    isEditMode: isEditMode
+    isEditMode: isEditMode,
+    handleDragStart: handleDragStart,
+    handleDragOver: handleDragOver,
+    handleDrop: handleDrop,
+    handleDragEnd: handleDragEnd
   })));
 };
 

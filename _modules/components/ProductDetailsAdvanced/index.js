@@ -60,7 +60,7 @@ var ProductDetailsAdvanced = function ProductDetailsAdvanced(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
-      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      handleSuccessUpdate = props.handleSuccessUpdate,
       setFormTaxState = props.setFormTaxState,
       formTaxState = props.formTaxState,
       taxes = props.taxes,
@@ -131,7 +131,7 @@ var ProductDetailsAdvanced = function ProductDetailsAdvanced(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, categories, updatedBusiness;
+      var changes, _yield$ordering$busin, _yield$ordering$busin2, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -160,31 +160,7 @@ var ProductDetailsAdvanced = function ProductDetailsAdvanced(props) {
                   loading: false,
                   changes: {}
                 }));
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, result);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(result);
                 showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {

@@ -605,6 +605,9 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
       getProduct();
     }
   }, [JSON.stringify((_businessState$busine5 = businessState.business) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.id), isInitialRender]);
+  (0, _react.useEffect)(function () {
+    setBusinessSlug(slug);
+  }, [slug]);
 
   var getBusiness = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
@@ -670,6 +673,17 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     var business = _objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business);
 
     Object.assign(business, result);
+
+    if (categorySelected) {
+      business.categories.forEach(function iterate(category) {
+        if (category.id === categorySelected.id) {
+          setCategorySelected(category);
+        }
+
+        Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+      });
+    }
+
     setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
       business: business
     }));

@@ -53,7 +53,7 @@ var OrderNotification = function OrderNotification(props) {
     if (!user) return;
 
     var handleRegisterOrder = function handleRegisterOrder(order) {
-      events.emit('order_added', order.id);
+      events.emit('order_added', order);
     };
 
     if (user.level === 0) {

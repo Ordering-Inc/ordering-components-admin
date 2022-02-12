@@ -67,7 +67,7 @@ var ProductIngredient = function ProductIngredient(props) {
       product = props.product,
       ingredient = props.ingredient,
       UIComponent = props.UIComponent,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -119,7 +119,7 @@ var ProductIngredient = function ProductIngredient(props) {
 
   var handleAddIngredient = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var changes, requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+      var changes, requestOptions, response, content, ingredients, updatedProduct;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -170,31 +170,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'));
                 props.onClose && props.onClose();
               }
@@ -229,7 +205,7 @@ var ProductIngredient = function ProductIngredient(props) {
 
   var handleUpdateIngredient = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var changes, requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+      var changes, requestOptions, response, content, ingredients, updatedProduct;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -280,31 +256,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('INGREDIENT_SAVED', 'Ingredient saved'));
               }
 
@@ -338,7 +290,7 @@ var ProductIngredient = function ProductIngredient(props) {
 
   var handleDeleteIngredient = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var requestOptions, response, content, ingredients, updatedProduct, categories, updatedBusiness;
+      var requestOptions, response, content, ingredients, updatedProduct;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -377,31 +329,7 @@ var ProductIngredient = function ProductIngredient(props) {
                 updatedProduct = _objectSpread(_objectSpread({}, product), {}, {
                   ingredients: ingredients
                 });
-
-                if (handleUpdateBusinessState) {
-                  categories = business.categories.map(function (item) {
-                    if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = item.products.map(function (prod) {
-                        if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-                          Object.assign(prod, updatedProduct);
-                        }
-
-                        return prod;
-                      });
-
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        products: _products
-                      });
-                    }
-
-                    return item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('INGREDIENT_DELETED', 'Ingredient deleted'));
                 props.onClose && props.onClose();
               }
