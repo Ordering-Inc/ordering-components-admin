@@ -17,14 +17,17 @@ export const UserCashWallet = (props) => {
   const [, t] = useLanguage()
 
   const [cashWalletState, setCashWalletState] = useState({ loading: false, wallet: {}, error: null })
+  const [cashEventsState, setCashEventsState] = useState({ loading: false, events: [], error: null })
+  const [usersState, setUsersState] = useState({ loading: false, users: [], error: null })
+
   const [addWalletState, setAddWalletState] = useState({})
   const [reduceWalletState, setReduceWalletState] = useState({})
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
-   * Method to get user from API
+   * Method to get user cash wallet info from API
    */
-  const getUser = async () => {
+  const getUserCashWallet = async () => {
     try {
       setCashWalletState({
         ...cashWalletState,
@@ -55,6 +58,75 @@ export const UserCashWallet = (props) => {
     } catch (err) {
       setCashWalletState({
         ...cashWalletState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
+  /**
+   * Method to get user cash wallet info from API
+   */
+  const getUserWalletHistory = async (walletId) => {
+    try {
+      setCashEventsState({
+        ...cashEventsState,
+        loading: true
+      })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/users/${userId}/wallets/${walletId}/events`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setCashEventsState({
+          loading: false,
+          events: content.result,
+          error: null
+        })
+      } else {
+        setCashEventsState({
+          ...cashEventsState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (err) {
+      setCashEventsState({
+        ...cashEventsState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
+  const getUsers = async () => {
+    try {
+      setUsersState({
+        loading: true,
+        ...usersState
+      })
+      const { content: { result, error } } = await ordering.setAccessToken(token).users().select(['name', 'lastname']).get()
+      if (!error) {
+        setUsersState({
+          loading: false,
+          users: result,
+          error: null
+        })
+      } else {
+        setUsersState({
+          ...usersState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setUsersState({
+        ...usersState,
         loading: false,
         error: [err.message]
       })
@@ -160,8 +232,53 @@ export const UserCashWallet = (props) => {
     }
   }
 
+  /**
+   * Method to parse the transaction event
+   */
+  const parseEvent = (event) => {
+    let eventLog = ''
+    let author = ''
+    const findUser = usersState.users.find(user => user.id === event.author_id)
+    if (findUser) {
+      author = `${findUser?.name} ${findUser?.lastname}`
+    } else {
+      author = `${event.author_id}`
+    }
+    if (event.event_type === 'manual') {
+      switch (event.event) {
+        case 'movement':
+          if (Math.sign(event.amount) === -1) {
+            eventLog = t('TRANSACTION_REDUCE_MONEY', '<strong>_user_</strong> reduce money').replace('_user_', `${author}`)
+          } else {
+            eventLog = t('TRANSACTION_ADD_MONEY', '<strong>_user_</strong> add money').replace('_user_', `${author}`)
+          }
+          break
+        case 'locked':
+          eventLog = t('TRANSACTION_LOCKED', '<strong>_user_</strong> locked').replace('_user_', `${author}`)
+          break
+        case 'unlocked':
+          eventLog = t('TRANSACTION_UNLOCKED', '<strong>_user_</strong> unlocked').replace('_user_', `${author}`)
+          break
+        default:
+          eventLog = event.event
+          break
+      }
+    }
+    if (event.event_type === 'refund') {
+      eventLog = t('Refund')
+    }
+
+    return eventLog
+  }
+
   useEffect(() => {
-    getUser()
+    if (!cashWalletState.wallet?.id) return
+    getUsers()
+    getUserWalletHistory(cashWalletState.wallet.id)
+  }, [cashWalletState.wallet?.id])
+
+  useEffect(() => {
+    getUserCashWallet()
   }, [userId])
 
   return (
@@ -171,12 +288,14 @@ export const UserCashWallet = (props) => {
           <UIComponent
             {...props}
             cashWalletState={cashWalletState}
+            cashEventsState={cashEventsState}
             addWalletState={addWalletState}
             reduceWalletState={reduceWalletState}
             actionState={actionState}
             handleChangeInput={handleChangeInput}
             handleAddWalletMoney={handleAddWalletMoney}
             handleReduceWalletMoney={handleReduceWalletMoney}
+            parseEvent={parseEvent}
           />
         )
       }
