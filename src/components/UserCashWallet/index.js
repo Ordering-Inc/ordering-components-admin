@@ -265,7 +265,7 @@ export const UserCashWallet = (props) => {
       }
     }
     if (event.event_type === 'refund') {
-      eventLog = t('Refund')
+      eventLog = t('REFUND')
     }
 
     return eventLog
