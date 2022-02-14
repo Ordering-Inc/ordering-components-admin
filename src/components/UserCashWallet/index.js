@@ -273,13 +273,16 @@ export const UserCashWallet = (props) => {
 
   useEffect(() => {
     if (!cashWalletState.wallet?.id) return
-    getUsers()
     getUserWalletHistory(cashWalletState.wallet.id)
-  }, [cashWalletState.wallet?.id])
+  }, [cashWalletState.wallet?.id, cashWalletState.wallet?.balance])
 
   useEffect(() => {
     getUserCashWallet()
   }, [userId])
+
+  useEffect(() => {
+    getUsers()
+  }, [])
 
   return (
     <>
