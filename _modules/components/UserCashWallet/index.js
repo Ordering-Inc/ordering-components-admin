@@ -52,7 +52,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var UserCashWallet = function UserCashWallet(props) {
-  var _cashWalletState$wall6;
+  var _cashWalletState$wall6, _cashWalletState$wall7;
 
   var UIComponent = props.UIComponent,
       userId = props.userId;
@@ -547,12 +547,14 @@ var UserCashWallet = function UserCashWallet(props) {
     var _cashWalletState$wall5;
 
     if (!((_cashWalletState$wall5 = cashWalletState.wallet) !== null && _cashWalletState$wall5 !== void 0 && _cashWalletState$wall5.id)) return;
-    getUsers();
     getUserWalletHistory(cashWalletState.wallet.id);
-  }, [(_cashWalletState$wall6 = cashWalletState.wallet) === null || _cashWalletState$wall6 === void 0 ? void 0 : _cashWalletState$wall6.id]);
+  }, [(_cashWalletState$wall6 = cashWalletState.wallet) === null || _cashWalletState$wall6 === void 0 ? void 0 : _cashWalletState$wall6.id, (_cashWalletState$wall7 = cashWalletState.wallet) === null || _cashWalletState$wall7 === void 0 ? void 0 : _cashWalletState$wall7.balance]);
   (0, _react.useEffect)(function () {
     getUserCashWallet();
   }, [userId]);
+  (0, _react.useEffect)(function () {
+    getUsers();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     cashWalletState: cashWalletState,
     cashEventsState: cashEventsState,
