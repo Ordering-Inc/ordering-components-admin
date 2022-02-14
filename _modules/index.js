@@ -1161,6 +1161,12 @@ Object.defineProperty(exports, "UpsellingPage", {
     return _UpsellingPage.UpsellingPage;
   }
 });
+Object.defineProperty(exports, "UserCashWallet", {
+  enumerable: true,
+  get: function get() {
+    return _UserCashWallet.UserCashWallet;
+  }
+});
 Object.defineProperty(exports, "UserDetails", {
   enumerable: true,
   get: function get() {
@@ -1697,6 +1703,8 @@ var _SiteDetails = require("./components/SiteDetails");
 var _SitesList = require("./components/SitesList");
 
 var _Analitycs = require("./components/Analitycs");
+
+var _UserCashWallet = require("./components/UserCashWallet");
 
 var _UsersList = require("./components/UsersList");
 

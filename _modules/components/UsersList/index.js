@@ -111,51 +111,56 @@ var UsersList = function UsersList(props) {
       searchValue = _useState6[0],
       setSearchValue = _useState6[1];
 
-  var _useState7 = (0, _react.useState)(deafultUserTypesSelected),
+  var _useState7 = (0, _react.useState)(false),
       _useState8 = _slicedToArray(_useState7, 2),
-      userTypesSelected = _useState8[0],
-      setUserTypesSelected = _useState8[1];
+      isVerified = _useState8[0],
+      setIsVerified = _useState8[1];
 
-  var _useState9 = (0, _react.useState)({
+  var _useState9 = (0, _react.useState)(deafultUserTypesSelected),
+      _useState10 = _slicedToArray(_useState9, 2),
+      userTypesSelected = _useState10[0],
+      setUserTypesSelected = _useState10[1];
+
+  var _useState11 = (0, _react.useState)({
     currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
     pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
     totalItems: null,
     totalPages: null
   }),
-      _useState10 = _slicedToArray(_useState9, 2),
-      paginationProps = _useState10[0],
-      setPaginationProps = _useState10[1];
-
-  var _useState11 = (0, _react.useState)({}),
       _useState12 = _slicedToArray(_useState11, 2),
-      paginationDetail = _useState12[0],
-      setPaginationDetail = _useState12[1];
+      paginationProps = _useState12[0],
+      setPaginationProps = _useState12[1];
 
-  var _useState13 = (0, _react.useState)(true),
+  var _useState13 = (0, _react.useState)({}),
       _useState14 = _slicedToArray(_useState13, 2),
-      selectedUserActiveState = _useState14[0],
-      setSelectedUserActiveState = _useState14[1];
+      paginationDetail = _useState14[0],
+      setPaginationDetail = _useState14[1];
 
-  var _useState15 = (0, _react.useState)({
-    loading: false,
-    error: null
-  }),
+  var _useState15 = (0, _react.useState)(true),
       _useState16 = _slicedToArray(_useState15, 2),
-      actionStatus = _useState16[0],
-      setActionStatus = _useState16[1];
+      selectedUserActiveState = _useState16[0],
+      setSelectedUserActiveState = _useState16[1];
 
-  var _useState17 = (0, _react.useState)([]),
-      _useState18 = _slicedToArray(_useState17, 2),
-      selectedUsers = _useState18[0],
-      setSelectedUsers = _useState18[1];
-
-  var _useState19 = (0, _react.useState)({
+  var _useState17 = (0, _react.useState)({
     loading: false,
     error: null
   }),
+      _useState18 = _slicedToArray(_useState17, 2),
+      actionStatus = _useState18[0],
+      setActionStatus = _useState18[1];
+
+  var _useState19 = (0, _react.useState)([]),
       _useState20 = _slicedToArray(_useState19, 2),
-      deleteUsersActionState = _useState20[0],
-      setDeleteUsersActionState = _useState20[1];
+      selectedUsers = _useState20[0],
+      setSelectedUsers = _useState20[1];
+
+  var _useState21 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState22 = _slicedToArray(_useState21, 2),
+      deleteUsersActionState = _useState22[0],
+      setDeleteUsersActionState = _useState22[1];
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
@@ -164,7 +169,7 @@ var UsersList = function UsersList(props) {
 
   var getUsers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page, pageSize) {
-      var parameters, paginationParams, where, conditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
+      var parameters, paginationParams, where, conditions, verifiedConditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -191,6 +196,22 @@ var UsersList = function UsersList(props) {
                 conditions.push({
                   attribute: 'enabled',
                   value: selectedUserActiveState
+                });
+              }
+
+              if (isVerified) {
+                verifiedConditions = [];
+                verifiedConditions.push({
+                  attribute: 'email_verified',
+                  value: true
+                });
+                verifiedConditions.push({
+                  attribute: 'phone_verified',
+                  value: true
+                });
+                conditions.push({
+                  conector: 'OR',
+                  conditions: verifiedConditions
                 });
               }
 
@@ -337,10 +358,10 @@ var UsersList = function UsersList(props) {
               }
 
               fetchEndpoint = where ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where) : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters);
-              _context.next = 15;
+              _context.next = 16;
               return fetchEndpoint.get();
 
-            case 15:
+            case 16:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               result = _yield$fetchEndpoint$2.result;
@@ -366,11 +387,11 @@ var UsersList = function UsersList(props) {
                 nextPageItems: nextPageItems
               }));
               setPaginationDetail(_objectSpread({}, pagination));
-              _context.next = 30;
+              _context.next = 31;
               break;
 
-            case 27:
-              _context.prev = 27;
+            case 28:
+              _context.prev = 28;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -380,12 +401,12 @@ var UsersList = function UsersList(props) {
                 }));
               }
 
-            case 30:
+            case 31:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 27]]);
+      }, _callee, null, [[0, 28]]);
     }));
 
     return function getUsers(_x, _x2) {
@@ -769,7 +790,7 @@ var UsersList = function UsersList(props) {
   (0, _react.useEffect)(function () {
     if (usersList.loading) return;
     getUsers(1, null);
-  }, [userTypesSelected, selectedUserActiveState, searchValue]);
+  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified]);
   (0, _react.useEffect)(function () {
     if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null);
   }, [filterValues]);
@@ -786,6 +807,8 @@ var UsersList = function UsersList(props) {
     onSearch: setSearchValue,
     paginationDetail: paginationDetail,
     selectedUserActiveState: selectedUserActiveState,
+    isVerified: isVerified,
+    setIsVerified: setIsVerified,
     handleChangeUserActiveState: handleChangeUserActiveState,
     handleChangeUserType: handleChangeUserType,
     handleChangeActiveUser: handleChangeActiveUser,
