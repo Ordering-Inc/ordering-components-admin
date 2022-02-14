@@ -185,6 +185,7 @@ import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
 import { SiteDetails } from './components/SiteDetails'
 import { SitesList } from './components/SitesList'
 import { Analytics } from './components/Analitycs'
+import { UserCashWallet } from './components/UserCashWallet'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
@@ -368,6 +369,7 @@ export {
   SiteDetails,
   SitesList,
   Analytics,
+  UserCashWallet,
   UsersList,
   UserTypeFilter,
   UserDetails,

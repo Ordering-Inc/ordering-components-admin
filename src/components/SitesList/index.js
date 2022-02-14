@@ -102,7 +102,6 @@ export const SitesList = (props) => {
         })
       }
     } catch (err) {
-      console.log(err)
       setSitesListState({
         ...sitesListState,
         loading: false,
