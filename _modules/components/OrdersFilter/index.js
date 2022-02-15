@@ -371,22 +371,12 @@ var OrdersFilter = function OrdersFilter(props) {
       try {
         var _loop = function _loop() {
           var groupId = _step.value;
-          var selectedDriverGroup = driverGroupList.groups.filter(function (group) {
+          var selectedDriverGroup = driverGroupList.groups.find(function (group) {
             return group.id === groupId;
           });
 
-          var _iterator2 = _createForOfIteratorHelper(selectedDriverGroup[0].drivers),
-              _step2;
-
-          try {
-            for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
-              var driver = _step2.value;
-              groupDriverIds.push(driver.id);
-            }
-          } catch (err) {
-            _iterator2.e(err);
-          } finally {
-            _iterator2.f();
+          if (selectedDriverGroup) {
+            groupDriverIds = [].concat(_toConsumableArray(groupDriverIds), _toConsumableArray(selectedDriverGroup === null || selectedDriverGroup === void 0 ? void 0 : selectedDriverGroup.drivers));
           }
         };
 
