@@ -101,6 +101,7 @@ export const BusinessMenuOptions = (props) => {
           }
           return true
         })
+
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('MENU_SAVED', 'Products catalog saved'))
       }
@@ -240,6 +241,16 @@ export const BusinessMenuOptions = (props) => {
     })
   }
 
+  const handleChangeMenuSite = (site, isRemove) => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        sites: isRemove ? formState.changes?.sites?.filter(s => s !== site) || [] : [...formState?.changes?.sites || [], site]
+      }
+    })
+  }
+
   useEffect(() => {
     setFormState({
       ...formState,
@@ -331,7 +342,6 @@ export const BusinessMenuOptions = (props) => {
             formState={formState}
             selectedProductsIds={selectedProductsIds}
             setSelectedProductsIds={setSelectedProductsIds}
-
             selectedProducts={selectedProducts}
             setSelectedProducts={setSelectedProducts}
             handleChangeInput={handleChangeInput}
@@ -340,7 +350,7 @@ export const BusinessMenuOptions = (props) => {
             handleAddBusinessMenuOption={handleAddBusinessMenuOption}
             handleChangeScheduleState={handleChangeScheduleState}
             handleDeleteMenu={handleDeleteMenu}
-
+            handleChangeMenuSite={handleChangeMenuSite}
             subCategoriesList={subCategoriesList}
           />
         )
