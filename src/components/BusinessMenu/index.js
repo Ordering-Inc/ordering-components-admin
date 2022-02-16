@@ -20,6 +20,9 @@ export const BusinessMenu = (props) => {
   const [isSelectedSharedMenus, setIsSelectedSharedMenus] = useState(false)
   const [sitesState, setSitesState] = useState({ sites: [], loading: true, error: null })
 
+  /**
+  * Method to get the business menus from API
+  */
   const getBusinessMenus = async () => {
     try {
       setBusinessMenusState({ ...businessMenusState, loading: true })
@@ -30,7 +33,7 @@ export const BusinessMenu = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/menus`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setBusinessMenusState({
@@ -188,10 +191,6 @@ export const BusinessMenu = (props) => {
     }
   }
 
-  const handleChangeBusinessMenus = (menus) => {
-    setBusinessMenusState({ ...businessMenusState, menus })
-  }
-
   /**
    * Method to get the business menus channels from API
    */
@@ -282,7 +281,6 @@ export const BusinessMenu = (props) => {
             handleChangeBusinessMenuActiveState={handleChangeBusinessMenuActiveState}
             handleDeleteBusinessMenu={handleDeleteBusinessMenu}
             setIsSelectedSharedMenus={setIsSelectedSharedMenus}
-            handleChangeBusinessMenus={handleChangeBusinessMenus}
           />
         )
       }
