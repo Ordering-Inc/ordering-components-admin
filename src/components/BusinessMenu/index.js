@@ -18,10 +18,11 @@ export const BusinessMenu = (props) => {
 
   const [businessMenusState, setBusinessMenusState] = useState({ menus: [], menusShared: [], loading: false, error: null })
   const [isSelectedSharedMenus, setIsSelectedSharedMenus] = useState(false)
+  const [sitesState, setSitesState] = useState({ sites: [], loading: true, error: null })
 
   /**
-   * Method to get the business menus from API
-   */
+  * Method to get the business menus from API
+  */
   const getBusinessMenus = async () => {
     try {
       setBusinessMenusState({ ...businessMenusState, loading: true })
@@ -190,6 +191,68 @@ export const BusinessMenu = (props) => {
     }
   }
 
+  /**
+   * Method to get the business menus channels from API
+   */
+  const getBusinessMenuChannels = async () => {
+    try {
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites`, requestOptions)
+      const { result, error } = await response.json()
+      if (!error) {
+        let sites = {}
+        result.forEach(menu => {
+          sites = {
+            ...sites,
+            [menu.id]: {
+              id: menu.id,
+              sites: menu.sites
+            }
+          }
+        })
+
+        try {
+          const response2 = await fetch(`${ordering.root}/sites`,
+            {
+              method: 'GET',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+                'x-app-x': ordering?.appId
+              }
+            }
+          )
+          const { result: sitesResult } = await response2.json()
+          setSitesState({ ...sitesState, loading: false, sites: sitesResult })
+        } catch (err) {
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            error: [err.message]
+          })
+        }
+      } else {
+        setBusinessMenusState({
+          ...businessMenusState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setBusinessMenusState({
+        ...businessMenusState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
   useEffect(() => {
     if (business?.menus) {
       setBusinessMenusState({
@@ -201,6 +264,11 @@ export const BusinessMenu = (props) => {
       getBusinessMenus()
     }
   }, [business])
+
+  useEffect(() => {
+    getBusinessMenuChannels()
+  }, [])
+
   return (
     <>
       {
@@ -208,9 +276,10 @@ export const BusinessMenu = (props) => {
           <UIComponent
             {...props}
             businessMenusState={businessMenusState}
+            isSelectedSharedMenus={isSelectedSharedMenus}
+            sitesState={sitesState}
             handleChangeBusinessMenuActiveState={handleChangeBusinessMenuActiveState}
             handleDeleteBusinessMenu={handleDeleteBusinessMenu}
-            isSelectedSharedMenus={isSelectedSharedMenus}
             setIsSelectedSharedMenus={setIsSelectedSharedMenus}
           />
         )
