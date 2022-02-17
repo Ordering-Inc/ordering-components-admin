@@ -86,9 +86,18 @@ var BusinessMenu = function BusinessMenu(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       isSelectedSharedMenus = _useState4[0],
       setIsSelectedSharedMenus = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    sites: [],
+    loading: true,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      sitesState = _useState6[0],
+      setSitesState = _useState6[1];
   /**
-   * Method to get the business menus from API
-   */
+  * Method to get the business menus from API
+  */
 
 
   var getBusinessMenus = /*#__PURE__*/function () {
@@ -365,6 +374,120 @@ var BusinessMenu = function BusinessMenu(props) {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to get the business menus channels from API
+   */
+
+
+  var getBusinessMenuChannels = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
+      var requestOptions, response, _yield$response$json, result, error, sites, response2, _yield$response2$json, sitesResult;
+
+      return _regenerator.default.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context4.next = 4;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus?params=sites"), requestOptions);
+
+            case 4:
+              response = _context4.sent;
+              _context4.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json = _context4.sent;
+              result = _yield$response$json.result;
+              error = _yield$response$json.error;
+
+              if (error) {
+                _context4.next = 29;
+                break;
+              }
+
+              sites = {};
+              result.forEach(function (menu) {
+                sites = _objectSpread(_objectSpread({}, sites), {}, _defineProperty({}, menu.id, {
+                  id: menu.id,
+                  sites: menu.sites
+                }));
+              });
+              _context4.prev = 13;
+              _context4.next = 16;
+              return fetch("".concat(ordering.root, "/sites"), {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token),
+                  'x-app-x': ordering === null || ordering === void 0 ? void 0 : ordering.appId
+                }
+              });
+
+            case 16:
+              response2 = _context4.sent;
+              _context4.next = 19;
+              return response2.json();
+
+            case 19:
+              _yield$response2$json = _context4.sent;
+              sitesResult = _yield$response2$json.result;
+              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                loading: false,
+                sites: sitesResult
+              }));
+              _context4.next = 27;
+              break;
+
+            case 24:
+              _context4.prev = 24;
+              _context4.t0 = _context4["catch"](13);
+              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                loading: false,
+                error: [_context4.t0.message]
+              }));
+
+            case 27:
+              _context4.next = 30;
+              break;
+
+            case 29:
+              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                loading: false,
+                error: result
+              }));
+
+            case 30:
+              _context4.next = 35;
+              break;
+
+            case 32:
+              _context4.prev = 32;
+              _context4.t1 = _context4["catch"](0);
+              setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
+                loading: false,
+                error: [_context4.t1.message]
+              }));
+
+            case 35:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 32], [13, 24]]);
+    }));
+
+    return function getBusinessMenuChannels() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (business !== null && business !== void 0 && business.menus) {
@@ -376,11 +499,15 @@ var BusinessMenu = function BusinessMenu(props) {
       getBusinessMenus();
     }
   }, [business]);
+  (0, _react.useEffect)(function () {
+    getBusinessMenuChannels();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessMenusState: businessMenusState,
+    isSelectedSharedMenus: isSelectedSharedMenus,
+    sitesState: sitesState,
     handleChangeBusinessMenuActiveState: handleChangeBusinessMenuActiveState,
     handleDeleteBusinessMenu: handleDeleteBusinessMenu,
-    isSelectedSharedMenus: isSelectedSharedMenus,
     setIsSelectedSharedMenus: setIsSelectedSharedMenus
   })));
 };

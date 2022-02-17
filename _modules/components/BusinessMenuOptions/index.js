@@ -469,6 +469,18 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     }));
   };
 
+  var handleChangeMenuSite = function handleChangeMenuSite(site, isRemove) {
+    var _formState$changes, _formState$changes$si, _formState$changes2;
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        sites: isRemove ? ((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : (_formState$changes$si = _formState$changes.sites) === null || _formState$changes$si === void 0 ? void 0 : _formState$changes$si.filter(function (s) {
+          return s !== site;
+        })) || [] : [].concat(_toConsumableArray((formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.sites) || []), [site])
+      })
+    }));
+  };
+
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
@@ -577,6 +589,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     handleAddBusinessMenuOption: handleAddBusinessMenuOption,
     handleChangeScheduleState: handleChangeScheduleState,
     handleDeleteMenu: handleDeleteMenu,
+    handleChangeMenuSite: handleChangeMenuSite,
     subCategoriesList: subCategoriesList
   })));
 };
