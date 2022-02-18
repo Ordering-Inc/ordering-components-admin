@@ -253,7 +253,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
   var handleAddBusinessMenuOption = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var changes, schedule, i, requestOptions, response, content, _business, _menu, products;
+      var changes, schedule, i, requestOptions, response, content, _business, _menu, allProducts, products;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -325,16 +325,25 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
               }));
 
               if (!content.error) {
-                props.onClose() && props.onClose();
                 _business = _objectSpread({}, business);
                 _menu = _objectSpread(_objectSpread({}, content.result), {}, {
                   enabled: true
                 });
-                products = business.categories.reduce(function (products, category) {
-                  return [].concat(_toConsumableArray(products), _toConsumableArray(category.products));
-                }, []).filter(function (product) {
-                  return _menu.products.includes(product.id);
+                allProducts = [];
+                business.categories.forEach(function iterate(category) {
+                  allProducts = [].concat(_toConsumableArray(allProducts), _toConsumableArray(category.products));
+                  Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                 });
+                products = [];
+
+                if (changes !== null && changes !== void 0 && changes.all_products) {
+                  products = _toConsumableArray(allProducts);
+                } else {
+                  products = allProducts.filter(function (product) {
+                    return _menu.products.includes(product.id);
+                  });
+                }
+
                 _menu = _objectSpread(_objectSpread({}, _menu), {}, {
                   products: products
                 });
@@ -343,6 +352,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
                 handleUpdateBusinessState && handleUpdateBusinessState(_business);
                 showToast(_ToastContext.ToastType.Success, t('MENU_ADDED', 'Products catalog added'));
+                props.onClose() && props.onClose();
               }
 
               _context2.next = 20;
@@ -469,6 +479,18 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     }));
   };
 
+  var handleChangeMenuSite = function handleChangeMenuSite(site, isRemove) {
+    var _formState$changes, _formState$changes$si, _formState$changes2;
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        sites: isRemove ? ((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : (_formState$changes$si = _formState$changes.sites) === null || _formState$changes$si === void 0 ? void 0 : _formState$changes$si.filter(function (s) {
+          return s !== site;
+        })) || [] : [].concat(_toConsumableArray((formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.sites) || []), [site])
+      })
+    }));
+  };
+
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
@@ -577,6 +599,7 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     handleAddBusinessMenuOption: handleAddBusinessMenuOption,
     handleChangeScheduleState: handleChangeScheduleState,
     handleDeleteMenu: handleDeleteMenu,
+    handleChangeMenuSite: handleChangeMenuSite,
     subCategoriesList: subCategoriesList
   })));
 };
