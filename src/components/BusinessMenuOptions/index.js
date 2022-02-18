@@ -168,14 +168,26 @@ export const BusinessMenuOptions = (props) => {
       })
 
       if (!content.error) {
-        props.onClose() && props.onClose()
         const _business = { ...business }
         let _menu = { ...content.result, enabled: true }
-        const products = business.categories.reduce((products, category) => [...products, ...category.products], []).filter(product => _menu.products.includes(product.id))
+
+        let allProducts = []
+        business.categories.forEach(function iterate (category) {
+          allProducts = [...allProducts, ...category.products]
+          Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+        })
+
+        let products = []
+        if (changes?.all_products) {
+          products = [...allProducts]
+        } else {
+          products = allProducts.filter(product => _menu.products.includes(product.id))
+        }
         _menu = { ..._menu, products: products }
         _business.menus.push(_menu)
         handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('MENU_ADDED', 'Products catalog added'))
+        props.onClose() && props.onClose()
       }
     } catch (err) {
       setFormState({ ...formState, loading: false, result: { error: true, result: err.message } })
