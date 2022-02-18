@@ -226,7 +226,7 @@ export const UserCashWallet = (props) => {
       })
     } else {
       setReduceWalletState({
-        ...addWalletState,
+        ...reduceWalletState,
         [e.target.name]: e.target.value
       })
     }
