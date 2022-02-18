@@ -490,7 +490,7 @@ var UserCashWallet = function UserCashWallet(props) {
     if (isAddMoney) {
       setAddWalletState(_objectSpread(_objectSpread({}, addWalletState), {}, _defineProperty({}, e.target.name, e.target.value)));
     } else {
-      setReduceWalletState(_objectSpread(_objectSpread({}, addWalletState), {}, _defineProperty({}, e.target.name, e.target.value)));
+      setReduceWalletState(_objectSpread(_objectSpread({}, reduceWalletState), {}, _defineProperty({}, e.target.name, e.target.value)));
     }
   };
   /**
