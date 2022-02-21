@@ -59,6 +59,39 @@ export const ProductExtraOptionDetails = (props) => {
   }
 
   /**
+   * Method change default suboption
+   * @param {Number} id
+   */
+  const handleChangeDefaultSuboption = (id) => {
+    if (id === null) setIsAddMode(true)
+    else setIsAddMode(false)
+    const suboptionPreselected = optionState?.option?.suboptions?.find(suboption => suboption.id === id)?.preselected
+    setEditSubOptionId(id)
+    setChangesState({
+      result: {},
+      changes: {
+        preselected: !suboptionPreselected
+      }
+    })
+  }
+
+  /**
+   * Method to select or deselect default suboption
+   * @param {Number} id
+   */
+  const handledisableDefaultSuboption = async (id) => {
+    const suboptionPreselected = optionState?.option?.suboptions?.find(suboption => suboption.preselected)
+    if (suboptionPreselected?.id === id || !suboptionPreselected) {
+      handleChangeDefaultSuboption(id)
+    } else {
+      const result = await handleUpdateSubOption({ id: suboptionPreselected?.id, preselected: false })
+      if (result) {
+        handleChangeDefaultSuboption(id)
+      }
+    }
+  }
+
+  /**
    * Method to change the option enabled state
    * @param {Boolean} enabled
    * @param {Number} id sub option id
@@ -183,9 +216,9 @@ export const ProductExtraOptionDetails = (props) => {
   /**
    * Method to save the new ingredient from API
    */
-  const handleUpdateSubOption = async () => {
+  const handleUpdateSubOption = async (changesParam) => {
     try {
-      const _changes = { ...changesState.changes }
+      const _changes = changesParam || { ...changesState.changes }
       let changes = {}
       for (const key in _changes) {
         if (_changes[key] !== '') {
@@ -203,7 +236,7 @@ export const ProductExtraOptionDetails = (props) => {
         },
         body: JSON.stringify(changes)
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}/suboptions/${editSubOptionId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}/suboptions/${changesParam?.id || editSubOptionId}`, requestOptions)
       const content = await response.json()
       setChangesState({
         changes: content.error ? changesState : {},
@@ -228,6 +261,7 @@ export const ProductExtraOptionDetails = (props) => {
         setExtraState(updatedExtra)
         handleSuccessUpdateBusiness(updatedExtra)
         showToast(ToastType.Success, t('CHOICE_SAVED', 'Choice saved'))
+        return true
       }
     } catch (err) {
       setOptionState({ ...optionState, loading: false, error: err.message })
@@ -273,7 +307,10 @@ export const ProductExtraOptionDetails = (props) => {
       })
       if (!content.error) {
         const subOptions = [...optionState.option.suboptions]
-        subOptions.push(content.result)
+        subOptions.push({
+          ...content.result,
+          preselected: false
+        })
         const updatedOption = { ...optionState.option, suboptions: subOptions }
         setOptionState({ ...optionState, option: updatedOption, loading: false })
         const options = extra.options.filter(option => {
@@ -478,6 +515,7 @@ export const ProductExtraOptionDetails = (props) => {
           handleChangeConditionalSubOption={handleChangeConditionalSubOption}
           handleAddOption={handleAddOption}
           handleDeteteOption={handleDeteteOption}
+          handledisableDefaultSuboption={handledisableDefaultSuboption}
         />
       )}
     </>
