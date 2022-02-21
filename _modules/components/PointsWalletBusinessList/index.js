@@ -5,17 +5,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Settings = void 0;
+exports.PointsWalletBusinessList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireDefault(require("prop-types"));
+var _propTypes = _interopRequireWildcard(require("prop-types"));
+
+var _ApiContext = require("../../contexts/ApiContext");
 
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _ApiContext = require("../../contexts/ApiContext");
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -24,14 +28,6 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
@@ -55,292 +51,293 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var categoryHideList = ['cloudinary', 'tookan', 'apple_login', 'order_messages', 'others', 'location'];
-var configHideList = ['search_by_address', 'distance_unit_km', 'google_login_client_id', 'pickup', 'orders_metafields_strategy', 'order_validate', 'time_format', 'driver_close_distance', 'lazy_load_products_when_necessary'];
-/**
- * Component to manage Settings page behavior without UI component
- */
-
-var Settings = function Settings(props) {
+var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
   var UIComponent = props.UIComponent,
-      settingsType = props.settingsType;
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      pointWallet = props.pointWallet,
+      propsToFetch = props.propsToFetch,
+      handleUpdateWalletBusiness = props.handleUpdateWalletBusiness;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
-    categories: [],
+    loading: true,
+    error: null,
+    businesses: [],
+    pagination: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      businessList = _useState2[0],
+      setBusinessList = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
     loading: false,
     error: null
   }),
-      _useState2 = _slicedToArray(_useState, 2),
-      categoryList = _useState2[0],
-      setCategoryList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(false),
       _useState4 = _slicedToArray(_useState3, 2),
-      isUpdateConfig = _useState4[0],
-      setIsUpdateConfig = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      parentId = _useState6[0],
-      setParentId = _useState6[1];
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to update the category
+   * Update business data
+   * @param {Number} businessId id of business
+   * @param {String} name name of business
+   * @param {Boolean} name status of checkbox
    */
 
 
-  var handleUpdateCategoryList = function handleUpdateCategoryList(categories) {
-    setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-      categories: categories
-    }));
-    setIsUpdateConfig(true);
+  var handleCheckBox = function handleCheckBox(businessId, name, checked) {
+    var changes = _defineProperty({}, name, checked);
+
+    updateLoayalty(businessId, changes);
   };
   /**
-   * Method to get parent categoryid
+   * Method to update the business list
    */
 
 
-  var getParentCategory = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json, error, result;
+  var handleUpdateBusinessList = function handleUpdateBusinessList(result) {
+    var businesses = businessList.businesses.map(function (business) {
+      if (business.id === result.id) {
+        return _objectSpread(_objectSpread({}, business), result);
+      }
+
+      return business;
+    });
+    setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+      businesses: businesses
+    }));
+  };
+  /**
+   * Method to update the loyalty data
+   */
+
+
+  var updateLoayalty = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(businessId, changes) {
+      var requestOptions, response, _yield$response$json, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
-              _context.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              _context.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(changes)
               };
-              filterConditons = [];
-              filterConditons.push({
-                attribute: 'key',
-                value: settingsType
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?where=").concat(JSON.stringify(filterConditons));
-              _context.next = 10;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 6;
+              return fetch("".concat(ordering.root, "/loyalty_plans/").concat(pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id, "/businesses/").concat(businessId), requestOptions);
 
-            case 10:
+            case 6:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 9;
               return response.json();
 
-            case 13:
+            case 9:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
-              if (!error && result.length > 0) {
-                setParentId(result[0].id);
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('POINTS_WALLET_UPDATED', 'Points wallet updated'));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                handleUpdateWalletBusiness && handleUpdateWalletBusiness(result);
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                setActionState({
                   loading: false,
                   error: result
-                }));
+                });
               }
 
-              _context.next = 22;
+              _context.next = 18;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+            case 15:
+              _context.prev = 15;
+              _context.t0 = _context["catch"](0);
+              setActionState({
                 loading: false,
-                error: _context.t0
-              }));
+                error: _context.t0.message
+              });
 
-            case 22:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 19]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
-    return function getParentCategory() {
+    return function updateLoayalty(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to get Configration List
+   * Method to get business types from API
    */
 
 
-  var getCagegories = /*#__PURE__*/function () {
+  var getBusinessTypes = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, filterConditons, functionFetch, response, _yield$response$json2, error, result, _result;
+      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _pointWallet$business, _businessList;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if (!loading) {
-                _context2.next = 2;
-                break;
-              }
-
-              return _context2.abrupt("return");
-
-            case 2:
-              _context2.prev = 2;
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+              _context2.prev = 0;
+              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: true
               }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              filterConditons = [];
-              filterConditons.push({
-                attribute: 'parent_category_id',
-                value: parseInt(parentId)
-              });
-              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=id&where=").concat(JSON.stringify(filterConditons));
-              _context2.next = 10;
-              return fetch(functionFetch, requestOptions);
+              fetchEndpoint = ordering.businesses().asDashboard().select(propsToFetch);
+              _context2.next = 5;
+              return fetchEndpoint.get();
 
-            case 10:
-              response = _context2.sent;
-              _context2.next = 13;
-              return response.json();
-
-            case 13:
-              _yield$response$json2 = _context2.sent;
-              error = _yield$response$json2.error;
-              result = _yield$response$json2.result;
+            case 5:
+              _yield$fetchEndpoint$ = _context2.sent;
+              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
+              error = _yield$fetchEndpoint$2.error;
+              result = _yield$fetchEndpoint$2.result;
+              pagination = _yield$fetchEndpoint$2.pagination;
 
               if (!error) {
-                _result = result.filter(function (setting) {
-                  return !categoryHideList.includes(setting.key);
-                }).map(function (setting) {
-                  var _setting$configs;
+                _businessList = [];
 
-                  var configs = (_setting$configs = setting.configs) === null || _setting$configs === void 0 ? void 0 : _setting$configs.filter(function (config) {
-                    return !configHideList.includes(config.key);
-                  }).sort(function (a, b) {
-                    return a.rank * 1 > b.rank * 1 ? 1 : -1;
+                if ((pointWallet === null || pointWallet === void 0 ? void 0 : (_pointWallet$business = pointWallet.businesses) === null || _pointWallet$business === void 0 ? void 0 : _pointWallet$business.length) > 0) {
+                  _businessList = pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses.map(function (wallet) {
+                    var searchBusiness = result.find(function (business) {
+                      return business.id === wallet.business_id;
+                    });
+
+                    if (searchBusiness) {
+                      return _objectSpread(_objectSpread({}, wallet), {}, {
+                        business_logo: searchBusiness === null || searchBusiness === void 0 ? void 0 : searchBusiness.logo,
+                        business_name: searchBusiness === null || searchBusiness === void 0 ? void 0 : searchBusiness.name
+                      });
+                    }
+
+                    return wallet;
                   });
-                  return _objectSpread(_objectSpread({}, setting), {}, {
-                    configs: _toConsumableArray(configs)
-                  });
-                });
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+                }
+
+                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                   loading: false,
-                  categories: _result
+                  businesses: _businessList,
+                  pagination: pagination
                 }));
               } else {
-                setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
-                  loading: true,
+                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                  loading: false,
                   error: result
                 }));
               }
 
-              _context2.next = 22;
+              _context2.next = 16;
               break;
 
-            case 19:
-              _context2.prev = 19;
-              _context2.t0 = _context2["catch"](2);
-              setCategoryList(_objectSpread(_objectSpread({}, categoryList), {}, {
+            case 13:
+              _context2.prev = 13;
+              _context2.t0 = _context2["catch"](0);
+              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
-                error: _context2.t0
+                error: [_context2.t0 || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.toString()) || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.message)]
               }));
 
-            case 22:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 19]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
-    return function getCagegories() {
+    return function getBusinessTypes() {
       return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getParentCategory();
+    var controller = new AbortController();
+    getBusinessTypes();
+    return controller.abort();
   }, []);
-  (0, _react.useEffect)(function () {
-    if (parentId) getCagegories(parentId);
-  }, [parentId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    isUpdateConfig: isUpdateConfig,
-    handChangeConfig: setIsUpdateConfig,
-    categoryList: categoryList,
-    handleUpdateCategoryList: handleUpdateCategoryList
+    businessList: businessList,
+    handleCheckBox: handleCheckBox,
+    updateLoayalty: updateLoayalty,
+    handleUpdateBusinessList: handleUpdateBusinessList
   })));
 };
 
-exports.Settings = Settings;
-Settings.propTypes = {
+exports.PointsWalletBusinessList = PointsWalletBusinessList;
+PointsWalletBusinessList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Number to idenity setting group
+   * pointWallet, this must be contains an object
    */
-  settingsType: _propTypes.default.string,
+  pointWallet: _propTypes.default.object,
 
   /**
-   * Components types before Checkout
+   * Array of business props to fetch
+   */
+  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
+
+  /**
+   * Components types before business type filter
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after business type filter
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before business type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after business type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-Settings.defaultProps = {
+PointsWalletBusinessList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
 };

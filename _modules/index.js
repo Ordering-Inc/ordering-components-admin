@@ -417,6 +417,12 @@ Object.defineProperty(exports, "CustomerContext", {
     return _CustomerContext.CustomerContext;
   }
 });
+Object.defineProperty(exports, "CustomerPointsWallet", {
+  enumerable: true,
+  get: function get() {
+    return _CustomerPointsWallet.CustomerPointsWallet;
+  }
+});
 Object.defineProperty(exports, "CustomerProvider", {
   enumerable: true,
   get: function get() {
@@ -879,6 +885,24 @@ Object.defineProperty(exports, "PluginList", {
     return _PluginList.PluginList;
   }
 });
+Object.defineProperty(exports, "PointsWalletBusinessDetail", {
+  enumerable: true,
+  get: function get() {
+    return _PointsWalletBusinessDetail.PointsWalletBusinessDetail;
+  }
+});
+Object.defineProperty(exports, "PointsWalletBusinessList", {
+  enumerable: true,
+  get: function get() {
+    return _PointsWalletBusinessList.PointsWalletBusinessList;
+  }
+});
+Object.defineProperty(exports, "PointsWalletLevels", {
+  enumerable: true,
+  get: function get() {
+    return _PointsWalletLevels.PointsWalletLevels;
+  }
+});
 Object.defineProperty(exports, "Popup", {
   enumerable: true,
   get: function get() {
@@ -1039,6 +1063,12 @@ Object.defineProperty(exports, "ReviewCustomer", {
   enumerable: true,
   get: function get() {
     return _ReviewCustomer.ReviewCustomer;
+  }
+});
+Object.defineProperty(exports, "RewardsPrograms", {
+  enumerable: true,
+  get: function get() {
+    return _RewardsPrograms.RewardsPrograms;
   }
 });
 Object.defineProperty(exports, "Schedule", {
@@ -1448,6 +1478,8 @@ var _CityList = require("./components/CityList");
 
 var _CouponControl = require("./components/CouponControl");
 
+var _CustomerPointsWallet = require("./components/CustomerPointsWallet");
+
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
 var _DashboardOrdersList = require("./components/DashboardOrdersList");
@@ -1528,6 +1560,10 @@ var _Logistics = require("./components/Logistics");
 
 var _LogoutAction = require("./components/LogoutAction");
 
+var _PointsWalletBusinessDetail = require("./components/PointsWalletBusinessDetail");
+
+var _PointsWalletBusinessList = require("./components/PointsWalletBusinessList");
+
 var _MainSearch = require("./components/MainSearch");
 
 var _MenuControl = require("./components/MenuControl");
@@ -1565,6 +1601,8 @@ var _PlaceList = require("./components/PlaceList");
 var _PluginList = require("./components/PluginList");
 
 var _Popup = require("./components/Popup");
+
+var _PointsWalletLevels = require("./components/PointsWalletLevels");
 
 var _ProductComponent = require("./components/ProductComponent");
 
@@ -1605,6 +1643,8 @@ var _ProductOptionSuboption = require("./components/ProductOptionSuboption");
 var _ProductsList = require("./components/ProductsList");
 
 var _ProductsListing = require("./components/ProductsListing");
+
+var _RewardsPrograms = require("./components/RewardsPrograms");
 
 var _SearchOptions = require("./components/SearchOptions");
 
