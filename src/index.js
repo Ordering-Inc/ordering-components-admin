@@ -57,6 +57,7 @@ import { CheckoutFieldsSetting } from './components/CheckoutFieldsSetting'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
+import { CustomerPointsWallet } from './components/CustomerPointsWallet'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -97,6 +98,8 @@ import { LoginForm } from './components/LoginForm'
 import { LogisticInformation } from './components/LogisticInformation'
 import { Logistics } from './components/Logistics'
 import { LogoutAction } from './components/LogoutAction'
+import { PointsWalletBusinessDetail } from './components/PointsWalletBusinessDetail'
+import { PointsWalletBusinessList } from './components/PointsWalletBusinessList'
 import { MainSearch } from './components/MainSearch'
 import { MenuControl } from './components/MenuControl'
 import { Messages } from './components/Messages'
@@ -116,6 +119,7 @@ import { PageForm } from './components/PageForm'
 import { PlaceList } from './components/PlaceList'
 import { PluginList } from './components/PluginList'
 import { Popup } from './components/Popup'
+import { PointsWalletLevels } from './components/PointsWalletLevels'
 import { ProductComponent } from './components/ProductComponent'
 import { ProductDetatils } from './components/ProductDetatils'
 import { ProductExtraMetaFields } from './components/ProductExtraMetaFields'
@@ -136,6 +140,7 @@ import { ProductOption } from './components/ProductOption'
 import { ProductOptionSuboption } from './components/ProductOptionSuboption'
 import { ProductsList } from './components/ProductsList'
 import { ProductsListing } from './components/ProductsListing'
+import { RewardsPrograms } from './components/RewardsPrograms'
 import { SearchOptions } from './components/SearchOptions'
 import { Schedule } from './components/Schedule'
 import { SignupForm } from './components/SignupForm'
@@ -252,6 +257,7 @@ export {
   CheckPassword,
   CityList,
   CouponControl,
+  CustomerPointsWallet,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
@@ -294,6 +300,7 @@ export {
   LogisticInformation,
   Logistics,
   LogoutAction,
+  PointsWalletBusinessDetail,
   MainSearch,
   MenuControl,
   MetaFields,
@@ -313,6 +320,8 @@ export {
   PlaceList,
   PluginList,
   Popup,
+  PointsWalletLevels,
+  PointsWalletBusinessList,
   ProductComponent,
   ProductDetatils,
   ProductDetailsAdvanced,
@@ -334,6 +343,7 @@ export {
   ProductsList,
   ProductsListing,
   ReportsDriverFilter,
+  RewardsPrograms,
   SearchOptions,
   Schedule,
   SignupForm,
