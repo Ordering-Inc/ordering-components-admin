@@ -37,11 +37,11 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -173,6 +173,81 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       });
     }
   };
+  /**
+   * Method change default suboption
+   * @param {Number} id
+   */
+
+
+  var handleChangeDefaultSuboption = function handleChangeDefaultSuboption(id) {
+    var _optionState$option, _optionState$option$s, _optionState$option$s2;
+
+    if (id === null) setIsAddMode(true);else setIsAddMode(false);
+    var suboptionPreselected = optionState === null || optionState === void 0 ? void 0 : (_optionState$option = optionState.option) === null || _optionState$option === void 0 ? void 0 : (_optionState$option$s = _optionState$option.suboptions) === null || _optionState$option$s === void 0 ? void 0 : (_optionState$option$s2 = _optionState$option$s.find(function (suboption) {
+      return suboption.id === id;
+    })) === null || _optionState$option$s2 === void 0 ? void 0 : _optionState$option$s2.preselected;
+    setEditSubOptionId(id);
+    setChangesState({
+      result: {},
+      changes: {
+        preselected: !suboptionPreselected
+      }
+    });
+  };
+  /**
+   * Method to select or deselect default suboption
+   * @param {Number} id
+   */
+
+
+  var handledisableDefaultSuboption = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(id) {
+      var _optionState$option2, _optionState$option2$;
+
+      var suboptionPreselected, result;
+      return _regenerator.default.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              suboptionPreselected = optionState === null || optionState === void 0 ? void 0 : (_optionState$option2 = optionState.option) === null || _optionState$option2 === void 0 ? void 0 : (_optionState$option2$ = _optionState$option2.suboptions) === null || _optionState$option2$ === void 0 ? void 0 : _optionState$option2$.find(function (suboption) {
+                return suboption.preselected;
+              });
+
+              if (!((suboptionPreselected === null || suboptionPreselected === void 0 ? void 0 : suboptionPreselected.id) === id || !suboptionPreselected)) {
+                _context.next = 5;
+                break;
+              }
+
+              handleChangeDefaultSuboption(id);
+              _context.next = 9;
+              break;
+
+            case 5:
+              _context.next = 7;
+              return handleUpdateSubOption({
+                id: suboptionPreselected === null || suboptionPreselected === void 0 ? void 0 : suboptionPreselected.id,
+                preselected: false
+              });
+
+            case 7:
+              result = _context.sent;
+
+              if (result) {
+                handleChangeDefaultSuboption(id);
+              }
+
+            case 9:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function handledisableDefaultSuboption(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
   /**
    * Method to change the option enabled state
    * @param {Boolean} enabled
@@ -381,15 +456,15 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleUpdateSubOption = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(changesParam) {
       var _changes, changes, key, requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
 
-      return _regenerator.default.wrap(function _callee$(_context) {
+      return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
-          switch (_context.prev = _context.next) {
+          switch (_context2.prev = _context2.next) {
             case 0:
-              _context.prev = 0;
-              _changes = _objectSpread({}, changesState.changes);
+              _context2.prev = 0;
+              _changes = changesParam || _objectSpread({}, changesState.changes);
               changes = {};
 
               for (key in _changes) {
@@ -399,11 +474,11 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
               }
 
               if (!(Object.keys(changes).length === 0)) {
-                _context.next = 6;
+                _context2.next = 6;
                 break;
               }
 
-              return _context.abrupt("return");
+              return _context2.abrupt("return");
 
             case 6:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
@@ -418,72 +493,77 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context.next = 11;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions/").concat(editSubOptionId), requestOptions);
+              _context2.next = 11;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions/").concat((changesParam === null || changesParam === void 0 ? void 0 : changesParam.id) || editSubOptionId), requestOptions);
 
             case 11:
-              response = _context.sent;
-              _context.next = 14;
+              response = _context2.sent;
+              _context2.next = 14;
               return response.json();
 
             case 14:
-              content = _context.sent;
+              content = _context2.sent;
               setChangesState({
                 changes: content.error ? changesState : {},
                 result: content === null || content === void 0 ? void 0 : content.result
               });
 
-              if (!content.error) {
-                subOptions = optionState.option.suboptions.filter(function (subOption) {
-                  if (subOption.id === content.result.id) {
-                    Object.assign(subOption, content.result);
-                  }
-
-                  return true;
-                });
-                updatedOption = _objectSpread(_objectSpread({}, optionState.option), {}, {
-                  suboptions: subOptions
-                });
-                setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
-                  option: updatedOption,
-                  loading: false
-                }));
-                options = extra.options.filter(function (option) {
-                  if (option.id === updatedOption.id) {
-                    Object.assign(option, updatedOption);
-                  }
-
-                  return true;
-                });
-                updatedExtra = _objectSpread(_objectSpread({}, extra), {}, {
-                  options: options
-                });
-                setExtraState(updatedExtra);
-                handleSuccessUpdateBusiness(updatedExtra);
-                showToast(_ToastContext.ToastType.Success, t('CHOICE_SAVED', 'Choice saved'));
+              if (content.error) {
+                _context2.next = 26;
+                break;
               }
 
-              _context.next = 22;
+              subOptions = optionState.option.suboptions.filter(function (subOption) {
+                if (subOption.id === content.result.id) {
+                  Object.assign(subOption, content.result);
+                }
+
+                return true;
+              });
+              updatedOption = _objectSpread(_objectSpread({}, optionState.option), {}, {
+                suboptions: subOptions
+              });
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                option: updatedOption,
+                loading: false
+              }));
+              options = extra.options.filter(function (option) {
+                if (option.id === updatedOption.id) {
+                  Object.assign(option, updatedOption);
+                }
+
+                return true;
+              });
+              updatedExtra = _objectSpread(_objectSpread({}, extra), {}, {
+                options: options
+              });
+              setExtraState(updatedExtra);
+              handleSuccessUpdateBusiness(updatedExtra);
+              showToast(_ToastContext.ToastType.Success, t('CHOICE_SAVED', 'Choice saved'));
+              return _context2.abrupt("return", true);
+
+            case 26:
+              _context2.next = 31;
               break;
 
-            case 19:
-              _context.prev = 19;
-              _context.t0 = _context["catch"](0);
+            case 28:
+              _context2.prev = 28;
+              _context2.t0 = _context2["catch"](0);
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: false,
-                error: _context.t0.message
+                error: _context2.t0.message
               }));
 
-            case 22:
+            case 31:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, null, [[0, 19]]);
+      }, _callee2, null, [[0, 28]]);
     }));
 
-    return function handleUpdateSubOption() {
-      return _ref.apply(this, arguments);
+    return function handleUpdateSubOption(_x2) {
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -492,14 +572,14 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleAddOption = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
       var _changes3, _changes4, _changes, changes, key, _changes5, _changes6, requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
 
-      return _regenerator.default.wrap(function _callee2$(_context2) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               _changes = _objectSpread({}, changesState.changes);
               changes = {};
 
@@ -510,7 +590,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
               }
 
               if (!(!((_changes3 = changes) !== null && _changes3 !== void 0 && _changes3.name) || !((_changes4 = changes) !== null && _changes4 !== void 0 && _changes4.price))) {
-                _context2.next = 7;
+                _context3.next = 7;
                 break;
               }
 
@@ -518,15 +598,15 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 name: !((_changes5 = changes) !== null && _changes5 !== void 0 && _changes5.name),
                 price: !((_changes6 = changes) !== null && _changes6 !== void 0 && _changes6.price)
               });
-              return _context2.abrupt("return");
+              return _context3.abrupt("return");
 
             case 7:
               if (!(Object.keys(changes).length === 0)) {
-                _context2.next = 9;
+                _context3.next = 9;
                 break;
               }
 
-              return _context2.abrupt("return");
+              return _context3.abrupt("return");
 
             case 9:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
@@ -542,16 +622,16 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context2.next = 15;
+              _context3.next = 15;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions"), requestOptions);
 
             case 15:
-              response = _context2.sent;
-              _context2.next = 18;
+              response = _context3.sent;
+              _context3.next = 18;
               return response.json();
 
             case 18:
-              content = _context2.sent;
+              content = _context3.sent;
               setChangesState({
                 changes: content.error ? changesState : {},
                 result: content === null || content === void 0 ? void 0 : content.result
@@ -559,7 +639,9 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
               if (!content.error) {
                 subOptions = _toConsumableArray(optionState.option.suboptions);
-                subOptions.push(content.result);
+                subOptions.push(_objectSpread(_objectSpread({}, content.result), {}, {
+                  preselected: false
+                }));
                 updatedOption = _objectSpread(_objectSpread({}, optionState.option), {}, {
                   suboptions: subOptions
                 });
@@ -582,27 +664,27 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 showToast(_ToastContext.ToastType.Success, t('CHOICE_ADDED', 'Choice added'));
               }
 
-              _context2.next = 26;
+              _context3.next = 26;
               break;
 
             case 23:
-              _context2.prev = 23;
-              _context2.t0 = _context2["catch"](0);
+              _context3.prev = 23;
+              _context3.t0 = _context3["catch"](0);
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: false,
-                error: _context2.t0.message
+                error: _context3.t0.message
               }));
 
             case 26:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, null, [[0, 23]]);
+      }, _callee3, null, [[0, 23]]);
     }));
 
     return function handleAddOption() {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -612,13 +694,13 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleDeteteSubOption = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(subOptionId) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(subOptionId) {
       var requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
-      return _regenerator.default.wrap(function _callee3$(_context3) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.prev = 0;
+              _context4.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: true
@@ -630,16 +712,16 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context3.next = 6;
+              _context4.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions/").concat(subOptionId), requestOptions);
 
             case 6:
-              response = _context3.sent;
-              _context3.next = 9;
+              response = _context4.sent;
+              _context4.next = 9;
               return response.json();
 
             case 9:
-              content = _context3.sent;
+              content = _context4.sent;
 
               if (!content.error) {
                 subOptions = optionState.option.suboptions.filter(function (subOption) {
@@ -667,27 +749,27 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 showToast(_ToastContext.ToastType.Success, t('CHOICE_DELETED', 'Choice deleted'));
               }
 
-              _context3.next = 16;
+              _context4.next = 16;
               break;
 
             case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: false,
-                error: _context3.t0.message
+                error: _context4.t0.message
               }));
 
             case 16:
             case "end":
-              return _context3.stop();
+              return _context4.stop();
           }
         }
-      }, _callee3, null, [[0, 13]]);
+      }, _callee4, null, [[0, 13]]);
     }));
 
-    return function handleDeteteSubOption(_x) {
-      return _ref3.apply(this, arguments);
+    return function handleDeteteSubOption(_x3) {
+      return _ref4.apply(this, arguments);
     };
   }();
   /**
@@ -698,11 +780,11 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleOptionSetting = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(name, checked) {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(name, checked) {
       var change;
-      return _regenerator.default.wrap(function _callee4$(_context4) {
+      return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
-          switch (_context4.prev = _context4.next) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               change = _defineProperty({}, name, checked);
               setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
@@ -712,14 +794,14 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
             case 3:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }));
 
-    return function handleOptionSetting(_x2, _x3) {
-      return _ref4.apply(this, arguments);
+    return function handleOptionSetting(_x4, _x5) {
+      return _ref5.apply(this, arguments);
     };
   }();
   /**
@@ -729,13 +811,13 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleUpdateOption = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(change) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6(change) {
       var requestOptions, response, content, options, updatedExtra;
-      return _regenerator.default.wrap(function _callee5$(_context5) {
+      return _regenerator.default.wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
+              _context6.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
                 loading: true
@@ -748,16 +830,16 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 },
                 body: JSON.stringify(change)
               };
-              _context5.next = 6;
+              _context6.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id), requestOptions);
 
             case 6:
-              response = _context5.sent;
-              _context5.next = 9;
+              response = _context6.sent;
+              _context6.next = 9;
               return response.json();
 
             case 9:
-              content = _context5.sent;
+              content = _context6.sent;
 
               if (!content.error) {
                 setSettingChangeState({
@@ -782,77 +864,13 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 showToast(_ToastContext.ToastType.Success, t('OPTION_SAVED', 'Option saved'));
               }
 
-              _context5.next = 16;
-              break;
-
-            case 13:
-              _context5.prev = 13;
-              _context5.t0 = _context5["catch"](0);
-              setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
-                loading: false,
-                error: _context5.t0.message
-              }));
-
-            case 16:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, null, [[0, 13]]);
-    }));
-
-    return function handleUpdateOption(_x4) {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to delete the extra
-   */
-
-
-  var handleDeteteOption = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
-      var requestOptions, response, content;
-      return _regenerator.default.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context6.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id), requestOptions);
-
-            case 6:
-              response = _context6.sent;
-              _context6.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context6.sent;
-
-              if (!content.error) {
-                handleSucccessDeleteOption && handleSucccessDeleteOption(option.id);
-                showToast(_ToastContext.ToastType.Success, t('OPTION_DELETED', 'Option deleted'));
-                props.onClose && props.onClose();
-              }
-
               _context6.next = 16;
               break;
 
             case 13:
               _context6.prev = 13;
               _context6.t0 = _context6["catch"](0);
-              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+              setSettingChangeState(_objectSpread(_objectSpread({}, settingChangeState), {}, {
                 loading: false,
                 error: _context6.t0.message
               }));
@@ -865,8 +883,72 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       }, _callee6, null, [[0, 13]]);
     }));
 
-    return function handleDeteteOption() {
+    return function handleUpdateOption(_x6) {
       return _ref6.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delete the extra
+   */
+
+
+  var handleDeteteOption = /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee7() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
+              _context7.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context7.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id), requestOptions);
+
+            case 6:
+              response = _context7.sent;
+              _context7.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context7.sent;
+
+              if (!content.error) {
+                handleSucccessDeleteOption && handleSucccessDeleteOption(option.id);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_DELETED', 'Option deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context7.next = 16;
+              break;
+
+            case 13:
+              _context7.prev = 13;
+              _context7.t0 = _context7["catch"](0);
+              setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
+                loading: false,
+                error: _context7.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context7.stop();
+          }
+        }
+      }, _callee7, null, [[0, 13]]);
+    }));
+
+    return function handleDeteteOption() {
+      return _ref7.apply(this, arguments);
     };
   }();
   /**
@@ -944,7 +1026,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     handleChangeConditionalOption: handleChangeConditionalOption,
     handleChangeConditionalSubOption: handleChangeConditionalSubOption,
     handleAddOption: handleAddOption,
-    handleDeteteOption: handleDeteteOption
+    handleDeteteOption: handleDeteteOption,
+    handledisableDefaultSuboption: handledisableDefaultSuboption
   })));
 };
 
