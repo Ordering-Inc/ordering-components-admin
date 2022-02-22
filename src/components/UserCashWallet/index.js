@@ -80,7 +80,7 @@ export const UserCashWallet = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/users/${userId}/wallets/${walletId}/events`, requestOptions)
+      const response = await fetch(`${ordering.root}/users/${userId}/wallets/${walletId}/events?orderBy=-id`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setCashEventsState({
