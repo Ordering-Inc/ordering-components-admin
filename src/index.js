@@ -131,6 +131,7 @@ import { ProductDetailsAdvanced } from './components/ProductDetailsAdvanced'
 import { ProductReviews } from './components/ProductReviews'
 import { ProductShare } from './components/ProductShare'
 import { ProductTagDetails } from './components/ProductTagDetails'
+import { ProductTagsList } from './components/ProductTagsList'
 import { ProductImages } from './components/ProductImages'
 import { ProductIngredient } from './components/ProductIngredient'
 import { ProductOption } from './components/ProductOption'
@@ -328,6 +329,7 @@ export {
   ProductMetaFields,
   ProductShare,
   ProductTagDetails,
+  ProductTagsList,
   ProductImages,
   ProductIngredient,
   ProductOption,
