@@ -1017,6 +1017,18 @@ Object.defineProperty(exports, "ProductShare", {
     return _ProductShare.ProductShare;
   }
 });
+Object.defineProperty(exports, "ProductTagDetails", {
+  enumerable: true,
+  get: function get() {
+    return _ProductTagDetails.ProductTagDetails;
+  }
+});
+Object.defineProperty(exports, "ProductTagsList", {
+  enumerable: true,
+  get: function get() {
+    return _ProductTagsList.ProductTagsList;
+  }
+});
 Object.defineProperty(exports, "ProductsList", {
   enumerable: true,
   get: function get() {
@@ -1631,6 +1643,10 @@ var _ProductDetailsAdvanced = require("./components/ProductDetailsAdvanced");
 var _ProductReviews = require("./components/ProductReviews");
 
 var _ProductShare = require("./components/ProductShare");
+
+var _ProductTagDetails = require("./components/ProductTagDetails");
+
+var _ProductTagsList = require("./components/ProductTagsList");
 
 var _ProductImages = require("./components/ProductImages");
 
