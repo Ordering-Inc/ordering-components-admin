@@ -11,7 +11,8 @@ export const BusinessMenuOptions = (props) => {
     menu,
     UIComponent,
     handleUpdateBusinessState,
-    isSelectedSharedMenus
+    isSelectedSharedMenus,
+    sitesState
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -253,12 +254,40 @@ export const BusinessMenuOptions = (props) => {
     })
   }
 
-  const handleChangeMenuSite = (site, isRemove) => {
+  const handleChangeMenuSite = (site) => {
+    const sites = [
+      ...menu?.sites?.map(s => s.id).filter(s => formState.changes.sites ? formState.changes.sites?.includes(s) : true),
+      ...formState.changes.sites || []
+    ]
+    const isRemove = sites.includes(site)
     setFormState({
       ...formState,
       changes: {
         ...formState.changes,
-        sites: isRemove ? formState.changes?.sites?.filter(s => s !== site) || [] : [...formState?.changes?.sites || [], site]
+        sites:
+          isRemove
+            ? sites.filter(s => s !== site)
+            : [...sites, site]
+      }
+    })
+  }
+
+  const handleSelectAllChannels = () => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        sites: sitesState?.sites.map(s => s.id)
+      }
+    })
+  }
+
+  const handleSelectNoneChannels = () => {
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        sites: []
       }
     })
   }
@@ -363,6 +392,8 @@ export const BusinessMenuOptions = (props) => {
             handleChangeScheduleState={handleChangeScheduleState}
             handleDeleteMenu={handleDeleteMenu}
             handleChangeMenuSite={handleChangeMenuSite}
+            handleSelectAllChannels={handleSelectAllChannels}
+            handleSelectNoneChannels={handleSelectNoneChannels}
             subCategoriesList={subCategoriesList}
           />
         )
