@@ -213,7 +213,7 @@ var UserCashWallet = function UserCashWallet(props) {
                 }
               };
               _context2.next = 5;
-              return fetch("".concat(ordering.root, "/users/").concat(userId, "/wallets/").concat(walletId, "/events"), requestOptions);
+              return fetch("".concat(ordering.root, "/users/").concat(userId, "/wallets/").concat(walletId, "/events?orderBy=-id"), requestOptions);
 
             case 5:
               response = _context2.sent;
