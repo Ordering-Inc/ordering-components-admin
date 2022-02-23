@@ -78,10 +78,10 @@ export const BusinessProductCreator = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       let categoryId
-      if (categorySelected.id === null && categorySelected.id === 'featured') {
+      if (categorySelected?.id === null && categorySelected?.id === 'featured') {
         categoryId = parseInt(business?.categories[0])
       } else {
-        categoryId = parseInt(categorySelected.id)
+        categoryId = parseInt(categorySelected?.id)
       }
       setFormState({
         ...formState,
@@ -101,7 +101,7 @@ export const BusinessProductCreator = (props) => {
         if (handleUpdateBusinessState) {
           const _categories = [...business?.categories]
           _categories.forEach(function iterate (category) {
-            if (category.id === categoryId) {
+            if (category?.id === categoryId) {
               category.products.push(content.result)
             }
             Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)

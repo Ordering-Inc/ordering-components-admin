@@ -50,7 +50,7 @@ export const BusinessDeliveryZone = (props) => {
         },
         body: JSON.stringify(currentChanges)
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/deliveryzones/${zoneId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zoneId}`, requestOptions)
       const content = await response.json()
       setFormState({
         ...formState,
@@ -60,7 +60,7 @@ export const BusinessDeliveryZone = (props) => {
       })
       if (!content.error) {
         const zones = businessDeliveryZonesState.zones.filter(zone => {
-          if (zone.id === zoneId) {
+          if (zone?.id === zoneId) {
             Object.assign(zone, content.result)
           }
           return true
@@ -123,7 +123,7 @@ export const BusinessDeliveryZone = (props) => {
         },
         body: JSON.stringify(currentChanges)
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/deliveryzones`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones`, requestOptions)
       const content = await response.json()
       setFormState({
         ...formState,
@@ -181,10 +181,10 @@ export const BusinessDeliveryZone = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/deliveryzones/${zoneId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zoneId}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const zones = businessDeliveryZonesState.zones.filter(zone => zone.id !== zoneId)
+        const zones = businessDeliveryZonesState.zones.filter(zone => zone?.id !== zoneId)
         setBusinessDeliveryZonesState({
           ...businessDeliveryZonesState,
           loading: false,
@@ -215,7 +215,7 @@ export const BusinessDeliveryZone = (props) => {
    */
   const handleChangeActiveState = (zoneId) => {
     setZoneId(zoneId)
-    const businessZone = businessDeliveryZonesState.zones.find(zone => zone.id === zoneId)
+    const businessZone = businessDeliveryZonesState.zones.find(zone => zone?.id === zoneId)
     setFormState({
       ...formState,
       changes: {

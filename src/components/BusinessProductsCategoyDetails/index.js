@@ -34,7 +34,7 @@ export const BusinessProductsCategoyDetails = (props) => {
 
   useEffect(() => {
     if (businessState?.business?.id && !category && categoryId) {
-      const _category = businessState.business.categories.filter(item => parseInt(item.id) === parseInt(categoryId))[0]
+      const _category = businessState.business.categories.filter(item => parseInt(item?.id) === parseInt(categoryId))[0]
 
       if (_category) setFormState({ ...formState, changes: _category })
     }
@@ -63,7 +63,7 @@ export const BusinessProductsCategoyDetails = (props) => {
       currentChanges = { enabled: isChecked.enabled }
     }
     if (isChecked.enabledParent) {
-      currentChanges = { ...currentChanges, parent_category_id: categorySelected.id }
+      currentChanges = { ...currentChanges, parent_category_id: categorySelected?.id }
     } else {
       currentChanges = { ...currentChanges, parent_category_id: null }
     }
@@ -122,7 +122,7 @@ export const BusinessProductsCategoyDetails = (props) => {
             delete changes[key]
           }
         }
-        const { content } = await ordering.businesses(businessState?.business.id).categories(parseInt(id)).save(changes)
+        const { content } = await ordering.businesses(businessState?.business?.id).categories(parseInt(id)).save(changes)
         if (!content.error) {
           setFormState({
             ...formState,
@@ -137,23 +137,23 @@ export const BusinessProductsCategoyDetails = (props) => {
           if (handleUpdateBusinessState) {
             const _categories = [...businessState.business.categories]
             _categories.forEach(function iterate (category, index, object) {
-              if (category.id === content?.result.parent_category_id) {
+              if (category?.id === content?.result.parent_category_id) {
                 if (Array.isArray(category?.subcategories)) {
-                  const found = category.subcategories.find(subCategory => subCategory.id === content?.result.id)
+                  const found = category.subcategories.find(subCategory => subCategory?.id === content?.result?.id)
                   if (!found) {
                     category.subcategories.push(content?.result)
                   }
                 }
               }
               const categoryKeyOptions = ['name', 'enabled', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description']
-              if (category.id === content?.result.id && category.parent_category_id === content?.result.parent_category_id) {
-                Object.keys(category).forEach( key => {
+              if (category?.id === content?.result?.id && category.parent_category_id === content?.result.parent_category_id) {
+                Object.keys(category).forEach(key => {
                   if (categoryKeyOptions.includes(key) && content.result[key]) {
                     category[key] = content?.result[key]
                   }
                 })
               }
-              if (category.id === content?.result.id && category.parent_category_id !== content?.result.parent_category_id) {
+              if (category?.id === content?.result?.id && category.parent_category_id !== content?.result.parent_category_id) {
                 object.splice(index, 1)
               }
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
@@ -209,7 +209,7 @@ export const BusinessProductsCategoyDetails = (props) => {
           const _categories = businessState.business?.categories || []
           if (content?.result.parent_category_id) {
             _categories.forEach(function iterate (category) {
-              if (category.id === content?.result.parent_category_id) {
+              if (category?.id === content?.result.parent_category_id) {
                 category.subcategories.push({ ...content.result, products: [], subcategories: [] })
               }
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
@@ -252,7 +252,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         ...formState,
         loading: true
       })
-      const { content: { error, result } } = await ordering.businesses(parseInt(businessState.business?.id)).categories(parseInt(category.id)).delete()
+      const { content: { error, result } } = await ordering.businesses(parseInt(businessState.business?.id)).categories(parseInt(category?.id)).delete()
       if (!error) {
         setFormState({
           ...formState,
@@ -265,17 +265,17 @@ export const BusinessProductsCategoyDetails = (props) => {
         if (handleUpdateBusinessState) {
           const _categories = [...businessState.business.categories]
           _categories.forEach(function iterate (_category, index, object) {
-            if (_category.id === category.id) {
+            if (_category?.id === category?.id) {
               object.splice(index, 1)
             }
             Array.isArray(_category?.subcategories) && _category.subcategories.forEach(iterate)
           })
 
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
-          if (category.id === categorySelected.id) setCategorySelected(_categories[0])
+          if (category?.id === categorySelected?.id) setCategorySelected(_categories[0])
         }
         showToast(ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'))
-        props.onClose && props.onClose(category.id)
+        props.onClose && props.onClose(category?.id)
       } else {
         setFormState({
           ...formState,
@@ -302,9 +302,9 @@ export const BusinessProductsCategoyDetails = (props) => {
     if (businessState.loading || !categorySelected) return
     const getParentCategories = (category, id) => {
       let path
-      const item = { id: category.id, name: category.name }
+      const item = { id: category?.id, name: category.name }
       if (!category || typeof category !== 'object') return
-      if (category.id === id) {
+      if (category?.id === id) {
         return []
       }
       (category?.subcategories || []).some(child =>

@@ -81,7 +81,7 @@ export const GoogleMaps = (props) => {
       }
     }
     businessesNear === 0 && setErrors && setErrors('ERROR_NOT_FOUND_BUSINESSES')
-    map.fitBounds(bounds)
+    map?.fitBounds && map.fitBounds(bounds)
     setBoundMap(bounds)
   }
 
@@ -319,7 +319,7 @@ export const GoogleMaps = (props) => {
   useEffect(() => {
     if (!businessMap) {
       const interval = setInterval(() => {
-        if (googleReady) {
+        if (googleReady && googleMap) {
           const driverLocation = locations[0]
           const newLocation = new window.google.maps.LatLng(driverLocation?.lat, driverLocation?.lng)
           if (markers[0]) markers[0].setPosition(newLocation)
