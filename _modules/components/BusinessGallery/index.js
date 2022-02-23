@@ -306,7 +306,7 @@ var BusinessGallery = function BusinessGallery(props) {
     setVideos(videos);
   }, [business]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    businessSchedule: business.schedule || [],
+    businessSchedule: (business === null || business === void 0 ? void 0 : business.schedule) || [],
     businessPhotos: photos || [],
     businessVideos: videos || [],
     formState: formState,

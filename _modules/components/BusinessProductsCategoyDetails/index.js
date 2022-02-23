@@ -118,7 +118,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
     if (businessState !== null && businessState !== void 0 && (_businessState$busine = businessState.business) !== null && _businessState$busine !== void 0 && _businessState$busine.id && !category && categoryId) {
       var _category = businessState.business.categories.filter(function (item) {
-        return parseInt(item.id) === parseInt(categoryId);
+        return parseInt(item === null || item === void 0 ? void 0 : item.id) === parseInt(categoryId);
       })[0];
       if (_category) setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: _category
@@ -154,7 +154,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
     if (isChecked.enabledParent) {
       currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, {
-        parent_category_id: categorySelected.id
+        parent_category_id: categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id
       });
     } else {
       currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, {
@@ -203,7 +203,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var id, changes, key, _yield$ordering$busin, content, _categories, _business;
+      var id, _businessState$busine2, changes, key, _yield$ordering$busin, content, _categories, _business;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -238,7 +238,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
               }
 
               _context.next = 11;
-              return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : businessState.business.id).categories(parseInt(id)).save(changes);
+              return ordering.businesses(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.id).categories(parseInt(id)).save(changes);
 
             case 11:
               _yield$ordering$busin = _context.sent;
@@ -259,10 +259,14 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                   _categories = _toConsumableArray(businessState.business.categories);
 
                   _categories.forEach(function iterate(category, index, object) {
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                    var _content$result2, _content$result3;
+
+                    if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       if (Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories)) {
                         var found = category.subcategories.find(function (subCategory) {
-                          return subCategory.id === (content === null || content === void 0 ? void 0 : content.result.id);
+                          var _content$result;
+
+                          return (subCategory === null || subCategory === void 0 ? void 0 : subCategory.id) === (content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.id);
                         });
 
                         if (!found) {
@@ -273,7 +277,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
                     var categoryKeyOptions = ['name', 'enabled', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description'];
 
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                    if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       Object.keys(category).forEach(function (key) {
                         if (categoryKeyOptions.includes(key) && content.result[key]) {
                           category[key] = content === null || content === void 0 ? void 0 : content.result[key];
@@ -281,7 +285,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                       });
                     }
 
-                    if (category.id === (content === null || content === void 0 ? void 0 : content.result.id) && category.parent_category_id !== (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                    if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : (_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.id) && category.parent_category_id !== (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       object.splice(index, 1);
                     }
 
@@ -339,7 +343,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var createBusinessCategory = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _businessState$busine2, _yield$ordering$busin2, content, _businessState$busine3, _categories;
+      var _businessState$busine3, _yield$ordering$busin2, content, _businessState$busine4, _categories;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -359,7 +363,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 loading: true
               }));
               _context2.next = 7;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.id)).categories().save(formState.changes);
+              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.id)).categories().save(formState.changes);
 
             case 7:
               _yield$ordering$busin2 = _context2.sent;
@@ -376,11 +380,11 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 }));
 
                 if (handleUpdateBusinessState) {
-                  _categories = ((_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.categories) || [];
+                  _categories = ((_businessState$busine4 = businessState.business) === null || _businessState$busine4 === void 0 ? void 0 : _businessState$busine4.categories) || [];
 
                   if (content !== null && content !== void 0 && content.result.parent_category_id) {
                     _categories.forEach(function iterate(category) {
-                      if (category.id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
+                      if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                         category.subcategories.push(_objectSpread(_objectSpread({}, content.result), {}, {
                           products: [],
                           subcategories: []
@@ -444,7 +448,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var handleDeleteCategory = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _businessState$busine4, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
+      var _businessState$busine5, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -464,7 +468,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                 loading: true
               }));
               _context3.next = 7;
-              return ordering.businesses(parseInt((_businessState$busine4 = businessState.business) === null || _businessState$busine4 === void 0 ? void 0 : _businessState$busine4.id)).categories(parseInt(category.id)).delete();
+              return ordering.businesses(parseInt((_businessState$busine5 = businessState.business) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.id)).categories(parseInt(category === null || category === void 0 ? void 0 : category.id)).delete();
 
             case 7:
               _yield$ordering$busin3 = _context3.sent;
@@ -485,7 +489,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                   _categories = _toConsumableArray(businessState.business.categories);
 
                   _categories.forEach(function iterate(_category, index, object) {
-                    if (_category.id === category.id) {
+                    if ((_category === null || _category === void 0 ? void 0 : _category.id) === (category === null || category === void 0 ? void 0 : category.id)) {
                       object.splice(index, 1);
                     }
 
@@ -495,11 +499,11 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                   handleUpdateBusinessState(_objectSpread(_objectSpread({}, businessState.business), {}, {
                     categories: _categories
                   }));
-                  if (category.id === categorySelected.id) setCategorySelected(_categories[0]);
+                  if ((category === null || category === void 0 ? void 0 : category.id) === (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id)) setCategorySelected(_categories[0]);
                 }
 
                 showToast(_ToastContext.ToastType.Success, t('CATEOGORY_DELETED', 'Category deleted'));
-                props.onClose && props.onClose(category.id);
+                props.onClose && props.onClose(category === null || category === void 0 ? void 0 : category.id);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -543,12 +547,12 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
     var getParentCategories = function getParentCategories(category, id) {
       var path;
       var item = {
-        id: category.id,
+        id: category === null || category === void 0 ? void 0 : category.id,
         name: category.name
       };
       if (!category || _typeof(category) !== 'object') return;
 
-      if (category.id === id) {
+      if ((category === null || category === void 0 ? void 0 : category.id) === id) {
         return [];
       }
 

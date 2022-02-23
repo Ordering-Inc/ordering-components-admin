@@ -165,7 +165,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 body: JSON.stringify(currentChanges)
               };
               _context.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones/").concat(zoneId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zoneId), requestOptions);
 
             case 8:
               response = _context.sent;
@@ -182,7 +182,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
               if (!content.error) {
                 zones = businessDeliveryZonesState.zones.filter(function (zone) {
-                  if (zone.id === zoneId) {
+                  if ((zone === null || zone === void 0 ? void 0 : zone.id) === zoneId) {
                     Object.assign(zone, content.result);
                   }
 
@@ -348,7 +348,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 body: JSON.stringify(currentChanges)
               };
               _context2.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones"), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones"), requestOptions);
 
             case 8:
               response = _context2.sent;
@@ -437,7 +437,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones/").concat(zoneId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zoneId), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -449,7 +449,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
               if (!content.error) {
                 zones = businessDeliveryZonesState.zones.filter(function (zone) {
-                  return zone.id !== zoneId;
+                  return (zone === null || zone === void 0 ? void 0 : zone.id) !== zoneId;
                 });
                 setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
                   loading: false,
@@ -499,7 +499,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
   var handleChangeActiveState = function handleChangeActiveState(zoneId) {
     setZoneId(zoneId);
     var businessZone = businessDeliveryZonesState.zones.find(function (zone) {
-      return zone.id === zoneId;
+      return (zone === null || zone === void 0 ? void 0 : zone.id) === zoneId;
     });
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
