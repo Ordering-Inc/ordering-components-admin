@@ -166,7 +166,7 @@ export const BusinessGallery = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          businessSchedule={business.schedule || []}
+          businessSchedule={business?.schedule || []}
           businessPhotos={photos || []}
           businessVideos={videos || []}
           formState={formState}
