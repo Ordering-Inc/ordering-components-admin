@@ -56,10 +56,10 @@ export const BusinessProductsListing = (props) => {
       if (!category?.parent_category_id) {
         openCategories.values = []
       }
-      if (openCategories.values.includes(category.id)) {
-        openCategories.values = openCategories.values.filter(categoryId => categoryId !== category.id)
+      if (openCategories.values.includes(category?.id)) {
+        openCategories.values = openCategories.values.filter(categoryId => categoryId !== category?.id)
       } else {
-        openCategories.values.push(category.id)
+        openCategories.values.push(category?.id)
       }
       setOpenCategories({
         ...openCategories,
@@ -96,7 +96,7 @@ export const BusinessProductsListing = (props) => {
         let categoryFiltered
         const _categories = [...businessState?.business?.categories]
         _categories.forEach(function iterate (category) {
-          if (category.id === categorySelected.id) {
+          if (category?.id === categorySelected?.id) {
             categoryFiltered = category
           }
           Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
@@ -133,10 +133,10 @@ export const BusinessProductsListing = (props) => {
 
     const categoryKey = searchValue
       ? 'search'
-      : categorySelected.id === 'featured'
+      : categorySelected?.id === 'featured'
         ? 'featured'
-        : categorySelected.id
-          ? `categoryId:${categorySelected.id}`
+        : categorySelected?.id
+          ? `categoryId:${categorySelected?.id}`
           : 'all'
 
     const categoryState = categoriesState[categoryKey] || categoryStateDefault
@@ -188,9 +188,9 @@ export const BusinessProductsListing = (props) => {
     }
 
     try {
-      const functionFetch = categorySelected.id && categorySelected.id !== 'featured'
-        ? ordering.businesses(businessState.business.id).categories(categorySelected.id).products()
-        : ordering.businesses(businessState.business.id).products()
+      const functionFetch = categorySelected?.id && categorySelected?.id !== 'featured'
+        ? ordering.businesses(businessState.business?.id).categories(categorySelected?.id).products()
+        : ordering.businesses(businessState.business?.id).products()
       const source = {}
       requestsState.products = source
       setRequestsState({ ...requestsState })
@@ -222,7 +222,7 @@ export const BusinessProductsListing = (props) => {
   }
 
   const getProduct = async () => {
-    if (categoryId && productId && businessState.business.id) {
+    if (categoryId && productId && businessState.business?.id) {
       try {
         setProductModal({
           ...productModal,
@@ -232,7 +232,7 @@ export const BusinessProductsListing = (props) => {
         requestsState.product = source
 
         const { content: { result } } = await ordering
-          .businesses(businessState.business.id)
+          .businesses(businessState.business?.id)
           .categories(categoryId)
           .products(productId)
           .get({ cancelToken: source })
@@ -267,7 +267,7 @@ export const BusinessProductsListing = (props) => {
     })
     const { error, result } = await response.json()
     if (!error) {
-      result.forEach(tax => (taxesObject[`id:${tax.id}`] = tax))
+      result.forEach(tax => (taxesObject[`id:${tax?.id}`] = tax))
       setTaxes(taxesObject)
       return
     }
@@ -296,7 +296,7 @@ export const BusinessProductsListing = (props) => {
     })
     const { error, result } = await response.json()
     if (!error) {
-      result.forEach(fee => (feesObject[`id:${fee.id}`] = fee))
+      result.forEach(fee => (feesObject[`id:${fee?.id}`] = fee))
       setFees(feesObject)
       return
     }
@@ -356,7 +356,7 @@ export const BusinessProductsListing = (props) => {
     Object.assign(business, result)
     if (categorySelected) {
       business.categories.forEach(function iterate (category) {
-        if (category.id === categorySelected.id) {
+        if (category?.id === categorySelected?.id) {
           setCategorySelected(category)
         }
         Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
@@ -382,12 +382,12 @@ export const BusinessProductsListing = (props) => {
         const category = categories[i]
         for (let j = 0; j < category.products.length; j++) {
           const product = category.products[j]
-          if (isRemove && product.tax?.id === tax.id) {
+          if (isRemove && product.tax?.id === tax?.id) {
             product.tax = null
             product.tax_id = null
-          } else if (product.tax && product.tax?.id === tax.id) {
+          } else if (product.tax && product.tax?.id === tax?.id) {
             Object.assign(product.tax, tax)
-            product.tax_id = tax.id
+            product.tax_id = tax?.id
           }
         }
         if (category.subcategories?.length > 0) {
@@ -412,12 +412,12 @@ export const BusinessProductsListing = (props) => {
         const category = categories[i]
         for (let j = 0; j < category.products.length; j++) {
           const product = category.products[j]
-          if (isRemove && product.fee?.id === fee.id) {
+          if (isRemove && product.fee?.id === fee?.id) {
             product.fee = null
             product.fee_id = null
-          } else if (product.fee && product.fee?.id === fee.id) {
+          } else if (product.fee && product.fee?.id === fee?.id) {
             Object.assign(product.fee, fee)
-            product.fee_id = fee.id
+            product.fee_id = fee?.id
           }
         }
         if (category.subcategories?.length > 0) {
@@ -459,6 +459,7 @@ export const BusinessProductsListing = (props) => {
   }, [businessSlug])
 
   useEffect(() => {
+    if (!businessState?.business) return
     if (Object.keys(businessState?.business)?.length > 0) {
       events.on('tax_changed', handleUpdateTaxesProducts)
       events.on('fee_changed', handleUpdateFeesProducts)

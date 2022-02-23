@@ -103,14 +103,14 @@ export const BusinessAndProductList = (props) => {
         ...categoryStateDefault,
         loading: false
       }
-      if (categorySelected.id !== 'featured' && categorySelected.id !== null) {
+      if (categorySelected?.id !== 'featured' && categorySelected?.id !== null) {
         const productsFiltered = businessState?.business?.categories?.find(
-          category => category.id === categorySelected.id
+          category => category?.id === categorySelected?.id
         )?.products.filter(
           product => isMatchSearch(product.name, product.description)
         )
         categoryState.products = productsFiltered || []
-      } else if (categorySelected.id === 'featured') {
+      } else if (categorySelected?.id === 'featured') {
         const productsFiltered = businessState?.business?.categories?.reduce(
           (products, category) => [...products, ...category.products], []
         ).filter(
@@ -132,10 +132,10 @@ export const BusinessAndProductList = (props) => {
 
     const categoryKey = searchValue
       ? 'search'
-      : categorySelected.id === 'featured'
+      : categorySelected?.id === 'featured'
         ? 'featured'
-        : categorySelected.id
-          ? `categoryId:${categorySelected.id}`
+        : categorySelected?.id
+          ? `categoryId:${categorySelected?.id}`
           : 'all'
 
     const categoryState = categoriesState[categoryKey] || categoryStateDefault
@@ -190,7 +190,7 @@ export const BusinessAndProductList = (props) => {
       conector: 'OR'
     }
 
-    if (categorySelected.id === 'featured') {
+    if (categorySelected?.id === 'featured') {
       where = {
         conditions: [
           {
@@ -201,7 +201,7 @@ export const BusinessAndProductList = (props) => {
       }
     }
 
-    if (categorySelected.id === 'featured' && searchValue) {
+    if (categorySelected?.id === 'featured' && searchValue) {
       where = {
         conditions: [
           {
@@ -218,9 +218,9 @@ export const BusinessAndProductList = (props) => {
     }
 
     try {
-      const functionFetch = categorySelected.id && categorySelected.id !== 'featured'
-        ? ordering.businesses(businessState.business.id).categories(categorySelected.id).products()
-        : ordering.businesses(businessState.business.id).products()
+      const functionFetch = categorySelected?.id && categorySelected?.id !== 'featured'
+        ? ordering.businesses(businessState.business?.id).categories(categorySelected?.id).products()
+        : ordering.businesses(businessState.business?.id).products()
       const source = {}
       requestsState.products = source
       setRequestsState({ ...requestsState })
@@ -253,7 +253,7 @@ export const BusinessAndProductList = (props) => {
   }
 
   const getProduct = async () => {
-    if (categoryId && productId && businessState.business.id) {
+    if (categoryId && productId && businessState.business?.id) {
       try {
         setProductModal({
           ...productModal,
@@ -267,7 +267,7 @@ export const BusinessAndProductList = (props) => {
         }
 
         const { content: { result } } = await ordering
-          .businesses(businessState.business.id)
+          .businesses(businessState.business?.id)
           .categories(categoryId)
           .products(productId)
           .parameters(parameters)
