@@ -45,9 +45,7 @@ import { BusinessSharedMenuProductDetails } from './components/BusinessSharedMen
 import { BusinessSharedMenuProducts } from './components/BusinessSharedMenuProducts'
 import { BusinessSortControl } from './components/BusinessSortControl'
 import { BusinessSpreadSheet } from './components/BusinessSpreadSheet'
-import { BusinessType } from './components/BusinessType'
 import { BusinessTypeFilter } from './components/BusinessTypeFilter'
-import { BusinessTypeForm } from './components/BusinessTypeForm'
 import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
@@ -247,9 +245,7 @@ export {
   BusinessSharedMenuProducts,
   BusinessSortControl,
   BusinessSpreadSheet,
-  BusinessType,
   BusinessTypeFilter,
-  BusinessTypeForm,
   BusinessWebhooks,
   BusinessZoneGoogleMaps,
   BusinessProductCreator,
