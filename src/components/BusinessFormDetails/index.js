@@ -179,6 +179,14 @@ export const BusinessFormDetails = (props) => {
     reader.onerror = error => console.log(error)
   }
 
+  const handleChangeSwtich = (name, checked) => {
+    const changes = { ...formState.changes, [name]: checked }
+    setFormState({
+      ...formState,
+      changes: changes
+    })
+  }
+
   const getTimeZone = async (lat, lng) => {
     const date = new Date()
     const timestamp = Math.floor(date.getTime() / 1000)
@@ -248,6 +256,7 @@ export const BusinessFormDetails = (props) => {
           handleAddBusiness={handleAddBusiness}
           handleChangeAddress={handleChangeAddress}
           handleChangeCenter={handleChangeCenter}
+          handleChangeSwtich={handleChangeSwtich}
         />
       )}
     </>
