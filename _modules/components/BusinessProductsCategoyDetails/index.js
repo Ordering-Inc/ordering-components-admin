@@ -343,7 +343,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
   var createBusinessCategory = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _businessState$busine3, _yield$ordering$busin2, content, _businessState$busine4, _categories;
+      var _businessState$busine3, _yield$ordering$busin2, content, _content$result4, newCategory, _businessState$busine4, _categories;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -370,11 +370,13 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
               content = _yield$ordering$busin2.content;
 
               if (!content.error) {
+                newCategory = _objectSpread({}, content.result);
+                newCategory.parent_category_id = ((_content$result4 = content.result) === null || _content$result4 === void 0 ? void 0 : _content$result4.parent_category_id) || null;
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   category: {},
                   result: {
                     error: false,
-                    result: content.result
+                    result: newCategory
                   },
                   loading: false
                 }));
@@ -385,7 +387,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                   if (content !== null && content !== void 0 && content.result.parent_category_id) {
                     _categories.forEach(function iterate(category) {
                       if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
-                        category.subcategories.push(_objectSpread(_objectSpread({}, content.result), {}, {
+                        category.subcategories.push(_objectSpread(_objectSpread({}, newCategory), {}, {
                           products: [],
                           subcategories: []
                         }));
@@ -394,7 +396,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                       Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
                     });
                   } else {
-                    _categories.push(_objectSpread(_objectSpread({}, content.result), {}, {
+                    _categories.push(_objectSpread(_objectSpread({}, newCategory), {}, {
                       products: [],
                       subcategories: []
                     }));
