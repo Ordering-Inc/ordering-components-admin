@@ -37,7 +37,7 @@ export const BusinessInformation = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          businessSchedule={business.schedule || []}
+          businessSchedule={business?.schedule || []}
           businessPhotos={photos || []}
           businessVideos={videos || []}
           businessLocation={location || {}}

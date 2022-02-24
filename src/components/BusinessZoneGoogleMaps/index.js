@@ -148,27 +148,29 @@ export const BusinessZoneGoogleMaps = (props) => {
       if (drawingManager) {
         drawingManager.setMap(null)
       }
-      const _drawingManager = new window.google.maps.drawing.DrawingManager({
-        drawingControl: true,
-        drawingControlOptions: {
-          position: window.google.maps.ControlPosition.TOP_CENTER,
-          drawingModes: type === 1
-            ? [window.google.maps.drawing.OverlayType.CIRCLE]
-            : [window.google.maps.drawing.OverlayType.POLYGON]
-        },
-        circleOptions: {
-          ...fillStyle,
-          clickable: false,
-          draggable: true
-        },
-        polygonOptions: {
-          ...fillStyle,
-          clickable: false,
-          draggable: false
-        }
-      })
-      setDrawingManager(_drawingManager)
-      _drawingManager.setMap(googleMap)
+      if (window.google.maps?.drawing?.DrawingManager) {
+        const _drawingManager = new window.google.maps.drawing.DrawingManager({
+          drawingControl: true,
+          drawingControlOptions: {
+            position: window.google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: type === 1
+              ? [window.google.maps.drawing.OverlayType.CIRCLE]
+              : [window.google.maps.drawing.OverlayType.POLYGON]
+          },
+          circleOptions: {
+            ...fillStyle,
+            clickable: false,
+            draggable: true
+          },
+          polygonOptions: {
+            ...fillStyle,
+            clickable: false,
+            draggable: false
+          }
+        })
+        setDrawingManager(_drawingManager)
+        _drawingManager.setMap(googleMap)
+      }
     }
   }, [clearState, type])
 
@@ -253,28 +255,29 @@ export const BusinessZoneGoogleMaps = (props) => {
           setPolygonZone(polygon)
         }
       }
-
-      const _drawingManager = new window.google.maps.drawing.DrawingManager({
-        drawingControl: true,
-        drawingControlOptions: {
-          position: window.google.maps.ControlPosition.TOP_CENTER,
-          drawingModes: type === 1
-            ? [window.google.maps.drawing.OverlayType.CIRCLE]
-            : [window.google.maps.drawing.OverlayType.POLYGON]
-        },
-        circleOptions: {
-          ...fillStyle,
-          clickable: false,
-          draggable: true
-        },
-        polygonOptions: {
-          ...fillStyle,
-          clickable: false,
-          draggable: false
-        }
-      })
-      setDrawingManager(_drawingManager)
-      _drawingManager.setMap(map)
+      if (window.google.maps?.drawing?.DrawingManager) {
+        const _drawingManager = new window.google.maps.drawing.DrawingManager({
+          drawingControl: true,
+          drawingControlOptions: {
+            position: window.google.maps.ControlPosition.TOP_CENTER,
+            drawingModes: type === 1
+              ? [window.google.maps.drawing.OverlayType.CIRCLE]
+              : [window.google.maps.drawing.OverlayType.POLYGON]
+          },
+          circleOptions: {
+            ...fillStyle,
+            clickable: false,
+            draggable: true
+          },
+          polygonOptions: {
+            ...fillStyle,
+            clickable: false,
+            draggable: false
+          }
+        })
+        setDrawingManager(_drawingManager)
+        _drawingManager.setMap(map)
+      }
     }
   }, [googleReady])
 
