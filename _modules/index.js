@@ -315,22 +315,16 @@ Object.defineProperty(exports, "BusinessSpreadSheet", {
     return _BusinessSpreadSheet.BusinessSpreadSheet;
   }
 });
-Object.defineProperty(exports, "BusinessType", {
+Object.defineProperty(exports, "BusinessTypeDetail", {
   enumerable: true,
   get: function get() {
-    return _BusinessType.BusinessType;
+    return _BusinessTypeDetail.BusinessTypeDetail;
   }
 });
 Object.defineProperty(exports, "BusinessTypeFilter", {
   enumerable: true,
   get: function get() {
     return _BusinessTypeFilter.BusinessTypeFilter;
-  }
-});
-Object.defineProperty(exports, "BusinessTypeForm", {
-  enumerable: true,
-  get: function get() {
-    return _BusinessTypeForm.BusinessTypeForm;
   }
 });
 Object.defineProperty(exports, "BusinessWebhooks", {
@@ -1466,11 +1460,9 @@ var _BusinessSortControl = require("./components/BusinessSortControl");
 
 var _BusinessSpreadSheet = require("./components/BusinessSpreadSheet");
 
-var _BusinessType = require("./components/BusinessType");
-
 var _BusinessTypeFilter = require("./components/BusinessTypeFilter");
 
-var _BusinessTypeForm = require("./components/BusinessTypeForm");
+var _BusinessTypeDetail = require("./components/BusinessTypeDetail");
 
 var _BusinessWebhooks = require("./components/BusinessWebhooks");
 

@@ -64,7 +64,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
       menu = props.menu,
       UIComponent = props.UIComponent,
       handleUpdateBusinessState = props.handleUpdateBusinessState,
-      isSelectedSharedMenus = props.isSelectedSharedMenus;
+      isSelectedSharedMenus = props.isSelectedSharedMenus,
+      sitesState = props.sitesState;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -479,14 +480,40 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     }));
   };
 
-  var handleChangeMenuSite = function handleChangeMenuSite(site, isRemove) {
-    var _formState$changes, _formState$changes$si, _formState$changes2;
+  var handleChangeMenuSite = function handleChangeMenuSite(site) {
+    var _menu$sites;
 
+    var sites = [].concat(_toConsumableArray(menu === null || menu === void 0 ? void 0 : (_menu$sites = menu.sites) === null || _menu$sites === void 0 ? void 0 : _menu$sites.map(function (s) {
+      return s.id;
+    }).filter(function (s) {
+      var _formState$changes$si;
+
+      return formState.changes.sites ? (_formState$changes$si = formState.changes.sites) === null || _formState$changes$si === void 0 ? void 0 : _formState$changes$si.includes(s) : true;
+    })), _toConsumableArray(formState.changes.sites || []));
+    var isRemove = sites.includes(site);
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        sites: isRemove ? ((_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : (_formState$changes$si = _formState$changes.sites) === null || _formState$changes$si === void 0 ? void 0 : _formState$changes$si.filter(function (s) {
+        sites: isRemove ? sites.filter(function (s) {
           return s !== site;
-        })) || [] : [].concat(_toConsumableArray((formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.sites) || []), [site])
+        }) : [].concat(_toConsumableArray(sites), [site])
+      })
+    }));
+  };
+
+  var handleSelectAllChannels = function handleSelectAllChannels() {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        sites: sitesState === null || sitesState === void 0 ? void 0 : sitesState.sites.map(function (s) {
+          return s.id;
+        })
+      })
+    }));
+  };
+
+  var handleSelectNoneChannels = function handleSelectNoneChannels() {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        sites: []
       })
     }));
   };
@@ -600,6 +627,8 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     handleChangeScheduleState: handleChangeScheduleState,
     handleDeleteMenu: handleDeleteMenu,
     handleChangeMenuSite: handleChangeMenuSite,
+    handleSelectAllChannels: handleSelectAllChannels,
+    handleSelectNoneChannels: handleSelectNoneChannels,
     subCategoriesList: subCategoriesList
   })));
 };

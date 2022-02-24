@@ -171,10 +171,10 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
               _context.prev = 2;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
 
-              if (categorySelected.id === null && categorySelected.id === 'featured') {
+              if ((categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id) === null && (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id) === 'featured') {
                 categoryId = parseInt(business === null || business === void 0 ? void 0 : business.categories[0]);
               } else {
-                categoryId = parseInt(categorySelected.id);
+                categoryId = parseInt(categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id);
               }
 
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -201,7 +201,7 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
                   _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
 
                   _categories.forEach(function iterate(category) {
-                    if (category.id === categoryId) {
+                    if ((category === null || category === void 0 ? void 0 : category.id) === categoryId) {
                       category.products.push(content.result);
                     }
 

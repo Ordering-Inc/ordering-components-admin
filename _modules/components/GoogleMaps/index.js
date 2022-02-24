@@ -182,7 +182,7 @@ var GoogleMaps = function GoogleMaps(props) {
     }
 
     businessesNear === 0 && setErrors && setErrors('ERROR_NOT_FOUND_BUSINESSES');
-    map.fitBounds(bounds);
+    (map === null || map === void 0 ? void 0 : map.fitBounds) && map.fitBounds(bounds);
     setBoundMap(bounds);
   };
   /**
@@ -443,7 +443,7 @@ var GoogleMaps = function GoogleMaps(props) {
   (0, _react.useEffect)(function () {
     if (!businessMap) {
       var interval = setInterval(function () {
-        if (googleReady) {
+        if (googleReady && googleMap) {
           var driverLocation = locations[0];
           var newLocation = new window.google.maps.LatLng(driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lat, driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lng);
           if (markers[0]) markers[0].setPosition(newLocation);

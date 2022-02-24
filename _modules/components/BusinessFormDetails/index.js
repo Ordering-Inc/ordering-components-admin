@@ -377,6 +377,14 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     };
   };
 
+  var handleChangeSwtich = function handleChangeSwtich(name, checked) {
+    var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, checked));
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: changes
+    }));
+  };
+
   var getTimeZone = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(lat, lng) {
       var date, timestamp, url, response, result;
@@ -504,7 +512,8 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     handlechangeImage: handlechangeImage,
     handleAddBusiness: handleAddBusiness,
     handleChangeAddress: handleChangeAddress,
-    handleChangeCenter: handleChangeCenter
+    handleChangeCenter: handleChangeCenter,
+    handleChangeSwtich: handleChangeSwtich
   })));
 };
 
