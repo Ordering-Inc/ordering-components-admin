@@ -82,6 +82,7 @@ import { ForgotPasswordForm } from './components/ForgotPasswordForm'
 import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
+import { GoogleTagManager } from './components/GoogleTagManager'
 import { Home } from './components/Home'
 import { ImporterForm } from './components/ImporterForm'
 import { ImporterJobForm } from './components/ImporterJobForm'
@@ -285,6 +286,7 @@ export {
   GoogleMapsMap,
   GpsButton,
   GoogleGpsButton,
+  GoogleTagManager,
   Home,
   ImporterForm,
   ImporterJobForm,
