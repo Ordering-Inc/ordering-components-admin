@@ -591,6 +591,12 @@ Object.defineProperty(exports, "GoogleMapsMap", {
     return _GoogleMaps.GoogleMapsMap;
   }
 });
+Object.defineProperty(exports, "GoogleTagManager", {
+  enumerable: true,
+  get: function get() {
+    return _GoogleTagManager.GoogleTagManager;
+  }
+});
 Object.defineProperty(exports, "GpsButton", {
   enumerable: true,
   get: function get() {
@@ -1533,6 +1539,8 @@ var _GoogleAutocompleteInput = require("./components/GoogleAutocompleteInput");
 var _GoogleMaps = require("./components/GoogleMaps");
 
 var _GpsButton = require("./components/GpsButton");
+
+var _GoogleTagManager = require("./components/GoogleTagManager");
 
 var _Home = require("./components/Home");
 
