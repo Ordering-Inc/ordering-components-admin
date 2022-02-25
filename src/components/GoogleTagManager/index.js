@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react'
-import { useConfig } from '../../contexts/ConfigContext'
+import propTypes from 'prop-types'
 
-export const GoogleTagManager = ({ children }) => {
-  const [{ configs }] = useConfig()
-
+export const GoogleTagManager = ({ children, tagId }) => {
   useEffect(() => {
-    if (configs?.google_tag_manager?.value) {
+    if (tagId) {
       const tag = (w, d, s, l, i) => {
         w[l] = w[l] || []; w[l].push({
           'gtm.start': new Date().getTime(),
@@ -18,13 +16,20 @@ export const GoogleTagManager = ({ children }) => {
         j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f)
         window.document.head.appendChild(j)
       }
-      tag(window, document, 'script', 'dataLayer', configs?.google_tag_manager?.value)
+      tag(window, document, 'script', 'dataLayer', tagId)
     }
-  }, [configs?.google_tag_manager?.value])
+  }, [tagId])
 
   return (
     <>
       {children}
     </>
   )
+}
+
+GoogleTagManager.propTypes = {
+  /**
+   * Id of google tag manger
+   */
+  tagId: propTypes.string.isRequired
 }
