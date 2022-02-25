@@ -7,7 +7,6 @@ const categoryHideList = ['cloudinary', 'tookan', 'apple_login', 'order_messages
 const configHideList = [
   'search_by_address',
   'distance_unit_km',
-  'google_login_client_id',
   'pickup',
   'orders_metafields_strategy',
   'order_validate',
