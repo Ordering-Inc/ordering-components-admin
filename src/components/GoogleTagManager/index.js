@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react'
 import propTypes from 'prop-types'
+import React, { useEffect } from 'react'
 
 export const GoogleTagManager = ({ children, tagId }) => {
   useEffect(() => {
@@ -32,4 +32,8 @@ GoogleTagManager.propTypes = {
    * Id of google tag manger
    */
   tagId: propTypes.string.isRequired
+}
+
+GoogleTagManager.defaultProps = {
+  tagId: 'GTM-MHNGWVF'
 }
