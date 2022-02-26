@@ -28,8 +28,7 @@ export const BusinessProductsCategoyDetails = (props) => {
   const [parentCategories, setParentCategories] = useState([])
 
   useEffect(() => {
-    if (!category) return
-    setFormState({ ...formState, changes: category })
+    setFormState({ ...formState, changes: category || {} })
   }, [category])
 
   useEffect(() => {
