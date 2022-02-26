@@ -469,18 +469,16 @@ export const ProductExtraOptionDetails = (props) => {
   }, [extraState, conditionalOptionId])
 
   useEffect(() => {
-    if (!Object.keys(changesState.changes).length) return
+    if (!Object.keys(changesState.changes).length || isAddMode) return
     if (changesState?.changes?.name === '' || changesState?.changes?.price === '') {
       setEditErrors({
         name: changesState?.changes?.name === '',
         price: changesState?.changes?.price === ''
       })
     } else {
-      if (!isAddMode) {
-        handleUpdateSubOption()
-      }
+      handleUpdateSubOption()
     }
-  }, [changesState, isAddMode])
+  }, [changesState])
 
   useEffect(() => {
     setOptionState({ ...optionState, option: option })
