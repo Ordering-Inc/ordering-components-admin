@@ -1,5 +1,5 @@
-import propTypes from 'prop-types'
 import React, { useEffect } from 'react'
+import propTypes from 'prop-types'
 
 export const GoogleTagManager = ({ children, tagId }) => {
   useEffect(() => {
