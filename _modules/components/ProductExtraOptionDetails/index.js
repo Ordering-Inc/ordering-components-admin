@@ -978,7 +978,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
   (0, _react.useEffect)(function () {
     var _changesState$changes, _changesState$changes2;
 
-    if (!Object.keys(changesState.changes).length) return;
+    if (!Object.keys(changesState.changes).length || isAddMode) return;
 
     if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.price) === '') {
       var _changesState$changes3, _changesState$changes4;
@@ -988,11 +988,9 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
         price: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.price) === ''
       });
     } else {
-      if (!isAddMode) {
-        handleUpdateSubOption();
-      }
+      handleUpdateSubOption();
     }
-  }, [changesState, isAddMode]);
+  }, [changesState]);
   (0, _react.useEffect)(function () {
     setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
       option: option
