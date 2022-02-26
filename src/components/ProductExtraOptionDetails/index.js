@@ -66,27 +66,26 @@ export const ProductExtraOptionDetails = (props) => {
     if (id === null) setIsAddMode(true)
     else setIsAddMode(false)
     const suboptionPreselected = optionState?.option?.suboptions?.find(suboption => suboption.id === id)?.preselected
-    setEditSubOptionId(id)
-    setChangesState({
-      result: {},
-      changes: {
-        preselected: !suboptionPreselected
-      }
-    })
-  }
-
-  /**
-   * Method to select or deselect default suboption
-   * @param {Number} id
-   */
-  const handledisableDefaultSuboption = async (id) => {
-    const suboptionPreselected = optionState?.option?.suboptions?.find(suboption => suboption.preselected)
-    if (suboptionPreselected?.id === id || !suboptionPreselected) {
-      handleChangeDefaultSuboption(id)
+    const defaultSubOptionsLength = optionState?.option?.suboptions?.filter(suboption => suboption?.preselected)?.length
+    if (suboptionPreselected) {
+      setEditSubOptionId(id)
+      setChangesState({
+        result: {},
+        changes: {
+          preselected: false
+        }
+      })
     } else {
-      const result = await handleUpdateSubOption({ id: suboptionPreselected?.id, preselected: false })
-      if (result) {
-        handleChangeDefaultSuboption(id)
+      if (optionState?.option?.max > defaultSubOptionsLength) {
+        setEditSubOptionId(id)
+        setChangesState({
+          result: {},
+          changes: {
+            preselected: true
+          }
+        })
+      } else {
+        showToast(ToastType.Error, t('MAX_PRESELECTED_OPTIONS_ERROR', 'Maximum number of options exceeded'), 4000)
       }
     }
   }
@@ -490,7 +489,7 @@ export const ProductExtraOptionDetails = (props) => {
     setOptionState({ ...optionState, option: option })
     handleSetConditionalOptions(extra)
     handleSetDefaultCondition(option?.respect_to)
-  }, [option])
+  }, [option, extra])
 
   return (
     <>
@@ -515,7 +514,7 @@ export const ProductExtraOptionDetails = (props) => {
           handleChangeConditionalSubOption={handleChangeConditionalSubOption}
           handleAddOption={handleAddOption}
           handleDeteteOption={handleDeteteOption}
-          handledisableDefaultSuboption={handledisableDefaultSuboption}
+          handleChangeDefaultSuboption={handleChangeDefaultSuboption}
         />
       )}
     </>
