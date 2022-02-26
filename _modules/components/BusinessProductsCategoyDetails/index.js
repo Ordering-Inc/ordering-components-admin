@@ -108,9 +108,8 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
       setParentCategories = _useState4[1];
 
   (0, _react.useEffect)(function () {
-    if (!category) return;
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: category
+      changes: category || {}
     }));
   }, [category]);
   (0, _react.useEffect)(function () {
