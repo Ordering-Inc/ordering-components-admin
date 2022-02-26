@@ -280,12 +280,8 @@ export const ProductExtraOptionDetails = (props) => {
           changes = { ...changes, [key]: _changes[key] }
         }
       }
-      if (!changes?.name || !changes?.price) {
-        setEditErrors({
-          name: !changes?.name,
-          price: !changes?.price
-        })
-        return
+      if (!changes?.price) {
+        changes.price = 0
       }
       if (Object.keys(changes).length === 0) return
       showToast(ToastType.Info, t('LOADING', 'Loading'))
