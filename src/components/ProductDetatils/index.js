@@ -13,6 +13,8 @@ export const ProductDetatils = (props) => {
     business,
     UIComponent,
     product,
+    productId,
+    categoryId,
     handleUpdateBusinessState
   } = props
 
@@ -29,6 +31,42 @@ export const ProductDetatils = (props) => {
    * Clean formState
    */
   const cleanFormState = (values) => setFormState({ ...formState, ...values })
+
+  /**
+   * Method to get the product from API
+   */
+  const getProduct = async () => {
+    try {
+      setProductState({
+        ...productState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering
+        .businesses(business.id)
+        .categories(categoryId)
+        .products(productId)
+        .get()
+      if (!error) {
+        setProductState({
+          loading: false,
+          product: result,
+          error: null
+        })
+      } else {
+        setProductState({
+          ...productState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setProductState({
+        ...productState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
 
   /**
    * Method to update the product details from API
@@ -311,8 +349,14 @@ export const ProductDetatils = (props) => {
   }
 
   useEffect(() => {
-    setProductState({ ...productState, product: product })
-    initProductCart(product)
+    if (product) {
+      setProductState({ ...productState, product: product })
+      initProductCart(product)
+    } else {
+      if (productId && categoryId) {
+        getProduct()
+      }
+    }
   }, [product])
 
   return (
