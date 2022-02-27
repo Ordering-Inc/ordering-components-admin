@@ -573,7 +573,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
   var handleAddOption = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _changes3, _changes4, _changes, changes, key, _changes5, _changes6, requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
+      var _changes3, _changes, changes, key, requestOptions, response, content, subOptions, updatedOption, options, updatedExtra;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -589,26 +589,18 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 }
               }
 
-              if (!(!((_changes3 = changes) !== null && _changes3 !== void 0 && _changes3.name) || !((_changes4 = changes) !== null && _changes4 !== void 0 && _changes4.price))) {
+              if (!((_changes3 = changes) !== null && _changes3 !== void 0 && _changes3.price)) {
+                changes.price = 0;
+              }
+
+              if (!(Object.keys(changes).length === 0)) {
                 _context3.next = 7;
                 break;
               }
 
-              setEditErrors({
-                name: !((_changes5 = changes) !== null && _changes5 !== void 0 && _changes5.name),
-                price: !((_changes6 = changes) !== null && _changes6 !== void 0 && _changes6.price)
-              });
               return _context3.abrupt("return");
 
             case 7:
-              if (!(Object.keys(changes).length === 0)) {
-                _context3.next = 9;
-                break;
-              }
-
-              return _context3.abrupt("return");
-
-            case 9:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               changes.enabled = true;
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
@@ -622,15 +614,15 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context3.next = 15;
+              _context3.next = 13;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions"), requestOptions);
 
-            case 15:
+            case 13:
               response = _context3.sent;
-              _context3.next = 18;
+              _context3.next = 16;
               return response.json();
 
-            case 18:
+            case 16:
               content = _context3.sent;
               setChangesState({
                 changes: content.error ? changesState : {},
@@ -664,23 +656,23 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
                 showToast(_ToastContext.ToastType.Success, t('CHOICE_ADDED', 'Choice added'));
               }
 
-              _context3.next = 26;
+              _context3.next = 24;
               break;
 
-            case 23:
-              _context3.prev = 23;
+            case 21:
+              _context3.prev = 21;
               _context3.t0 = _context3["catch"](0);
               setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
                 loading: false,
                 error: _context3.t0.message
               }));
 
-            case 26:
+            case 24:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 23]]);
+      }, _callee3, null, [[0, 21]]);
     }));
 
     return function handleAddOption() {
@@ -986,7 +978,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
   (0, _react.useEffect)(function () {
     var _changesState$changes, _changesState$changes2;
 
-    if (!Object.keys(changesState.changes).length) return;
+    if (!Object.keys(changesState.changes).length || isAddMode) return;
 
     if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.price) === '') {
       var _changesState$changes3, _changesState$changes4;
@@ -996,11 +988,9 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
         price: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.price) === ''
       });
     } else {
-      if (!isAddMode) {
-        handleUpdateSubOption();
-      }
+      handleUpdateSubOption();
     }
-  }, [changesState, isAddMode]);
+  }, [changesState]);
   (0, _react.useEffect)(function () {
     setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
       option: option

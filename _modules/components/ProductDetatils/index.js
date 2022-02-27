@@ -66,6 +66,8 @@ var ProductDetatils = function ProductDetatils(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
+      productId = props.productId,
+      categoryId = props.categoryId,
       handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -120,34 +122,96 @@ var ProductDetatils = function ProductDetatils(props) {
     return setFormState(_objectSpread(_objectSpread({}, formState), values));
   };
   /**
-   * Method to update the product details from API
+   * Method to get the product from API
    */
 
 
-  var handleUpdateClick = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(params) {
-      var _productState$product, _productState$product2, changes, _yield$ordering$busin, _yield$ordering$busin2, error, result, _categories, updatedBusiness;
+  var getProduct = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var _yield$ordering$busin, _yield$ordering$busin2, error, result;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
+              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                loading: true
+              }));
+              _context.next = 4;
+              return ordering.businesses(business.id).categories(categoryId).products(productId).get();
+
+            case 4:
+              _yield$ordering$busin = _context.sent;
+              _yield$ordering$busin2 = _yield$ordering$busin.content;
+              error = _yield$ordering$busin2.error;
+              result = _yield$ordering$busin2.result;
+
+              if (!error) {
+                setProductState({
+                  loading: false,
+                  product: result,
+                  error: null
+                });
+              } else {
+                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context.next = 14;
+              break;
+
+            case 11:
+              _context.prev = 11;
+              _context.t0 = _context["catch"](0);
+              setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+                loading: false,
+                error: [_context.t0.message]
+              }));
+
+            case 14:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 11]]);
+    }));
+
+    return function getProduct() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to update the product details from API
+   */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(params) {
+      var _productState$product, _productState$product2, changes, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories, updatedBusiness;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               changes = params ? _objectSpread({}, params) : _objectSpread({}, formState.changes);
-              _context.next = 6;
+              _context2.next = 6;
               return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).categories(productState === null || productState === void 0 ? void 0 : (_productState$product = productState.product) === null || _productState$product === void 0 ? void 0 : _productState$product.category_id).products(productState === null || productState === void 0 ? void 0 : (_productState$product2 = productState.product) === null || _productState$product2 === void 0 ? void 0 : _productState$product2.id).save(changes, {
                 accessToken: session.token
               });
 
             case 6:
-              _yield$ordering$busin = _context.sent;
-              _yield$ordering$busin2 = _yield$ordering$busin.content;
-              error = _yield$ordering$busin2.error;
-              result = _yield$ordering$busin2.result;
+              _yield$ordering$busin3 = _context2.sent;
+              _yield$ordering$busin4 = _yield$ordering$busin3.content;
+              error = _yield$ordering$busin4.error;
+              result = _yield$ordering$busin4.result;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: error ? formState.changes : {},
                 result: result,
@@ -187,30 +251,30 @@ var ProductDetatils = function ProductDetatils(props) {
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_SAVED', 'Product saved'));
               }
 
-              _context.next = 17;
+              _context2.next = 17;
               break;
 
             case 14:
-              _context.prev = 14;
-              _context.t0 = _context["catch"](0);
+              _context2.prev = 14;
+              _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
-                  result: _context.t0.message
+                  result: _context2.t0.message
                 },
                 loading: false
               }));
 
             case 17:
             case "end":
-              return _context.stop();
+              return _context2.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
+      }, _callee2, null, [[0, 14]]);
     }));
 
     return function handleUpdateClick(_x) {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
   /**
@@ -219,26 +283,26 @@ var ProductDetatils = function ProductDetatils(props) {
 
 
   var handleDeleteProduct = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories;
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories;
 
-      return _regenerator.default.wrap(function _callee2$(_context2) {
+      return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
-              _context2.prev = 0;
+              _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context2.next = 5;
+              _context3.next = 5;
               return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(product === null || product === void 0 ? void 0 : product.category_id)).products(product === null || product === void 0 ? void 0 : product.id).delete();
 
             case 5:
-              _yield$ordering$busin3 = _context2.sent;
-              _yield$ordering$busin4 = _yield$ordering$busin3.content;
-              error = _yield$ordering$busin4.error;
-              result = _yield$ordering$busin4.result;
+              _yield$ordering$busin5 = _context3.sent;
+              _yield$ordering$busin6 = _yield$ordering$busin5.content;
+              error = _yield$ordering$busin6.error;
+              result = _yield$ordering$busin6.result;
 
               if (!error) {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -281,30 +345,30 @@ var ProductDetatils = function ProductDetatils(props) {
                 }));
               }
 
-              _context2.next = 15;
+              _context3.next = 15;
               break;
 
             case 12:
-              _context2.prev = 12;
-              _context2.t0 = _context2["catch"](0);
+              _context3.prev = 12;
+              _context3.t0 = _context3["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 result: {
                   error: true,
-                  result: _context2.t0
+                  result: _context3.t0
                 }
               }));
 
             case 15:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee3, null, [[0, 12]]);
     }));
 
     return function handleDeleteProduct() {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -502,10 +566,16 @@ var ProductDetatils = function ProductDetatils(props) {
   };
 
   (0, _react.useEffect)(function () {
-    setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-      product: product
-    }));
-    initProductCart(product);
+    if (product) {
+      setProductState(_objectSpread(_objectSpread({}, productState), {}, {
+        product: product
+      }));
+      initProductCart(product);
+    } else {
+      if (productId && categoryId) {
+        getProduct();
+      }
+    }
   }, [product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
