@@ -55,7 +55,9 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
   var UIComponent = props.UIComponent,
       pointWallet = props.pointWallet,
       propsToFetch = props.propsToFetch,
-      handleUpdateWalletBusiness = props.handleUpdateWalletBusiness;
+      handleUpdateWalletBusiness = props.handleUpdateWalletBusiness,
+      handleAddWalletBusiness = props.handleAddWalletBusiness,
+      handleDeleteWalletBusiness = props.handleDeleteWalletBusiness;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -101,17 +103,73 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
   var handleCheckBox = function handleCheckBox(businessId, name, checked) {
     var changes = _defineProperty({}, name, checked);
 
-    updateLoayalty(businessId, changes);
+    updateLoyalty(businessId, changes);
+  };
+  /**
+   * Update business data
+   * @param {Number} businessId id of business
+   * @param {String} name name of business
+   * @param {Boolean} name status of checkbox
+   */
+
+
+  var handleChangeSwitch = function handleChangeSwitch(businessId, checked) {
+    if (checked) {
+      var _businessList$busines;
+
+      var selectedBusiness = businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.find(function (business) {
+        return business.id === businessId;
+      });
+
+      if (selectedBusiness) {
+        var data = {
+          business_id: businessId,
+          redeems: selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.redeems,
+          accumulates: selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.accumulates,
+          loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id
+        };
+        addLoyaltyBusiness(data);
+      }
+    } else {
+      deleteLoyaltyBusiness(businessId);
+    }
   };
   /**
    * Method to update the business list
    */
 
 
-  var handleUpdateBusinessList = function handleUpdateBusinessList(result) {
+  var handleUpdateBusinessList = function handleUpdateBusinessList(id, changes) {
     var businesses = businessList.businesses.map(function (business) {
-      if (business.id === result.id) {
-        return _objectSpread(_objectSpread({}, business), result);
+      if (business.id === id) {
+        return _objectSpread(_objectSpread({}, business), changes);
+      }
+
+      return business;
+    });
+    setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+      businesses: businesses
+    }));
+  };
+  /**
+   * Method to update business status
+   */
+
+
+  var handleUpdateBusinessState = function handleUpdateBusinessState(result, enabled) {
+    var businesses = businessList.businesses.map(function (business) {
+      if (business.id === result.business_id) {
+        return _objectSpread(_objectSpread(_objectSpread(_objectSpread(_objectSpread({}, business), {}, {
+          wallet_enabled: enabled
+        }, !enabled && {
+          redeems: false
+        }), !enabled && {
+          accumulates: false
+        }), !enabled && {
+          redemption_rate: null
+        }), !enabled && {
+          accumulation_rate: null
+        });
       }
 
       return business;
@@ -125,7 +183,7 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
    */
 
 
-  var updateLoayalty = /*#__PURE__*/function () {
+  var updateLoyalty = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(businessId, changes) {
       var requestOptions, response, _yield$response$json, error, result;
 
@@ -160,12 +218,13 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
               result = _yield$response$json.result;
 
               if (!error) {
-                showToast(_ToastContext.ToastType.Success, t('POINTS_WALLET_UPDATED', 'Points wallet updated'));
+                showToast(_ToastContext.ToastType.Success, t('WALLET_BUSINESS_UPDATED', 'Wallet business updated'));
                 setActionState({
                   loading: false,
                   error: null
                 });
                 handleUpdateWalletBusiness && handleUpdateWalletBusiness(result);
+                handleUpdateBusinessList(businessId, changes);
               } else {
                 setActionState({
                   loading: false,
@@ -192,8 +251,161 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
       }, _callee, null, [[0, 15]]);
     }));
 
-    return function updateLoayalty(_x, _x2) {
+    return function updateLoyalty(_x, _x2) {
       return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to add the loyalty business data
+   */
+
+
+  var addLoyaltyBusiness = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(data) {
+      var requestOptions, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(data)
+              };
+              _context2.next = 6;
+              return fetch("".concat(ordering.root, "/loyalty_plans/").concat(pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id, "/businesses"), requestOptions);
+
+            case 6:
+              response = _context2.sent;
+              _context2.next = 9;
+              return response.json();
+
+            case 9:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('WALLET_BUSINESS_ENABLED', 'Wallet business enabled'));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                handleAddWalletBusiness && handleAddWalletBusiness(result);
+                handleUpdateBusinessState(result, true);
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
+                });
+              }
+
+              _context2.next = 18;
+              break;
+
+            case 15:
+              _context2.prev = 15;
+              _context2.t0 = _context2["catch"](0);
+              setActionState({
+                loading: false,
+                error: _context2.t0.message
+              });
+
+            case 18:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 15]]);
+    }));
+
+    return function addLoyaltyBusiness(_x3) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delete the loyalty business data
+   */
+
+
+  var deleteLoyaltyBusiness = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(businessId) {
+      var requestOptions, response, _yield$response$json3, error, result;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/loyalty_plans/").concat(pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id, "/businesses/").concat(businessId), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              _yield$response$json3 = _context3.sent;
+              error = _yield$response$json3.error;
+              result = _yield$response$json3.result;
+
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('WALLET_BUSINESS_DISABLED', 'Wallet business disabled'));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                handleDeleteWalletBusiness && handleDeleteWalletBusiness(result);
+                handleUpdateBusinessState(result, false);
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
+                });
+              }
+
+              _context3.next = 18;
+              break;
+
+            case 15:
+              _context3.prev = 15;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                loading: false,
+                error: _context3.t0.message
+              });
+
+            case 18:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 15]]);
+    }));
+
+    return function deleteLoyaltyBusiness(_x4) {
+      return _ref3.apply(this, arguments);
     };
   }();
   /**
@@ -202,23 +414,23 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
 
 
   var getBusinessTypes = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
       var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _pointWallet$business, _businessList;
 
-      return _regenerator.default.wrap(function _callee2$(_context2) {
+      return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context2.prev = 0;
+              _context4.prev = 0;
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: true
               }));
               fetchEndpoint = ordering.businesses().asDashboard().select(propsToFetch);
-              _context2.next = 5;
+              _context4.next = 5;
               return fetchEndpoint.get();
 
             case 5:
-              _yield$fetchEndpoint$ = _context2.sent;
+              _yield$fetchEndpoint$ = _context4.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               error = _yield$fetchEndpoint$2.error;
               result = _yield$fetchEndpoint$2.result;
@@ -228,19 +440,30 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
                 _businessList = [];
 
                 if ((pointWallet === null || pointWallet === void 0 ? void 0 : (_pointWallet$business = pointWallet.businesses) === null || _pointWallet$business === void 0 ? void 0 : _pointWallet$business.length) > 0) {
-                  _businessList = pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses.map(function (wallet) {
-                    var searchBusiness = result.find(function (business) {
-                      return business.id === wallet.business_id;
+                  _businessList = result.map(function (business) {
+                    var walletBusiness = pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses.find(function (item) {
+                      return item.business_id === business.id;
                     });
 
-                    if (searchBusiness) {
-                      return _objectSpread(_objectSpread({}, wallet), {}, {
-                        business_logo: searchBusiness === null || searchBusiness === void 0 ? void 0 : searchBusiness.logo,
-                        business_name: searchBusiness === null || searchBusiness === void 0 ? void 0 : searchBusiness.name
+                    if (walletBusiness) {
+                      return _objectSpread(_objectSpread({}, business), {}, {
+                        redeems: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redeems,
+                        accumulates: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulates,
+                        wallet_enabled: true,
+                        redemption_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redemption_rate,
+                        accumulation_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulation_rate,
+                        loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id
                       });
                     }
 
-                    return wallet;
+                    return _objectSpread(_objectSpread({}, business), {}, {
+                      redeems: false,
+                      accumulates: false,
+                      wallet_enabled: false,
+                      loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id,
+                      redemption_rate: null,
+                      accumulation_rate: null
+                    });
                   });
                 }
 
@@ -256,27 +479,27 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
                 }));
               }
 
-              _context2.next = 16;
+              _context4.next = 16;
               break;
 
             case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](0);
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
-                error: [_context2.t0 || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.toString()) || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.message)]
+                error: [_context4.t0 || (_context4.t0 === null || _context4.t0 === void 0 ? void 0 : _context4.t0.toString()) || (_context4.t0 === null || _context4.t0 === void 0 ? void 0 : _context4.t0.message)]
               }));
 
             case 16:
             case "end":
-              return _context2.stop();
+              return _context4.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee4, null, [[0, 13]]);
     }));
 
     return function getBusinessTypes() {
-      return _ref2.apply(this, arguments);
+      return _ref4.apply(this, arguments);
     };
   }();
 
@@ -288,8 +511,8 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,
     handleCheckBox: handleCheckBox,
-    updateLoayalty: updateLoayalty,
-    handleUpdateBusinessList: handleUpdateBusinessList
+    handleUpdateBusinessList: handleUpdateBusinessList,
+    handleChangeSwitch: handleChangeSwitch
   })));
 };
 
