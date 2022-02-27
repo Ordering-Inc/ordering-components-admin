@@ -109,7 +109,7 @@ export const BusinessSpreadSheet = (props) => {
             changes.push(item[0])
             const row = hotTableObj.getSourceDataAtRow(item[0])
             hotTableObj.validateRows(changes, function (res) { })
-            if (!row.name) {
+            if (!row.name && (row.price || row.quantity || row.description)) {
               error.name = true
               setFormState({
                 ...formState,

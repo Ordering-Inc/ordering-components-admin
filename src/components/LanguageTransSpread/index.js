@@ -103,9 +103,6 @@ export const LanguageTransSpread = (props) => {
       setFormState({ ...formState, result: { error: true, result: errors } })
     }
     if (itemToUpdate.length > 0) {
-      if (itemToUpdate[0]?.key) {
-        props.onSearch && props.onSearch(itemToUpdate[0]?.key)
-      }
       createBulkTranslations(itemToUpdate, false, hotTableObj)
     }
     if (itemToAdd.length > 0) {

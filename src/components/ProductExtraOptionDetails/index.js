@@ -280,12 +280,8 @@ export const ProductExtraOptionDetails = (props) => {
           changes = { ...changes, [key]: _changes[key] }
         }
       }
-      if (!changes?.name || !changes?.price) {
-        setEditErrors({
-          name: !changes?.name,
-          price: !changes?.price
-        })
-        return
+      if (!changes?.price) {
+        changes.price = 0
       }
       if (Object.keys(changes).length === 0) return
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -473,18 +469,16 @@ export const ProductExtraOptionDetails = (props) => {
   }, [extraState, conditionalOptionId])
 
   useEffect(() => {
-    if (!Object.keys(changesState.changes).length) return
+    if (!Object.keys(changesState.changes).length || isAddMode) return
     if (changesState?.changes?.name === '' || changesState?.changes?.price === '') {
       setEditErrors({
         name: changesState?.changes?.name === '',
         price: changesState?.changes?.price === ''
       })
     } else {
-      if (!isAddMode) {
-        handleUpdateSubOption()
-      }
+      handleUpdateSubOption()
     }
-  }, [changesState, isAddMode])
+  }, [changesState])
 
   useEffect(() => {
     setOptionState({ ...optionState, option: option })
