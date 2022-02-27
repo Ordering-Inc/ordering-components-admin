@@ -26,20 +26,20 @@ export const PointsWalletBusinessDetail = (props) => {
    * @param {EventTarget} evt Related HTML event
    */
   const handleChangeInput = (evt) => {
-    const value = evt.target.value || null
+    const value = evt.target.value
     setFormState({ ...formState, changes: { ...formState.changes, [evt.target.name]: value } })
   }
 
-  const handleSubmit = () => {
+  const handleClickSubmit = () => {
     if (Object.keys(formState?.changes).length === 0) return
-    updateLoayalty(walletData?.business_id, formState?.changes)
+    updateLoyalty(walletData?.id, formState?.changes)
   }
 
   /**
    * @param { Number } businessId id of loyalty business
    * @param {Object} changes data of business
    */
-  const updateLoayalty = async (businessId, changes) => {
+  const updateLoyalty = async (businessId, changes) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
@@ -60,7 +60,7 @@ export const PointsWalletBusinessDetail = (props) => {
         showToast(ToastType.Success, t('POINTS_WALLET_UPDATED', 'Points wallet updated'))
         setFormState({ ...formState, loading: false, error: null, changes: {} })
         handleUpdateWalletBusiness && handleUpdateWalletBusiness(result)
-        handleUpdateBusinessList && handleUpdateBusinessList(result)
+        handleUpdateBusinessList && handleUpdateBusinessList(changes)
         if (!isBusiness && handleUpdatePointsWallet) handleUpdatePointsWallet(result)
       } else {
         setFormState({ ...formState, loading: false, error: result })
@@ -77,7 +77,7 @@ export const PointsWalletBusinessDetail = (props) => {
           {...props}
           formState={formState}
           setFormState={setFormState}
-          handleSubmit={handleSubmit}
+          handleClickSubmit={handleClickSubmit}
           handleChangeInput={handleChangeInput}
         />
       )}
