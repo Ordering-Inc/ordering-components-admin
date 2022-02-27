@@ -28,8 +28,7 @@ export const BusinessProductsCategoyDetails = (props) => {
   const [parentCategories, setParentCategories] = useState([])
 
   useEffect(() => {
-    if (!category) return
-    setFormState({ ...formState, changes: category })
+    setFormState({ ...formState, changes: category || {} })
   }, [category])
 
   useEffect(() => {
@@ -196,12 +195,14 @@ export const BusinessProductsCategoyDetails = (props) => {
       })
       const { content } = await ordering.businesses(parseInt(businessState?.business?.id)).categories().save(formState.changes)
       if (!content.error) {
+        const newCategory = { ...content.result }
+        newCategory.parent_category_id = content.result?.parent_category_id || null
         setFormState({
           ...formState,
           category: {},
           result: {
             error: false,
-            result: content.result
+            result: newCategory
           },
           loading: false
         })
@@ -210,12 +211,12 @@ export const BusinessProductsCategoyDetails = (props) => {
           if (content?.result.parent_category_id) {
             _categories.forEach(function iterate (category) {
               if (category?.id === content?.result.parent_category_id) {
-                category.subcategories.push({ ...content.result, products: [], subcategories: [] })
+                category.subcategories.push({ ...newCategory, products: [], subcategories: [] })
               }
               Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
             })
           } else {
-            _categories.push({ ...content.result, products: [], subcategories: [] })
+            _categories.push({ ...newCategory, products: [], subcategories: [] })
           }
           handleUpdateBusinessState({ ...businessState.business, categories: _categories })
         }
