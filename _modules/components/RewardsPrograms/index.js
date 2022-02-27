@@ -29,6 +29,14 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -86,6 +94,32 @@ var RewardsPrograms = function RewardsPrograms(props) {
       }
 
       return business;
+    });
+    setPointWallet(_objectSpread(_objectSpread({}, pointWallet), {}, {
+      businesses: businesses
+    }));
+  };
+  /**
+   * Method to add the pointsWallet business
+   */
+
+
+  var handleAddWalletBusiness = function handleAddWalletBusiness(result) {
+    var businesses = [].concat(_toConsumableArray(pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses), [result]);
+    setPointWallet(_objectSpread(_objectSpread({}, pointWallet), {}, {
+      businesses: businesses
+    }));
+  };
+  /**
+   * Method to add the pointsWallet business
+   */
+
+
+  var handleDeleteWalletBusiness = function handleDeleteWalletBusiness(result) {
+    var _pointWallet$business;
+
+    var businesses = pointWallet === null || pointWallet === void 0 ? void 0 : (_pointWallet$business = pointWallet.businesses) === null || _pointWallet$business === void 0 ? void 0 : _pointWallet$business.filter(function (business) {
+      return business.id !== result.id;
     });
     setPointWallet(_objectSpread(_objectSpread({}, pointWallet), {}, {
       businesses: businesses
@@ -199,7 +233,9 @@ var RewardsPrograms = function RewardsPrograms(props) {
     loyaltyPlanList: loyaltyPlanList,
     pointWallet: pointWallet,
     handleUpdateWalletBusiness: handleUpdateWalletBusiness,
-    handleUpdatePointsWallet: handleUpdatePointsWallet
+    handleUpdatePointsWallet: handleUpdatePointsWallet,
+    handleAddWalletBusiness: handleAddWalletBusiness,
+    handleDeleteWalletBusiness: handleDeleteWalletBusiness
   })));
 };
 

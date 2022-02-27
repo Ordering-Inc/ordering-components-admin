@@ -175,7 +175,12 @@ var PointsWalletLevels = function PointsWalletLevels(props) {
     setEditFormState(_objectSpread(_objectSpread({}, editFormState), {}, {
       changes: changes
     }));
-    updateLevel(_defineProperty({}, evt.target.name, evt.target.value), levelId);
+  };
+
+  var handleUpdateBtnClick = function handleUpdateBtnClick() {
+    var _editFormState$change2;
+
+    updateLevel(editFormState === null || editFormState === void 0 ? void 0 : editFormState.changes, editFormState === null || editFormState === void 0 ? void 0 : (_editFormState$change2 = editFormState.changes) === null || _editFormState$change2 === void 0 ? void 0 : _editFormState$change2.id);
   };
   /**
    * Default fuction to add a level
@@ -421,11 +426,9 @@ var PointsWalletLevels = function PointsWalletLevels(props) {
             case 0:
               _context4.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setEditFormState(function (preState) {
-                return _objectSpread(_objectSpread({}, preState), {}, {
-                  loading: true
-                });
-              });
+              setEditFormState(_objectSpread(_objectSpread({}, editFormState), {}, {
+                loading: true
+              }));
               requestOptions = {
                 method: 'PUT',
                 headers: {
@@ -448,21 +451,18 @@ var PointsWalletLevels = function PointsWalletLevels(props) {
               result = _yield$response$json4.result;
 
               if (!error) {
-                setEditFormState(function (preState) {
-                  return _objectSpread(_objectSpread({}, preState), {}, {
-                    loading: false,
-                    error: null
-                  });
+                setEditFormState({
+                  changes: {},
+                  loading: false,
+                  error: null
                 });
                 handleUpdateLevelList(result);
                 showToast(_ToastContext.ToastType.Success, t('LEVEL_UPDATED', 'Level updated'));
               } else {
-                setEditFormState(function (preState) {
-                  return _objectSpread(_objectSpread({}, preState), {}, {
-                    loading: false,
-                    error: result
-                  });
-                });
+                setEditFormState(_objectSpread(_objectSpread({}, editFormState), {}, {
+                  loading: false,
+                  error: result
+                }));
               }
 
               _context4.next = 18;
@@ -499,7 +499,8 @@ var PointsWalletLevels = function PointsWalletLevels(props) {
     handleChangeInput: handleChangeInput,
     handleUpdateAddClick: handleUpdateAddClick,
     handleUpdateDeleteClick: handleUpdateDeleteClick,
-    handleUpdateLevel: handleUpdateLevel
+    handleUpdateLevel: handleUpdateLevel,
+    handleUpdateBtnClick: handleUpdateBtnClick
   })));
 };
 
