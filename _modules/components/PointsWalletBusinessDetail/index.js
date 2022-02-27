@@ -90,15 +90,15 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
 
 
   var handleChangeInput = function handleChangeInput(evt) {
-    var value = evt.target.value || null;
+    var value = evt.target.value;
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, evt.target.name, value))
     }));
   };
 
-  var handleSubmit = function handleSubmit() {
+  var handleClickSubmit = function handleClickSubmit() {
     if (Object.keys(formState === null || formState === void 0 ? void 0 : formState.changes).length === 0) return;
-    updateLoayalty(walletData === null || walletData === void 0 ? void 0 : walletData.business_id, formState === null || formState === void 0 ? void 0 : formState.changes);
+    updateLoyalty(walletData === null || walletData === void 0 ? void 0 : walletData.id, formState === null || formState === void 0 ? void 0 : formState.changes);
   };
   /**
    * @param { Number } businessId id of loyalty business
@@ -106,7 +106,7 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
    */
 
 
-  var updateLoayalty = /*#__PURE__*/function () {
+  var updateLoyalty = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(businessId, changes) {
       var requestOptions, fetchEndpoint, response, _yield$response$json, error, result;
 
@@ -149,7 +149,7 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
                   changes: {}
                 }));
                 handleUpdateWalletBusiness && handleUpdateWalletBusiness(result);
-                handleUpdateBusinessList && handleUpdateBusinessList(result);
+                handleUpdateBusinessList && handleUpdateBusinessList(changes);
                 if (!isBusiness && handleUpdatePointsWallet) handleUpdatePointsWallet(result);
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -177,7 +177,7 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
       }, _callee, null, [[0, 16]]);
     }));
 
-    return function updateLoayalty(_x, _x2) {
+    return function updateLoyalty(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -185,7 +185,7 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     setFormState: setFormState,
-    handleSubmit: handleSubmit,
+    handleClickSubmit: handleClickSubmit,
     handleChangeInput: handleChangeInput
   })));
 };
