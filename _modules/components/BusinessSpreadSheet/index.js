@@ -214,7 +214,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
             var row = hotTableObj.getSourceDataAtRow(item[0]);
             hotTableObj.validateRows(changes, function (res) {});
 
-            if (!row.name) {
+            if (!row.name && (row.price || row.quantity || row.description)) {
               error.name = true;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
