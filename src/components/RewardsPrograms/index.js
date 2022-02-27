@@ -34,6 +34,28 @@ export const RewardsPrograms = (props) => {
   }
 
   /**
+   * Method to add the pointsWallet business
+   */
+  const handleAddWalletBusiness = (result) => {
+    const businesses = [...pointWallet?.businesses, result]
+    setPointWallet({
+      ...pointWallet,
+      businesses: businesses
+    })
+  }
+
+  /**
+   * Method to add the pointsWallet business
+   */
+  const handleDeleteWalletBusiness = (result) => {
+    const businesses = pointWallet?.businesses?.filter(business => business.id !== result.id)
+    setPointWallet({
+      ...pointWallet,
+      businesses: businesses
+    })
+  }
+
+  /**
    * Method to update the pointsWallet
    */
   const handleUpdatePointsWallet = (changes) => {
@@ -100,6 +122,8 @@ export const RewardsPrograms = (props) => {
           pointWallet={pointWallet}
           handleUpdateWalletBusiness={handleUpdateWalletBusiness}
           handleUpdatePointsWallet={handleUpdatePointsWallet}
+          handleAddWalletBusiness={handleAddWalletBusiness}
+          handleDeleteWalletBusiness={handleDeleteWalletBusiness}
         />
       )}
     </>

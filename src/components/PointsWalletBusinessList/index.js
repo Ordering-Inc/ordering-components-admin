@@ -10,7 +10,9 @@ export const PointsWalletBusinessList = (props) => {
     UIComponent,
     pointWallet,
     propsToFetch,
-    handleUpdateWalletBusiness
+    handleUpdateWalletBusiness,
+    handleAddWalletBusiness,
+    handleDeleteWalletBusiness
   } = props
 
   const [ordering] = useApi()
@@ -28,18 +30,64 @@ export const PointsWalletBusinessList = (props) => {
    */
   const handleCheckBox = (businessId, name, checked) => {
     const changes = { [name]: checked }
-    updateLoayalty(businessId, changes)
+    updateLoyalty(businessId, changes)
+  }
+
+  /**
+   * Update business data
+   * @param {Number} businessId id of business
+   * @param {String} name name of business
+   * @param {Boolean} name status of checkbox
+   */
+  const handleChangeSwitch = (businessId, checked) => {
+    if (checked) {
+      const selectedBusiness = businessList?.businesses?.find(business => business.id === businessId)
+      if (selectedBusiness) {
+        const data = {
+          business_id: businessId,
+          redeems: selectedBusiness?.redeems,
+          accumulates: selectedBusiness?.accumulates,
+          loyalty_plan_id: pointWallet?.id
+        }
+        addLoyaltyBusiness(data)
+      }
+    } else {
+      deleteLoyaltyBusiness(businessId)
+    }
   }
 
   /**
    * Method to update the business list
    */
-  const handleUpdateBusinessList = (result) => {
+  const handleUpdateBusinessList = (id, changes) => {
     const businesses = businessList.businesses.map(business => {
-      if (business.id === result.id) {
+      if (business.id === id) {
         return {
           ...business,
-          ...result
+          ...changes
+        }
+      }
+      return business
+    })
+    setBusinessList({
+      ...businessList,
+      businesses: businesses
+    })
+  }
+
+  /**
+   * Method to update business status
+   */
+  const handleUpdateBusinessState = (result, enabled) => {
+    const businesses = businessList.businesses.map(business => {
+      if (business.id === result.business_id) {
+        return {
+          ...business,
+          wallet_enabled: enabled,
+          ...(!enabled && { redeems: false }),
+          ...(!enabled && { accumulates: false }),
+          ...(!enabled && { redemption_rate: null }),
+          ...(!enabled && { accumulation_rate: null })
         }
       }
       return business
@@ -53,7 +101,7 @@ export const PointsWalletBusinessList = (props) => {
   /**
    * Method to update the loyalty data
    */
-  const updateLoayalty = async (businessId, changes) => {
+  const updateLoyalty = async (businessId, changes) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
@@ -68,9 +116,69 @@ export const PointsWalletBusinessList = (props) => {
       const response = await fetch(`${ordering.root}/loyalty_plans/${pointWallet?.id}/businesses/${businessId}`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        showToast(ToastType.Success, t('POINTS_WALLET_UPDATED', 'Points wallet updated'))
+        showToast(ToastType.Success, t('WALLET_BUSINESS_UPDATED', 'Wallet business updated'))
         setActionState({ loading: false, error: null })
         handleUpdateWalletBusiness && handleUpdateWalletBusiness(result)
+        handleUpdateBusinessList(businessId, changes)
+      } else {
+        setActionState({ loading: false, error: result })
+      }
+    } catch (error) {
+      setActionState({ loading: false, error: error.message })
+    }
+  }
+
+  /**
+   * Method to add the loyalty business data
+   */
+  const addLoyaltyBusiness = async (data) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      }
+      const response = await fetch(`${ordering.root}/loyalty_plans/${pointWallet?.id}/businesses`, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        showToast(ToastType.Success, t('WALLET_BUSINESS_ENABLED', 'Wallet business enabled'))
+        setActionState({ loading: false, error: null })
+        handleAddWalletBusiness && handleAddWalletBusiness(result)
+        handleUpdateBusinessState(result, true)
+      } else {
+        setActionState({ loading: false, error: result })
+      }
+    } catch (error) {
+      setActionState({ loading: false, error: error.message })
+    }
+  }
+
+  /**
+   * Method to delete the loyalty business data
+   */
+  const deleteLoyaltyBusiness = async (businessId) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/loyalty_plans/${pointWallet?.id}/businesses/${businessId}`, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        showToast(ToastType.Success, t('WALLET_BUSINESS_DISABLED', 'Wallet business disabled'))
+        setActionState({ loading: false, error: null })
+        handleDeleteWalletBusiness && handleDeleteWalletBusiness(result)
+        handleUpdateBusinessState(result, false)
       } else {
         setActionState({ loading: false, error: result })
       }
@@ -93,16 +201,28 @@ export const PointsWalletBusinessList = (props) => {
       if (!error) {
         let _businessList = []
         if (pointWallet?.businesses?.length > 0) {
-          _businessList = pointWallet?.businesses.map(wallet => {
-            const searchBusiness = result.find(business => business.id === wallet.business_id)
-            if (searchBusiness) {
+          _businessList = result.map(business => {
+            const walletBusiness = pointWallet?.businesses.find(item => item.business_id === business.id)
+            if (walletBusiness) {
               return {
-                ...wallet,
-                business_logo: searchBusiness?.logo,
-                business_name: searchBusiness?.name
+                ...business,
+                redeems: walletBusiness?.redeems,
+                accumulates: walletBusiness?.accumulates,
+                wallet_enabled: true,
+                redemption_rate: walletBusiness?.redemption_rate,
+                accumulation_rate: walletBusiness?.accumulation_rate,
+                loyalty_plan_id: pointWallet?.id
               }
             }
-            return wallet
+            return {
+              ...business,
+              redeems: false,
+              accumulates: false,
+              wallet_enabled: false,
+              loyalty_plan_id: pointWallet?.id,
+              redemption_rate: null,
+              accumulation_rate: null
+            }
           })
         }
         setBusinessList({
@@ -140,8 +260,8 @@ export const PointsWalletBusinessList = (props) => {
           {...props}
           businessList={businessList}
           handleCheckBox={handleCheckBox}
-          updateLoayalty={updateLoayalty}
           handleUpdateBusinessList={handleUpdateBusinessList}
+          handleChangeSwitch={handleChangeSwitch}
         />
       )}
     </>

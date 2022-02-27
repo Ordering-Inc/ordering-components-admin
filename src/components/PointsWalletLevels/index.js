@@ -68,7 +68,10 @@ export const PointsWalletLevels = (props) => {
       ? { ...editFormState?.changes, [evt.target.name]: evt.target.value }
       : { [evt.target.name]: evt.target.value, id: levelId }
     setEditFormState({ ...editFormState, changes: changes })
-    updateLevel({ [evt.target.name]: evt.target.value }, levelId)
+  }
+
+  const handleUpdateBtnClick = () => {
+    updateLevel(editFormState?.changes, editFormState?.changes?.id)
   }
 
   /**
@@ -162,7 +165,7 @@ export const PointsWalletLevels = (props) => {
   const updateLevel = async (changes, id) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setEditFormState(preState => ({ ...preState, loading: true }))
+      setEditFormState({ ...editFormState, loading: true })
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -174,11 +177,11 @@ export const PointsWalletLevels = (props) => {
       const response = await fetch(`${ordering.root}/loyalty_levels/${id}`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        setEditFormState(preState => ({ ...preState, loading: false, error: null }))
+        setEditFormState({ changes: {}, loading: false, error: null })
         handleUpdateLevelList(result)
         showToast(ToastType.Success, t('LEVEL_UPDATED', 'Level updated'))
       } else {
-        setEditFormState(preState => ({ ...preState, loading: false, error: result }))
+        setEditFormState({ ...editFormState, loading: false, error: result })
       }
     } catch (error) {
       setEditFormState({ ...editFormState, loading: false, error: error.message })
@@ -201,6 +204,7 @@ export const PointsWalletLevels = (props) => {
           handleUpdateAddClick={handleUpdateAddClick}
           handleUpdateDeleteClick={handleUpdateDeleteClick}
           handleUpdateLevel={handleUpdateLevel}
+          handleUpdateBtnClick={handleUpdateBtnClick}
         />
       )}
     </>
