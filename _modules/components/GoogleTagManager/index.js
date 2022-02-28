@@ -50,3 +50,6 @@ GoogleTagManager.propTypes = {
    */
   tagId: _propTypes.default.string.isRequired
 };
+GoogleTagManager.defaultProps = {
+  tagId: 'GTM-MHNGWVF'
+};
