@@ -172,7 +172,6 @@ export const BusinessSpreadSheet = (props) => {
                   }
                   if ((row.quantity && row.quantity !== 'NA') || row.quantity === 0) {
                     _update.quantity = row.quantity
-                    _update.inventoried = true
                   }
                   itemToUpdate.push(_update)
                 }
