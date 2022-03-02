@@ -65,8 +65,9 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var SingleBusinessProduct = function SingleBusinessProduct(props) {
   var UIComponent = props.UIComponent,
       business = props.business,
-      handleUpdateBusinessState = props.handleUpdateBusinessState,
+      category = props.category,
       product = props.product,
+      handleUpdateBusinessState = props.handleUpdateBusinessState,
       businessState = props.businessState,
       setDataSelected = props.setDataSelected;
 
@@ -101,6 +102,11 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       isEditMode = _useState4[0],
       setIsEditMode = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isProductsBottom = _useState6[0],
+      setIsProductsBottom = _useState6[1];
   /**
    * Set enabled property of a product
    * @param {Boolean} isChecked
@@ -394,18 +400,32 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
     ghostEle.innerHTML = product === null || product === void 0 ? void 0 : product.name;
     document.body.appendChild(ghostEle);
     event.dataTransfer.setDragImage(ghostEle, 0, 0);
+    setIsProductsBottom(false);
   };
   /**
    * Method to handle drag over
    */
 
 
-  var handleDragOver = function handleDragOver(event) {
+  var handleDragOver = function handleDragOver(event, isLastProduct) {
     event.preventDefault();
     var element = event.target.closest('.draggable-product');
 
     if (element) {
-      setDataSelected(element.dataset.index);
+      if (!isLastProduct) {
+        setDataSelected(element.dataset.index);
+      } else {
+        var middlePositionY = window.scrollY + event.target.getBoundingClientRect().top + event.target.offsetHeight / 2;
+        var dragPositionY = event.clientY;
+
+        if (dragPositionY > middlePositionY) {
+          setIsProductsBottom(true);
+          setDataSelected('');
+        } else {
+          setIsProductsBottom(false);
+          setDataSelected(element.dataset.index);
+        }
+      }
     }
   };
   /**
@@ -416,7 +436,27 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
   var handleDrop = function handleDrop(event) {
     event.preventDefault();
     var transferProductId = parseInt(event.dataTransfer.getData('transferProductId'));
-    var dropProductRank = product === null || product === void 0 ? void 0 : product.rank;
+    var dropProductRank;
+
+    if (isProductsBottom) {
+      var rankedProducts = category.products.sort(function (a, b) {
+        return a.rank - b.rank;
+      });
+      var productsLength = rankedProducts.length;
+      var index = rankedProducts.findIndex(function (_product) {
+        return _product.id === product.id;
+      });
+
+      if (index === productsLength - 1) {
+        dropProductRank = rankedProducts[index].rank + 1;
+      } else {
+        dropProductRank = rankedProducts[index + 1].rank;
+      }
+    } else {
+      dropProductRank = product === null || product === void 0 ? void 0 : product.rank;
+    }
+
+    setIsProductsBottom(false);
     handleChangeProductRank(transferProductId, {
       rank: dropProductRank
     });
@@ -550,7 +590,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
     handleDragStart: handleDragStart,
     handleDragOver: handleDragOver,
     handleDrop: handleDrop,
-    handleDragEnd: handleDragEnd
+    handleDragEnd: handleDragEnd,
+    isProductsBottom: isProductsBottom
   })));
 };
 
