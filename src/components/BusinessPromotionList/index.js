@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
 
 export const BusinessPromotionList = (props) => {
   const {
@@ -12,10 +14,14 @@ export const BusinessPromotionList = (props) => {
     handleSuccessUpdate
   } = props
 
+  const [, t] = useLanguage()
   const [ordering] = useApi()
   const [{ token }] = useSession()
+  const [, { showToast }] = useToast()
+
   const [promotionListState, setPromotionListState] = useState({ promotions: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
+  const [isSuccessDeleted, setIsSuccessDeleted] = useState(false)
 
   /**
    * Method to get the business promotions from API
@@ -50,6 +56,7 @@ export const BusinessPromotionList = (props) => {
    */
   const handleChangePromotionActiveState = async (enabled, promotionId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'PUT',
@@ -69,7 +76,7 @@ export const BusinessPromotionList = (props) => {
           return true
         })
         setPromotionListState({ ...promotionListState, promotions: _promotions })
-
+        showToast(ToastType.Success, t('PROMOTION_SAVED', 'Promotion saved'))
         if (handleSuccessUpdate) {
           handleSuccessUpdate({ ...business, offers: _promotions })
         }
@@ -85,6 +92,7 @@ export const BusinessPromotionList = (props) => {
    */
   const handleDeletePromotion = async (promotionId) => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true })
       const requestOptions = {
         method: 'DELETE',
@@ -102,6 +110,8 @@ export const BusinessPromotionList = (props) => {
         if (handleSuccessUpdate) {
           handleSuccessUpdate({ ...business, offers: _promotions })
         }
+        showToast(ToastType.Success, t('PROMOTION_DELETED', 'Promotion deleted'))
+        setIsSuccessDeleted(true)
       }
     } catch (err) {
       setActionState({ loading: false, error: [err.message] })
@@ -129,6 +139,8 @@ export const BusinessPromotionList = (props) => {
             promotionListState={promotionListState}
             handleChangePromotionActiveState={handleChangePromotionActiveState}
             handleDeletePromotion={handleDeletePromotion}
+            isSuccessDeleted={isSuccessDeleted}
+            setIsSuccessDeleted={setIsSuccessDeleted}
           />
         )
       }
