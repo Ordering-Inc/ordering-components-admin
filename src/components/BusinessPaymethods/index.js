@@ -28,6 +28,7 @@ export const BusinessPaymethods = (props) => {
   const [actionState, setActionState] = useState({ loading: false, result: { error: false } })
   const [changesState, setChangesState] = useState({})
   const [stripeConnectData, setStripeConnectData] = useState({})
+  const [isSuccessDeleted, setIsSuccessDeleted] = useState(false)
   const stripeClientId = configState?.configs?.stripe_connect_sandbox?.value === '1'
     ? configState?.configs?.stripe_connect_client_id_sandbox?.value
     : configState?.configs?.stripe_connect_client_id?.value
@@ -228,6 +229,7 @@ export const BusinessPaymethods = (props) => {
         const updatedPaymethods = businessPaymethodsState.paymethods.filter(paymethod => paymethod.paymethod_id !== paymethodId)
         setBusinessPaymethodsState({ ...businessPaymethodsState, paymethods: updatedPaymethods })
         showToast(ToastType.Success, t('PAYMETHOD_DELETED', 'Payment method deleted'))
+        setIsSuccessDeleted(true)
       }
     } catch (err) {
       setActionState({ result: { error: true, result: err.message }, loading: false })
@@ -429,6 +431,8 @@ export const BusinessPaymethods = (props) => {
           handleStripeConnect={handleStripeConnect}
           handleChangeStripeInput={handleChangeStripeInput}
           handleStripeSave={handleStripeSave}
+          isSuccessDeleted={isSuccessDeleted}
+          setIsSuccessDeleted={setIsSuccessDeleted}
         />
       )}
     </>
