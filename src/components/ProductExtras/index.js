@@ -13,6 +13,7 @@ export const ProductExtras = (props) => {
     business,
     UIComponent,
     product,
+    handleSuccessUpdate,
     handleUpdateBusinessState
   } = props
   const [ordering] = useApi()
@@ -24,32 +25,6 @@ export const ProductExtras = (props) => {
   const [extrasState, setExtrasState] = useState({ extras: business?.extras, loading: false, error: null })
   const [changesState, setChangesState] = useState({})
   const [isAddMode, setIsAddMode] = useState(false)
-
-  /**
-   * Method to update the business state from updated product
-   * @param {Object} updatedProduct
-   */
-  const updateBusinessState = (updatedProduct, businessState) => {
-    if (handleUpdateBusinessState) {
-      const categories = businessState.categories.map(item => {
-        if (item.id === parseInt(product?.category_id)) {
-          const _products = item.products.map(prod => {
-            if (prod.id === product?.id) {
-              Object.assign(prod, updatedProduct)
-            }
-            return prod
-          })
-          return {
-            ...item,
-            products: _products
-          }
-        }
-        return item
-      })
-      const updatedBusiness = { ...businessState, categories: categories }
-      handleUpdateBusinessState(updatedBusiness)
-    }
-  }
 
   /**
    * Method to save the new ingredient from API
@@ -83,7 +58,8 @@ export const ProductExtras = (props) => {
           loading: false,
           product: updatedProduct
         })
-        updateBusinessState(updatedProduct, business)
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
+        // updateBusinessState(updatedProduct, business)
         showToast(ToastType.Success, t('EXTRA_SAVED', 'Extra saved'))
       }
     } catch (err) {
@@ -148,24 +124,7 @@ export const ProductExtras = (props) => {
         const updatedProduct = { ...product, extras: productExtras }
         setProductState({ ...productState, product: updatedProduct })
 
-        if (handleUpdateBusinessState) {
-          const businessState = { ...business, extras: extras }
-          const categories = businessState.categories.map(item => {
-            const _products = item.products.map(prod => {
-              const _extras = prod.extras.filter(extra => {
-                if (extra.id === content.result.id) {
-                  Object.assign(extra, content.result)
-                }
-                return true
-              })
-              return { ...prod, extras: _extras }
-            })
-            const _item = { ...item, products: _products }
-            return _item
-          })
-          const updatedBusiness = { ...businessState, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('EXTRA_SAVED', 'Extra saved'))
       }
     } catch (err) {
@@ -208,19 +167,7 @@ export const ProductExtras = (props) => {
         const productExtras = productState.product.extras.filter(extra => extra.id !== extraId)
         const updatedProduct = { ...product, extras: productExtras }
         setProductState({ ...productState, product: updatedProduct })
-        if (handleUpdateBusinessState) {
-          const businessState = { ...business, extras: extras }
-          const categories = businessState.categories.map(item => {
-            const _products = item.products.map(prod => {
-              const _extras = prod.extras.filter(extra => extra.id !== extraId)
-              return { ...prod, extras: _extras }
-            })
-            const _item = { ...item, products: _products }
-            return _item
-          })
-          const updatedBusiness = { ...businessState, categories: categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate && handleSuccessUpdate(updatedProduct)
         showToast(ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'))
       }
     } catch (err) {
