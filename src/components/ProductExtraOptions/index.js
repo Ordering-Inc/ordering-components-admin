@@ -364,6 +364,7 @@ export const ProductExtraOptions = (props) => {
 
           curOption={curOption}
           openModal={openModal}
+          setCurOption={setCurOption}
           setOpenModal={setOpenModal}
           handleOpenModal={handleOpenModal}
         />
