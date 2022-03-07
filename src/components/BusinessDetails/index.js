@@ -77,7 +77,10 @@ export const BusinessDetails = (props) => {
       if (!error) {
         setBusinessState({
           ...businessState,
-          business: result
+          business: {
+            ...businessState.business,
+            ...result
+          }
         })
         showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
