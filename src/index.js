@@ -17,6 +17,7 @@ import { BusinessBrandBUSIDetail } from './components/BusinessBrandBUSIDetail'
 import { BusinessBrandGENDetail } from './components/BusinessBrandGENDetail'
 import { BusinessBrandListing } from './components/BusinessBrandListing'
 import { BusinessController } from './components/BusinessController'
+import { BusinessDeliveryDetails } from './components/BusinessDeliveryDetails'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
@@ -219,6 +220,7 @@ export {
   BusinessBrandGENDetail,
   BusinessBrandListing,
   BusinessController,
+  BusinessDeliveryDetails,
   BusinessDeliveryZone,
   BusinessDetails,
   BusinessFormDetails,
