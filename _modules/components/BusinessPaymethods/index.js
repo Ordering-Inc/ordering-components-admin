@@ -140,6 +140,11 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
       stripeConnectData = _useState12[0],
       setStripeConnectData = _useState12[1];
 
+  var _useState13 = (0, _react.useState)(false),
+      _useState14 = _slicedToArray(_useState13, 2),
+      isSuccessDeleted = _useState14[0],
+      setIsSuccessDeleted = _useState14[1];
+
   var stripeClientId = (configState === null || configState === void 0 ? void 0 : (_configState$configs = configState.configs) === null || _configState$configs === void 0 ? void 0 : (_configState$configs$ = _configState$configs.stripe_connect_sandbox) === null || _configState$configs$ === void 0 ? void 0 : _configState$configs$.value) === '1' ? configState === null || configState === void 0 ? void 0 : (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 ? void 0 : (_configState$configs3 = _configState$configs2.stripe_connect_client_id_sandbox) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value : configState === null || configState === void 0 ? void 0 : (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 ? void 0 : (_configState$configs5 = _configState$configs4.stripe_connect_client_id) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value;
   /**
    * Clean formState
@@ -601,6 +606,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                   paymethods: updatedPaymethods
                 }));
                 showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_DELETED', 'Payment method deleted'));
+                setIsSuccessDeleted(true);
               }
 
               _context6.next = 17;
@@ -831,7 +837,9 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     handleSaveClick: handleSaveClick,
     handleStripeConnect: handleStripeConnect,
     handleChangeStripeInput: handleChangeStripeInput,
-    handleStripeSave: handleStripeSave
+    handleStripeSave: handleStripeSave,
+    isSuccessDeleted: isSuccessDeleted,
+    setIsSuccessDeleted: setIsSuccessDeleted
   })));
 };
 
