@@ -208,7 +208,7 @@ var BusinessDetails = function BusinessDetails(props) {
 
               if (!error) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: result
+                  business: _objectSpread(_objectSpread({}, businessState.business), result)
                 }));
                 showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
               }
