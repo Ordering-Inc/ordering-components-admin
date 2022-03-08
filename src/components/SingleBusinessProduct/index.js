@@ -12,8 +12,9 @@ export const SingleBusinessProduct = (props) => {
   const {
     UIComponent,
     business,
-    handleUpdateBusinessState,
+    category,
     product,
+    handleUpdateBusinessState,
     businessState,
     setDataSelected
   } = props
@@ -24,6 +25,8 @@ export const SingleBusinessProduct = (props) => {
   const [, { showToast }] = useToast()
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [isEditMode, setIsEditMode] = useState(false)
+
+  const [isProductsBottom, setIsProductsBottom] = useState(false)
 
   /**
    * Set enabled property of a product
@@ -216,16 +219,29 @@ export const SingleBusinessProduct = (props) => {
     ghostEle.innerHTML = product?.name
     document.body.appendChild(ghostEle)
     event.dataTransfer.setDragImage(ghostEle, 0, 0)
+    setIsProductsBottom(false)
   }
 
   /**
    * Method to handle drag over
    */
-  const handleDragOver = (event) => {
+  const handleDragOver = (event, isLastProduct) => {
     event.preventDefault()
     const element = event.target.closest('.draggable-product')
     if (element) {
-      setDataSelected(element.dataset.index)
+      if (!isLastProduct) {
+        setDataSelected(element.dataset.index)
+      } else {
+        const middlePositionY = window.scrollY + event.target.getBoundingClientRect().top + event.target.offsetHeight / 2
+        const dragPositionY = event.clientY
+        if (dragPositionY > middlePositionY) {
+          setIsProductsBottom(true)
+          setDataSelected('')
+        } else {
+          setIsProductsBottom(false)
+          setDataSelected(element.dataset.index)
+        }
+      }
     }
   }
 
@@ -235,7 +251,21 @@ export const SingleBusinessProduct = (props) => {
   const handleDrop = (event) => {
     event.preventDefault()
     const transferProductId = parseInt(event.dataTransfer.getData('transferProductId'))
-    const dropProductRank = product?.rank
+    let dropProductRank
+    if (isProductsBottom) {
+      const rankedProducts = category.products.sort((a, b) => a.rank - b.rank)
+      const productsLength = rankedProducts.length
+      const index = rankedProducts.findIndex(_product => _product.id === product.id)
+
+      if (index === productsLength - 1) {
+        dropProductRank = rankedProducts[index].rank + 1
+      } else {
+        dropProductRank = rankedProducts[index + 1].rank
+      }
+    } else {
+      dropProductRank = product?.rank
+    }
+    setIsProductsBottom(false)
     handleChangeProductRank(transferProductId, { rank: dropProductRank })
   }
 
@@ -326,6 +356,7 @@ export const SingleBusinessProduct = (props) => {
           handleDragOver={handleDragOver}
           handleDrop={handleDrop}
           handleDragEnd={handleDragEnd}
+          isProductsBottom={isProductsBottom}
         />
       )}
     </>
