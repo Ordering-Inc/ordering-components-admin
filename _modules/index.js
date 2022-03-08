@@ -225,6 +225,12 @@ Object.defineProperty(exports, "BusinessPaymethods", {
     return _BusinessPaymethods.BusinessPaymethods;
   }
 });
+Object.defineProperty(exports, "BusinessPickupDetails", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPickupDetails.BusinessPickupDetails;
+  }
+});
 Object.defineProperty(exports, "BusinessProductCreator", {
   enumerable: true,
   get: function get() {
@@ -1447,6 +1453,8 @@ var _BusinessMenuShare = require("./components/BusinessMenuShare");
 var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessPaymethods = require("./components/BusinessPaymethods");
+
+var _BusinessPickupDetails = require("./components/BusinessPickupDetails");
 
 var _BusinessProductsCategoyDetails = require("./components/BusinessProductsCategoyDetails");
 
