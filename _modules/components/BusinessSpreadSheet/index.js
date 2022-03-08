@@ -276,14 +276,13 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                     name: row.name,
                     description: row.description ? row.description : ' ',
                     price: row.price ? row.price : 0,
-                    offer_price: (row === null || row === void 0 ? void 0 : row.offer_price) || 0,
+                    inventoried: (row === null || row === void 0 ? void 0 : row.inventoried) || false,
                     category_id: id,
                     business_id: business === null || business === void 0 ? void 0 : business.id
                   };
 
                   if (row.quantity && row.quantity !== 'NA' || row.quantity === 0) {
                     _update.quantity = row.quantity;
-                    _update.inventoried = true;
                   }
 
                   itemToUpdate.push(_update);

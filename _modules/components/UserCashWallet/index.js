@@ -537,7 +537,11 @@ var UserCashWallet = function UserCashWallet(props) {
     }
 
     if (event.event_type === 'refund') {
-      eventLog = t('REFUND');
+      eventLog = t('REFUND_MONEY', 'Refund money');
+    }
+
+    if (event.event_type === 'payment') {
+      eventLog = t('PAID_MONEY', 'Paid money');
     }
 
     return eventLog;

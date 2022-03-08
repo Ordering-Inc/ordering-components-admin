@@ -694,6 +694,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleSucccessDeleteOption: handleSucccessDeleteOption,
     curOption: curOption,
     openModal: openModal,
+    setCurOption: setCurOption,
     setOpenModal: setOpenModal,
     handleOpenModal: handleOpenModal
   })));

@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -66,6 +66,7 @@ var ProductExtras = function ProductExtras(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
       product = props.product,
+      handleSuccessUpdate = props.handleSuccessUpdate,
       handleUpdateBusinessState = props.handleUpdateBusinessState;
 
   var _useApi = (0, _ApiContext.useApi)(),
@@ -111,39 +112,6 @@ var ProductExtras = function ProductExtras(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       isAddMode = _useState8[0],
       setIsAddMode = _useState8[1];
-  /**
-   * Method to update the business state from updated product
-   * @param {Object} updatedProduct
-   */
-
-
-  var updateBusinessState = function updateBusinessState(updatedProduct, businessState) {
-    if (handleUpdateBusinessState) {
-      var categories = businessState.categories.map(function (item) {
-        if (item.id === parseInt(product === null || product === void 0 ? void 0 : product.category_id)) {
-          var _products = item.products.map(function (prod) {
-            if (prod.id === (product === null || product === void 0 ? void 0 : product.id)) {
-              Object.assign(prod, updatedProduct);
-            }
-
-            return prod;
-          });
-
-          return _objectSpread(_objectSpread({}, item), {}, {
-            products: _products
-          });
-        }
-
-        return item;
-      });
-
-      var updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
-        categories: categories
-      });
-
-      handleUpdateBusinessState(updatedBusiness);
-    }
-  };
   /**
    * Method to save the new ingredient from API
    * @param {Array} extraIds
@@ -198,7 +166,8 @@ var ProductExtras = function ProductExtras(props) {
                   loading: false,
                   product: updatedProduct
                 }));
-                updateBusinessState(updatedProduct, business);
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct); // updateBusinessState(updatedProduct, business)
+
                 showToast(_ToastContext.ToastType.Success, t('EXTRA_SAVED', 'Extra saved'));
               }
 
@@ -262,7 +231,7 @@ var ProductExtras = function ProductExtras(props) {
 
   var handleUpdateExtraState = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(extraId, params) {
-      var requestOptions, response, content, extras, productExtras, updatedProduct, businessState, categories, updatedBusiness;
+      var requestOptions, response, content, extras, productExtras, updatedProduct;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -316,38 +285,7 @@ var ProductExtras = function ProductExtras(props) {
                 setProductState(_objectSpread(_objectSpread({}, productState), {}, {
                   product: updatedProduct
                 }));
-
-                if (handleUpdateBusinessState) {
-                  businessState = _objectSpread(_objectSpread({}, business), {}, {
-                    extras: extras
-                  });
-                  categories = businessState.categories.map(function (item) {
-                    var _products = item.products.map(function (prod) {
-                      var _extras = prod.extras.filter(function (extra) {
-                        if (extra.id === content.result.id) {
-                          Object.assign(extra, content.result);
-                        }
-
-                        return true;
-                      });
-
-                      return _objectSpread(_objectSpread({}, prod), {}, {
-                        extras: _extras
-                      });
-                    });
-
-                    var _item = _objectSpread(_objectSpread({}, item), {}, {
-                      products: _products
-                    });
-
-                    return _item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('EXTRA_SAVED', 'Extra saved'));
               }
 
@@ -395,7 +333,7 @@ var ProductExtras = function ProductExtras(props) {
 
   var handleDeteteExtra = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(extraId) {
-      var requestOptions, response, content, extras, productExtras, updatedProduct, businessState, categories, updatedBusiness;
+      var requestOptions, response, content, extras, productExtras, updatedProduct;
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -440,34 +378,7 @@ var ProductExtras = function ProductExtras(props) {
                 setProductState(_objectSpread(_objectSpread({}, productState), {}, {
                   product: updatedProduct
                 }));
-
-                if (handleUpdateBusinessState) {
-                  businessState = _objectSpread(_objectSpread({}, business), {}, {
-                    extras: extras
-                  });
-                  categories = businessState.categories.map(function (item) {
-                    var _products = item.products.map(function (prod) {
-                      var _extras = prod.extras.filter(function (extra) {
-                        return extra.id !== extraId;
-                      });
-
-                      return _objectSpread(_objectSpread({}, prod), {}, {
-                        extras: _extras
-                      });
-                    });
-
-                    var _item = _objectSpread(_objectSpread({}, item), {}, {
-                      products: _products
-                    });
-
-                    return _item;
-                  });
-                  updatedBusiness = _objectSpread(_objectSpread({}, businessState), {}, {
-                    categories: categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate && handleSuccessUpdate(updatedProduct);
                 showToast(_ToastContext.ToastType.Success, t('EXTRA_DELETED', 'Extra deleted'));
               }
 
