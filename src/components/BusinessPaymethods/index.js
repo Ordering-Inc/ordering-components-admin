@@ -125,13 +125,13 @@ export const BusinessPaymethods = (props) => {
       const response = await fetch(`${ordering.root}/business/${business.id}/paymethods`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setBusinessPaymethodsState({
-          ...businessPaymethodsState,
+        setBusinessPaymethodsState(prevState => ({
+          ...prevState,
           paymethods: [
-            ...businessPaymethodsState.paymethods,
+            ...prevState.paymethods,
             { ...content.result, paymethod: paymethod }
           ]
-        })
+        }))
         setActionState({ loading: false, result: { error: false } })
         showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
       }
@@ -163,13 +163,15 @@ export const BusinessPaymethods = (props) => {
       setChangesState(content.error ? changesState : {})
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
-        const updatedPaymethods = businessPaymethodsState.paymethods.filter(paymethod => {
-          if (paymethod.id === paymethodId) {
-            Object.assign(paymethod, content.result)
-          }
-          return true
-        })
-        setBusinessPaymethodsState({ ...businessPaymethodsState, paymethods: updatedPaymethods })
+        setBusinessPaymethodsState(prevState => ({
+          ...prevState,
+          paymethods: prevState.paymethods.filter(paymethod => {
+            if (paymethod.id === paymethodId) {
+              Object.assign(paymethod, content.result)
+            }
+            return true
+          })
+        }))
         showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
       }
     } catch (err) {
@@ -248,6 +250,36 @@ export const BusinessPaymethods = (props) => {
       })
     } else {
       handleCreateBusinessPaymentOption(paymethodId)
+    }
+  }
+
+  /**
+   * Method to allow all paymethods
+   */
+  const handleSelectAllPaymethods = () => {
+    for (const paymethod of paymethodsList.paymethods) {
+      const found = businessPaymethodsState.paymethods.find(_paymethod => _paymethod.paymethod_id === paymethod.id)
+      if (found) {
+        if (!found?.enabled) {
+          handleUpdateBusinessPaymethodOpton(found.id, {
+            enabled: true
+          })
+        }
+      } else {
+        handleCreateBusinessPaymentOption(paymethod.id)
+      }
+    }
+  }
+  /**
+   * Method to disable all paymethods
+   */
+  const handleSelectNonePaymethods = () => {
+    for (const paymethod of businessPaymethodsState.paymethods) {
+      if (paymethod?.enabled) {
+        handleUpdateBusinessPaymethodOpton(paymethod.id, {
+          enabled: false
+        })
+      }
     }
   }
 
@@ -433,6 +465,8 @@ export const BusinessPaymethods = (props) => {
           handleStripeSave={handleStripeSave}
           isSuccessDeleted={isSuccessDeleted}
           setIsSuccessDeleted={setIsSuccessDeleted}
+          handleSelectAllPaymethods={handleSelectAllPaymethods}
+          handleSelectNonePaymethods={handleSelectNonePaymethods}
         />
       )}
     </>
