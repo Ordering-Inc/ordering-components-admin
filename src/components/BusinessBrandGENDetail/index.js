@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -113,8 +113,7 @@ export const BusinessBrandGENDetail = (props) => {
             if (item.id === content.result.id) {
               return {
                 ...item,
-                name: content.result.name,
-                logo: content.result.logo
+                ...content.result
               }
             }
             return item
@@ -175,6 +174,13 @@ export const BusinessBrandGENDetail = (props) => {
     }
     reader.onerror = error => console.log(error)
   }
+
+  useEffect(() => {
+    setFormState({
+      ...formState,
+      changes: {}
+    })
+  }, [brand?.id])
 
   return (
     <>
