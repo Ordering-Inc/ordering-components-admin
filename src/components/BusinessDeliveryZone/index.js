@@ -8,6 +8,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
 export const BusinessDeliveryZone = (props) => {
   const {
     business,
+    zone,
     UIComponent,
     handleSuccessUpdate
   } = props
@@ -17,18 +18,13 @@ export const BusinessDeliveryZone = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
-  const [businessDeliveryZonesState, setBusinessDeliveryZonesState] = useState({ zones: [], loading: false, error: null })
-  const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-  const [zoneId, setZoneId] = useState(null)
-  const [errors, setErrors] = useState({})
-  const [isEdit, setIsEdit] = useState(false)
-  const [isAddMode, setIsAddMode] = useState(false)
-  const [isAddValid, setIsAddValid] = useState(false)
+  const [zoneState, setZoneState] = useState({ zone: zone })
+  const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
 
   /**
    * Clean formState
    */
-  const cleanFormState = () => setFormState({ ...formState, changes: {} })
+  const cleanFormState = () => setFormState({ loading: false, changes: {}, error: null })
 
   /**
    * Method to update the business delivery zone from API
@@ -50,32 +46,26 @@ export const BusinessDeliveryZone = (props) => {
         },
         body: JSON.stringify(currentChanges)
       }
-      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zoneId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zone.id}`, requestOptions)
       const content = await response.json()
-      setFormState({
-        ...formState,
-        changes: content.error ? formState.changes : {},
-        result: content.result,
-        loading: false
-      })
       if (!content.error) {
-        const zones = businessDeliveryZonesState.zones.filter(zone => {
-          if (zone?.id === zoneId) {
+        setFormState({
+          ...formState,
+          loading: false,
+          changes: {}
+        })
+        const zones = business.zones.filter(_zone => {
+          if (_zone?.id === zone.id) {
             Object.assign(zone, content.result)
           }
           return true
-        })
-        setBusinessDeliveryZonesState({
-          ...businessDeliveryZonesState,
-          loading: false,
-          zones: zones
         })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_SAVED', 'Delivery zone saved'))
       } else {
-        setBusinessDeliveryZonesState({
-          ...setBusinessDeliveryZonesState,
+        setFormState({
+          ...formState,
           loading: false,
           error: content.result
         })
@@ -83,11 +73,8 @@ export const BusinessDeliveryZone = (props) => {
     } catch (err) {
       setFormState({
         ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
-        loading: false
+        loading: false,
+        error: [err.message]
       })
     }
   }
@@ -125,31 +112,23 @@ export const BusinessDeliveryZone = (props) => {
       }
       const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones`, requestOptions)
       const content = await response.json()
-      setFormState({
-        ...formState,
-        changes: content.error ? formState.changes : {},
-        result: content.result,
-        loading: false
-      })
       if (!content.error) {
-        props.onClose && props.onClose()
-        setIsAddMode(false)
-        setIsAddValid(false)
+        setFormState({
+          ...formState,
+          changes: {},
+          loading: false
+        })
         const zones = [
-          ...businessDeliveryZonesState.zones,
+          ...business.zones,
           content.result
         ]
-        setBusinessDeliveryZonesState({
-          ...businessDeliveryZonesState,
-          loading: false,
-          zones: zones
-        })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_ADDED', 'Delivery zone added'))
+        props.onClose && props.onClose()
       } else {
-        setBusinessDeliveryZonesState({
-          ...setBusinessDeliveryZonesState,
+        setFormState({
+          ...formState,
           loading: false,
           error: content.result
         })
@@ -157,10 +136,7 @@ export const BusinessDeliveryZone = (props) => {
     } catch (err) {
       setFormState({
         ...formState,
-        result: {
-          error: true,
-          result: err.message
-        },
+        error: err.message,
         loading: false
       })
     }
@@ -170,10 +146,13 @@ export const BusinessDeliveryZone = (props) => {
    * Method to delete the business delivery zone
    * @param {Number} zoneId id of business dleivery zone
    */
-  const handleDeleteBusinessDeliveryZone = async (zoneId) => {
+  const handleDeleteBusinessDeliveryZone = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setBusinessDeliveryZonesState({ ...businessDeliveryZonesState, loading: true })
+      setFormState({
+        ...formState,
+        loading: true
+      })
       const requestOptions = {
         method: 'DELETE',
         headers: {
@@ -181,28 +160,28 @@ export const BusinessDeliveryZone = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zoneId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business?.id}/deliveryzones/${zone.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const zones = businessDeliveryZonesState.zones.filter(zone => zone?.id !== zoneId)
-        setBusinessDeliveryZonesState({
-          ...businessDeliveryZonesState,
-          loading: false,
-          zones: zones
+        const zones = business.zones.filter(_zone => _zone?.id !== zone.id)
+        setFormState({
+          ...formState,
+          loading: false
         })
         const _business = { ...business, zones: zones }
         handleSuccessUpdate && handleSuccessUpdate(_business)
         showToast(ToastType.Success, t('DELIVERYZONE_DELETED', 'Business delivery zone deleted'))
+        props.onClose && props.onClose()
       } else {
-        setBusinessDeliveryZonesState({
-          ...setBusinessDeliveryZonesState,
+        setFormState({
+          ...formState,
           loading: false,
           error: content.result
         })
       }
     } catch (err) {
-      setBusinessDeliveryZonesState({
-        ...setBusinessDeliveryZonesState,
+      setFormState({
+        ...formState,
         loading: false,
         error: [err.message]
       })
@@ -210,28 +189,10 @@ export const BusinessDeliveryZone = (props) => {
   }
 
   /**
-   * Method to change the business delivery zone
-   * @param {Number} zoneId id of business dleivery zone
-   */
-  const handleChangeActiveState = (zoneId) => {
-    setZoneId(zoneId)
-    const businessZone = businessDeliveryZonesState.zones.find(zone => zone?.id === zoneId)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        enabled: !businessZone.enabled
-      }
-    })
-  }
-
-  /**
    * Method to change the business dleivey zone name, price, minimum
    * @param {EventTarget} e Related HTML event
-   * @param {Number} zoneId id of business dleivery zone
    */
-  const handleChangeInput = (e, zoneId) => {
-    setZoneId(zoneId)
+  const handleChangeInput = (e) => {
     setFormState({
       ...formState,
       changes: {
@@ -242,82 +203,39 @@ export const BusinessDeliveryZone = (props) => {
   }
 
   /**
-   * Method to change the zone type
-   * @param {Number} type zone type
-   * @param {Number} zoneId id of business dleivery zone
+   * Method to change the form state
+   * @param {Object} updatedChange changes to update
    */
-  const handleZoneType = (type, zoneId) => {
-    setZoneId(zoneId)
+  const handleChangeFormState = (updatedChange) => {
     setFormState({
       ...formState,
       changes: {
         ...formState.changes,
-        type: type
-      }
-    })
-  }
-
-  /**
-   * Method to change the zone type
-   * @param {Object || Array} data zone type
-   * @param {Number} zoneId id of business dleivery zone
-   */
-  const handleChangeZoneData = (data, zoneId) => {
-    setZoneId(zoneId)
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        data: data
+        ...updatedChange
       }
     })
   }
 
   useEffect(() => {
-    if (!Object.keys(formState.changes).length) return
-    if (formState.changes?.name === '' || formState.changes?.minimum === '' || formState.changes?.price === '') {
-      setErrors({
-        name: formState.changes?.name === '',
-        minimum: formState.changes?.minimum === '',
-        price: formState.changes?.price === ''
-      })
-    } else {
-      if (!(isAddMode || isEdit)) {
-        handleUpdateBusinessDeliveryZone()
-      }
-    }
-  }, [formState.changes, isAddMode, isEdit])
+    cleanFormState()
+    setZoneState({
+      zone: zone
+    })
+  }, [zone])
 
-  useEffect(() => {
-    if (business?.zones) {
-      setBusinessDeliveryZonesState({ ...businessDeliveryZonesState, zones: business?.zones })
-    }
-  }, [business])
   return (
     <>
       {
         UIComponent && (
           <UIComponent
             {...props}
+            zoneState={zoneState}
             formState={formState}
-            businessDeliveryZonesState={businessDeliveryZonesState}
             handleChangeInput={handleChangeInput}
-            handleChangeActiveState={handleChangeActiveState}
+            handleChangeFormState={handleChangeFormState}
             handleDeleteBusinessDeliveryZone={handleDeleteBusinessDeliveryZone}
-            errors={errors}
-            setErrors={setErrors}
-            cleanErrors={() => setErrors({})}
-            handleZoneType={handleZoneType}
-            handleChangeZoneData={handleChangeZoneData}
-            isEdit={isEdit}
-            setIsEdit={setIsEdit}
-            isAddMode={isAddMode}
-            setIsAddMode={setIsAddMode}
-            isAddValid={isAddValid}
-            setIsAddValid={setIsAddValid}
             handleUpdateBusinessDeliveryZone={handleUpdateBusinessDeliveryZone}
             handleAddBusinessDeliveryZone={handleAddBusinessDeliveryZone}
-            cleanFormState={cleanFormState}
           />
         )
       }
