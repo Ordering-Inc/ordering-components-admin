@@ -254,10 +254,7 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 if (handleUpdateBrandList) {
                   _brands = brandListState === null || brandListState === void 0 ? void 0 : brandListState.brands.map(function (item) {
                     if (item.id === content.result.id) {
-                      return _objectSpread(_objectSpread({}, item), {}, {
-                        name: content.result.name,
-                        logo: content.result.logo
-                      });
+                      return _objectSpread(_objectSpread({}, item), content.result);
                     }
 
                     return item;
@@ -334,6 +331,11 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
     };
   };
 
+  (0, _react.useEffect)(function () {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: {}
+    }));
+  }, [brand === null || brand === void 0 ? void 0 : brand.id]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     brandFormState: formState,
     handleUpdateClick: handleUpdateClick,
