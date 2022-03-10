@@ -12,7 +12,8 @@ export const PointsWalletBusinessList = (props) => {
     propsToFetch,
     handleUpdateWalletBusiness,
     handleAddWalletBusiness,
-    handleDeleteWalletBusiness
+    handleDeleteWalletBusiness,
+    setSelectedBusinessList
   } = props
 
   const [ordering] = useApi()
@@ -30,7 +31,11 @@ export const PointsWalletBusinessList = (props) => {
    */
   const handleCheckBox = (businessId, name, checked) => {
     const changes = { [name]: checked }
-    updateLoyalty(businessId, changes)
+    if (!pointWallet) {
+      handleUpdateBusinessList(businessId, changes)
+    } else {
+      updateLoyalty(businessId, changes)
+    }
   }
 
   /**
@@ -40,6 +45,22 @@ export const PointsWalletBusinessList = (props) => {
    * @param {Boolean} name status of checkbox
    */
   const handleChangeSwitch = (businessId, checked) => {
+    if (!pointWallet) {
+      const updatedBusinesses = businessList?.businesses.map(business => {
+        if (businessId === business.id) {
+          return {
+            ...business,
+            wallet_enabled: checked
+          }
+        }
+        return business
+      })
+      setBusinessList({
+        ...businessList,
+        businesses: updatedBusinesses
+      })
+      return
+    }
     if (checked) {
       const selectedBusiness = businessList?.businesses?.find(business => business.id === businessId)
       if (selectedBusiness) {
@@ -200,31 +221,29 @@ export const PointsWalletBusinessList = (props) => {
       const { content: { error, result, pagination } } = await fetchEndpoint.get()
       if (!error) {
         let _businessList = []
-        if (pointWallet?.businesses?.length > 0) {
-          _businessList = result.map(business => {
-            const walletBusiness = pointWallet?.businesses.find(item => item.business_id === business.id)
-            if (walletBusiness) {
-              return {
-                ...business,
-                redeems: walletBusiness?.redeems,
-                accumulates: walletBusiness?.accumulates,
-                wallet_enabled: true,
-                redemption_rate: walletBusiness?.redemption_rate,
-                accumulation_rate: walletBusiness?.accumulation_rate,
-                loyalty_plan_id: pointWallet?.id
-              }
-            }
+        _businessList = result.map(business => {
+          const walletBusiness = pointWallet?.businesses.find(item => item.business_id === business.id)
+          if (walletBusiness) {
             return {
               ...business,
-              redeems: false,
-              accumulates: false,
-              wallet_enabled: false,
-              loyalty_plan_id: pointWallet?.id,
-              redemption_rate: null,
-              accumulation_rate: null
+              redeems: walletBusiness?.redeems,
+              accumulates: walletBusiness?.accumulates,
+              wallet_enabled: true,
+              redemption_rate: walletBusiness?.redemption_rate,
+              accumulation_rate: walletBusiness?.accumulation_rate,
+              loyalty_plan_id: pointWallet?.id
             }
-          })
-        }
+          }
+          return {
+            ...business,
+            redeems: false,
+            accumulates: false,
+            wallet_enabled: false,
+            loyalty_plan_id: pointWallet?.id,
+            redemption_rate: null,
+            accumulation_rate: null
+          }
+        })
         setBusinessList({
           ...businessList,
           loading: false,
@@ -252,6 +271,10 @@ export const PointsWalletBusinessList = (props) => {
     getBusinessTypes()
     return controller.abort()
   }, [])
+
+  useEffect(() => {
+    setSelectedBusinessList([...businessList?.businesses])
+  }, [businessList?.businesses])
 
   return (
     <>
