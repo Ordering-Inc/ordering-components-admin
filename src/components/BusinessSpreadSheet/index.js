@@ -142,7 +142,7 @@ export const BusinessSpreadSheet = (props) => {
               if (!(error.price || error.name || error.quantity)) {
                 const _add = {
                   name: row.name,
-                  description: row.description ? row.description : ' ',
+                  description: row.description ? row.description : '',
                   price: row.price ? row.price : 0,
                   offer_price: row?.offer_price || 0,
                   category_id: id,
