@@ -250,7 +250,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
               if (!(error.price || error.name || error.quantity)) {
                 var _add = {
                   name: row.name,
-                  description: row.description ? row.description : ' ',
+                  description: row.description ? row.description : '',
                   price: row.price ? row.price : 0,
                   offer_price: (row === null || row === void 0 ? void 0 : row.offer_price) || 0,
                   category_id: id,
@@ -274,12 +274,20 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
                   var _update = {
                     id: row.id,
                     name: row.name,
-                    description: row.description ? row.description : ' ',
+                    description: row.description ? row.description : '',
                     price: row.price ? row.price : 0,
                     inventoried: (row === null || row === void 0 ? void 0 : row.inventoried) || false,
                     category_id: id,
                     business_id: business === null || business === void 0 ? void 0 : business.id
                   };
+
+                  if (typeof (row === null || row === void 0 ? void 0 : row.offer_price) !== 'undefined') {
+                    _update.offer_price = row.offer_price;
+                  }
+
+                  if (typeof (row === null || row === void 0 ? void 0 : row.cost_price) !== 'undefined') {
+                    _update.cost_price = row.cost_price;
+                  }
 
                   if (row.quantity && row.quantity !== 'NA' || row.quantity === 0) {
                     _update.quantity = row.quantity;

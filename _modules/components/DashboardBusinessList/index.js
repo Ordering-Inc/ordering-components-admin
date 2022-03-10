@@ -67,7 +67,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       isSearchByBusinessId = props.isSearchByBusinessId,
       isSearchByBusinessName = props.isSearchByBusinessName,
       isSearchByBusinessEmail = props.isSearchByBusinessEmail,
-      isSearchByBusinessPhone = props.isSearchByBusinessPhone;
+      isSearchByBusinessPhone = props.isSearchByBusinessPhone,
+      noActiveStatusCondition = props.noActiveStatusCondition;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -129,10 +130,13 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                   page_size: pageSize
                 }
               };
-              conditions.push({
-                attribute: 'enabled',
-                value: selectedBusinessActiveState
-              });
+
+              if (!noActiveStatusCondition) {
+                conditions.push({
+                  attribute: 'enabled',
+                  value: selectedBusinessActiveState
+                });
+              }
 
               if (businessTypeSelected) {
                 conditions.push({

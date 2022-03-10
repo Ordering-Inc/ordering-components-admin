@@ -65,7 +65,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var ProductDetatils = function ProductDetatils(props) {
   var business = props.business,
       UIComponent = props.UIComponent,
-      product = props.product,
       productId = props.productId,
       categoryId = props.categoryId,
       handleUpdateBusinessState = props.handleUpdateBusinessState;
@@ -190,7 +189,7 @@ var ProductDetatils = function ProductDetatils(props) {
 
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(params) {
-      var _productState$product, _productState$product2, changes, _yield$ordering$busin3, _yield$ordering$busin4, error, result, _categories, updatedBusiness;
+      var _productState$product, _productState$product2, changes, _yield$ordering$busin3, _yield$ordering$busin4, error, result;
 
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -219,35 +218,7 @@ var ProductDetatils = function ProductDetatils(props) {
               }));
 
               if (!error) {
-                setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-                  product: _objectSpread(_objectSpread({}, productState.product), result)
-                }));
-
-                if (handleUpdateBusinessState) {
-                  _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
-
-                  _categories.forEach(function iterate(category) {
-                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
-                      var _products = category.products.map(function (_product) {
-                        if (_product.id === product.id) {
-                          return _objectSpread(_objectSpread({}, _product), result);
-                        }
-
-                        return _product;
-                      });
-
-                      category.products = _toConsumableArray(_products);
-                    }
-
-                    Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
-                  });
-
-                  updatedBusiness = _objectSpread(_objectSpread({}, business), {}, {
-                    categories: _categories
-                  });
-                  handleUpdateBusinessState(updatedBusiness);
-                }
-
+                handleSuccessUpdate(result);
                 showToast(_ToastContext.ToastType.Success, t('PRODUCT_SAVED', 'Product saved'));
               }
 
@@ -284,7 +255,7 @@ var ProductDetatils = function ProductDetatils(props) {
 
   var handleDeleteProduct = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories;
+      var _productState$product3, _productState$product4, _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -296,7 +267,7 @@ var ProductDetatils = function ProductDetatils(props) {
                 loading: true
               }));
               _context3.next = 5;
-              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt(product === null || product === void 0 ? void 0 : product.category_id)).products(product === null || product === void 0 ? void 0 : product.id).delete();
+              return ordering.businesses(parseInt(business === null || business === void 0 ? void 0 : business.id)).categories(parseInt((_productState$product3 = productState.product) === null || _productState$product3 === void 0 ? void 0 : _productState$product3.category_id)).products((_productState$product4 = productState.product) === null || _productState$product4 === void 0 ? void 0 : _productState$product4.id).delete();
 
             case 5:
               _yield$ordering$busin5 = _context3.sent;
@@ -317,9 +288,11 @@ var ProductDetatils = function ProductDetatils(props) {
                   _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
 
                   _categories.forEach(function iterate(category) {
-                    if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+                    var _productState$product5;
+
+                    if (category.id === ((_productState$product5 = productState.product) === null || _productState$product5 === void 0 ? void 0 : _productState$product5.category_id)) {
                       var _products = category.products.filter(function (_product) {
-                        return _product.id !== product.id;
+                        return _product.id !== productState.product.id;
                       });
 
                       category.products = _toConsumableArray(_products);
@@ -377,10 +350,10 @@ var ProductDetatils = function ProductDetatils(props) {
 
 
   var handleChangeProductActiveState = function handleChangeProductActiveState() {
-    var _productState$product3;
+    var _productState$product6;
 
     var params = {
-      enabled: !(productState !== null && productState !== void 0 && (_productState$product3 = productState.product) !== null && _productState$product3 !== void 0 && _productState$product3.enabled)
+      enabled: !(productState !== null && productState !== void 0 && (_productState$product6 = productState.product) !== null && _productState$product6 !== void 0 && _productState$product6.enabled)
     };
     handleUpdateClick(params);
   };
@@ -469,12 +442,14 @@ var ProductDetatils = function ProductDetatils(props) {
 
 
   var getUnitTotal = function getUnitTotal(productCart) {
+    var _props$product3;
+
     var subtotal = 0;
 
-    for (var i = 0; i < (product === null || product === void 0 ? void 0 : (_product$extras = product.extras) === null || _product$extras === void 0 ? void 0 : _product$extras.length); i++) {
-      var _product$extras;
+    for (var i = 0; i < ((_props$product = props.product) === null || _props$product === void 0 ? void 0 : (_props$product$extras = _props$product.extras) === null || _props$product$extras === void 0 ? void 0 : _props$product$extras.length); i++) {
+      var _props$product, _props$product$extras, _props$product2;
 
-      var extra = product === null || product === void 0 ? void 0 : product.extras[i];
+      var extra = (_props$product2 = props.product) === null || _props$product2 === void 0 ? void 0 : _props$product2.extras[i];
 
       for (var j = 0; j < ((_extra$options = extra.options) === null || _extra$options === void 0 ? void 0 : _extra$options.length); j++) {
         var _extra$options;
@@ -496,7 +471,7 @@ var ProductDetatils = function ProductDetatils(props) {
       }
     }
 
-    return (product === null || product === void 0 ? void 0 : product.price) + subtotal;
+    return ((_props$product3 = props.product) === null || _props$product3 === void 0 ? void 0 : _props$product3.price) + subtotal;
   };
   /**
    * Check if option must show
@@ -542,9 +517,11 @@ var ProductDetatils = function ProductDetatils(props) {
       var _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
 
       _categories.forEach(function iterate(category) {
-        if (category.id === (product === null || product === void 0 ? void 0 : product.category_id)) {
+        var _productState$product7;
+
+        if (category.id === ((_productState$product7 = productState.product) === null || _productState$product7 === void 0 ? void 0 : _productState$product7.category_id)) {
           var _products = category.products.map(function (_product) {
-            if (_product.id === product.id) {
+            if (_product.id === productState.product.id) {
               return _objectSpread(_objectSpread({}, _product), updatedProduct);
             }
 
@@ -566,17 +543,17 @@ var ProductDetatils = function ProductDetatils(props) {
   };
 
   (0, _react.useEffect)(function () {
-    if (product) {
+    if (props.product) {
       setProductState(_objectSpread(_objectSpread({}, productState), {}, {
-        product: product
+        product: props.product
       }));
-      initProductCart(product);
+      initProductCart(props.product);
     } else {
       if (productId && categoryId) {
         getProduct();
       }
     }
-  }, [product]);
+  }, [props.product]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productState: productState,
     productCart: productCart,
