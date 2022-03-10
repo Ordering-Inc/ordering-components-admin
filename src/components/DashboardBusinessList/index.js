@@ -14,7 +14,8 @@ export const DashboardBusinessList = (props) => {
     isSearchByBusinessId,
     isSearchByBusinessName,
     isSearchByBusinessEmail,
-    isSearchByBusinessPhone
+    isSearchByBusinessPhone,
+    noActiveStatusCondition
   } = props
 
   const [ordering] = useApi()
@@ -44,7 +45,9 @@ export const DashboardBusinessList = (props) => {
       }
     }
 
-    conditions.push({ attribute: 'enabled', value: selectedBusinessActiveState })
+    if (!noActiveStatusCondition) {
+      conditions.push({ attribute: 'enabled', value: selectedBusinessActiveState })
+    }
 
     if (businessTypeSelected) {
       conditions.push({
