@@ -82,7 +82,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       isSearchByCustomerEmail = props.isSearchByCustomerEmail,
       isSearchByCustomerPhone = props.isSearchByCustomerPhone,
       isSearchByBusinessName = props.isSearchByBusinessName,
-      orderIdForUnreadCountUpdate = props.orderIdForUnreadCountUpdate;
+      orderIdForUnreadCountUpdate = props.orderIdForUnreadCountUpdate,
+      timeStatus = props.timeStatus;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -311,6 +312,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 });
               }
 
+              if (timeStatus) {
+                conditions.push({
+                  attribute: 'time_status',
+                  value: timeStatus
+                });
+              }
+
               if (searchValue) {
                 searchConditions = [];
 
@@ -462,13 +470,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().where(where);
               }
 
-              _context2.next = 18;
+              _context2.next = 19;
               return functionFetch.get(options);
 
-            case 18:
+            case 19:
               return _context2.abrupt("return", _context2.sent);
 
-            case 19:
+            case 20:
             case "end":
               return _context2.stop();
           }
@@ -786,7 +794,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus]);
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus, timeStatus]);
   (0, _react.useEffect)(function () {
     if (orderList.loading) return;
 
