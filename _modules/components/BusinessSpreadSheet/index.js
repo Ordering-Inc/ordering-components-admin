@@ -250,7 +250,7 @@ var BusinessSpreadSheet = function BusinessSpreadSheet(props) {
               if (!(error.price || error.name || error.quantity)) {
                 var _add = {
                   name: row.name,
-                  description: row.description ? row.description : ' ',
+                  description: row.description ? row.description : '',
                   price: row.price ? row.price : 0,
                   offer_price: (row === null || row === void 0 ? void 0 : row.offer_price) || 0,
                   category_id: id,
