@@ -27,7 +27,8 @@ export const DashboardOrdersList = (props) => {
     isSearchByCustomerEmail,
     isSearchByCustomerPhone,
     isSearchByBusinessName,
-    orderIdForUnreadCountUpdate
+    orderIdForUnreadCountUpdate,
+    timeStatus
   } = props
 
   const [ordering] = useApi()
@@ -162,6 +163,15 @@ export const DashboardOrdersList = (props) => {
         {
           attribute: 'business_id',
           value: businessId
+        }
+      )
+    }
+
+    if (timeStatus) {
+      conditions.push(
+        {
+          attribute: 'time_status',
+          value: timeStatus
         }
       )
     }
@@ -516,7 +526,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus])
+  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus, timeStatus])
 
   useEffect(() => {
     if (orderList.loading) return
