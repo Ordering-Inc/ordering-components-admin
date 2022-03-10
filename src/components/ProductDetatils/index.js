@@ -12,7 +12,6 @@ export const ProductDetatils = (props) => {
   const {
     business,
     UIComponent,
-    product,
     productId,
     categoryId,
     handleUpdateBusinessState
@@ -87,33 +86,7 @@ export const ProductDetatils = (props) => {
       })
 
       if (!error) {
-        setProductState({
-          ...productState,
-          product: {
-            ...productState.product,
-            ...result
-          }
-        })
-        if (handleUpdateBusinessState) {
-          const _categories = [...business?.categories]
-          _categories.forEach(function iterate (category) {
-            if (category.id === product?.category_id) {
-              const _products = category.products.map(_product => {
-                if (_product.id === product.id) {
-                  return {
-                    ..._product,
-                    ...result
-                  }
-                }
-                return _product
-              })
-              category.products = [..._products]
-            }
-            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
-          })
-          const updatedBusiness = { ...business, categories: _categories }
-          handleUpdateBusinessState(updatedBusiness)
-        }
+        handleSuccessUpdate(result)
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
       }
     } catch (err) {
@@ -138,7 +111,7 @@ export const ProductDetatils = (props) => {
         ...formState,
         loading: true
       })
-      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(product?.category_id)).products(product?.id).delete()
+      const { content: { error, result } } = await ordering.businesses(parseInt(business?.id)).categories(parseInt(productState.product?.category_id)).products(productState.product?.id).delete()
       if (!error) {
         setFormState({
           ...formState,
@@ -151,8 +124,8 @@ export const ProductDetatils = (props) => {
         if (handleUpdateBusinessState) {
           const _categories = [...business?.categories]
           _categories.forEach(function iterate (category) {
-            if (category.id === product?.category_id) {
-              const _products = category.products.filter(_product => _product.id !== product.id)
+            if (category.id === productState.product?.category_id) {
+              const _products = category.products.filter(_product => _product.id !== productState.product.id)
               category.products = [..._products]
             }
             Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
@@ -275,8 +248,8 @@ export const ProductDetatils = (props) => {
    */
   const getUnitTotal = (productCart) => {
     let subtotal = 0
-    for (let i = 0; i < product?.extras?.length; i++) {
-      const extra = product?.extras[i]
+    for (let i = 0; i < props.product?.extras?.length; i++) {
+      const extra = props.product?.extras[i]
       for (let j = 0; j < extra.options?.length; j++) {
         const option = extra.options[j]
         for (let k = 0; k < option.suboptions?.length; k++) {
@@ -290,7 +263,7 @@ export const ProductDetatils = (props) => {
         }
       }
     }
-    return product?.price + subtotal
+    return props.product?.price + subtotal
   }
 
   /**
@@ -329,9 +302,9 @@ export const ProductDetatils = (props) => {
     if (handleUpdateBusinessState) {
       const _categories = [...business?.categories]
       _categories.forEach(function iterate (category) {
-        if (category.id === product?.category_id) {
+        if (category.id === productState.product?.category_id) {
           const _products = category.products.map(_product => {
-            if (_product.id === product.id) {
+            if (_product.id === productState.product.id) {
               return {
                 ..._product,
                 ...updatedProduct
@@ -349,15 +322,15 @@ export const ProductDetatils = (props) => {
   }
 
   useEffect(() => {
-    if (product) {
-      setProductState({ ...productState, product: product })
-      initProductCart(product)
+    if (props.product) {
+      setProductState({ ...productState, product: props.product })
+      initProductCart(props.product)
     } else {
       if (productId && categoryId) {
         getProduct()
       }
     }
-  }, [product])
+  }, [props.product])
 
   return (
     <>
