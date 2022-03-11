@@ -29,6 +29,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
@@ -57,7 +65,8 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
       propsToFetch = props.propsToFetch,
       handleUpdateWalletBusiness = props.handleUpdateWalletBusiness,
       handleAddWalletBusiness = props.handleAddWalletBusiness,
-      handleDeleteWalletBusiness = props.handleDeleteWalletBusiness;
+      handleDeleteWalletBusiness = props.handleDeleteWalletBusiness,
+      setSelectedBusinessList = props.setSelectedBusinessList;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -103,7 +112,11 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
   var handleCheckBox = function handleCheckBox(businessId, name, checked) {
     var changes = _defineProperty({}, name, checked);
 
-    updateLoyalty(businessId, changes);
+    if (!pointWallet) {
+      handleUpdateBusinessList(businessId, changes);
+    } else {
+      updateLoyalty(businessId, changes);
+    }
   };
   /**
    * Update business data
@@ -114,6 +127,22 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
 
 
   var handleChangeSwitch = function handleChangeSwitch(businessId, checked) {
+    if (!pointWallet) {
+      var updatedBusinesses = businessList === null || businessList === void 0 ? void 0 : businessList.businesses.map(function (business) {
+        if (businessId === business.id) {
+          return _objectSpread(_objectSpread({}, business), {}, {
+            wallet_enabled: checked
+          });
+        }
+
+        return business;
+      });
+      setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+        businesses: updatedBusinesses
+      }));
+      return;
+    }
+
     if (checked) {
       var _businessList$busines;
 
@@ -415,7 +444,7 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4() {
-      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _pointWallet$business, _businessList;
+      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _businessList;
 
       return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
@@ -438,35 +467,31 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
 
               if (!error) {
                 _businessList = [];
-
-                if ((pointWallet === null || pointWallet === void 0 ? void 0 : (_pointWallet$business = pointWallet.businesses) === null || _pointWallet$business === void 0 ? void 0 : _pointWallet$business.length) > 0) {
-                  _businessList = result.map(function (business) {
-                    var walletBusiness = pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses.find(function (item) {
-                      return item.business_id === business.id;
-                    });
-
-                    if (walletBusiness) {
-                      return _objectSpread(_objectSpread({}, business), {}, {
-                        redeems: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redeems,
-                        accumulates: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulates,
-                        wallet_enabled: true,
-                        redemption_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redemption_rate,
-                        accumulation_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulation_rate,
-                        loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id
-                      });
-                    }
-
-                    return _objectSpread(_objectSpread({}, business), {}, {
-                      redeems: false,
-                      accumulates: false,
-                      wallet_enabled: false,
-                      loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id,
-                      redemption_rate: null,
-                      accumulation_rate: null
-                    });
+                _businessList = result.map(function (business) {
+                  var walletBusiness = pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.businesses.find(function (item) {
+                    return item.business_id === business.id;
                   });
-                }
 
+                  if (walletBusiness) {
+                    return _objectSpread(_objectSpread({}, business), {}, {
+                      redeems: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redeems,
+                      accumulates: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulates,
+                      wallet_enabled: true,
+                      redemption_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.redemption_rate,
+                      accumulation_rate: walletBusiness === null || walletBusiness === void 0 ? void 0 : walletBusiness.accumulation_rate,
+                      loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id
+                    });
+                  }
+
+                  return _objectSpread(_objectSpread({}, business), {}, {
+                    redeems: false,
+                    accumulates: false,
+                    wallet_enabled: false,
+                    loyalty_plan_id: pointWallet === null || pointWallet === void 0 ? void 0 : pointWallet.id,
+                    redemption_rate: null,
+                    accumulation_rate: null
+                  });
+                });
                 setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                   loading: false,
                   businesses: _businessList,
@@ -508,6 +533,9 @@ var PointsWalletBusinessList = function PointsWalletBusinessList(props) {
     getBusinessTypes();
     return controller.abort();
   }, []);
+  (0, _react.useEffect)(function () {
+    setSelectedBusinessList(_toConsumableArray(businessList === null || businessList === void 0 ? void 0 : businessList.businesses));
+  }, [businessList === null || businessList === void 0 ? void 0 : businessList.businesses]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessList: businessList,
     handleCheckBox: handleCheckBox,

@@ -57,7 +57,8 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
       handleUpdateWalletBusiness = props.handleUpdateWalletBusiness,
       handleUpdateBusinessList = props.handleUpdateBusinessList,
       handleUpdatePointsWallet = props.handleUpdatePointsWallet,
-      isBusiness = props.isBusiness;
+      isBusiness = props.isBusiness,
+      selectedBusinessList = props.selectedBusinessList;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -98,7 +99,27 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
 
   var handleClickSubmit = function handleClickSubmit() {
     if (Object.keys(formState === null || formState === void 0 ? void 0 : formState.changes).length === 0) return;
-    updateLoyalty(walletData === null || walletData === void 0 ? void 0 : walletData.id, formState === null || formState === void 0 ? void 0 : formState.changes);
+    if (walletData) updateLoyalty(walletData === null || walletData === void 0 ? void 0 : walletData.id, formState === null || formState === void 0 ? void 0 : formState.changes);else {
+      var filteredBusiness = selectedBusinessList.filter(function (business) {
+        return business.wallet_enabled;
+      }).map(function (business) {
+        return {
+          id: business.id,
+          redeems: (business === null || business === void 0 ? void 0 : business.redeems) || false,
+          accumulates: (business === null || business === void 0 ? void 0 : business.accumulates) || false
+        };
+      });
+
+      var loyaltyPlan = _objectSpread({
+        name: 'Loyalty Point Plan',
+        type: 'credit_point',
+        redemption_rate: null,
+        accumulation_rate: null,
+        businesses: JSON.stringify(filteredBusiness)
+      }, formState === null || formState === void 0 ? void 0 : formState.changes);
+
+      addLoyaltyPlan(loyaltyPlan);
+    }
   };
   /**
    * @param { Number } businessId id of loyalty business
@@ -179,6 +200,85 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
 
     return function updateLoyalty(_x, _x2) {
       return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * @param { Number } businessId id of loyalty business
+   * @param {Object} changes data of business
+   */
+
+
+  var addLoyaltyPlan = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(changes) {
+      var requestOptions, fetchEndpoint, response, _yield$response$json2, error, result;
+
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              fetchEndpoint = "".concat(ordering.root, "/loyalty_plans");
+              _context2.next = 7;
+              return fetch(fetchEndpoint, requestOptions);
+
+            case 7:
+              response = _context2.sent;
+              _context2.next = 10;
+              return response.json();
+
+            case 10:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('POINTS_WALLET_CREATED', 'Points wallet created'));
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: null,
+                  changes: {}
+                }));
+                if (!isBusiness && handleUpdatePointsWallet) handleUpdatePointsWallet(result);
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context2.next = 19;
+              break;
+
+            case 16:
+              _context2.prev = 16;
+              _context2.t0 = _context2["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                error: _context2.t0.message
+              }));
+
+            case 19:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 16]]);
+    }));
+
+    return function addLoyaltyPlan(_x3) {
+      return _ref2.apply(this, arguments);
     };
   }();
 
