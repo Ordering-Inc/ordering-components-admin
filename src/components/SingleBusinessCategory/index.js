@@ -101,16 +101,7 @@ export const SingleBusinessCategory = (props) => {
   const handleDrop = (event) => {
     event.preventDefault()
     const transferCategoryId = parseInt(event.dataTransfer.getData('transferCategoryId'))
-    const transferCategory = business?.categories.find(_category => _category.id === transferCategoryId)
-    const transferCategoryRank = transferCategory?.rank
     const dropCategoryRank = category?.rank
-
-    const updatedCategories = business?.categories.filter(_category => {
-      if (_category.id === transferCategoryId) _category.rank = dropCategoryRank
-      if (_category.id === category.id) _category.rank = transferCategoryRank
-      return true
-    })
-    handleUpdateBusinessState({ ...business, categories: updatedCategories })
     handleChangeCategoryRank(transferCategoryId, { rank: dropCategoryRank })
   }
 
@@ -123,6 +114,14 @@ export const SingleBusinessCategory = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const { content } = await ordering.businesses(parseInt(business?.id)).categories(transferCategoryId).save(params)
       if (!content.error) {
+        const _categories = [...business?.categories]
+        _categories.forEach(function iterate (category) {
+          if (category.id === transferCategoryId) {
+            Object.assign(category, content.result)
+          }
+          Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
+        })
+        handleUpdateBusinessState({ ...business, categories: _categories })
         showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
       }
     } catch (err) {
