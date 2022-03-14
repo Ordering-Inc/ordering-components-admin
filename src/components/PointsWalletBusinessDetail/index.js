@@ -12,7 +12,8 @@ export const PointsWalletBusinessDetail = (props) => {
     handleUpdateWalletBusiness,
     handleUpdateBusinessList,
     handleUpdatePointsWallet,
-    isBusiness
+    isBusiness,
+    selectedBusinessList
   } = props
 
   const [ordering] = useApi()
@@ -32,7 +33,26 @@ export const PointsWalletBusinessDetail = (props) => {
 
   const handleClickSubmit = () => {
     if (Object.keys(formState?.changes).length === 0) return
-    updateLoyalty(walletData?.id, formState?.changes)
+
+    if (walletData) updateLoyalty(walletData?.id, formState?.changes)
+    else {
+      const filteredBusiness = selectedBusinessList.filter(business => business.wallet_enabled).map(business => {
+        return {
+          id: business.id,
+          redeems: business?.redeems || false,
+          accumulates: business?.accumulates || false
+        }
+      })
+      const loyaltyPlan = {
+        name: 'Loyalty Point Plan',
+        type: 'credit_point',
+        redemption_rate: null,
+        accumulation_rate: null,
+        businesses: JSON.stringify(filteredBusiness),
+        ...formState?.changes
+      }
+      addLoyaltyPlan(loyaltyPlan)
+    }
   }
 
   /**
@@ -61,6 +81,37 @@ export const PointsWalletBusinessDetail = (props) => {
         setFormState({ ...formState, loading: false, error: null, changes: {} })
         handleUpdateWalletBusiness && handleUpdateWalletBusiness(result)
         handleUpdateBusinessList && handleUpdateBusinessList(changes)
+        if (!isBusiness && handleUpdatePointsWallet) handleUpdatePointsWallet(result)
+      } else {
+        setFormState({ ...formState, loading: false, error: result })
+      }
+    } catch (error) {
+      setFormState({ ...formState, loading: false, error: error.message })
+    }
+  }
+
+  /**
+   * @param { Number } businessId id of loyalty business
+   * @param {Object} changes data of business
+   */
+  const addLoyaltyPlan = async (changes) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setFormState({ ...formState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const fetchEndpoint = `${ordering.root}/loyalty_plans`
+      const response = await fetch(fetchEndpoint, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        showToast(ToastType.Success, t('POINTS_WALLET_CREATED', 'Points wallet created'))
+        setFormState({ ...formState, loading: false, error: null, changes: {} })
         if (!isBusiness && handleUpdatePointsWallet) handleUpdatePointsWallet(result)
       } else {
         setFormState({ ...formState, loading: false, error: result })
