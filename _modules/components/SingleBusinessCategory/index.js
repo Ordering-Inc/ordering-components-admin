@@ -190,19 +190,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
   var handleDrop = function handleDrop(event) {
     event.preventDefault();
     var transferCategoryId = parseInt(event.dataTransfer.getData('transferCategoryId'));
-    var transferCategory = business === null || business === void 0 ? void 0 : business.categories.find(function (_category) {
-      return _category.id === transferCategoryId;
-    });
-    var transferCategoryRank = transferCategory === null || transferCategory === void 0 ? void 0 : transferCategory.rank;
     var dropCategoryRank = category === null || category === void 0 ? void 0 : category.rank;
-    var updatedCategories = business === null || business === void 0 ? void 0 : business.categories.filter(function (_category) {
-      if (_category.id === transferCategoryId) _category.rank = dropCategoryRank;
-      if (_category.id === category.id) _category.rank = transferCategoryRank;
-      return true;
-    });
-    handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
-      categories: updatedCategories
-    }));
     handleChangeCategoryRank(transferCategoryId, {
       rank: dropCategoryRank
     });
@@ -214,7 +202,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
   var handleChangeCategoryRank = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(transferCategoryId, params) {
-      var _yield$ordering$busin, content;
+      var _yield$ordering$busin, content, _categories;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -238,6 +226,19 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
               content = _yield$ordering$busin.content;
 
               if (!content.error) {
+                _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+
+                _categories.forEach(function iterate(category) {
+                  if (category.id === transferCategoryId) {
+                    Object.assign(category, content.result);
+                  }
+
+                  Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+                });
+
+                handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+                  categories: _categories
+                }));
                 showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
               }
 
