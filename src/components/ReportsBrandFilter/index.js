@@ -20,7 +20,7 @@ export const ReportsBrandFilter = (props) => {
   const [brandList, setBrandList] = useState({ loading: true, error: null, brands: [], pagination: null })
   const [brandIds, setBrandIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
-  const [{ token, loading }] = useSession()
+  const [{ token, loading, user }] = useSession()
 
   /**
    * Method to change brand id
@@ -79,12 +79,25 @@ export const ReportsBrandFilter = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const functionFetch = `${ordering.root}/franchises?params=${propsToFetch}`
 
+      let franchiseIds = []
+      if (user?.level !== 0) {
+        const response = await ordering.setAccessToken(token).businesses().select(['franchise_id']).asDashboard().get()
+        if (!response.content.error) {
+          franchiseIds = response.content.result.reduce((ids, business) => [...ids, business.franchise_id], []).filter(id => id)
+        }
+      }
+
+      const functionFetch = `${ordering.root}/franchises?params=${propsToFetch}`
       const response = await fetch(functionFetch, requestOptions)
       const { error, result, pagination } = await response.json()
       if (!error) {
-        const availableBrands = result?.filter(brand => brand.enabled)
+        let availableBrands
+        if (user?.level === 0) {
+          availableBrands = result?.filter(brand => brand.enabled)
+        } else {
+          availableBrands = result?.filter(brand => brand.enabled && franchiseIds.includes(brand.id))
+        }
         setBrandList({
           ...brandList,
           loading: false,
