@@ -96,7 +96,8 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       _useSession2$ = _useSession2[0],
       token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      loading = _useSession2$.loading,
+      user = _useSession2$.user;
   /**
    * Method to change brand id
    * @param {number} id
@@ -175,7 +176,7 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
 
   var getBrands = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination, availableBrands;
+      var requestOptions, franchiseIds, _response, functionFetch, response, _yield$response$json, error, result, pagination, availableBrands;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -200,25 +201,54 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              functionFetch = "".concat(ordering.root, "/franchises?params=").concat(propsToFetch);
-              _context.next = 8;
-              return fetch(functionFetch, requestOptions);
+              franchiseIds = [];
 
-            case 8:
-              response = _context.sent;
-              _context.next = 11;
-              return response.json();
+              if (!((user === null || user === void 0 ? void 0 : user.level) !== 0)) {
+                _context.next = 11;
+                break;
+              }
+
+              _context.next = 9;
+              return ordering.setAccessToken(token).businesses().select(['franchise_id']).asDashboard().get();
+
+            case 9:
+              _response = _context.sent;
+
+              if (!_response.content.error) {
+                franchiseIds = _response.content.result.reduce(function (ids, business) {
+                  return [].concat(_toConsumableArray(ids), [business.franchise_id]);
+                }, []).filter(function (id) {
+                  return id;
+                });
+              }
 
             case 11:
+              functionFetch = "".concat(ordering.root, "/franchises?params=").concat(propsToFetch);
+              _context.next = 14;
+              return fetch(functionFetch, requestOptions);
+
+            case 14:
+              response = _context.sent;
+              _context.next = 17;
+              return response.json();
+
+            case 17:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
               pagination = _yield$response$json.pagination;
 
               if (!error) {
-                availableBrands = result === null || result === void 0 ? void 0 : result.filter(function (brand) {
-                  return brand.enabled;
-                });
+                if ((user === null || user === void 0 ? void 0 : user.level) === 0) {
+                  availableBrands = result === null || result === void 0 ? void 0 : result.filter(function (brand) {
+                    return brand.enabled;
+                  });
+                } else {
+                  availableBrands = result === null || result === void 0 ? void 0 : result.filter(function (brand) {
+                    return brand.enabled && franchiseIds.includes(brand.id);
+                  });
+                }
+
                 setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                   loading: false,
                   brands: availableBrands,
@@ -231,23 +261,23 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
                 }));
               }
 
-              _context.next = 21;
+              _context.next = 27;
               break;
 
-            case 18:
-              _context.prev = 18;
+            case 24:
+              _context.prev = 24;
               _context.t0 = _context["catch"](2);
               setBrandList(_objectSpread(_objectSpread({}, brandList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 21:
+            case 27:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 18]]);
+      }, _callee, null, [[2, 24]]);
     }));
 
     return function getBrands() {
