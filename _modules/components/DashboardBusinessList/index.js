@@ -515,10 +515,21 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       }
     }
   };
+
+  (0, _react.useEffect)(function () {
+    if (businessList.loading || businessList.businesses.length > 0) return;
+
+    if ((pagination === null || pagination === void 0 ? void 0 : pagination.currentPage) !== 0 && (pagination === null || pagination === void 0 ? void 0 : pagination.total) !== 0) {
+      if (Math.ceil((pagination === null || pagination === void 0 ? void 0 : pagination.total) / pagination.pageSize) >= (pagination === null || pagination === void 0 ? void 0 : pagination.currentPage)) {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage);
+      } else {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage - 1);
+      }
+    }
+  }, [businessList.businesses]);
   /**
    * Listening session
    */
-
 
   (0, _react.useEffect)(function () {
     if (props.businesses) {
