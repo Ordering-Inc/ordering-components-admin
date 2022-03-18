@@ -31,14 +31,6 @@ export const BusinessProductsCategoyDetails = (props) => {
     setFormState({ ...formState, changes: category || {} })
   }, [category])
 
-  useEffect(() => {
-    if (businessState?.business?.id && !category && categoryId) {
-      const _category = businessState.business.categories.filter(item => parseInt(item?.id) === parseInt(categoryId))[0]
-
-      if (_category) setFormState({ ...formState, changes: _category })
-    }
-  }, [businessState])
-
   /**
   * Update form input data
   * @param {EventTarget} e Related HTML event
