@@ -550,9 +550,9 @@ var ProductGallery = function ProductGallery(props) {
    */
 
 
-  var handleAddGalleryProduct = function handleAddGalleryProduct() {
+  var handleAddGalleryProduct = function handleAddGalleryProduct(_type) {
     var params = _objectSpread(_objectSpread({}, changesState.changes), {}, {
-      type: 1
+      type: _type
     });
 
     handleAddProductGalleryItem(params);
