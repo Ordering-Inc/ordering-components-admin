@@ -289,7 +289,7 @@ export const BusinessZoneGoogleMaps = (props) => {
       return
     }
     let checker = null
-    if (window.document.getElementById('google-maps-sdk-shap')) {
+    if (window.document.getElementById('__googleMapsScriptId')) {
       if (typeof google !== 'undefined') {
         setGoogleReady(true)
       } else {
@@ -308,10 +308,10 @@ export const BusinessZoneGoogleMaps = (props) => {
     }
 
     const js = window.document.createElement('script')
-    js.id = 'google-maps-sdk-shap'
+    js.id = '__googleMapsScriptId'
     js.async = true
     js.defer = true
-    js.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=drawing&callback=googleAsyncInit`
+    js.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places,geometry,visualization,drawing&callback=googleAsyncInit`
 
     window.document.body.appendChild(js)
     return () => {
