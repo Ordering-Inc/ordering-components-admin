@@ -114,6 +114,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
   var _useState9 = (0, _react.useState)({
     conditioned: false,
     enabled: true,
+    name: '',
     min: 1,
     max: 1
   }),
@@ -417,6 +418,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
                 setAddChangesState({
                   conditioned: false,
                   enabled: true,
+                  name: '',
                   min: 1,
                   max: 1
                 });
@@ -673,6 +675,15 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       extra: extra
     }));
   }, [extra]);
+  (0, _react.useEffect)(function () {
+    setAddChangesState({
+      conditioned: false,
+      enabled: true,
+      name: '',
+      min: 1,
+      max: 1
+    });
+  }, [extra === null || extra === void 0 ? void 0 : extra.id]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     editErrors: editErrors,
     changesState: changesState,
