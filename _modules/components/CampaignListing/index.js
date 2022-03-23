@@ -17,7 +17,7 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _WebsocketContext = require("../../contexts/WebsocketContext");
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
 
@@ -79,7 +79,7 @@ var CampaignListing = function CampaignListing(props) {
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
-  var _useLanguage = (0, _WebsocketContext.useLanguage)(),
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
