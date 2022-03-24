@@ -79,7 +79,7 @@ export const BusinessProductsCategoyDetails = (props) => {
  * Update business photo data
  * @param {File} file Image to change business photo
  */
-  const handlechangeImage = (file, isSeo) => {
+  const handlechangeImage = (file, name) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
@@ -87,7 +87,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         ...formState,
         changes: {
           ...formState.changes,
-          [isSeo ? 'seo_image' : 'image']: reader.result
+          [name]: reader.result
         }
       })
     }
