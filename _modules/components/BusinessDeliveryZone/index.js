@@ -37,15 +37,15 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symb
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -61,6 +61,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
   var business = props.business,
+      zone = props.zone,
       UIComponent = props.UIComponent,
       handleSuccessUpdate = props.handleSuccessUpdate;
 
@@ -81,58 +82,31 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
-    zones: [],
-    loading: false,
-    error: null
+    zone: zone
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      businessDeliveryZonesState = _useState2[0],
-      setBusinessDeliveryZonesState = _useState2[1];
+      zoneState = _useState2[0],
+      setZoneState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
     changes: {},
-    result: {
-      error: false
-    }
+    error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
       formState = _useState4[0],
       setFormState = _useState4[1];
-
-  var _useState5 = (0, _react.useState)(null),
-      _useState6 = _slicedToArray(_useState5, 2),
-      zoneId = _useState6[0],
-      setZoneId = _useState6[1];
-
-  var _useState7 = (0, _react.useState)({}),
-      _useState8 = _slicedToArray(_useState7, 2),
-      errors = _useState8[0],
-      setErrors = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(false),
-      _useState10 = _slicedToArray(_useState9, 2),
-      isEdit = _useState10[0],
-      setIsEdit = _useState10[1];
-
-  var _useState11 = (0, _react.useState)(false),
-      _useState12 = _slicedToArray(_useState11, 2),
-      isAddMode = _useState12[0],
-      setIsAddMode = _useState12[1];
-
-  var _useState13 = (0, _react.useState)(false),
-      _useState14 = _slicedToArray(_useState13, 2),
-      isAddValid = _useState14[0],
-      setIsAddValid = _useState14[1];
   /**
    * Clean formState
    */
 
 
   var cleanFormState = function cleanFormState() {
-    return setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {}
-    }));
+    return setFormState({
+      loading: false,
+      changes: {},
+      error: null
+    });
   };
   /**
    * Method to update the business delivery zone from API
@@ -165,7 +139,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 body: JSON.stringify(currentChanges)
               };
               _context.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zoneId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zone.id), requestOptions);
 
             case 8:
               response = _context.sent;
@@ -174,56 +148,48 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
             case 11:
               content = _context.sent;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: content.error ? formState.changes : {},
-                result: content.result,
-                loading: false
-              }));
 
               if (!content.error) {
-                zones = businessDeliveryZonesState.zones.filter(function (zone) {
-                  if ((zone === null || zone === void 0 ? void 0 : zone.id) === zoneId) {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  changes: {}
+                }));
+                zones = business.zones.filter(function (_zone) {
+                  if ((_zone === null || _zone === void 0 ? void 0 : _zone.id) === zone.id) {
                     Object.assign(zone, content.result);
                   }
 
                   return true;
                 });
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
-                  loading: false,
-                  zones: zones
-                }));
                 _business = _objectSpread(_objectSpread({}, business), {}, {
                   zones: zones
                 });
                 handleSuccessUpdate && handleSuccessUpdate(_business);
                 showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_SAVED', 'Delivery zone saved'));
               } else {
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, setBusinessDeliveryZonesState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
               }
 
-              _context.next = 19;
+              _context.next = 18;
               break;
 
-            case 16:
-              _context.prev = 16;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context.t0.message
-                },
-                loading: false
+                loading: false,
+                error: [_context.t0.message]
               }));
 
-            case 19:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 16]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
     return function handleUpdateBusinessDeliveryZone() {
@@ -357,53 +323,43 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
             case 11:
               content = _context2.sent;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: content.error ? formState.changes : {},
-                result: content.result,
-                loading: false
-              }));
 
               if (!content.error) {
-                props.onClose && props.onClose();
-                setIsAddMode(false);
-                setIsAddValid(false);
-                zones = [].concat(_toConsumableArray(businessDeliveryZonesState.zones), [content.result]);
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
-                  loading: false,
-                  zones: zones
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  changes: {},
+                  loading: false
                 }));
+                zones = [].concat(_toConsumableArray(business.zones), [content.result]);
                 _business = _objectSpread(_objectSpread({}, business), {}, {
                   zones: zones
                 });
                 handleSuccessUpdate && handleSuccessUpdate(_business);
                 showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_ADDED', 'Delivery zone added'));
+                props.onClose && props.onClose();
               } else {
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, setBusinessDeliveryZonesState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
               }
 
-              _context2.next = 19;
+              _context2.next = 18;
               break;
 
-            case 16:
-              _context2.prev = 16;
+            case 15:
+              _context2.prev = 15;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context2.t0.message
-                },
+                error: _context2.t0.message,
                 loading: false
               }));
 
-            case 19:
+            case 18:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 16]]);
+      }, _callee2, null, [[0, 15]]);
     }));
 
     return function handleAddBusinessDeliveryZone() {
@@ -417,7 +373,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
 
 
   var handleDeleteBusinessDeliveryZone = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(zoneId) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
       var requestOptions, response, content, zones, _business;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
@@ -426,7 +382,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
             case 0:
               _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -437,7 +393,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zoneId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zone.id), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -448,20 +404,20 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                zones = businessDeliveryZonesState.zones.filter(function (zone) {
-                  return (zone === null || zone === void 0 ? void 0 : zone.id) !== zoneId;
+                zones = business.zones.filter(function (_zone) {
+                  return (_zone === null || _zone === void 0 ? void 0 : _zone.id) !== zone.id;
                 });
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
-                  loading: false,
-                  zones: zones
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false
                 }));
                 _business = _objectSpread(_objectSpread({}, business), {}, {
                   zones: zones
                 });
                 handleSuccessUpdate && handleSuccessUpdate(_business);
                 showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_DELETED', 'Business delivery zone deleted'));
+                props.onClose && props.onClose();
               } else {
-                setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, setBusinessDeliveryZonesState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
@@ -473,7 +429,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
             case 13:
               _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
-              setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, setBusinessDeliveryZonesState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: [_context3.t0.message]
               }));
@@ -486,119 +442,47 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeleteBusinessDeliveryZone(_x) {
+    return function handleDeleteBusinessDeliveryZone() {
       return _ref3.apply(this, arguments);
     };
   }();
   /**
-   * Method to change the business delivery zone
-   * @param {Number} zoneId id of business dleivery zone
-   */
-
-
-  var handleChangeActiveState = function handleChangeActiveState(zoneId) {
-    setZoneId(zoneId);
-    var businessZone = businessDeliveryZonesState.zones.find(function (zone) {
-      return (zone === null || zone === void 0 ? void 0 : zone.id) === zoneId;
-    });
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        enabled: !businessZone.enabled
-      })
-    }));
-  };
-  /**
    * Method to change the business dleivey zone name, price, minimum
    * @param {EventTarget} e Related HTML event
-   * @param {Number} zoneId id of business dleivery zone
    */
 
 
-  var handleChangeInput = function handleChangeInput(e, zoneId) {
-    setZoneId(zoneId);
+  var handleChangeInput = function handleChangeInput(e) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
     }));
   };
   /**
-   * Method to change the zone type
-   * @param {Number} type zone type
-   * @param {Number} zoneId id of business dleivery zone
+   * Method to change the form state
+   * @param {Object} updatedChange changes to update
    */
 
 
-  var handleZoneType = function handleZoneType(type, zoneId) {
-    setZoneId(zoneId);
+  var handleChangeFormState = function handleChangeFormState(updatedChange) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        type: type
-      })
-    }));
-  };
-  /**
-   * Method to change the zone type
-   * @param {Object || Array} data zone type
-   * @param {Number} zoneId id of business dleivery zone
-   */
-
-
-  var handleChangeZoneData = function handleChangeZoneData(data, zoneId) {
-    setZoneId(zoneId);
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        data: data
-      })
+      changes: _objectSpread(_objectSpread({}, formState.changes), updatedChange)
     }));
   };
 
   (0, _react.useEffect)(function () {
-    var _formState$changes2, _formState$changes3, _formState$changes4;
-
-    if (!Object.keys(formState.changes).length) return;
-
-    if (((_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.name) === '' || ((_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.minimum) === '' || ((_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.price) === '') {
-      var _formState$changes5, _formState$changes6, _formState$changes7;
-
-      setErrors({
-        name: ((_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.name) === '',
-        minimum: ((_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.minimum) === '',
-        price: ((_formState$changes7 = formState.changes) === null || _formState$changes7 === void 0 ? void 0 : _formState$changes7.price) === ''
-      });
-    } else {
-      if (!(isAddMode || isEdit)) {
-        handleUpdateBusinessDeliveryZone();
-      }
-    }
-  }, [formState.changes, isAddMode, isEdit]);
-  (0, _react.useEffect)(function () {
-    if (business !== null && business !== void 0 && business.zones) {
-      setBusinessDeliveryZonesState(_objectSpread(_objectSpread({}, businessDeliveryZonesState), {}, {
-        zones: business === null || business === void 0 ? void 0 : business.zones
-      }));
-    }
-  }, [business]);
+    cleanFormState();
+    setZoneState({
+      zone: zone
+    });
+  }, [zone]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    zoneState: zoneState,
     formState: formState,
-    businessDeliveryZonesState: businessDeliveryZonesState,
     handleChangeInput: handleChangeInput,
-    handleChangeActiveState: handleChangeActiveState,
+    handleChangeFormState: handleChangeFormState,
     handleDeleteBusinessDeliveryZone: handleDeleteBusinessDeliveryZone,
-    errors: errors,
-    setErrors: setErrors,
-    cleanErrors: function cleanErrors() {
-      return setErrors({});
-    },
-    handleZoneType: handleZoneType,
-    handleChangeZoneData: handleChangeZoneData,
-    isEdit: isEdit,
-    setIsEdit: setIsEdit,
-    isAddMode: isAddMode,
-    setIsAddMode: setIsAddMode,
-    isAddValid: isAddValid,
-    setIsAddValid: setIsAddValid,
     handleUpdateBusinessDeliveryZone: handleUpdateBusinessDeliveryZone,
-    handleAddBusinessDeliveryZone: handleAddBusinessDeliveryZone,
-    cleanFormState: cleanFormState
+    handleAddBusinessDeliveryZone: handleAddBusinessDeliveryZone
   })));
 };
 

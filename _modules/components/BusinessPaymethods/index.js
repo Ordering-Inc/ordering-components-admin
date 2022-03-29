@@ -31,6 +31,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
+
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -361,11 +363,13 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
-                  paymethods: [].concat(_toConsumableArray(businessPaymethodsState.paymethods), [_objectSpread(_objectSpread({}, content.result), {}, {
-                    paymethod: paymethod
-                  })])
-                }));
+                setBusinessPaymethodsState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    paymethods: [].concat(_toConsumableArray(prevState.paymethods), [_objectSpread(_objectSpread({}, content.result), {}, {
+                      paymethod: paymethod
+                    })])
+                  });
+                });
                 setActionState({
                   loading: false,
                   result: {
@@ -410,7 +414,7 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
 
   var handleUpdateBusinessPaymethodOpton = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(paymethodId, options) {
-      var requestOptions, response, content, updatedPaymethods;
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -445,16 +449,17 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
-                updatedPaymethods = businessPaymethodsState.paymethods.filter(function (paymethod) {
-                  if (paymethod.id === paymethodId) {
-                    Object.assign(paymethod, content.result);
-                  }
+                setBusinessPaymethodsState(function (prevState) {
+                  return _objectSpread(_objectSpread({}, prevState), {}, {
+                    paymethods: prevState.paymethods.filter(function (paymethod) {
+                      if (paymethod.id === paymethodId) {
+                        Object.assign(paymethod, content.result);
+                      }
 
-                  return true;
+                      return true;
+                    })
+                  });
                 });
-                setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
-                  paymethods: updatedPaymethods
-                }));
                 showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'));
               }
 
@@ -655,6 +660,67 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     }
   };
   /**
+   * Method to allow all paymethods
+   */
+
+
+  var handleSelectAllPaymethods = function handleSelectAllPaymethods() {
+    var _iterator = _createForOfIteratorHelper(paymethodsList.paymethods),
+        _step;
+
+    try {
+      var _loop = function _loop() {
+        var paymethod = _step.value;
+        var found = businessPaymethodsState.paymethods.find(function (_paymethod) {
+          return _paymethod.paymethod_id === paymethod.id;
+        });
+
+        if (found) {
+          if (!(found !== null && found !== void 0 && found.enabled)) {
+            handleUpdateBusinessPaymethodOpton(found.id, {
+              enabled: true
+            });
+          }
+        } else {
+          handleCreateBusinessPaymentOption(paymethod.id);
+        }
+      };
+
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        _loop();
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+  };
+  /**
+   * Method to disable all paymethods
+   */
+
+
+  var handleSelectNonePaymethods = function handleSelectNonePaymethods() {
+    var _iterator2 = _createForOfIteratorHelper(businessPaymethodsState.paymethods),
+        _step2;
+
+    try {
+      for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
+        var paymethod = _step2.value;
+
+        if (paymethod !== null && paymethod !== void 0 && paymethod.enabled) {
+          handleUpdateBusinessPaymethodOpton(paymethod.id, {
+            enabled: false
+          });
+        }
+      }
+    } catch (err) {
+      _iterator2.e(err);
+    } finally {
+      _iterator2.f();
+    }
+  };
+  /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    * @param {Boolean} sandbox value if sandbox data is or not
@@ -839,7 +905,9 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     handleChangeStripeInput: handleChangeStripeInput,
     handleStripeSave: handleStripeSave,
     isSuccessDeleted: isSuccessDeleted,
-    setIsSuccessDeleted: setIsSuccessDeleted
+    setIsSuccessDeleted: setIsSuccessDeleted,
+    handleSelectAllPaymethods: handleSelectAllPaymethods,
+    handleSelectNonePaymethods: handleSelectNonePaymethods
   })));
 };
 
