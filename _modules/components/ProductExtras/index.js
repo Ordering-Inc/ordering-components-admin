@@ -195,34 +195,6 @@ var ProductExtras = function ProductExtras(props) {
     };
   }();
   /**
-   * Method to change the product extra enable state
-   * @param {Number} extraId extra id
-   * @param {Boolean} checked check state
-   */
-
-
-  var handleClickExtra = function handleClickExtra(extraId, checked) {
-    var extraIds;
-
-    if (productState.product.extras) {
-      extraIds = productState.product.extras.reduce(function (ids, extra) {
-        return [].concat(_toConsumableArray(ids), [extra.id]);
-      }, []);
-    } else {
-      extraIds = [];
-    }
-
-    if (checked) {
-      extraIds.push(extraId);
-    } else {
-      extraIds = extraIds.filter(function (id) {
-        return id !== extraId;
-      });
-    }
-
-    handleProductExtraState(extraIds);
-  };
-  /**
    * Method to save the new ingredient from API
    * @param {Number} extraId
    * @param {Object} params updated parameters
@@ -522,14 +494,14 @@ var ProductExtras = function ProductExtras(props) {
     isAddMode: isAddMode,
     productState: productState,
     extrasState: extrasState,
-    handleClickExtra: handleClickExtra,
     handleChangeExtraInput: handleChangeExtraInput,
     handleDeteteExtra: handleDeteteExtra,
     handleOpenAddForm: function handleOpenAddForm() {
       return setIsAddMode(true);
     },
     handleAddExtra: handleAddExtra,
-    handleChangeAddExtraInput: handleChangeAddExtraInput
+    handleChangeAddExtraInput: handleChangeAddExtraInput,
+    handleProductExtraState: handleProductExtraState
   })));
 };
 

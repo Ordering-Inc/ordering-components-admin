@@ -67,7 +67,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       isSearchByBusinessId = props.isSearchByBusinessId,
       isSearchByBusinessName = props.isSearchByBusinessName,
       isSearchByBusinessEmail = props.isSearchByBusinessEmail,
-      isSearchByBusinessPhone = props.isSearchByBusinessPhone;
+      isSearchByBusinessPhone = props.isSearchByBusinessPhone,
+      noActiveStatusCondition = props.noActiveStatusCondition;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -129,10 +130,13 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                   page_size: pageSize
                 }
               };
-              conditions.push({
-                attribute: 'enabled',
-                value: selectedBusinessActiveState
-              });
+
+              if (!noActiveStatusCondition) {
+                conditions.push({
+                  attribute: 'enabled',
+                  value: selectedBusinessActiveState
+                });
+              }
 
               if (businessTypeSelected) {
                 conditions.push({
@@ -511,10 +515,21 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       }
     }
   };
+
+  (0, _react.useEffect)(function () {
+    if (businessList.loading || businessList.businesses.length > 0) return;
+
+    if ((pagination === null || pagination === void 0 ? void 0 : pagination.currentPage) !== 0 && (pagination === null || pagination === void 0 ? void 0 : pagination.total) !== 0) {
+      if (Math.ceil((pagination === null || pagination === void 0 ? void 0 : pagination.total) / pagination.pageSize) >= (pagination === null || pagination === void 0 ? void 0 : pagination.currentPage)) {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage);
+      } else {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage - 1);
+      }
+    }
+  }, [businessList.businesses]);
   /**
    * Listening session
    */
-
 
   (0, _react.useEffect)(function () {
     if (props.businesses) {
