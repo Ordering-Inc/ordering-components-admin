@@ -295,6 +295,17 @@ export const DashboardBusinessList = (props) => {
     }
   }
 
+  useEffect(() => {
+    if (businessList.loading || businessList.businesses.length > 0) return
+    if (pagination?.currentPage !== 0 && pagination?.total !== 0) {
+      if (Math.ceil(pagination?.total / pagination.pageSize) >= pagination?.currentPage) {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage)
+      } else {
+        getPageBusinesses(pagination.pageSize, pagination.currentPage - 1)
+      }
+    }
+  }, [businessList.businesses])
+
   /**
    * Listening session
    */
