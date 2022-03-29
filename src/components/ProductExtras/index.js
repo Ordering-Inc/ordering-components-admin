@@ -68,26 +68,6 @@ export const ProductExtras = (props) => {
   }
 
   /**
-   * Method to change the product extra enable state
-   * @param {Number} extraId extra id
-   * @param {Boolean} checked check state
-   */
-  const handleClickExtra = (extraId, checked) => {
-    let extraIds
-    if (productState.product.extras) {
-      extraIds = productState.product.extras.reduce((ids, extra) => [...ids, extra.id], [])
-    } else {
-      extraIds = []
-    }
-    if (checked) {
-      extraIds.push(extraId)
-    } else {
-      extraIds = extraIds.filter(id => id !== extraId)
-    }
-    handleProductExtraState(extraIds)
-  }
-
-  /**
    * Method to save the new ingredient from API
    * @param {Number} extraId
    * @param {Object} params updated parameters
@@ -231,6 +211,7 @@ export const ProductExtras = (props) => {
   useEffect(() => {
     setExtrasState({ ...extrasState, extras: business?.extras })
   }, [business])
+
   return (
     <>
       {UIComponent && (
@@ -240,12 +221,12 @@ export const ProductExtras = (props) => {
           isAddMode={isAddMode}
           productState={productState}
           extrasState={extrasState}
-          handleClickExtra={handleClickExtra}
           handleChangeExtraInput={handleChangeExtraInput}
           handleDeteteExtra={handleDeteteExtra}
           handleOpenAddForm={() => setIsAddMode(true)}
           handleAddExtra={handleAddExtra}
           handleChangeAddExtraInput={handleChangeAddExtraInput}
+          handleProductExtraState={handleProductExtraState}
         />
       )}
     </>
