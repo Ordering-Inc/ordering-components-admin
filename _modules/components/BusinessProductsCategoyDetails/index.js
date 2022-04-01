@@ -266,7 +266,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
 
                     if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       Object.keys(category).forEach(function (key) {
-                        if (categoryKeyOptions.includes(key) && content.result[key]) {
+                        if (categoryKeyOptions.includes(key) && content.result[key] !== undefined) {
                           category[key] = content === null || content === void 0 ? void 0 : content.result[key];
                         }
                       });
