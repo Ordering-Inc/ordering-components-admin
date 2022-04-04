@@ -263,7 +263,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
                 _categories.forEach(function iterate(category) {
                   if (category.id === transferCategoryId) {
-                    Object.assign(category, content.result);
+                    category.rank = content.result.rank;
                   }
 
                   Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
