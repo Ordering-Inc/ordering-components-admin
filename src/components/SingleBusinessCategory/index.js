@@ -142,7 +142,7 @@ export const SingleBusinessCategory = (props) => {
         const _categories = [...business?.categories]
         _categories.forEach(function iterate (category) {
           if (category.id === transferCategoryId) {
-            Object.assign(category, content.result)
+            category.rank = content.result.rank
           }
           Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
         })
