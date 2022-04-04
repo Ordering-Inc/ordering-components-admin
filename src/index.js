@@ -263,6 +263,7 @@ export {
   BusinessProductCreator,
   CampaignListing,
   CampaignDetail,
+  CampaignDetailContent,
   CampaignSignUpOption,
   CampaignAmountOption,
   Cart,
