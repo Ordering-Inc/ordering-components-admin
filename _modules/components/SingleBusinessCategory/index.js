@@ -68,7 +68,8 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       business = props.business,
       category = props.category,
       categorySelected = props.categorySelected,
-      setCategorySelected = props.setCategorySelected;
+      setCategorySelected = props.setCategorySelected,
+      setDataSelected = props.setDataSelected;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
@@ -101,6 +102,11 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       _useState4 = _slicedToArray(_useState3, 2),
       isEditMode = _useState4[0],
       setIsEditMode = _useState4[1];
+
+  var _useState5 = (0, _react.useState)(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      isCategoriesBottom = _useState6[0],
+      setIsCategoriesBottom = _useState6[1];
 
   var handelChangeCategoryActive = function handelChangeCategoryActive(isChecked) {
     var params = {
@@ -173,14 +179,33 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
     ghostEle.innerHTML = category.name;
     document.body.appendChild(ghostEle);
     event.dataTransfer.setDragImage(ghostEle, 0, 0);
+    setIsCategoriesBottom(false);
   };
   /**
    * Method to handle drag over
    */
 
 
-  var handleDragOver = function handleDragOver(event) {
+  var handleDragOver = function handleDragOver(event, isLastCategory) {
     event.preventDefault();
+    var element = event.target.closest('.draggable-category');
+
+    if (element) {
+      if (!isLastCategory) {
+        setDataSelected(element.dataset.index);
+      } else {
+        var middlePositionY = window.scrollY + event.target.getBoundingClientRect().top + event.target.offsetHeight / 2;
+        var dragPositionY = event.clientY;
+
+        if (dragPositionY > middlePositionY) {
+          setIsCategoriesBottom(true);
+          setDataSelected('');
+        } else {
+          setIsCategoriesBottom(false);
+          setDataSelected(element.dataset.index);
+        }
+      }
+    }
   };
   /**
    * Method to handle drag drop
@@ -190,7 +215,15 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
   var handleDrop = function handleDrop(event) {
     event.preventDefault();
     var transferCategoryId = parseInt(event.dataTransfer.getData('transferCategoryId'));
-    var dropCategoryRank = category === null || category === void 0 ? void 0 : category.rank;
+    var dropCategoryRank;
+
+    if (isCategoriesBottom) {
+      dropCategoryRank = (category === null || category === void 0 ? void 0 : category.rank) + 1;
+    } else {
+      dropCategoryRank = category === null || category === void 0 ? void 0 : category.rank;
+    }
+
+    setIsCategoriesBottom(false);
     handleChangeCategoryRank(transferCategoryId, {
       rank: dropCategoryRank
     });
@@ -230,7 +263,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
                 _categories.forEach(function iterate(category) {
                   if (category.id === transferCategoryId) {
-                    Object.assign(category, content.result);
+                    category.rank = content.result.rank;
                   }
 
                   Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
@@ -274,6 +307,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
 
 
   var handleDragEnd = function handleDragEnd() {
+    setDataSelected('');
     var elements = document.getElementsByClassName('ghostDragging');
 
     while (elements.length > 0) {
@@ -490,6 +524,7 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     handelChangeCategoryActive: handelChangeCategoryActive,
     categoryFormState: formState,
+    isCategoriesBottom: isCategoriesBottom,
     handlechangeImage: handlechangeImage,
     handleUpdateClick: handleUpdateClick,
     deleteCategory: deleteCategory,

@@ -382,7 +382,7 @@ var CampaignSignUpOption = function CampaignSignUpOption(props) {
         }), (selectedRule === null || selectedRule === void 0 ? void 0 : selectedRule.date) && {
           date: selectedRule === null || selectedRule === void 0 ? void 0 : selectedRule.date
         }), (selectedRule === null || selectedRule === void 0 ? void 0 : selectedRule.max_date) && {
-          date: selectedRule === null || selectedRule === void 0 ? void 0 : selectedRule.max_date
+          max_date: selectedRule === null || selectedRule === void 0 ? void 0 : selectedRule.max_date
         }), {}, {
           type: type
         })

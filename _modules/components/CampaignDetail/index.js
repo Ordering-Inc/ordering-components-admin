@@ -147,8 +147,14 @@ var CampaignDetail = function CampaignDetail(props) {
 
 
   var handleChangeItem = function handleChangeItem(key, value) {
+    var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value));
+
+    if (key === 'scheduled_at') {
+      changes.status = value ? 'scheduled' : 'ended';
+    }
+
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value))
+      changes: changes
     }));
   };
   /**
@@ -285,6 +291,13 @@ var CampaignDetail = function CampaignDetail(props) {
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
 
               for (key in changes) {
+                // if (key === 'conditions' && changes[key].length > 0) {
+                //   changes[key].forEach(change => {
+                //     for (const innerKey in change) {
+                //       if (change[innerKey] === null) delete change[innerKey]
+                //     }
+                //   })
+                // }
                 if (_typeof(changes[key]) === 'object' && changes[key] !== null || Array.isArray(changes[key])) {
                   changes[key] = JSON.stringify(changes[key]);
                 }
