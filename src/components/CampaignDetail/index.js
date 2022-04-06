@@ -61,12 +61,14 @@ export const CampaignDetail = (props) => {
    * @param {string} value parameters to change
    */
   const handleChangeItem = (key, value) => {
+    const changes = { ...formState.changes, [key]: value }
+    if (key === 'scheduled_at') {
+      changes.status = value ? 'scheduled' : 'ended'
+    }
+
     setFormState({
       ...formState,
-      changes: {
-        ...formState.changes,
-        [key]: value
-      }
+      changes: changes
     })
   }
 
@@ -149,12 +151,23 @@ export const CampaignDetail = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, error: null })
+
       const changes = { ...formState?.changes }
+
       for (const key in changes) {
+        // if (key === 'conditions' && changes[key].length > 0) {
+        //   changes[key].forEach(change => {
+        //     for (const innerKey in change) {
+        //       if (change[innerKey] === null) delete change[innerKey]
+        //     }
+        //   })
+        // }
+
         if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
           changes[key] = JSON.stringify(changes[key])
         }
       }
+
       const requestOptions = {
         method: 'POST',
         headers: {
