@@ -54,6 +54,7 @@ import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { CampaignListing } from './components/CampaignListing'
 import { CampaignDetail } from './components/CampaignDetail'
+import { CampaignDetailContent } from './components/CampaignDetailContent'
 import { CampaignSignUpOption } from './components/CampaignSignUpOption'
 import { CampaignAmountOption } from './components/CampaignAmountOption'
 import { Cart } from './components/Cart'
@@ -262,6 +263,7 @@ export {
   BusinessProductCreator,
   CampaignListing,
   CampaignDetail,
+  CampaignDetailContent,
   CampaignSignUpOption,
   CampaignAmountOption,
   Cart,

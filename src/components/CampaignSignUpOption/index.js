@@ -183,7 +183,7 @@ export const CampaignSignUpOption = (props) => {
           ...(selectedRule?.id && { id: selectedRule?.id }),
           ...(selectedRule?.date_condition && { date_condition: selectedRule?.date_condition }),
           ...(selectedRule?.date && { date: selectedRule?.date }),
-          ...(selectedRule?.max_date && { date: selectedRule?.max_date }),
+          ...(selectedRule?.max_date && { max_date: selectedRule?.max_date }),
           type: type
         }
       })
