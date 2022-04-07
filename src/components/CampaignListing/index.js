@@ -89,7 +89,7 @@ export const CampaignListing = (props) => {
       }
 
       const fetchEndpoint = where
-        ? `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}&&where=${JSON.stringify(where)}`
+        ? `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}&where=${JSON.stringify(where)}`
         : `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}`
 
       const response = await fetch(fetchEndpoint, requestOptions)
