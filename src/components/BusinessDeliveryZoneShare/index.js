@@ -128,10 +128,6 @@ export const BusinessDeliveryZoneShare = (props) => {
     }
   }, [zone])
 
-  useEffect(() => {
-    console.log('selectedBusinessIds =  ', selectedBusinessIds)
-  }, [selectedBusinessIds])
-
   return (
     <>
       {UIComponent && (
