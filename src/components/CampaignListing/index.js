@@ -241,7 +241,7 @@ CampaignListing.propTypes = {
   /**
     * Enable/disable search by contact type
     */
-   isSearchByContactType: PropTypes.bool,
+  isSearchByContactType: PropTypes.bool,
   /**
    * Components types before my orders
    * Array of type components, the parent props will pass to these components
