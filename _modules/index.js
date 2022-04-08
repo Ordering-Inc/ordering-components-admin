@@ -1227,6 +1227,12 @@ Object.defineProperty(exports, "SingleProductCard", {
     return _SingleProductCard.SingleProductCard;
   }
 });
+Object.defineProperty(exports, "SingleRecoveryNotification", {
+  enumerable: true,
+  get: function get() {
+    return _SingleRecoveryNotification.SingleRecoveryNotification;
+  }
+});
 Object.defineProperty(exports, "SiteDetails", {
   enumerable: true,
   get: function get() {

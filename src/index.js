@@ -373,6 +373,7 @@ export {
   RecoveryActionListing,
   RecoveryActionDetail,
   RecoveryNotificationList,
+  SingleRecoveryNotification,
   SearchOptions,
   Schedule,
   SignupForm,
