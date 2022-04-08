@@ -5,12 +5,15 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
+/**
+ * Component to manage campaign form behavior without UI component
+ */
 export const CampaignListing = (props) => {
   const {
     UIComponent,
     paginationSettings,
     isSearchByName,
-    isSearchByDescription
+    isSearchByContactType
   } = props
 
   const [ordering] = useApi()
@@ -57,10 +60,10 @@ export const CampaignListing = (props) => {
             }
           )
         }
-        if (isSearchByDescription) {
+        if (isSearchByContactType) {
           searchConditions.push(
             {
-              attribute: 'description',
+              attribute: 'contact_type',
               value: {
                 condition: 'ilike',
                 value: encodeURI(`%${searchValue}%`)
@@ -89,7 +92,7 @@ export const CampaignListing = (props) => {
       }
 
       const fetchEndpoint = where
-        ? `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}&&where=${JSON.stringify(where)}`
+        ? `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}&where=${JSON.stringify(where)}`
         : `${ordering.root}/marketing_campaigns?page=${page}&page_size=${pageSize}`
 
       const response = await fetch(fetchEndpoint, requestOptions)
@@ -232,6 +235,14 @@ CampaignListing.propTypes = {
    */
   UIComponent: PropTypes.elementType,
   /**
+   * Enable/disable search by name
+   */
+  isSearchByName: PropTypes.bool,
+  /**
+    * Enable/disable search by contact type
+    */
+   isSearchByContactType: PropTypes.bool,
+  /**
    * Components types before my orders
    * Array of type components, the parent props will pass to these components
    */
@@ -254,6 +265,8 @@ CampaignListing.propTypes = {
 }
 
 CampaignListing.defaultProps = {
+  isSearchByName: true,
+  isSearchByContactType: true,
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
