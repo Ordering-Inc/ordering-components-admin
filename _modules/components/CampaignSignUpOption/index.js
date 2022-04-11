@@ -116,6 +116,12 @@ var CampaignSignUpOption = function CampaignSignUpOption(props) {
       changes: changes
     }));
   };
+  /**
+   * Change date range
+   * @param {string} date1 date
+   * @param {string} date2 max date
+   */
+
 
   var handleChangeDate = function handleChangeDate(date1, date2) {
     var changes = _objectSpread(_objectSpread({}, ruleFormState.changes), {}, {
@@ -127,16 +133,27 @@ var CampaignSignUpOption = function CampaignSignUpOption(props) {
       changes: changes
     }));
   };
+  /**
+   * Change date
+   * @param {string} value date
+   */
+
 
   var handleChangeDateTime = function handleChangeDateTime(value) {
     var changes = _objectSpread(_objectSpread({}, ruleFormState.changes), {}, {
       date: value
     });
 
+    changes === null || changes === void 0 ? true : delete changes.max_date;
     setRuleFormState(_objectSpread(_objectSpread({}, ruleFormState), {}, {
       changes: changes
     }));
   };
+  /**
+   * Change option
+   * @param {string} index condition
+   */
+
 
   var handleChangeOption = function handleChangeOption(index) {
     var changes = _objectSpread(_objectSpread({}, ruleFormState.changes), {}, {

@@ -59,13 +59,16 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
+/**
+ * Component to manage campaign form behavior without UI component
+ */
 var CampaignListing = function CampaignListing(props) {
   var _paginationSettings$p;
 
   var UIComponent = props.UIComponent,
       paginationSettings = props.paginationSettings,
       isSearchByName = props.isSearchByName,
-      isSearchByDescription = props.isSearchByDescription;
+      isSearchByContactType = props.isSearchByContactType;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -155,9 +158,9 @@ var CampaignListing = function CampaignListing(props) {
                   });
                 }
 
-                if (isSearchByDescription) {
+                if (isSearchByContactType) {
                   searchConditions.push({
-                    attribute: 'description',
+                    attribute: 'contact_type',
                     value: {
                       condition: 'ilike',
                       value: encodeURI("%".concat(searchValue, "%"))
@@ -185,7 +188,7 @@ var CampaignListing = function CampaignListing(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              fetchEndpoint = where ? "".concat(ordering.root, "/marketing_campaigns?page=").concat(page, "&page_size=").concat(pageSize, "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/marketing_campaigns?page=").concat(page, "&page_size=").concat(pageSize);
+              fetchEndpoint = where ? "".concat(ordering.root, "/marketing_campaigns?page=").concat(page, "&page_size=").concat(pageSize, "&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/marketing_campaigns?page=").concat(page, "&page_size=").concat(pageSize);
               _context.next = 10;
               return fetch(fetchEndpoint, requestOptions);
 
@@ -382,6 +385,16 @@ CampaignListing.propTypes = {
   UIComponent: _propTypes.default.elementType,
 
   /**
+   * Enable/disable search by name
+   */
+  isSearchByName: _propTypes.default.bool,
+
+  /**
+    * Enable/disable search by contact type
+    */
+  isSearchByContactType: _propTypes.default.bool,
+
+  /**
    * Components types before my orders
    * Array of type components, the parent props will pass to these components
    */
@@ -406,6 +419,8 @@ CampaignListing.propTypes = {
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
 CampaignListing.defaultProps = {
+  isSearchByName: true,
+  isSearchByContactType: true,
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
