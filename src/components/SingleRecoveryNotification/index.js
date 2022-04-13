@@ -11,7 +11,8 @@ export const SingleRecoveryNotification = (props) => {
     UIComponent,
     handleAddNotifications,
     handleUpdateNotifications,
-    handleDeleteNotifications
+    handleDeleteNotifications,
+    onClose
   } = props
 
   const [, t] = useLanguage()
@@ -85,6 +86,7 @@ export const SingleRecoveryNotification = (props) => {
         })
         handleAddNotifications(content.result)
         showToast(ToastType.Success, t('NOTIFICATION_ADDED', 'Notification added'))
+        onClose && onClose()
       } else {
         setFormState({
           ...formState,
@@ -130,6 +132,7 @@ export const SingleRecoveryNotification = (props) => {
         handleUpdateNotifications && handleUpdateNotifications(content.result)
         cleanFormState()
         showToast(ToastType.Success, t('NOTIFICATION_SAVED', 'Notification saved'))
+        onClose && onClose()
       } else {
         setFormState({
           ...formState,
@@ -174,6 +177,7 @@ export const SingleRecoveryNotification = (props) => {
         handleDeleteNotifications && handleDeleteNotifications(content.result)
         cleanFormState()
         showToast(ToastType.Success, t('NOTIFICATION_DELETED', 'Notification deleted'))
+        onClose && onClose()
       } else {
         setFormState({
           ...formState,
