@@ -84,7 +84,7 @@ export const BusinessDeliveryZoneShare = (props) => {
         }
       }
 
-      const response = await fetch(`${ordering.root}/business/${business.id}/deliveryzones/${zone.id}?jbusinesses=${selectedBusinessIds}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/deliveryzones/${zone.id}?businesses=[${selectedBusinessIds}]`, requestOptions)
       const content = await response.json()
 
       if (!content.error) {
