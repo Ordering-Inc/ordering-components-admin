@@ -209,7 +209,7 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              fetchEndpoint = where ? "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString(), "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString());
+              fetchEndpoint = where ? "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "&params=").concat(propsToFetch.toString(), "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "&params=").concat(propsToFetch.toString());
               _context.next = 10;
               return fetch(fetchEndpoint, requestOptions);
 
@@ -229,6 +229,7 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
                 });
                 setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
                   currentPage: content.pagination.current_page,
+                  pageSize: content.pagination.page_size === 0 ? paginationProps.pageSize : content.pagination.page_size,
                   totalPages: content.pagination.total_pages,
                   totalItems: content.pagination.total,
                   from: content.pagination.from,

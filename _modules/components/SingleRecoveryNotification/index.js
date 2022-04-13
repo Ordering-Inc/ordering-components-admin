@@ -56,7 +56,8 @@ var SingleRecoveryNotification = function SingleRecoveryNotification(props) {
       UIComponent = props.UIComponent,
       handleAddNotifications = props.handleAddNotifications,
       handleUpdateNotifications = props.handleUpdateNotifications,
-      handleDeleteNotifications = props.handleDeleteNotifications;
+      handleDeleteNotifications = props.handleDeleteNotifications,
+      onClose = props.onClose;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
@@ -162,6 +163,7 @@ var SingleRecoveryNotification = function SingleRecoveryNotification(props) {
                 }));
                 handleAddNotifications(content.result);
                 showToast(_ToastContext.ToastType.Success, t('NOTIFICATION_ADDED', 'Notification added'));
+                onClose && onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -237,6 +239,7 @@ var SingleRecoveryNotification = function SingleRecoveryNotification(props) {
                 handleUpdateNotifications && handleUpdateNotifications(content.result);
                 cleanFormState();
                 showToast(_ToastContext.ToastType.Success, t('NOTIFICATION_SAVED', 'Notification saved'));
+                onClose && onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -311,6 +314,7 @@ var SingleRecoveryNotification = function SingleRecoveryNotification(props) {
                 handleDeleteNotifications && handleDeleteNotifications(content.result);
                 cleanFormState();
                 showToast(_ToastContext.ToastType.Success, t('NOTIFICATION_DELETED', 'Notification deleted'));
+                onClose && onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
