@@ -230,7 +230,7 @@ var BusinessDeliveryZoneShare = function BusinessDeliveryZoneShare(props) {
                 }
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones/").concat(zone.id, "?jbusinesses=").concat(selectedBusinessIds), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones/").concat(zone.id, "?businesses=[").concat(selectedBusinessIds, "]"), requestOptions);
 
             case 6:
               response = _context2.sent;

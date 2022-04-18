@@ -649,7 +649,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleSuccessUpdateBusiness(updatedExtra);
   };
 
-  (0, _react.useEffect)(function () {
+  var handleClickUpdateOption = function handleClickUpdateOption() {
     var _changesState$changes, _changesState$changes2, _changesState$changes3;
 
     if (!Object.keys(changesState.changes).length) return;
@@ -665,7 +665,8 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     } else {
       handleUpdateOption();
     }
-  }, [changesState]);
+  };
+
   (0, _react.useEffect)(function () {
     setChangesState({
       changes: {},
@@ -703,6 +704,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleDeteteOption: handleDeteteOption,
     handleDeleteExtra: handleDeleteExtra,
     handleSucccessDeleteOption: handleSucccessDeleteOption,
+    handleClickUpdateOption: handleClickUpdateOption,
     curOption: curOption,
     openModal: openModal,
     setCurOption: setCurOption,
