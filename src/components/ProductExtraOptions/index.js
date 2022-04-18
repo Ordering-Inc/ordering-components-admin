@@ -324,7 +324,7 @@ export const ProductExtraOptions = (props) => {
     handleSuccessUpdateBusiness(updatedExtra)
   }
 
-  useEffect(() => {
+  const handleClickUpdateOption = () => {
     if (!Object.keys(changesState.changes).length) return
     if (changesState?.changes?.name === '' || changesState?.changes?.min === '' || changesState?.changes?.max === '') {
       setEditErrors({
@@ -335,7 +335,7 @@ export const ProductExtraOptions = (props) => {
     } else {
       handleUpdateOption()
     }
-  }, [changesState])
+  }
 
   useEffect(() => {
     setChangesState({ changes: {}, result: {} })
@@ -373,6 +373,7 @@ export const ProductExtraOptions = (props) => {
           handleDeteteOption={handleDeteteOption}
           handleDeleteExtra={handleDeleteExtra}
           handleSucccessDeleteOption={handleSucccessDeleteOption}
+          handleClickUpdateOption={handleClickUpdateOption}
 
           curOption={curOption}
           openModal={openModal}
