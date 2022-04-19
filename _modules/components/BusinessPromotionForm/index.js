@@ -17,6 +17,8 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _ConfigContext = require("../../contexts/ConfigContext");
+
 var _LanguageContext = require("../../contexts/LanguageContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
@@ -60,6 +62,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessPromotionForm = function BusinessPromotionForm(props) {
+  var _configs$advanced_off;
+
   var promotion = props.promotion,
       UIComponent = props.UIComponent,
       business = props.business,
@@ -81,6 +85,12 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
+
+  var _useConfig = (0, _ConfigContext.useConfig)(),
+      _useConfig2 = _slicedToArray(_useConfig, 1),
+      configs = _useConfig2[0].configs;
+
+  var isAdvancedOffersActivated = configs === null || configs === void 0 ? void 0 : (_configs$advanced_off = configs.advanced_offers_module) === null || _configs$advanced_off === void 0 ? void 0 : _configs$advanced_off.value;
 
   var _useState = (0, _react.useState)({
     promotion: promotion,
@@ -342,13 +352,29 @@ var BusinessPromotionForm = function BusinessPromotionForm(props) {
   (0, _react.useEffect)(function () {
     if (Object.keys(promotion).length === 0) {
       setIsAddMode(true);
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          type: 2,
-          rate_type: 2,
-          rate: 0
-        }
-      }));
+
+      if (isAdvancedOffersActivated) {
+        setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+          changes: {
+            type: 2,
+            rate_type: 2,
+            rate: 0,
+            auto: false,
+            public: true,
+            condition_type: 1,
+            target: 1,
+            stackable: false
+          }
+        }));
+      } else {
+        setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+          changes: {
+            type: 2,
+            rate_type: 2,
+            rate: 0
+          }
+        }));
+      }
     } else {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: {}
