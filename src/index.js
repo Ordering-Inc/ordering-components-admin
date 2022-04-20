@@ -53,6 +53,7 @@ import { BusinessTypeDetail } from './components/BusinessTypeDetail'
 import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
+import { BusinessWalletsList } from './components/BusinessWalletsList'
 import { CampaignListing } from './components/CampaignListing'
 import { CampaignDetail } from './components/CampaignDetail'
 import { CampaignDetailContent } from './components/CampaignDetailContent'
@@ -270,6 +271,7 @@ export {
   BusinessWebhooks,
   BusinessZoneGoogleMaps,
   BusinessProductCreator,
+  BusinessWalletsList,
   CampaignListing,
   CampaignDetail,
   CampaignDetailContent,
