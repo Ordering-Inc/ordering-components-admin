@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -63,7 +62,7 @@ export const CampaignDetail = (props) => {
   const handleChangeItem = (key, value) => {
     const changes = { ...formState.changes, [key]: value }
     if (key === 'scheduled_at') {
-      changes.status = value ? 'scheduled' : 'ended'
+      changes.status = value ? 'scheduled' : 'pending'
     }
 
     setFormState({
@@ -292,7 +291,8 @@ export const CampaignDetail = (props) => {
         ...formState,
         changes: {
           enabled: true,
-          conditions: []
+          conditions: [],
+          status: 'pending'
         }
       })
     } else {
@@ -301,17 +301,6 @@ export const CampaignDetail = (props) => {
     }
     setCampaignState({ ...campaignState, campaign: campaign })
   }, [campaign])
-
-  useEffect(() => {
-    if (!formState.changes?.audience_type) return
-    if (formState.changes?.audience_type === 'dynamic') {
-      const changes = {
-        ...formState.changes,
-        end_at: formState.changes?.end_at ?? campaign?.end_at ?? moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-      }
-      setFormState({ ...formState, changes: changes })
-    }
-  }, [formState.changes?.audience_type])
 
   return (
     <>
