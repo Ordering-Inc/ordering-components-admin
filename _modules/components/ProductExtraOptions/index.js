@@ -106,31 +106,26 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
       editOptionId = _useState6[0],
       setEditOptionId = _useState6[1];
 
-  var _useState7 = (0, _react.useState)({}),
-      _useState8 = _slicedToArray(_useState7, 2),
-      editErrors = _useState8[0],
-      setEditErrors = _useState8[1];
-
-  var _useState9 = (0, _react.useState)({
+  var _useState7 = (0, _react.useState)({
     conditioned: false,
     enabled: true,
     name: '',
     min: 1,
     max: 1
   }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      addChangesState = _useState8[0],
+      setAddChangesState = _useState8[1];
+
+  var _useState9 = (0, _react.useState)(null),
       _useState10 = _slicedToArray(_useState9, 2),
-      addChangesState = _useState10[0],
-      setAddChangesState = _useState10[1];
+      curOption = _useState10[0],
+      setCurOption = _useState10[1];
 
-  var _useState11 = (0, _react.useState)(null),
+  var _useState11 = (0, _react.useState)({}),
       _useState12 = _slicedToArray(_useState11, 2),
-      curOption = _useState12[0],
-      setCurOption = _useState12[1];
-
-  var _useState13 = (0, _react.useState)({}),
-      _useState14 = _slicedToArray(_useState13, 2),
-      openModal = _useState14[0],
-      setOpenModal = _useState14[1];
+      openModal = _useState12[0],
+      setOpenModal = _useState12[1];
   /**
    * Clean changesState
    */
@@ -649,24 +644,6 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleSuccessUpdateBusiness(updatedExtra);
   };
 
-  var handleClickUpdateOption = function handleClickUpdateOption() {
-    var _changesState$changes, _changesState$changes2, _changesState$changes3;
-
-    if (!Object.keys(changesState.changes).length) return;
-
-    if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.min) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes3 = changesState.changes) === null || _changesState$changes3 === void 0 ? void 0 : _changesState$changes3.max) === '') {
-      var _changesState$changes4, _changesState$changes5;
-
-      setEditErrors({
-        name: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.name) === '',
-        min: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes5 = changesState.changes) === null || _changesState$changes5 === void 0 ? void 0 : _changesState$changes5.min) === '',
-        max: (changesState === null || changesState === void 0 ? void 0 : changesState.changes.max) === ''
-      });
-    } else {
-      handleUpdateOption();
-    }
-  };
-
   (0, _react.useEffect)(function () {
     setChangesState({
       changes: {},
@@ -686,15 +663,11 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     });
   }, [extra === null || extra === void 0 ? void 0 : extra.id]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    editErrors: editErrors,
     changesState: changesState,
     cleanChangesState: cleanChangesState,
     extraState: extraState,
     editOptionId: editOptionId,
     addChangesState: addChangesState,
-    cleanEditErrors: function cleanEditErrors() {
-      return setEditErrors({});
-    },
     handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
     handleChangeOptionEnable: handleChangeOptionEnable,
@@ -704,7 +677,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     handleDeteteOption: handleDeteteOption,
     handleDeleteExtra: handleDeleteExtra,
     handleSucccessDeleteOption: handleSucccessDeleteOption,
-    handleClickUpdateOption: handleClickUpdateOption,
+    handleUpdateOption: handleUpdateOption,
     curOption: curOption,
     openModal: openModal,
     setCurOption: setCurOption,

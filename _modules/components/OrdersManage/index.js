@@ -529,12 +529,6 @@ var OrdersManage = function OrdersManage(props) {
                   loading: false,
                   businesses: content.result.businesses
                 }));
-
-                if ((user === null || user === void 0 ? void 0 : user.level) !== 0 && (user === null || user === void 0 ? void 0 : user.level) !== 2) {
-                  setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
-                    drivers: content.result.drivers
-                  }));
-                }
               } else {
                 setActionStatus({
                   loading: false,
@@ -657,7 +651,7 @@ var OrdersManage = function OrdersManage(props) {
   (0, _react.useEffect)(function () {
     if (loading) return;
 
-    if ((user === null || user === void 0 ? void 0 : user.level) === 0 || (user === null || user === void 0 ? void 0 : user.level) === 2) {
+    if ((user === null || user === void 0 ? void 0 : user.level) === 0 || (user === null || user === void 0 ? void 0 : user.level) === 2 || (user === null || user === void 0 ? void 0 : user.level) === 5) {
       getDrivers();
     }
 
