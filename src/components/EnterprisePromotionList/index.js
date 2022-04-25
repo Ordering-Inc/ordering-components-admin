@@ -86,8 +86,8 @@ export const EnterprisePromotionList = (props) => {
         }
       }
       const fetchEndpoint = where
-        ? `${ordering.root}/offers?page=${page}&page_size=${pageSize}8&params=${propsToFetch.toString()}&&where=${JSON.stringify(where)}`
-        : `${ordering.root}/offers?page=${page}&page_size=${pageSize}8&params=${propsToFetch.toString()}`
+        ? `${ordering.root}/offers?page=${page}&page_size=${pageSize}&params=${propsToFetch.toString()}&&where=${JSON.stringify(where)}`
+        : `${ordering.root}/offers?page=${page}&page_size=${pageSize}&params=${propsToFetch.toString()}`
 
       const response = await fetch(fetchEndpoint, requestOptions)
       const content = await response.json()
@@ -96,6 +96,7 @@ export const EnterprisePromotionList = (props) => {
         setPaginationProps({
           ...paginationProps,
           currentPage: content.pagination.current_page,
+          pageSize: content.pagination.page_size === 0 ? paginationProps.pageSize : content.pagination.page_size,
           totalPages: content.pagination.total_pages,
           totalItems: content.pagination.total,
           from: content.pagination.from,
