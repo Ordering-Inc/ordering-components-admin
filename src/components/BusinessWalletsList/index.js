@@ -8,7 +8,8 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 export const BusinessWalletsList = (props) => {
   const {
     UIComponent,
-    business
+    business,
+    handleSuccessUpdate
   } = props
 
   const [ordering] = useApi()
@@ -65,6 +66,12 @@ export const BusinessWalletsList = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ loading: false, error: null })
+        const _wallets = walletsListState.wallets.map(wallet => {
+          if (wallet.id === content.result?.id) return content.result
+          return wallet
+        })
+        setWalletsListState({ ...walletsListState, wallets: _wallets })
+        handleSuccessUpdate && handleSuccessUpdate({ ...business, configs: _wallets })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       } else {
         setActionState({ loading: false, error: content.result })
