@@ -286,11 +286,13 @@ export const GoogleMaps = (props) => {
           })
           setHeatMap(_heatMap)
           // Add a marker clusterer to manage the markers.
-          const _markerCluster = new window.MarkerClusterer(googleMap, markers, {
-            imagePath:
-              'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-          })
-          setMarkerCluster(_markerCluster)
+          if (window.MarkerClusterer) {
+            const _markerCluster = new window.MarkerClusterer(googleMap, markers, {
+              imagePath:
+                'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
+            })
+            setMarkerCluster(_markerCluster)
+          }
         }
 
         return () => {
