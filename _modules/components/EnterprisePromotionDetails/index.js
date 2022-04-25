@@ -565,6 +565,10 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
           rate: 5
         }
       }));
+      setSelectedBusinessIds([]);
+      setSelectedSitesIds([]);
+      setSelectedProductsIds({});
+      setSelectedCategoryIds({});
     } else {
       var _promotion$businesses, _promotion$sites;
 
