@@ -23,7 +23,6 @@ export const ProductExtraOptions = (props) => {
   const [extraState, setExtraState] = useState({ extra: extra, loading: false, error: null })
   const [changesState, setChangesState] = useState({ changes: {}, result: {} })
   const [editOptionId, setEditOptionId] = useState(null)
-  const [editErrors, setEditErrors] = useState({})
   const [addChangesState, setAddChangesState] = useState({
     conditioned: false,
     enabled: true,
@@ -324,19 +323,6 @@ export const ProductExtraOptions = (props) => {
     handleSuccessUpdateBusiness(updatedExtra)
   }
 
-  const handleClickUpdateOption = () => {
-    if (!Object.keys(changesState.changes).length) return
-    if (changesState?.changes?.name === '' || changesState?.changes?.min === '' || changesState?.changes?.max === '') {
-      setEditErrors({
-        name: changesState?.changes?.name === '',
-        min: changesState?.changes?.min === '',
-        max: changesState?.changes.max === ''
-      })
-    } else {
-      handleUpdateOption()
-    }
-  }
-
   useEffect(() => {
     setChangesState({ changes: {}, result: {} })
     setExtraState({ ...extraState, extra: extra })
@@ -357,13 +343,11 @@ export const ProductExtraOptions = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
-          editErrors={editErrors}
           changesState={changesState}
           cleanChangesState={cleanChangesState}
           extraState={extraState}
           editOptionId={editOptionId}
           addChangesState={addChangesState}
-          cleanEditErrors={() => setEditErrors({})}
           handleChangeImage={handleChangeImage}
           handleChangeInput={handleChangeInput}
           handleChangeOptionEnable={handleChangeOptionEnable}
@@ -373,7 +357,7 @@ export const ProductExtraOptions = (props) => {
           handleDeteteOption={handleDeteteOption}
           handleDeleteExtra={handleDeleteExtra}
           handleSucccessDeleteOption={handleSucccessDeleteOption}
-          handleClickUpdateOption={handleClickUpdateOption}
+          handleUpdateOption={handleUpdateOption}
 
           curOption={curOption}
           openModal={openModal}
