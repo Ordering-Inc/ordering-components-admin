@@ -162,7 +162,7 @@ export const OrderDetails = (props) => {
       const requestsState = {}
       const source = {}
       requestsState.updateOrder = source
-      const { content } = await ordering.setAccessToken(token).orders(order.id).save({ status: order.newStatus }, { cancelToken: source })
+      const { content } = await ordering.setAccessToken(token).orders(order?.id).save({ status: order.newStatus }, { cancelToken: source })
       setActionStatus({
         loading: false,
         error: content.error ? content.result : null
@@ -204,7 +204,7 @@ export const OrderDetails = (props) => {
   useEffect(() => {
     if (orderState.loading || loading) return
     const handleUpdateOrder = (order) => {
-      if (order.id !== orderState.order.id) return
+      if (order?.id !== orderState.order?.id) return
       delete order.total
       delete order.subtotal
       setOrderState({
