@@ -364,7 +364,7 @@ var OrderDetails = function OrderDetails(props) {
               source = {};
               requestsState.updateOrder = source;
               _context4.next = 7;
-              return ordering.setAccessToken(token).orders(order.id).save({
+              return ordering.setAccessToken(token).orders(order === null || order === void 0 ? void 0 : order.id).save({
                 status: order.newStatus
               }, {
                 cancelToken: source
@@ -465,7 +465,9 @@ var OrderDetails = function OrderDetails(props) {
     if (orderState.loading || loading) return;
 
     var handleUpdateOrder = function handleUpdateOrder(order) {
-      if (order.id !== orderState.order.id) return;
+      var _orderState$order;
+
+      if ((order === null || order === void 0 ? void 0 : order.id) !== ((_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.id)) return;
       delete order.total;
       delete order.subtotal;
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {

@@ -170,7 +170,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
               source = {};
               requestsState.updateOrders = source;
               _context.next = 6;
-              return ordering.setAccessToken(accessToken).orders(order.id).save({
+              return ordering.setAccessToken(accessToken).orders(order === null || order === void 0 ? void 0 : order.id).save({
                 status: order.newStatus
               }, {
                 cancelToken: source
@@ -186,7 +186,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
 
               if (!content.error) {
                 _orders2 = orderList.orders.filter(function (_order) {
-                  return _order.id !== order.id;
+                  return (_order === null || _order === void 0 ? void 0 : _order.id) !== (order === null || order === void 0 ? void 0 : order.id);
                 });
                 setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
                   orders: _orders2
@@ -726,7 +726,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderIdForUnreadCountUpdate === null || orderList.orders.length === 0) return;
 
     var _orders = orderList.orders.filter(function (order) {
-      if (order.id === orderIdForUnreadCountUpdate) {
+      if ((order === null || order === void 0 ? void 0 : order.id) === orderIdForUnreadCountUpdate) {
         order.unread_count = 0;
         order.unread_general_count = 0;
         order.unread_direct_count = 0;
@@ -746,7 +746,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   (0, _react.useEffect)(function () {
     if (!deletedOrderId) return;
     var orders = orderList.orders.filter(function (_order) {
-      return _order.id !== deletedOrderId;
+      return (_order === null || _order === void 0 ? void 0 : _order.id) !== deletedOrderId;
     });
     loadOrders();
     setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
@@ -801,7 +801,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     var handleUpdateOrder = function handleUpdateOrder(order) {
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
-        return _order.id === order.id;
+        return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
       });
       var orders = [];
 
@@ -809,7 +809,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         orders = orderList.orders.filter(function (_order) {
           var valid = true;
 
-          if (_order.id === order.id) {
+          if ((_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id)) {
             delete order.total;
             delete order.subtotal;
             Object.assign(_order, order);
@@ -851,7 +851,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     var handleRegisterOrder = function handleRegisterOrder(order) {
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
-        return _order.id === order.id;
+        return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
       });
       if (found) return;
       var orders = [];
@@ -874,12 +874,16 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     var handleNewMessage = function handleNewMessage(message) {
       if (orderList.orders.length === 0) return;
       var found = orderList.orders.find(function (order) {
-        return order.id === message.order.id;
+        var _message$order;
+
+        return (order === null || order === void 0 ? void 0 : order.id) === ((_message$order = message.order) === null || _message$order === void 0 ? void 0 : _message$order.id);
       });
 
       if (found) {
         var _orders = orderList.orders.filter(function (order) {
-          if (order.id === message.order.id) {
+          var _message$order2;
+
+          if ((order === null || order === void 0 ? void 0 : order.id) === ((_message$order2 = message.order) === null || _message$order2 === void 0 ? void 0 : _message$order2.id)) {
             if (order.last_message_at !== message.created_at) {
               if (message.type === 1) {
                 order.last_general_message_at = message.created_at;
@@ -937,7 +941,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
   (0, _react.useEffect)(function () {
     var handleCustomerReviewed = function handleCustomerReviewed(review) {
       var orders = orderList.orders.filter(function (_order) {
-        if (_order.id === review.order_id) {
+        if ((_order === null || _order === void 0 ? void 0 : _order.id) === review.order_id) {
           _order.user_review = review;
         }
 

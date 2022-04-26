@@ -53,7 +53,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var BusinessWalletsList = function BusinessWalletsList(props) {
   var UIComponent = props.UIComponent,
-      business = props.business;
+      business = props.business,
+      handleSuccessUpdate = props.handleSuccessUpdate;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -155,7 +156,8 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
 
   var handleUpdateWallet = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(walletId, params) {
-      var requestOptions, response, content;
+      var requestOptions, response, content, _wallets;
+
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -189,6 +191,18 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
                   loading: false,
                   error: null
                 });
+                _wallets = walletsListState.wallets.map(function (wallet) {
+                  var _content$result;
+
+                  if (wallet.id === ((_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.id)) return content.result;
+                  return wallet;
+                });
+                setWalletsListState(_objectSpread(_objectSpread({}, walletsListState), {}, {
+                  wallets: _wallets
+                }));
+                handleSuccessUpdate && handleSuccessUpdate(_objectSpread(_objectSpread({}, business), {}, {
+                  configs: _wallets
+                }));
                 showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
               } else {
                 setActionState({

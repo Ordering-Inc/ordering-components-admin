@@ -98,7 +98,7 @@ var OrderReview = function OrderReview(props) {
               }));
               _context.prev = 1;
               body = {
-                order_id: order.id,
+                order_id: order === null || order === void 0 ? void 0 : order.id,
                 quality: stars.quality,
                 delivery: stars.punctiality,
                 service: stars.service,

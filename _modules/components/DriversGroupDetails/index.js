@@ -435,7 +435,7 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
   };
 
   var handleSelectAllBusiness = function handleSelectAllBusiness(isAll) {
-    var businessIds = businesses.reduce(function (ids, business) {
+    var businessIds = businesses === null || businesses === void 0 ? void 0 : businesses.reduce(function (ids, business) {
       return [].concat(_toConsumableArray(ids), [business.id]);
     }, []);
     var filteredIds = [];
@@ -569,7 +569,7 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
     }));
 
     if (curDriversGroup) {
-      var _curDriversGroup$busi;
+      var _curDriversGroup$busi, _curDriversGroup$driv, _curDriversGroup$driv2;
 
       var businessIds = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : (_curDriversGroup$busi = curDriversGroup.business) === null || _curDriversGroup$busi === void 0 ? void 0 : _curDriversGroup$busi.reduce(function (ids, business) {
         return [].concat(_toConsumableArray(ids), [business.id]);
@@ -577,12 +577,12 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
       setSelectedBusinessIds(businessIds);
       setSelectedPaymethodIds((curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.allowed_paymethods) || []);
 
-      var _drivers = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.drivers.reduce(function (ids, driver) {
+      var _drivers = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : (_curDriversGroup$driv = curDriversGroup.drivers) === null || _curDriversGroup$driv === void 0 ? void 0 : _curDriversGroup$driv.reduce(function (ids, driver) {
         return [].concat(_toConsumableArray(ids), [driver.id]);
       }, []);
 
       setSelectedDriverIds(_drivers);
-      var companyIds = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : curDriversGroup.driver_companies.reduce(function (ids, company) {
+      var companyIds = curDriversGroup === null || curDriversGroup === void 0 ? void 0 : (_curDriversGroup$driv2 = curDriversGroup.driver_companies) === null || _curDriversGroup$driv2 === void 0 ? void 0 : _curDriversGroup$driv2.reduce(function (ids, company) {
         return [].concat(_toConsumableArray(ids), [company.id]);
       }, []);
       setSelectedDriversCompanyIds(companyIds);

@@ -251,10 +251,12 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
   }();
 
   var handleCheckboxClick = function handleCheckboxClick(groupId) {
+    var _selectedGroup$driver;
+
     var selectedGroup = driversGroupsState.groups.find(function (group) {
       return group.id === groupId;
     });
-    var driverIds = selectedGroup.drivers.reduce(function (ids, driver) {
+    var driverIds = (_selectedGroup$driver = selectedGroup.drivers) === null || _selectedGroup$driver === void 0 ? void 0 : _selectedGroup$driver.reduce(function (ids, driver) {
       return [].concat(_toConsumableArray(ids), [driver.id]);
     }, []);
     var changedDriverIds = [];
@@ -277,8 +279,10 @@ var DriverGroupSetting = function DriverGroupSetting(props) {
   };
 
   (0, _react.useEffect)(function () {
+    var _driversGroupsState$g;
+
     if (driversGroupsState.loading) return;
-    var groupIds = driversGroupsState.groups.reduce(function (ids, group) {
+    var groupIds = (_driversGroupsState$g = driversGroupsState.groups) === null || _driversGroupsState$g === void 0 ? void 0 : _driversGroupsState$g.reduce(function (ids, group) {
       var found = group.drivers.find(function (driver) {
         return driver.id === userId;
       });

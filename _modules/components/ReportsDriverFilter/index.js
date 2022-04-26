@@ -293,11 +293,11 @@ var ReportsDriverFilter = function ReportsDriverFilter(props) {
     return controller.abort();
   }, [searchValue]);
   (0, _react.useEffect)(function () {
-    var _driverList$drivers, _filterList$drivers_i;
+    var _driverList$drivers, _driverList$drivers2, _filterList$drivers_i;
 
     if ((driverList === null || driverList === void 0 ? void 0 : (_driverList$drivers = driverList.drivers) === null || _driverList$drivers === void 0 ? void 0 : _driverList$drivers.length) === 0) return;
 
-    var _driverIds = driverList === null || driverList === void 0 ? void 0 : driverList.drivers.reduce(function (prev, cur) {
+    var _driverIds = driverList === null || driverList === void 0 ? void 0 : (_driverList$drivers2 = driverList.drivers) === null || _driverList$drivers2 === void 0 ? void 0 : _driverList$drivers2.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 

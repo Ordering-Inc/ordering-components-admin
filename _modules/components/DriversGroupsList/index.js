@@ -707,7 +707,9 @@ var DriversGroupsList = function DriversGroupsList(props) {
   };
 
   var handleAllSelectGroup = function handleAllSelectGroup() {
-    var allIds = driversGroupsState.groups.reduce(function (ids, group) {
+    var _driversGroupsState$g;
+
+    var allIds = (_driversGroupsState$g = driversGroupsState.groups) === null || _driversGroupsState$g === void 0 ? void 0 : _driversGroupsState$g.reduce(function (ids, group) {
       return [].concat(_toConsumableArray(ids), [group.id]);
     }, []);
 

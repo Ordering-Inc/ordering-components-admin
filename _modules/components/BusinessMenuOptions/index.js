@@ -542,7 +542,9 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
     var _selectedProductsIds = [];
 
     if (Object.keys(menu).length) {
-      _selectedProductsIds = menu.products.reduce(function (ids, product) {
+      var _menu$products;
+
+      _selectedProductsIds = (_menu$products = menu.products) === null || _menu$products === void 0 ? void 0 : _menu$products.reduce(function (ids, product) {
         return [].concat(_toConsumableArray(ids), [product.id]);
       }, []);
       setSelectedProductsIds(_selectedProductsIds);
@@ -574,11 +576,11 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
       var iterateCategories = function iterateCategories(categories) {
         return (categories === null || categories === void 0 ? void 0 : categories.length) > 0 && (categories === null || categories === void 0 ? void 0 : categories.forEach(function (category) {
-          var _category$subcategori;
+          var _category$products, _category$subcategori;
 
           var productIds = [];
 
-          var _productIds = category.products.reduce(function (ids, product) {
+          var _productIds = (_category$products = category.products) === null || _category$products === void 0 ? void 0 : _category$products.reduce(function (ids, product) {
             return [].concat(_toConsumableArray(ids), [product.id]);
           }, []);
 
@@ -586,7 +588,9 @@ var BusinessMenuOptions = function BusinessMenuOptions(props) {
 
           if (category !== null && category !== void 0 && (_category$subcategori = category.subcategories) !== null && _category$subcategori !== void 0 && _category$subcategori.length) {
             category.subcategories.forEach(function iterate(category) {
-              var _productIds = category.products.reduce(function (ids, product) {
+              var _category$products2;
+
+              var _productIds = (_category$products2 = category.products) === null || _category$products2 === void 0 ? void 0 : _category$products2.reduce(function (ids, product) {
                 return [].concat(_toConsumableArray(ids), [product.id]);
               }, []);
 

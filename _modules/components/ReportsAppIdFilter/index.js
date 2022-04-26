@@ -258,11 +258,11 @@ var ReportsAppIdFilter = function ReportsAppIdFilter(props) {
     return controller.abort();
   }, []);
   (0, _react.useEffect)(function () {
-    var _appIdList$appIds, _filterList$app_ids;
+    var _appIdList$appIds, _appIdList$appIds2, _filterList$app_ids;
 
     if ((appIdList === null || appIdList === void 0 ? void 0 : (_appIdList$appIds = appIdList.appIds) === null || _appIdList$appIds === void 0 ? void 0 : _appIdList$appIds.length) === 0) return;
 
-    var _appIds = appIdList.appIds.reduce(function (prev, cur) {
+    var _appIds = (_appIdList$appIds2 = appIdList.appIds) === null || _appIdList$appIds2 === void 0 ? void 0 : _appIdList$appIds2.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 

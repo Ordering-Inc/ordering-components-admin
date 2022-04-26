@@ -360,7 +360,9 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
   };
 
   var handleAllSelectCompany = function handleAllSelectCompany() {
-    var allIds = driversCompaniesState.companies.reduce(function (ids, company) {
+    var _driversCompaniesStat;
+
+    var allIds = (_driversCompaniesStat = driversCompaniesState.companies) === null || _driversCompaniesStat === void 0 ? void 0 : _driversCompaniesStat.reduce(function (ids, company) {
       return [].concat(_toConsumableArray(ids), [company.id]);
     }, []);
 

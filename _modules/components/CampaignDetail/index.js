@@ -11,8 +11,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _moment = _interopRequireDefault(require("moment"));
-
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
@@ -54,8 +52,6 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var CampaignDetail = function CampaignDetail(props) {
-  var _formState$changes6;
-
   var campaign = props.campaign,
       campaignList = props.campaignList,
       UIComponent = props.UIComponent,
@@ -150,7 +146,7 @@ var CampaignDetail = function CampaignDetail(props) {
     var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value));
 
     if (key === 'scheduled_at') {
-      changes.status = value ? 'scheduled' : 'ended';
+      changes.status = value ? 'scheduled' : 'pending';
     }
 
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -530,7 +526,8 @@ var CampaignDetail = function CampaignDetail(props) {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: {
           enabled: true,
-          conditions: []
+          conditions: [],
+          status: 'pending'
         }
       }));
     } else {
@@ -542,23 +539,6 @@ var CampaignDetail = function CampaignDetail(props) {
       campaign: campaign
     }));
   }, [campaign]);
-  (0, _react.useEffect)(function () {
-    var _formState$changes3, _formState$changes4;
-
-    if (!((_formState$changes3 = formState.changes) !== null && _formState$changes3 !== void 0 && _formState$changes3.audience_type)) return;
-
-    if (((_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.audience_type) === 'dynamic') {
-      var _ref6, _formState$changes$en, _formState$changes5;
-
-      var changes = _objectSpread(_objectSpread({}, formState.changes), {}, {
-        end_at: (_ref6 = (_formState$changes$en = (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.end_at) !== null && _formState$changes$en !== void 0 ? _formState$changes$en : campaign === null || campaign === void 0 ? void 0 : campaign.end_at) !== null && _ref6 !== void 0 ? _ref6 : (0, _moment.default)(new Date()).format('YYYY-MM-DD HH:mm:ss')
-      });
-
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: changes
-      }));
-    }
-  }, [(_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.audience_type]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
     campaignState: campaignState,
