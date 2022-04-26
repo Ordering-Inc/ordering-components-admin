@@ -519,6 +519,10 @@ var SingleBusinessCategory = function SingleBusinessCategory(props) {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: _objectSpread({}, category)
       }));
+    } else {
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {}
+      }));
     }
   }, [category]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
