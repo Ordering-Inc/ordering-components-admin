@@ -179,7 +179,7 @@ export const UserCashWallet = (props) => {
     try {
       setActionState({ loading: true, error: null })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const params = { ...reduceWalletState }
+      const params = { ..?.reduceWalletState }
       params.amount = '-' + reduceWalletState.amount
       const requestOptions = {
         method: 'POST',
@@ -226,7 +226,7 @@ export const UserCashWallet = (props) => {
       })
     } else {
       setReduceWalletState({
-        ...reduceWalletState,
+        ..?.reduceWalletState,
         [e.target.name]: e.target.value
       })
     }

@@ -102,7 +102,7 @@ export const EnterprisePromotionDetails = (props) => {
       sites = [...formState.changes?.sites]
     } else {
       if (promotion?.sites) {
-        sites = promotion?.sites.reduce((ids, site) => [...ids, site.id], [])
+        sites = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
       }
     }
     if (checked) {
@@ -326,9 +326,9 @@ export const EnterprisePromotionDetails = (props) => {
       setSelectedBusinessIds(businessIds || [])
       const sitesIds = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
       setSelectedSitesIds(sitesIds || [])
-      const _selectedProductsIds = promotion?.products.reduce((ids, product) => [...ids, product.id], [])
+      const _selectedProductsIds = promotion?.products?.reduce((ids, product) => [...ids, product.id], [])
       setSelectedProductsIds(_selectedProductsIds)
-      const _selectedCategoryIds = promotion?.categories.reduce((ids, category) => [...ids, category.id], [])
+      const _selectedCategoryIds = promotion?.categories?.reduce((ids, category) => [...ids, category.id], [])
       setSelectedCategoryIds(_selectedCategoryIds)
     }
     setPromotionState({ ...promotionState, promotion: promotion })
