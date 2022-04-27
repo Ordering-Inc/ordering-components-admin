@@ -282,6 +282,11 @@ var PointsWalletBusinessDetail = function PointsWalletBusinessDetail(props) {
     };
   }();
 
+  (0, _react.useEffect)(function () {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: {}
+    }));
+  }, [walletData]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     setFormState: setFormState,
