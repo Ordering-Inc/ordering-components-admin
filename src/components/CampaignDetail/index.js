@@ -4,7 +4,6 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
-import { useSession, useApi, useLanguage, useToast, ToastType } from 'ordering-components-admin'
 
 export const CampaignDetail = (props) => {
   const {
