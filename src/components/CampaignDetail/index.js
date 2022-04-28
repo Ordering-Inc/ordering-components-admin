@@ -23,6 +23,7 @@ export const CampaignDetail = (props) => {
   const [campaignState, setCampaignState] = useState({ campaign: campaign, loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
+  const [audienceState, setAudienceState] = useState({ loading: false, audience: 0, error: null })
 
   /**
    * Clean formState
@@ -284,6 +285,52 @@ export const CampaignDetail = (props) => {
     }
   }
 
+  /**
+   * Method to get audience from API
+   */
+  const getAudience = async () => {
+    try {
+      setAudienceState({ ...audienceState, loading: true })
+      const conditions = [...campaignState?.campaign?.conditions]
+      conditions.forEach(condition => {
+        Object.keys(condition).forEach(key => {
+          if (condition[key] === null) {
+            delete condition[key]
+          }
+        })
+      })
+
+      const changes = { conditions: JSON.stringify(conditions) }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+
+      const response = await fetch(`${ordering.root}/marketing_campaigns/audience`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setAudienceState({ ...audienceState, loading: false, error: null, audience: content?.result?.audience })
+      } else {
+        setAudienceState({
+          ...audienceState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (err) {
+      setAudienceState({
+        ...audienceState,
+        loading: false,
+        error: err.message
+      })
+    }
+  }
+
   useEffect(() => {
     if (Object.keys(campaign).length === 0) {
       setIsAddMode(true)
@@ -302,6 +349,12 @@ export const CampaignDetail = (props) => {
     setCampaignState({ ...campaignState, campaign: campaign })
   }, [campaign])
 
+  useEffect(() => {
+    if (campaignState?.campaign && Object.keys(campaignState?.campaign).length > 0) {
+      getAudience()
+    }
+  }, [campaignState?.campaign])
+
   return (
     <>
       {
@@ -309,6 +362,7 @@ export const CampaignDetail = (props) => {
           <UIComponent
             {...props}
             isAddMode={isAddMode}
+            audienceState={audienceState}
             campaignState={campaignState}
             formState={formState}
             handleChangeItem={handleChangeItem}
