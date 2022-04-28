@@ -27,6 +27,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -97,6 +105,15 @@ var CampaignDetail = function CampaignDetail(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       isAddMode = _useState6[0],
       setIsAddMode = _useState6[1];
+
+  var _useState7 = (0, _react.useState)({
+    loading: false,
+    audience: 0,
+    error: null
+  }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      audienceState = _useState8[0],
+      setAudienceState = _useState8[1];
   /**
    * Clean formState
    */
@@ -519,6 +536,89 @@ var CampaignDetail = function CampaignDetail(props) {
       return _ref5.apply(this, arguments);
     };
   }();
+  /**
+   * Method to get audience from API
+   */
+
+
+  var getAudience = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
+      var _campaignState$campai, conditions, changes, requestOptions, response, content, _content$result;
+
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                loading: true
+              }));
+              conditions = _toConsumableArray(campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai = campaignState.campaign) === null || _campaignState$campai === void 0 ? void 0 : _campaignState$campai.conditions);
+              conditions.forEach(function (condition) {
+                Object.keys(condition).forEach(function (key) {
+                  if (condition[key] === null) {
+                    delete condition[key];
+                  }
+                });
+              });
+              changes = {
+                conditions: JSON.stringify(conditions)
+              };
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context5.next = 8;
+              return fetch("".concat(ordering.root, "/marketing_campaigns/audience"), requestOptions);
+
+            case 8:
+              response = _context5.sent;
+              _context5.next = 11;
+              return response.json();
+
+            case 11:
+              content = _context5.sent;
+
+              if (!content.error) {
+                setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                  loading: false,
+                  error: null,
+                  audience: content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.audience
+                }));
+              } else {
+                setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context5.next = 18;
+              break;
+
+            case 15:
+              _context5.prev = 15;
+              _context5.t0 = _context5["catch"](0);
+              setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                loading: false,
+                error: _context5.t0.message
+              }));
+
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 15]]);
+    }));
+
+    return function getAudience() {
+      return _ref6.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (Object.keys(campaign).length === 0) {
@@ -539,8 +639,14 @@ var CampaignDetail = function CampaignDetail(props) {
       campaign: campaign
     }));
   }, [campaign]);
+  (0, _react.useEffect)(function () {
+    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
+      getAudience();
+    }
+  }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
+    audienceState: audienceState,
     campaignState: campaignState,
     formState: formState,
     handleChangeItem: handleChangeItem,

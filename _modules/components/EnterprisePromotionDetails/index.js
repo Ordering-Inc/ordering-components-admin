@@ -410,7 +410,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
 
 
   var handleAddPromotion = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(notCloseAdd) {
       var changes, requestOptions, response, content;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
@@ -454,7 +454,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
                 });
                 handleSuccessAddPromotion && handleSuccessAddPromotion(content.result);
                 showToast(_ToastContext.ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'));
-                props.onClose && props.onClose();
+                !notCloseAdd && props.onClose && props.onClose();
               } else {
                 setActionState({
                   loading: false,
@@ -481,7 +481,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
       }, _callee2, null, [[0, 15]]);
     }));
 
-    return function handleAddPromotion() {
+    return function handleAddPromotion(_x) {
       return _ref2.apply(this, arguments);
     };
   }();

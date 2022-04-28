@@ -168,7 +168,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     loading: true,
     pagination: {
       currentPage: 0,
-      pageSize: 20,
+      pageSize: 10,
       totalItems: null,
       totalPages: 0,
       nextPageItems: 10
@@ -249,7 +249,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
   };
 
   var getProducts = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(newFetch, currentPage, currentPageSize) {
       var _businessState$busine;
 
       var _categoryState, _businessState$busine2, _categoryFiltered, _categoryFiltered$pro, categoryFiltered, _categories, productsFiltered, _categorySelected$pro, _businessState$busine3, _businessState$busine4, _productsFiltered, categoryKey, categoryState, pagination, parameters, where, searchConditions, _businessState$busine5, _businessState$busine6, functionFetch, source, productEndpoint, _yield$productEndpoin, _yield$productEndpoin2, error, result, _pagination, newcategoryState;
@@ -310,17 +310,6 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
               categoryState = categoriesState[categoryKey] || categoryStateDefault;
               pagination = categoryState.pagination;
 
-              if (!(!newFetch && pagination.currentPage > 0 && pagination.currentPage === pagination.totalPages)) {
-                _context.next = 11;
-                break;
-              }
-
-              setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
-                loading: false
-              }));
-              return _context.abrupt("return");
-
-            case 11:
               if (!isUpdateMode) {
                 setCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
                   loading: true
@@ -328,8 +317,8 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
               }
 
               parameters = {
-                page: newFetch ? 1 : pagination.currentPage + 1,
-                page_size: pagination.pageSize
+                page: currentPage || (newFetch ? 1 : pagination.currentPage + 1),
+                page_size: currentPageSize || pagination.pageSize
               };
               where = null;
               searchConditions = [];
@@ -360,18 +349,18 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 conditions: searchConditions,
                 conector: 'OR'
               };
-              _context.prev = 17;
+              _context.prev = 14;
               functionFetch = categorySelected !== null && categorySelected !== void 0 && categorySelected.id && (categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id) !== 'featured' ? ordering.businesses((_businessState$busine5 = businessState.business) === null || _businessState$busine5 === void 0 ? void 0 : _businessState$busine5.id).categories(categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id).products() : ordering.businesses((_businessState$busine6 = businessState.business) === null || _businessState$busine6 === void 0 ? void 0 : _businessState$busine6.id).products();
               source = {};
               requestsState.products = source;
               setRequestsState(_objectSpread({}, requestsState));
               productEndpoint = where.conditions.length > 0 ? functionFetch.parameters(parameters).where(where) : functionFetch.parameters(parameters);
-              _context.next = 25;
+              _context.next = 22;
               return productEndpoint.get({
                 cancelToken: source
               });
 
-            case 25:
+            case 22:
               _yield$productEndpoin = _context.sent;
               _yield$productEndpoin2 = _yield$productEndpoin.content;
               error = _yield$productEndpoin2.error;
@@ -381,6 +370,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
               if (!error) {
                 newcategoryState = {
                   pagination: _objectSpread(_objectSpread({}, categoryState.pagination), {}, {
+                    pageSize: _pagination.page_size === 0 ? categoryState.pagination.pageSize : _pagination.page_size,
                     currentPage: _pagination.current_page,
                     totalItems: _pagination.total,
                     totalPages: _pagination.total_pages
@@ -395,23 +385,23 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
                 setErrors(result);
               }
 
-              _context.next = 36;
+              _context.next = 33;
               break;
 
-            case 33:
-              _context.prev = 33;
-              _context.t0 = _context["catch"](17);
+            case 30:
+              _context.prev = 30;
+              _context.t0 = _context["catch"](14);
               setErrors([_context.t0.message]);
 
-            case 36:
+            case 33:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[17, 33]]);
+      }, _callee, null, [[14, 30]]);
     }));
 
-    return function getProducts(_x) {
+    return function getProducts(_x, _x2, _x3) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -803,7 +793,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     if (searchValue !== null) getProducts(!!searchValue);
   }, [searchValue]);
   (0, _react.useEffect)(function () {
-    getProducts(!!searchValue);
+    getProducts(!!searchValue, 1);
   }, [categorySelected === null || categorySelected === void 0 ? void 0 : categorySelected.id]);
   (0, _react.useEffect)(function () {
     if (businessSlug) {
@@ -872,7 +862,7 @@ var BusinessProductsListing = function BusinessProductsListing(props) {
     errorQuantityProducts: errorQuantityProducts,
     handleChangeCategory: handleChangeCategory,
     handleChangeSearch: handleChangeSearch,
-    getNextProducts: getProducts,
+    getPageProducts: getProducts,
     setCategorySelected: setCategorySelected,
     setBusinessState: setBusinessState,
     handleUpdateBusinessState: handleUpdateBusinessState,
