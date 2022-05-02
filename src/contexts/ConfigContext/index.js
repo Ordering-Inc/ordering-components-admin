@@ -91,7 +91,7 @@ export const ConfigProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    if (ordering?.project === null) {
+    if (!ordering?.project) {
       setState({ loading: true, configs: {} })
       return
     }
