@@ -195,7 +195,7 @@ var ConfigProvider = function ConfigProvider(_ref) {
     refreshConfigs: refreshConfigs
   };
   (0, _react.useEffect)(function () {
-    if ((ordering === null || ordering === void 0 ? void 0 : ordering.project) === null) {
+    if (!(ordering !== null && ordering !== void 0 && ordering.project)) {
       setState({
         loading: true,
         configs: {}
