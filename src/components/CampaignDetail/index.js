@@ -288,11 +288,11 @@ export const CampaignDetail = (props) => {
   /**
    * Method to get audience from API
    */
-  const getAudience = async () => {
+  const getAudience = async (conditions) => {
     try {
       setAudienceState({ ...audienceState, loading: true })
-      const conditions = [...campaignState?.campaign?.conditions]
-      conditions.forEach(condition => {
+      const _conditions = [...conditions]
+      _conditions.forEach(condition => {
         Object.keys(condition).forEach(key => {
           if (condition[key] === null) {
             delete condition[key]
@@ -300,7 +300,7 @@ export const CampaignDetail = (props) => {
         })
       })
 
-      const changes = { conditions: JSON.stringify(conditions) }
+      const changes = { conditions: JSON.stringify(_conditions) }
 
       const requestOptions = {
         method: 'POST',
@@ -331,6 +331,18 @@ export const CampaignDetail = (props) => {
     }
   }
 
+  const isCheckBoxClick = () => {
+    let valid = false
+    formState.changes.conditions.forEach(item => {
+      let childValid = true
+      Object.keys(item).forEach(key => {
+        if (key === 'condition' || key === 'date_condition') childValid = false
+      })
+      if (childValid) valid = true
+    })
+    return valid
+  }
+
   useEffect(() => {
     if (Object.keys(campaign).length === 0) {
       setIsAddMode(true)
@@ -342,6 +354,7 @@ export const CampaignDetail = (props) => {
           status: 'pending'
         }
       })
+      getAudience(campaign?.conditions)
     } else {
       setIsAddMode(false)
       cleanFormState()
@@ -350,10 +363,12 @@ export const CampaignDetail = (props) => {
   }, [campaign])
 
   useEffect(() => {
-    if (campaignState?.campaign && Object.keys(campaignState?.campaign).length > 0) {
-      getAudience()
+    if (!isAddMode) return
+    const valid = isCheckBoxClick()
+    if (formState?.changes?.conditions && formState?.changes?.conditions?.length > 0 && !valid) {
+      getAudience(formState?.changes?.conditions)
     }
-  }, [campaignState?.campaign])
+  }, [JSON.stringify(formState?.changes?.conditions)])
 
   return (
     <>
