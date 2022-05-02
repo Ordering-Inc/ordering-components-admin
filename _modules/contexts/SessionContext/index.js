@@ -187,6 +187,10 @@ var SessionProvider = function SessionProvider(_ref) {
               return strategy.setItem('user', values.user, true);
 
             case 4:
+              _context3.next = 6;
+              return strategy.setItem('project', values.project);
+
+            case 6:
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 auth: true,
                 user: values.user,
@@ -194,7 +198,7 @@ var SessionProvider = function SessionProvider(_ref) {
                 loading: false
               }));
 
-            case 5:
+            case 7:
             case "end":
               return _context3.stop();
           }

@@ -60,6 +60,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var CampaignDetail = function CampaignDetail(props) {
+  var _formState$changes6;
+
   var campaign = props.campaign,
       campaignList = props.campaignList,
       UIComponent = props.UIComponent,
@@ -542,8 +544,8 @@ var CampaignDetail = function CampaignDetail(props) {
 
 
   var getAudience = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5() {
-      var _campaignState$campai, conditions, changes, requestOptions, response, content, _content$result;
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(conditions) {
+      var _conditions, changes, requestOptions, response, content, _content$result;
 
       return _regenerator.default.wrap(function _callee5$(_context5) {
         while (1) {
@@ -553,16 +555,18 @@ var CampaignDetail = function CampaignDetail(props) {
               setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
                 loading: true
               }));
-              conditions = _toConsumableArray(campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai = campaignState.campaign) === null || _campaignState$campai === void 0 ? void 0 : _campaignState$campai.conditions);
-              conditions.forEach(function (condition) {
+              _conditions = _toConsumableArray(conditions);
+
+              _conditions.forEach(function (condition) {
                 Object.keys(condition).forEach(function (key) {
                   if (condition[key] === null) {
                     delete condition[key];
                   }
                 });
               });
+
               changes = {
-                conditions: JSON.stringify(conditions)
+                conditions: JSON.stringify(_conditions)
               };
               requestOptions = {
                 method: 'POST',
@@ -615,10 +619,22 @@ var CampaignDetail = function CampaignDetail(props) {
       }, _callee5, null, [[0, 15]]);
     }));
 
-    return function getAudience() {
+    return function getAudience(_x2) {
       return _ref6.apply(this, arguments);
     };
   }();
+
+  var isCheckBoxClick = function isCheckBoxClick() {
+    var valid = false;
+    formState.changes.conditions.forEach(function (item) {
+      var childValid = true;
+      Object.keys(item).forEach(function (key) {
+        if (key === 'condition' || key === 'date_condition') childValid = false;
+      });
+      if (childValid) valid = true;
+    });
+    return valid;
+  };
 
   (0, _react.useEffect)(function () {
     if (Object.keys(campaign).length === 0) {
@@ -630,6 +646,7 @@ var CampaignDetail = function CampaignDetail(props) {
           status: 'pending'
         }
       }));
+      getAudience(campaign === null || campaign === void 0 ? void 0 : campaign.conditions);
     } else {
       setIsAddMode(false);
       cleanFormState();
@@ -640,10 +657,17 @@ var CampaignDetail = function CampaignDetail(props) {
     }));
   }, [campaign]);
   (0, _react.useEffect)(function () {
-    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
-      getAudience();
+    var _formState$changes3, _formState$changes4, _formState$changes4$c;
+
+    if (!isAddMode) return;
+    var valid = isCheckBoxClick();
+
+    if (formState !== null && formState !== void 0 && (_formState$changes3 = formState.changes) !== null && _formState$changes3 !== void 0 && _formState$changes3.conditions && (formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : (_formState$changes4$c = _formState$changes4.conditions) === null || _formState$changes4$c === void 0 ? void 0 : _formState$changes4$c.length) > 0 && !valid) {
+      var _formState$changes5;
+
+      getAudience(formState === null || formState === void 0 ? void 0 : (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.conditions);
     }
-  }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
+  }, [JSON.stringify(formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.conditions)]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
     audienceState: audienceState,

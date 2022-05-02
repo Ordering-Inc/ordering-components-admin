@@ -55,6 +55,7 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
   var UIComponent = props.UIComponent,
       campaignState = props.campaignState,
       isAddMode = props.isAddMode,
+      campaignFormState = props.formState,
       handleChangeItem = props.handleChangeItem,
       handleChangeContactData = props.handleChangeContactData,
       handleSuccessUpdateCampaign = props.handleSuccessUpdateCampaign,
@@ -221,15 +222,47 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
   }();
 
   (0, _react.useEffect)(function () {
-    var _campaignState$campai3, _campaignState$campai4;
+    if (isAddMode) return;
 
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {
-        contact_type: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai3 = campaignState.campaign) === null || _campaignState$campai3 === void 0 ? void 0 : _campaignState$campai3.contact_type) || '',
-        contact_data: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai4 = campaignState.campaign) === null || _campaignState$campai4 === void 0 ? void 0 : _campaignState$campai4.contact_data) || {}
-      }
-    }));
+    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
+      var _campaignState$campai3, _campaignState$campai4;
+
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          contact_type: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai3 = campaignState.campaign) === null || _campaignState$campai3 === void 0 ? void 0 : _campaignState$campai3.contact_type) || '',
+          contact_data: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai4 = campaignState.campaign) === null || _campaignState$campai4 === void 0 ? void 0 : _campaignState$campai4.contact_data) || {}
+        }
+      }));
+    }
   }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
+  (0, _react.useEffect)(function () {
+    if (isAddMode) return;
+
+    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
+      var _campaignState$campai5, _campaignState$campai6;
+
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          contact_type: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai5 = campaignState.campaign) === null || _campaignState$campai5 === void 0 ? void 0 : _campaignState$campai5.contact_type) || '',
+          contact_data: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai6 = campaignState.campaign) === null || _campaignState$campai6 === void 0 ? void 0 : _campaignState$campai6.contact_data) || {}
+        }
+      }));
+    }
+  }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
+  (0, _react.useEffect)(function () {
+    if (!isAddMode) return;
+
+    if (campaignFormState !== null && campaignFormState !== void 0 && campaignFormState.changes && Object.keys(campaignFormState === null || campaignFormState === void 0 ? void 0 : campaignFormState.changes).length > 0) {
+      var _campaignFormState$ch, _campaignFormState$ch2;
+
+      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+        changes: {
+          contact_type: (campaignFormState === null || campaignFormState === void 0 ? void 0 : (_campaignFormState$ch = campaignFormState.changes) === null || _campaignFormState$ch === void 0 ? void 0 : _campaignFormState$ch.contact_type) || '',
+          contact_data: (campaignFormState === null || campaignFormState === void 0 ? void 0 : (_campaignFormState$ch2 = campaignFormState.changes) === null || _campaignFormState$ch2 === void 0 ? void 0 : _campaignFormState$ch2.contact_data) || {}
+        }
+      }));
+    }
+  }, [campaignFormState === null || campaignFormState === void 0 ? void 0 : campaignFormState.changes]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     contactState: formState,
     handleChangeType: handleChangeType,
