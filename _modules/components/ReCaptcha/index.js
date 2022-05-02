@@ -47,15 +47,19 @@ var ReCaptcha = function ReCaptcha(props) {
 
     if (configs && Object.keys(configs).length > 0 && configs !== null && configs !== void 0 && (_configs$security_rec = configs.security_recaptcha_site_key) !== null && _configs$security_rec !== void 0 && _configs$security_rec.value) {
       return configs === null || configs === void 0 ? void 0 : configs.security_recaptcha_site_key.value;
+    } else {
+      console.log('ReCaptcha component: the config doesn\'t have recaptcha site key');
+      return null;
     }
-
-    throw new Error('ReCaptcha component: the config doesn\'t have recaptcha site key');
   };
 
-  return /*#__PURE__*/_react.default.createElement(_reactGoogleRecaptcha.default, {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, getReCaptChaSiteKey() && /*#__PURE__*/_react.default.createElement(_reactGoogleRecaptcha.default, {
     sitekey: getReCaptChaSiteKey(),
-    onChange: onChange
-  });
+    onChange: onChange,
+    onErrored: function onErrored(e) {
+      return console.log(e);
+    }
+  }));
 };
 
 exports.ReCaptcha = ReCaptcha;
