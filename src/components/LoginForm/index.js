@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useEvent } from '../../contexts/EventContext'
+import { useLanguage } from '../../contexts/LanguageContext'
+import { useConfig } from '../../contexts/ConfigContext'
 
 /**
  * Component to manage login behavior without UI component
@@ -27,6 +29,11 @@ export const LoginForm = (props) => {
   const [checkPhoneCodeState, setCheckPhoneCodeState] = useState({ loading: false, result: { error: false } })
   const [events] = useEvent()
 
+  const [, t] = useLanguage()
+  const [{ configs }] = useConfig()
+  const [reCaptchaValue, setReCaptchaValue] = useState(null)
+  const [isReCaptchaEnable, setIsReCaptchaEnable] = useState(false)
+
   if (!useLoginByEmail && !useLoginByCellphone) {
     defaultLoginTab = 'none'
   } else if (defaultLoginTab === 'email' && !useLoginByEmail && useLoginByCellphone) {
@@ -45,9 +52,25 @@ export const LoginForm = (props) => {
   const handleLoginClick = async (values) => {
     try {
       const _credentials = {
-        [loginTab]: values && values[loginTab] || credentials[loginTab],
-        password: values && values?.password || credentials.password
+        [loginTab]: (values && values[loginTab]) || credentials[loginTab],
+        password: (values && values?.password) || credentials.password
       }
+
+      if (isReCaptchaEnable) {
+        if (reCaptchaValue === null) {
+          setFormState({
+            result: {
+              error: true,
+              result: t('RECAPTCHA_VALIDATION_IS_REQUIRED', 'The captcha validation is required')
+            },
+            loading: false
+          })
+          return
+        } else {
+          _credentials.verification_code = reCaptchaValue
+        }
+      }
+
       setFormState({ ...formState, loading: true })
       const { content: { error, result } } = await ordering.users().auth(_credentials)
       if (!error) {
@@ -81,7 +104,8 @@ export const LoginForm = (props) => {
           }
           login({
             user: result,
-            token: result.session.access_token
+            token: result.session.access_token,
+            project: ordering?.project
           })
         }
         events.emit('userLogin', result)
@@ -145,7 +169,7 @@ export const LoginForm = (props) => {
           country_phone_code: `+${values.country_phone_code}`
         })
       })
-      const res = await response.json();
+      const res = await response.json()
       setVerifyPhoneState({
         ...verifyPhoneState,
         loading: false,
@@ -179,7 +203,7 @@ export const LoginForm = (props) => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(values)
       })
-      const res = await response.json();
+      const res = await response.json()
       if (!res?.error && res?.result?.id) {
         login({
           user: res?.result,
@@ -205,6 +229,12 @@ export const LoginForm = (props) => {
     }
   }
 
+  useEffect(() => {
+    setIsReCaptchaEnable(configs &&
+      Object.keys(configs).length > 0 &&
+      configs?.security_recaptcha_auth?.value === '1')
+  }, [configs])
+
   return (
     <>
       {UIComponent && (
@@ -221,6 +251,8 @@ export const LoginForm = (props) => {
           handleChangeTab={handleChangeTab}
           handleSendVerifyCode={sendVerifyPhoneCode}
           handleCheckPhoneCode={checkVerifyPhoneCode}
+          isReCaptchaEnable={isReCaptchaEnable}
+          handleReCaptcha={setReCaptchaValue}
         />
       )}
     </>
