@@ -21,6 +21,10 @@ var _WebsocketContext = require("../../contexts/WebsocketContext");
 
 var _EventContext = require("../../contexts/EventContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -73,6 +77,14 @@ var OrderDetails = function OrderDetails(props) {
   var _useEvent = (0, _EventContext.useEvent)(),
       _useEvent2 = _slicedToArray(_useEvent, 1),
       events = _useEvent2[0];
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
     order: null,
@@ -452,6 +464,79 @@ var OrderDetails = function OrderDetails(props) {
     };
   }();
 
+  var handleRefundOrder = /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee6() {
+      var _orderState$order, _orderState$order2, _orderState$order3, _orderState$order3$pa, requestOption, response, content;
+
+      return _regenerator.default.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: true
+              }));
+              requestOption = {
+                method: 'POST',
+                headers: {
+                  Authorization: "Bearer ".concat(token),
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  order_id: (_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.id,
+                  business_id: (_orderState$order2 = orderState.order) === null || _orderState$order2 === void 0 ? void 0 : _orderState$order2.business_id,
+                  gateway: (_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : (_orderState$order3$pa = _orderState$order3.paymethod) === null || _orderState$order3$pa === void 0 ? void 0 : _orderState$order3$pa.gateway
+                })
+              };
+              _context6.next = 6;
+              return fetch("".concat(ordering.root, "/payments/stripe/refund"), requestOption);
+
+            case 6:
+              response = _context6.sent;
+              _context6.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context6.sent;
+              setActionStatus({
+                loading: false,
+                error: content.error ? content.result : null
+              });
+
+              if (!content.error) {
+                setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
+                  order: _objectSpread(_objectSpread({}, orderState.order), {}, {
+                    refund_data: content.result
+                  })
+                }));
+                showToast(_ToastContext.ToastType.Success, t('ORDER_REFUNDED', 'Order refunded'));
+              }
+
+              _context6.next = 17;
+              break;
+
+            case 14:
+              _context6.prev = 14;
+              _context6.t0 = _context6["catch"](0);
+              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                loading: false,
+                error: [_context6.t0.message]
+              }));
+
+            case 17:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[0, 14]]);
+    }));
+
+    return function handleRefundOrder() {
+      return _ref7.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (props.order) {
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
@@ -465,9 +550,9 @@ var OrderDetails = function OrderDetails(props) {
     if (orderState.loading || loading) return;
 
     var handleUpdateOrder = function handleUpdateOrder(order) {
-      var _orderState$order;
+      var _orderState$order4;
 
-      if ((order === null || order === void 0 ? void 0 : order.id) !== ((_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.id)) return;
+      if ((order === null || order === void 0 ? void 0 : order.id) !== ((_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.id)) return;
       delete order.total;
       delete order.subtotal;
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
@@ -515,7 +600,8 @@ var OrderDetails = function OrderDetails(props) {
     messages: messages,
     setMessages: setMessages,
     messagesReadList: messagesReadList,
-    readMessages: readMessages
+    readMessages: readMessages,
+    handleRefundOrder: handleRefundOrder
   })));
 };
 
