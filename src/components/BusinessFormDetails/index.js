@@ -115,7 +115,7 @@ export const BusinessFormDetails = (props) => {
           ...businessState,
           business: {
             ...businessState.business,
-            ...response.content
+            ...response.content.result
           }
         })
 
