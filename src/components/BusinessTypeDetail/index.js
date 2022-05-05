@@ -41,7 +41,6 @@ export const BusinessTypeDetail = (props) => {
 
   /**
    * Update business type field data
-   * @param {String} name Field name to change business type
    */
   const handleChangeItem = (name, value) => {
     const currentChanges = { ...formState?.changes, [name]: value }
