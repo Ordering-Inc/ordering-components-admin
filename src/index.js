@@ -53,6 +53,7 @@ import { BusinessTypeDetail } from './components/BusinessTypeDetail'
 import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
+import { BusinessWalletsList } from './components/BusinessWalletsList'
 import { CampaignListing } from './components/CampaignListing'
 import { CampaignDetail } from './components/CampaignDetail'
 import { CampaignDetailContent } from './components/CampaignDetailContent'
@@ -154,6 +155,7 @@ import { ProductOption } from './components/ProductOption'
 import { ProductOptionSuboption } from './components/ProductOptionSuboption'
 import { ProductsList } from './components/ProductsList'
 import { ProductsListing } from './components/ProductsListing'
+import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
 import { RecoveryActionListing } from './components/RecoveryActionListing'
 import { RecoveryActionDetail } from './components/RecoveryActionDetail'
@@ -271,6 +273,7 @@ export {
   BusinessWebhooks,
   BusinessZoneGoogleMaps,
   BusinessProductCreator,
+  BusinessWalletsList,
   CampaignListing,
   CampaignDetail,
   CampaignDetailContent,
@@ -375,6 +378,7 @@ export {
   ProductsList,
   ProductsListing,
   ReportsDriverFilter,
+  ReCaptcha,
   RewardsPrograms,
   RecoveryActionListing,
   RecoveryActionDetail,

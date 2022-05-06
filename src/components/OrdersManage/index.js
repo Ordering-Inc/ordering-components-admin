@@ -238,12 +238,6 @@ export const OrdersManage = (props) => {
           loading: false,
           businesses: content.result.businesses
         })
-        if (user?.level !== 0 && user?.level !== 2) {
-          setDriversList({
-            ...driversList,
-            drivers: content.result.drivers
-          })
-        }
       } else {
         setActionStatus({ loading: false, error: content?.result })
       }
@@ -330,7 +324,7 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     if (loading) return
-    if (user?.level === 0 || user?.level === 2) {
+    if (user?.level === 0 || user?.level === 2 || user?.level === 5) {
       getDrivers()
     }
     getControlsOrders()

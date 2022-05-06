@@ -292,6 +292,8 @@ export const SingleBusinessCategory = (props) => {
         ...formState,
         changes: { ...category }
       })
+    } else {
+      setFormState({ ...formState, changes: {} })
     }
   }, [category])
 
