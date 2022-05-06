@@ -124,6 +124,19 @@ var ProductTagDetails = function ProductTagDetails(props) {
     }));
   };
   /**
+   * Update credential data
+   * @param {*} changes Field for product tag
+   */
+
+
+  var handleChangeItem = function handleChangeItem(changes) {
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), changes);
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
+  /**
    * Method to update the product tag from API
    */
 
@@ -369,7 +382,8 @@ var ProductTagDetails = function ProductTagDetails(props) {
     handlechangeImage: handlechangeImage,
     handleUpdateProductTag: handleUpdateProductTag,
     handleAddProductTag: handleAddProductTag,
-    handleDeleteProductTag: handleDeleteProductTag
+    handleDeleteProductTag: handleDeleteProductTag,
+    handleChangeItem: handleChangeItem
   })));
 };
 

@@ -113,6 +113,18 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
   };
   /**
   * Update credential data
+  */
+
+
+  var handleChangeItem = function handleChangeItem(changes) {
+    var currentChanges = _objectSpread(_objectSpread({}, formState.changes), changes);
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
+  /**
+  * Update credential data
   * @param {Boolean} isChecked checkbox status
   */
 
@@ -257,7 +269,8 @@ var BusinessProductCreator = function BusinessProductCreator(props) {
     handlechangeImage: handlechangeImage,
     handleChangeInput: handleChangeInput,
     handleUpdateClick: handleUpdateClick,
-    handleChangeCheckBox: handleChangeCheckBox
+    handleChangeCheckBox: handleChangeCheckBox,
+    handleChangeItem: handleChangeItem
   })));
 };
 

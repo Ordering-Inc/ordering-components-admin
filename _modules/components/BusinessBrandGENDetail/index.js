@@ -331,6 +331,14 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
     };
   };
 
+  var handleChangeItem = function handleChangeItem(changes) {
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), changes);
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
+
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {}
@@ -340,7 +348,8 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
     brandFormState: formState,
     handleUpdateClick: handleUpdateClick,
     handleChangeInput: handleChangeInput,
-    handlechangeImage: handlechangeImage
+    handlechangeImage: handlechangeImage,
+    handleChangeItem: handleChangeItem
   })));
 };
 
