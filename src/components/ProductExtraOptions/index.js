@@ -71,6 +71,20 @@ export const ProductExtraOptions = (props) => {
       })
     }
   }
+
+  /**
+   * Method to change the option state
+   */
+  const handleChangeItem = (changes, id) => {
+    if (id !== undefined) setEditOptionId(id)
+    setChangesState({
+      result: {},
+      changes: {
+        ...changesState.changes,
+        ...changes
+      }
+    })
+  }
   /**
    * Method to change the option enabled state
    * @param {Boolean} enabled
@@ -345,6 +359,7 @@ export const ProductExtraOptions = (props) => {
           {...props}
           changesState={changesState}
           cleanChangesState={cleanChangesState}
+          handleChangeItem={handleChangeItem}
           extraState={extraState}
           editOptionId={editOptionId}
           addChangesState={addChangesState}
