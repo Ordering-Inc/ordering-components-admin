@@ -233,7 +233,7 @@ export const EnterprisePromotionDetails = (props) => {
   /**
    * Method to add new promotion from API
    */
-  const handleAddPromotion = async () => {
+  const handleAddPromotion = async (notCloseAdd) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
@@ -256,7 +256,7 @@ export const EnterprisePromotionDetails = (props) => {
         setActionState({ error: null, loading: false })
         handleSuccessAddPromotion && handleSuccessAddPromotion(content.result)
         showToast(ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'))
-        props.onClose && props.onClose()
+        !notCloseAdd && props.onClose && props.onClose()
       } else {
         setActionState({
           loading: false,
