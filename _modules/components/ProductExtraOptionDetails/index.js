@@ -107,49 +107,39 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
       editSubOptionId = _useState6[0],
       setEditSubOptionId = _useState6[1];
 
-  var _useState7 = (0, _react.useState)({}),
-      _useState8 = _slicedToArray(_useState7, 2),
-      editErrors = _useState8[0],
-      setEditErrors = _useState8[1];
-
-  var _useState9 = (0, _react.useState)({
+  var _useState7 = (0, _react.useState)({
     changes: {},
     loading: false,
     error: null
   }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      settingChangeState = _useState8[0],
+      setSettingChangeState = _useState8[1];
+
+  var _useState9 = (0, _react.useState)([]),
       _useState10 = _slicedToArray(_useState9, 2),
-      settingChangeState = _useState10[0],
-      setSettingChangeState = _useState10[1];
+      conditionalOptions = _useState10[0],
+      setConditionalOptions = _useState10[1];
 
   var _useState11 = (0, _react.useState)([]),
       _useState12 = _slicedToArray(_useState11, 2),
-      conditionalOptions = _useState12[0],
-      setConditionalOptions = _useState12[1];
+      conditionalSubOptions = _useState12[0],
+      setConditionalSubOptions = _useState12[1];
 
-  var _useState13 = (0, _react.useState)([]),
+  var _useState13 = (0, _react.useState)(null),
       _useState14 = _slicedToArray(_useState13, 2),
-      conditionalSubOptions = _useState14[0],
-      setConditionalSubOptions = _useState14[1];
+      conditionalOptionId = _useState14[0],
+      setConditionalOptionId = _useState14[1];
 
-  var _useState15 = (0, _react.useState)(null),
+  var _useState15 = (0, _react.useState)(extra),
       _useState16 = _slicedToArray(_useState15, 2),
-      conditionalOptionId = _useState16[0],
-      setConditionalOptionId = _useState16[1];
+      extraState = _useState16[0],
+      setExtraState = _useState16[1];
 
-  var _useState17 = (0, _react.useState)(extra),
+  var _useState17 = (0, _react.useState)(null),
       _useState18 = _slicedToArray(_useState17, 2),
-      extraState = _useState18[0],
-      setExtraState = _useState18[1];
-
-  var _useState19 = (0, _react.useState)(null),
-      _useState20 = _slicedToArray(_useState19, 2),
-      conditionalSubOptionId = _useState20[0],
-      setConditionalSubOptionId = _useState20[1];
-
-  var _useState21 = (0, _react.useState)(false),
-      _useState22 = _slicedToArray(_useState21, 2),
-      isAddMode = _useState22[0],
-      setIsAddMode = _useState22[1];
+      conditionalSubOptionId = _useState18[0],
+      setConditionalSubOptionId = _useState18[1];
   /**
    * Method to change the option input
    * @param {EventTarget} e Related HTML event
@@ -158,8 +148,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeInput = function handleChangeInput(e, id) {
-    if (id === null) setIsAddMode(true);else setIsAddMode(false);
-
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -182,7 +170,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
   var handleChangeDefaultSuboption = function handleChangeDefaultSuboption(id) {
     var _optionState$option, _optionState$option$s, _optionState$option$s2, _optionState$option2, _optionState$option2$, _optionState$option2$2;
 
-    if (id === null) setIsAddMode(true);else setIsAddMode(false);
     var suboptionPreselected = optionState === null || optionState === void 0 ? void 0 : (_optionState$option = optionState.option) === null || _optionState$option === void 0 ? void 0 : (_optionState$option$s = _optionState$option.suboptions) === null || _optionState$option$s === void 0 ? void 0 : (_optionState$option$s2 = _optionState$option$s.find(function (suboption) {
       return suboption.id === id;
     })) === null || _optionState$option$s2 === void 0 ? void 0 : _optionState$option$s2.preselected;
@@ -222,8 +209,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeSubOptionEnable = function handleChangeSubOptionEnable(enabled, id) {
-    if (id === null) setIsAddMode(true);else setIsAddMode(false);
-
     if (id === editSubOptionId) {
       setChangesState({
         result: {},
@@ -248,7 +233,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
 
 
   var handleChangeSubOptionImage = function handleChangeSubOptionImage(file, id) {
-    if (id === null) setIsAddMode(true);else setIsAddMode(false);
     var reader = new window.FileReader();
     reader.readAsDataURL(file);
 
@@ -942,22 +926,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     }
   }, [extraState, conditionalOptionId]);
   (0, _react.useEffect)(function () {
-    var _changesState$changes, _changesState$changes2;
-
-    if (!Object.keys(changesState.changes).length || isAddMode) return;
-
-    if ((changesState === null || changesState === void 0 ? void 0 : (_changesState$changes = changesState.changes) === null || _changesState$changes === void 0 ? void 0 : _changesState$changes.name) === '' || (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes2 = changesState.changes) === null || _changesState$changes2 === void 0 ? void 0 : _changesState$changes2.price) === '') {
-      var _changesState$changes3, _changesState$changes4;
-
-      setEditErrors({
-        name: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes3 = changesState.changes) === null || _changesState$changes3 === void 0 ? void 0 : _changesState$changes3.name) === '',
-        price: (changesState === null || changesState === void 0 ? void 0 : (_changesState$changes4 = changesState.changes) === null || _changesState$changes4 === void 0 ? void 0 : _changesState$changes4.price) === ''
-      });
-    } else {
-      handleUpdateSubOption();
-    }
-  }, [changesState]);
-  (0, _react.useEffect)(function () {
     setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
       option: option
     }));
@@ -968,7 +936,6 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     optionState: optionState,
     changesState: changesState,
     editSubOptionId: editSubOptionId,
-    editErrors: editErrors,
     settingChangeState: settingChangeState,
     handleChangeInput: handleChangeInput,
     handleChangeSubOptionImage: handleChangeSubOptionImage,
@@ -983,7 +950,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     handleChangeConditionalSubOption: handleChangeConditionalSubOption,
     handleAddOption: handleAddOption,
     handleDeteteOption: handleDeteteOption,
-    handleChangeDefaultSuboption: handleChangeDefaultSuboption
+    handleChangeDefaultSuboption: handleChangeDefaultSuboption,
+    handleUpdateSubOption: handleUpdateSubOption
   })));
 };
 

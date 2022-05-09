@@ -172,7 +172,7 @@ var OrderList = function OrderList(props) {
               source = {};
               requestsState.updateOrders = source;
               _context.next = 6;
-              return ordering.setAccessToken(accessToken).orders(order.id).save({
+              return ordering.setAccessToken(accessToken).orders(order === null || order === void 0 ? void 0 : order.id).save({
                 status: order.newStatus
               }, {
                 cancelToken: source
@@ -188,7 +188,7 @@ var OrderList = function OrderList(props) {
 
               if (!content.error) {
                 _orders2 = orderList.orders.filter(function (_order) {
-                  return _order.id !== order.id;
+                  return (_order === null || _order === void 0 ? void 0 : _order.id) !== (order === null || order === void 0 ? void 0 : order.id);
                 });
                 setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
                   orders: _orders2
@@ -553,7 +553,7 @@ var OrderList = function OrderList(props) {
     if (orderIdForUnreadCountUpdate === null || orderList.orders.length === 0) return;
 
     var _orders = orderList.orders.filter(function (order) {
-      if (order.id === orderIdForUnreadCountUpdate) {
+      if ((order === null || order === void 0 ? void 0 : order.id) === orderIdForUnreadCountUpdate) {
         order.unread_count = 0;
         order.unread_general_count = 0;
         order.unread_direct_count = 0;
@@ -586,7 +586,7 @@ var OrderList = function OrderList(props) {
   (0, _react.useEffect)(function () {
     if (deletedOrderId === null) return;
     var orders = orderList.orders.filter(function (_order) {
-      return _order.id !== deletedOrderId;
+      return (_order === null || _order === void 0 ? void 0 : _order.id) !== deletedOrderId;
     });
     setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
       orders: orders
@@ -645,7 +645,7 @@ var OrderList = function OrderList(props) {
 
     var handleUpdateOrder = function handleUpdateOrder(order) {
       var found = orderList.orders.find(function (_order) {
-        return _order.id === order.id;
+        return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
       });
       var orders = [];
 
@@ -653,7 +653,7 @@ var OrderList = function OrderList(props) {
         orders = orderList.orders.filter(function (_order) {
           var valid = true;
 
-          if (_order.id === order.id) {
+          if ((_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id)) {
             delete order.total;
             delete order.subtotal;
             Object.assign(_order, order);
@@ -693,7 +693,7 @@ var OrderList = function OrderList(props) {
     };
 
     var handleRegisterOrder = function handleRegisterOrder(_order) {
-      setRegisterOrderId(_order.id);
+      setRegisterOrderId(_order === null || _order === void 0 ? void 0 : _order.id);
 
       var order = _objectSpread(_objectSpread({}, _order), {}, {
         status: 0
@@ -717,12 +717,16 @@ var OrderList = function OrderList(props) {
     var handleNewMessage = function handleNewMessage(message) {
       if (orderList.orders.length === 0) return;
       var found = orderList.orders.find(function (order) {
-        return order.id === message.order.id;
+        var _message$order;
+
+        return (order === null || order === void 0 ? void 0 : order.id) === ((_message$order = message.order) === null || _message$order === void 0 ? void 0 : _message$order.id);
       });
 
       if (found) {
         var _orders = orderList.orders.filter(function (order) {
-          if (order.id === message.order.id) {
+          var _message$order2;
+
+          if ((order === null || order === void 0 ? void 0 : order.id) === ((_message$order2 = message.order) === null || _message$order2 === void 0 ? void 0 : _message$order2.id)) {
             if (order.last_message_at !== message.created_at) {
               if (message.type === 1) {
                 order.last_general_message_at = message.created_at;

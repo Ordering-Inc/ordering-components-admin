@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.DriversCompaniesList = void 0;
+exports.RecoveryActionListing = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,13 +13,13 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _ApiContext = require("../../contexts/ApiContext");
-
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _ToastContext = require("../../contexts/ToastContext");
+var _ApiContext = require("../../contexts/ApiContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -59,8 +59,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var DriversCompaniesList = function DriversCompaniesList(props) {
-  var UIComponent = props.UIComponent;
+var RecoveryActionListing = function RecoveryActionListing(props) {
+  var _paginationSettings$p;
+
+  var UIComponent = props.UIComponent,
+      paginationSettings = props.paginationSettings,
+      isSearchByName = props.isSearchByName,
+      isSearchByDescription = props.isSearchByDescription;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -78,53 +83,101 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
       t = _useLanguage2[1];
 
-  var _useState = (0, _react.useState)({
-    companies: [],
-    loading: false,
-    error: null
-  }),
+  var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
-      driversCompaniesState = _useState2[0],
-      setDriversCompaniesState = _useState2[1];
+      searchValue = _useState2[0],
+      setSearchValue = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
+    actions: [],
     loading: false,
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionState = _useState4[0],
-      setActionState = _useState4[1];
+      recoveryActionList = _useState4[0],
+      setRecoveryActionList = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(false),
+  var _useState5 = (0, _react.useState)({
+    clear: false,
+    changes: {}
+  }),
       _useState6 = _slicedToArray(_useState5, 2),
-      openDetails = _useState6[0],
-      setOpenDetails = _useState6[1];
+      filterValues = _useState6[0],
+      setFilterValues = _useState6[1];
 
-  var _useState7 = (0, _react.useState)([]),
+  var _useState7 = (0, _react.useState)({
+    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+    pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
+    totalItems: null,
+    totalPages: null
+  }),
       _useState8 = _slicedToArray(_useState7, 2),
-      selectedCompanyList = _useState8[0],
-      setSelectedCompanyList = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(false),
-      _useState10 = _slicedToArray(_useState9, 2),
-      startSeveralDeleteStart = _useState10[0],
-      setStartSeveralDeleteStart = _useState10[1];
+      paginationProps = _useState8[0],
+      setPaginationProps = _useState8[1];
   /**
-   * Method to get the drivers companies from API
+   * Change text to search
+   * @param {string} search Search value
    */
 
 
-  var getDriversCompanies = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, response, content;
+  var handleChangeSearch = function handleChangeSearch(search) {
+    setSearchValue(search);
+  };
+  /**
+   * Method to get the sites from API
+   */
+
+
+  var getRecoveryList = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee(page, pageSize) {
+      var where, conditions, searchConditions, requestOptions, fetchEndpoint, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+              setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
                 loading: true
               }));
+              where = null;
+              conditions = [];
+
+              if (searchValue) {
+                searchConditions = [];
+
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByDescription) {
+                  searchConditions.push({
+                    attribute: 'description',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
               requestOptions = {
                 method: 'GET',
                 headers: {
@@ -132,305 +185,240 @@ var DriversCompaniesList = function DriversCompaniesList(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/driver_companies"), requestOptions);
+              fetchEndpoint = where ? "".concat(ordering.root, "/event_rules?page=").concat(page, "&page_size=").concat(pageSize, "&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/event_rules?page=").concat(page, "&page_size=").concat(pageSize);
+              _context.next = 10;
+              return fetch(fetchEndpoint, requestOptions);
 
-            case 5:
+            case 10:
               response = _context.sent;
-              _context.next = 8;
+              _context.next = 13;
               return response.json();
 
-            case 8:
+            case 13:
               content = _context.sent;
 
               if (!content.error) {
-                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
-                  companies: content.result,
-                  loading: false
+                setRecoveryActionList({
+                  loading: false,
+                  actions: content.result,
+                  error: null
+                });
+                setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+                  currentPage: content.pagination.current_page,
+                  totalPages: content.pagination.total_pages,
+                  totalItems: content.pagination.total,
+                  from: content.pagination.from,
+                  to: content.pagination.to
+                }));
+              } else {
+                setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
+                  loading: false,
+                  error: content.result
                 }));
               }
 
-              _context.next = 15;
+              _context.next = 20;
               break;
 
-            case 12:
-              _context.prev = 12;
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
-              setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
+              setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 15:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 12]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
-    return function getDriversCompanies() {
+    return function getRecoveryList(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to update the selected drivers company from API
-   * @param {Number} driverCompanyId
+   * Default fuction for recovery action workflow
    */
 
 
-  var handleUpdateDriversCompany = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(driverCompanyId, changes) {
-      var requestOptions, response, content, companies;
+  var handleUpdateAction = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(id, changes) {
+      var requestOptions, response, content, updatedActions;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
               requestOptions = {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
                 body: JSON.stringify(changes)
               };
-              _context2.next = 6;
-              return fetch("".concat(ordering.root, "/driver_companies/").concat(driverCompanyId), requestOptions);
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/event_rules/").concat(id), requestOptions);
 
-            case 6:
+            case 5:
               response = _context2.sent;
-              _context2.next = 9;
+              _context2.next = 8;
               return response.json();
 
-            case 9:
+            case 8:
               content = _context2.sent;
 
               if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
-                companies = driversCompaniesState.companies.filter(function (company) {
-                  if (company.id === driverCompanyId) {
-                    Object.assign(company, content.result);
-                  }
+                if (handleSuccessUpdateRecoveryAction) {
+                  updatedActions = recoveryActionList === null || recoveryActionList === void 0 ? void 0 : recoveryActionList.actions.filter(function (_action) {
+                    if (_action.id === id) {
+                      Object.assign(_action, content.result);
+                    }
 
-                  return true;
-                });
-                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
-                  companies: companies
-                }));
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+                    return true;
+                  });
+                  handleSuccessUpdateRecoveryAction(updatedActions);
+                }
+
+                showToast(_ToastContext.ToastType.Success, t('RECOVERY_ACTION_SAVED', 'Recovery action saved'));
               } else {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false,
+                setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
                   error: content.result
                 }));
               }
 
-              _context2.next = 16;
+              _context2.next = 15;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context2.t0.message]
-              });
+              setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
+                error: _context2.t0.message
+              }));
 
-            case 16:
+            case 15:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
-    return function handleUpdateDriversCompany(_x, _x2) {
+    return function handleUpdateAction(_x3, _x4) {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to delete the selected drivers company from API
-   * @param {Number} driverCompanyId
+   * Method to add the recovery action in the recovery action list
+   * @param {Object} action recovery action to add
    */
 
 
-  var handleDeleteDriversCompany = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(driverCompanyId) {
-      var requestOptions, response, content, companies, companyList;
-      return _regenerator.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'DELETE',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context3.next = 6;
-              return fetch("".concat(ordering.root, "/driver_companies/").concat(driverCompanyId), requestOptions);
-
-            case 6:
-              response = _context3.sent;
-              _context3.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context3.sent;
-
-              if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false
-                }));
-                companies = driversCompaniesState.companies.filter(function (company) {
-                  return company.id !== driverCompanyId;
-                });
-                setDriversCompaniesState(_objectSpread(_objectSpread({}, driversCompaniesState), {}, {
-                  companies: companies
-                }));
-                showToast(_ToastContext.ToastType.Success, t('DRIVER_COMPANY_DELETED', 'Driver company deleted'));
-
-                if (startSeveralDeleteStart) {
-                  companyList = _toConsumableArray(selectedCompanyList);
-                  companyList.shift();
-
-                  if (companyList.length === 0) {
-                    setStartSeveralDeleteStart(false);
-                  }
-
-                  setSelectedCompanyList(companyList);
-                }
-              } else {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false,
-                  error: content.result
-                }));
-                setStartSeveralDeleteStart(false);
-              }
-
-              _context3.next = 16;
-              break;
-
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context3.t0.message]
-              });
-
-            case 16:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 13]]);
+  var handleSuccessAddRecoveryAction = function handleSuccessAddRecoveryAction(action) {
+    var actions = [].concat(_toConsumableArray(recoveryActionList.actions), [action]);
+    setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+      to: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.to) + 1,
+      total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) + 1
     }));
-
-    return function handleDeleteDriversCompany(_x3) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-
-  var handleSelectCompany = function handleSelectCompany(driversCompanyId) {
-    var ids = [];
-
-    if (selectedCompanyList.includes(driversCompanyId)) {
-      ids = selectedCompanyList.filter(function (id) {
-        return id !== driversCompanyId;
-      });
-    } else {
-      ids = [].concat(_toConsumableArray(selectedCompanyList), [driversCompanyId]);
-    }
-
-    setSelectedCompanyList(ids);
+    setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
+      actions: actions
+    }));
   };
+  /**
+   * Method to update the recovery action list
+   */
 
-  var handleAllSelectCompany = function handleAllSelectCompany() {
-    var _driversCompaniesStat;
 
-    var allIds = (_driversCompaniesStat = driversCompaniesState.companies) === null || _driversCompaniesStat === void 0 ? void 0 : _driversCompaniesStat.reduce(function (ids, company) {
-      return [].concat(_toConsumableArray(ids), [company.id]);
-    }, []);
+  var handleSuccessUpdateRecoveryAction = function handleSuccessUpdateRecoveryAction(updatedActions) {
+    setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
+      actions: updatedActions
+    }));
+  };
+  /**
+   * Method to delete the recovery action in the recovery action list
+   * @param {Number} actionId recovery action to delete
+   */
 
-    if (selectedCompanyList.length === allIds.length) {
-      setSelectedCompanyList([]);
-    } else {
-      setSelectedCompanyList(allIds);
-    }
+
+  var handleSuccessDeleteRecoveryAction = function handleSuccessDeleteRecoveryAction(actionId) {
+    var actions = recoveryActionList.actions.filter(function (action) {
+      return action.id !== actionId;
+    });
+    setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+      total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) - 1
+    }));
+    setRecoveryActionList(_objectSpread(_objectSpread({}, recoveryActionList), {}, {
+      actions: actions
+    }));
   };
 
   (0, _react.useEffect)(function () {
-    if (!startSeveralDeleteStart || selectedCompanyList.length === 0) return;
-    handleDeleteDriversCompany(selectedCompanyList[0]);
-  }, [selectedCompanyList, startSeveralDeleteStart]);
+    if (recoveryActionList.loading) return;
+    getRecoveryList(1, paginationProps.pageSize);
+  }, [searchValue]);
   (0, _react.useEffect)(function () {
-    getDriversCompanies();
-  }, []);
+    if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !recoveryActionList.loading) getRecoveryList(1, paginationProps.pageSize);
+  }, [filterValues]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    driversCompaniesState: driversCompaniesState,
-    setDriversCompaniesState: setDriversCompaniesState,
-    actionState: actionState,
-    openDetails: openDetails,
-    setOpenDetails: setOpenDetails,
-    handleUpdateDriversCompany: handleUpdateDriversCompany,
-    handleDeleteDriversCompany: handleDeleteDriversCompany,
-    handleSelectCompany: handleSelectCompany,
-    selectedCompanyList: selectedCompanyList,
-    handleAllSelectCompany: handleAllSelectCompany,
-    handleDeleteSelectedCompanies: function handleDeleteSelectedCompanies() {
-      return setStartSeveralDeleteStart(true);
-    }
+    searchValue: searchValue,
+    paginationProps: paginationProps,
+    recoveryActionList: recoveryActionList,
+    getRecoveryList: getRecoveryList,
+    setFilterValues: setFilterValues,
+    setPaginationProps: setPaginationProps,
+    handleChangeSearch: handleChangeSearch,
+    handleUpdateAction: handleUpdateAction,
+    handleSuccessAddRecoveryAction: handleSuccessAddRecoveryAction,
+    handleSuccessUpdateRecoveryAction: handleSuccessUpdateRecoveryAction,
+    handleSuccessDeleteRecoveryAction: handleSuccessDeleteRecoveryAction
   })));
 };
 
-exports.DriversCompaniesList = DriversCompaniesList;
-DriversCompaniesList.propTypes = {
+exports.RecoveryActionListing = RecoveryActionListing;
+RecoveryActionListing.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before drivers companies list
+   * Components types before my orders
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after drivers companies list
+   * Components types after my orders
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before drivers companies list
+   * Elements before my orders
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after drivers companies list
+   * Elements after my orders
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-DriversCompaniesList.defaultProps = {
+RecoveryActionListing.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  paginationSettings: {
+    initialPage: 1,
+    pageSize: 10,
+    controlType: 'infinity'
+  }
 };

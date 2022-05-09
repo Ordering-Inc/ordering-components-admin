@@ -323,7 +323,9 @@ var ProductTagsList = function ProductTagsList(props) {
   };
 
   var handleSelectAllTags = function handleSelectAllTags() {
-    var tagIds = tagsState.tags.reduce(function (ids, tag) {
+    var _tagsState$tags;
+
+    var tagIds = (_tagsState$tags = tagsState.tags) === null || _tagsState$tags === void 0 ? void 0 : _tagsState$tags.reduce(function (ids, tag) {
       return [].concat(_toConsumableArray(ids), [tag.id]);
     }, []);
     setSelectedTagIds(tagIds);
@@ -331,7 +333,7 @@ var ProductTagsList = function ProductTagsList(props) {
   };
 
   (0, _react.useEffect)(function () {
-    var tagIds = tags.reduce(function (ids, tag) {
+    var tagIds = tags === null || tags === void 0 ? void 0 : tags.reduce(function (ids, tag) {
       return [].concat(_toConsumableArray(ids), [tag.id]);
     }, []);
     setSelectedTagIds(tagIds);

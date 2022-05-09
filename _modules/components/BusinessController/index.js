@@ -140,7 +140,7 @@ var BusinessController = function BusinessController(props) {
 
   var getBusinessOffer = function getBusinessOffer(offers) {
     if (!offers || !offers.length) return null;
-    var maxOffer = offers.reduce(function (acc, cur) {
+    var maxOffer = offers === null || offers === void 0 ? void 0 : offers.reduce(function (acc, cur) {
       return acc.rate > cur.rate ? acc : cur;
     });
     return (maxOffer === null || maxOffer === void 0 ? void 0 : maxOffer.rate_type) === 1 ? "".concat(maxOffer === null || maxOffer === void 0 ? void 0 : maxOffer.rate, "%") : parsePrice(maxOffer === null || maxOffer === void 0 ? void 0 : maxOffer.rate);

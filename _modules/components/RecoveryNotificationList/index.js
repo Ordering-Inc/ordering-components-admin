@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MyOrders = void 0;
+exports.RecoveryNotificationList = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -17,6 +17,10 @@ var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -24,6 +28,14 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -47,225 +59,275 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var MyOrders = function MyOrders(props) {
-  var UIComponent = props.UIComponent;
+var RecoveryNotificationList = function RecoveryNotificationList(props) {
+  var action = props.action,
+      UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var requestsState = {};
-  /**
-   * Get token session
-   */
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
-  /**
-   * Array to save active orders
-   */
-
 
   var _useState = (0, _react.useState)({
-    loading: true,
-    orders: [],
+    loading: false,
+    notifications: [],
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      activeOrdersStatus = _useState2[0],
-      setActiveOrdersStatus = _useState2[1];
-  /**
-   * Array to save previous orders
-   */
-
+      notificationListState = _useState2[0],
+      setNotificationListState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
-    loading: true,
-    orders: [],
+    loading: false,
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      previousOrdersStatus = _useState4[0],
-      setPreviousOrdersStatus = _useState4[1];
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
   /**
-   * Method to get active orders from API
+   * Method to change multi orders status from API
    */
 
 
-  var getActiveOrders = /*#__PURE__*/function () {
+  var getNotificationList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var source, _yield$ordering$setAc, result;
-
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              source = {};
-              requestsState.activeOrders = source;
+              setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
               _context.next = 5;
-              return ordering.setAccessToken(token).orders().where([{
-                attribute: 'status',
-                value: [0, 3, 4, 7, 8, 9]
-              }]).get({
-                cancelToken: source
-              });
+              return fetch("".concat(ordering.root, "/event_rules/").concat(action === null || action === void 0 ? void 0 : action.id, "/channels"), requestOptions);
 
             case 5:
-              _yield$ordering$setAc = _context.sent;
-              result = _yield$ordering$setAc.content.result;
-              setActiveOrdersStatus(_objectSpread(_objectSpread({}, activeOrdersStatus), {}, {
-                loading: false,
-                orders: result
-              }));
-              _context.next = 13;
+              response = _context.sent;
+              _context.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context.sent;
+
+              if (!content.error) {
+                setNotificationListState({
+                  loading: false,
+                  notifications: content.result,
+                  error: null
+                });
+              } else {
+                setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context.next = 15;
               break;
 
-            case 10:
-              _context.prev = 10;
+            case 12:
+              _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setActiveOrdersStatus(_objectSpread(_objectSpread({}, activeOrdersStatus), {}, {
+              setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
                 loading: false,
-                error: _context.t0.message
+                error: [_context.t0.message]
               }));
 
-            case 13:
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 10]]);
+      }, _callee, null, [[0, 12]]);
     }));
 
-    return function getActiveOrders() {
+    return function getNotificationList() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to get previous orders from API
+   * Method to add the notification in the notification list
+   * @param {Object} result notification to add
    */
 
 
-  var getPreviousOrders = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var source, _yield$ordering$setAc2, result;
+  var handleAddNotifications = function handleAddNotifications(result) {
+    var notifications = [].concat(_toConsumableArray(notificationListState.notifications), [result]);
+    setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
+      notifications: notifications
+    }));
+  };
+  /**
+   * Method to update the notification in the notification list
+   * @param {Object} result notification to update
+   */
 
+
+  var handleUpdateNotifications = function handleUpdateNotifications(result) {
+    var updatedNotifications = notificationListState.notifications.filter(function (_notification) {
+      if (_notification.id === result.id) {
+        Object.assign(_notification, result);
+      }
+
+      return true;
+    });
+    setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
+      notifications: updatedNotifications
+    }));
+  };
+  /**
+   * Method to delete the notification in the notification list
+   * @param {Object} result notification to delete
+   */
+
+
+  var handleDeleteNotifications = function handleDeleteNotifications(result) {
+    var updatedNotifications = notificationListState.notifications.filter(function (_notification) {
+      return _notification.id !== result.id;
+    });
+    setNotificationListState(_objectSpread(_objectSpread({}, notificationListState), {}, {
+      notifications: updatedNotifications
+    }));
+  };
+  /**
+   * Default fuction to update a notification
+   */
+
+
+  var handleUpdateClick = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(channelId, changes) {
+      var requestOptions, response, content;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              source = {};
-              requestsState.previousOrders = source;
-              _context2.next = 5;
-              return ordering.setAccessToken(token).orders().where([{
-                attribute: 'status',
-                value: [1, 2, 5, 6, 10, 11, 12]
-              }]).get({
-                cancelToken: source
-              });
-
-            case 5:
-              _yield$ordering$setAc2 = _context2.sent;
-              result = _yield$ordering$setAc2.content.result;
-              setPreviousOrdersStatus(_objectSpread(_objectSpread({}, previousOrdersStatus), {}, {
-                loading: false,
-                orders: result
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
               }));
-              _context2.next = 13;
+              requestOptions = {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context2.next = 6;
+              return fetch("".concat(ordering.root, "/event_rules/").concat(action === null || action === void 0 ? void 0 : action.id, "/channels/").concat(channelId), requestOptions);
+
+            case 6:
+              response = _context2.sent;
+              _context2.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context2.sent;
+
+              if (!content.error) {
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                handleUpdateNotifications && handleUpdateNotifications(content.result);
+                showToast(_ToastContext.ToastType.Success, t('NOTIFICATION_SAVED', 'Notification saved'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
+              }
+
+              _context2.next = 16;
               break;
 
-            case 10:
-              _context2.prev = 10;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
-              setPreviousOrdersStatus(_objectSpread(_objectSpread({}, previousOrdersStatus), {}, {
+              setActionState({
                 loading: false,
                 error: _context2.t0.message
-              }));
+              });
 
-            case 13:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 10]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
-    return function getPreviousOrders() {
+    return function handleUpdateClick(_x, _x2) {
       return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getPreviousOrders();
-    getActiveOrders();
-    return function () {
-      if (requestsState.previousOrders) {
-        requestsState.previousOrders.cancel();
-      }
-
-      if (requestsState.activeOrders) {
-        requestsState.activeOrders.cancel();
-      }
-    };
-  }, []); // useEffect(() => {
-  //   if (orderState.loading) return
-  //   const handleUpdateOrder = (order) => {
-  //     if (order?.id !== orderState.order?.id) return
-  //     delete order.total
-  //     delete order.subtotal
-  //     setOrderState({
-  //       ...orderState,
-  //       order: Object.assign(orderState.order, order)
-  //     })
-  //   }
-  //   socket.join(`orders_${user.id}`)
-  //   socket.on('update_order', handleUpdateOrder)
-  //   return () => {
-  //     socket.leave(`orders_${user.id}`)
-  //     socket.off('update_order', handleUpdateOrder)
-  //   }
-  // }, [orderState.order, socket])
-
+    getNotificationList();
+  }, [action]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    activeOrders: activeOrdersStatus,
-    previousOrders: previousOrdersStatus
+    actionState: actionState,
+    notificationListState: notificationListState,
+    handleAddNotifications: handleAddNotifications,
+    handleUpdateNotifications: handleUpdateNotifications,
+    handleDeleteNotifications: handleDeleteNotifications,
+    handleUpdateClick: handleUpdateClick
   })));
 };
 
-exports.MyOrders = MyOrders;
-MyOrders.propTypes = {
+exports.RecoveryNotificationList = RecoveryNotificationList;
+RecoveryNotificationList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before my orders
+   * Components types before enterprise promotion details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
-   * Array of type components, the parent props will pass to these components
-   */
+  * Components types after enterprise promotion details
+  * Array of type components, the parent props will pass to these components
+  */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements before enterprise promotion details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements after enterprise promotion details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-MyOrders.defaultProps = {
+RecoveryNotificationList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

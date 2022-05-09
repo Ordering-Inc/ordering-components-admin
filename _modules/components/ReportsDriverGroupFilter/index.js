@@ -313,11 +313,11 @@ var ReportsDriverGroupFilter = function ReportsDriverGroupFilter(props) {
     return controller.abort();
   }, []);
   (0, _react.useEffect)(function () {
-    var _driverGroupList$driv, _filterList$driver_gr;
+    var _driverGroupList$driv, _driverGroupList$driv2, _filterList$driver_gr;
 
     if ((driverGroupList === null || driverGroupList === void 0 ? void 0 : (_driverGroupList$driv = driverGroupList.driverGroups) === null || _driverGroupList$driv === void 0 ? void 0 : _driverGroupList$driv.length) === 0) return;
 
-    var _groupIds = driverGroupList === null || driverGroupList === void 0 ? void 0 : driverGroupList.driverGroups.reduce(function (prev, cur) {
+    var _groupIds = driverGroupList === null || driverGroupList === void 0 ? void 0 : (_driverGroupList$driv2 = driverGroupList.driverGroups) === null || _driverGroupList$driv2 === void 0 ? void 0 : _driverGroupList$driv2.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 

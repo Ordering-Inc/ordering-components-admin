@@ -396,7 +396,9 @@ var ProductForm = function ProductForm(props) {
     var newBalance = Object.keys(newProductCart.options["id:".concat(option.id)].suboptions).length;
 
     if (option.limit_suboptions_by_max) {
-      newBalance = Object.values(newProductCart.options["id:".concat(option.id)].suboptions).reduce(function (count, suboption) {
+      var _Object$values;
+
+      newBalance = (_Object$values = Object.values(newProductCart.options["id:".concat(option.id)].suboptions)) === null || _Object$values === void 0 ? void 0 : _Object$values.reduce(function (count, suboption) {
         return count + suboption.quantity;
       }, 0);
     }

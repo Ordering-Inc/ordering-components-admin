@@ -279,11 +279,11 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     return controller.abort();
   }, [searchValue]);
   (0, _react.useEffect)(function () {
-    var _businessList$busines, _filterList$businessI;
+    var _businessList$busines, _businessList$busines2, _filterList$businessI;
 
     if ((businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.length) === 0) return;
 
-    var _businessIds = businessList.businesses.reduce(function (prev, cur) {
+    var _businessIds = (_businessList$busines2 = businessList.businesses) === null || _businessList$busines2 === void 0 ? void 0 : _businessList$busines2.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 

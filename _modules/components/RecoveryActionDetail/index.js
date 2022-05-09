@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CampaignDetailContent = void 0;
+exports.RecoveryActionDetail = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -51,15 +51,17 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CampaignDetailContent = function CampaignDetailContent(props) {
-  var UIComponent = props.UIComponent,
-      campaignState = props.campaignState,
-      isAddMode = props.isAddMode,
-      campaignFormState = props.formState,
-      handleChangeItem = props.handleChangeItem,
-      handleChangeContactData = props.handleChangeContactData,
-      handleSuccessUpdateCampaign = props.handleSuccessUpdateCampaign,
-      campaignList = props.campaignList;
+var RecoveryActionDetail = function RecoveryActionDetail(props) {
+  var action = props.action,
+      recoveryActionList = props.recoveryActionList,
+      UIComponent = props.UIComponent,
+      handleSuccessUpdateRecoveryAction = props.handleSuccessUpdateRecoveryAction,
+      handleSuccessAddRecoveryAction = props.handleSuccessAddRecoveryAction,
+      handleSuccessDeleteRecoveryAction = props.handleSuccessDeleteRecoveryAction;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -73,35 +75,45 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
   var _useState = (0, _react.useState)({
+    action: action,
     loading: false,
-    changes: {},
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      formState = _useState2[0],
-      setFormState = _useState2[1];
+      recoveryActionState = _useState2[0],
+      setRecoveryActionState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    changes: {}
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      formState = _useState4[0],
+      setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      actionState = _useState6[0],
+      setActionState = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isAddMode = _useState8[0],
+      setIsAddMode = _useState8[1];
   /**
-   * Update parameter data
-   * @param {string} name parameters to change
-   * @param {string} value parameters to change
+   * Clean formState
    */
 
 
-  var handleChangeType = function handleChangeType(name, value) {
-    var changes = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, _defineProperty({}, name, value));
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: changes
-    }));
-
-    if (isAddMode) {
-      handleChangeItem && handleChangeItem(name, value);
-    }
+  var cleanFormState = function cleanFormState() {
+    return setFormState({
+      loading: false,
+      changes: {}
+    });
   };
   /**
    * Update credential data
@@ -109,40 +121,54 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
    */
 
 
-  var handleChangeData = function handleChangeData(e) {
-    var _formState$changes;
-
-    var contactData = _objectSpread(_objectSpread({}, (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.contact_data), {}, _defineProperty({}, e.target.name, e.target.value));
-
+  var handleChangeInput = function handleChangeInput(e) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-        contact_data: contactData
-      })
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
     }));
+  };
+  /**
+   * Update parameter data
+   * @param {changes} changes parameters to change
+   */
 
-    if (isAddMode) {
-      handleChangeContactData && handleChangeContactData(e);
-    }
+
+  var handleChangeItem = function handleChangeItem(changes) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), changes)
+    }));
+  };
+  /**
+   * Method to remove the key of changes
+   * @param {String} key
+   */
+
+
+  var handleRemoveKey = function handleRemoveKey(key) {
+    var _changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+
+    delete _changes[key];
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _changes
+    }));
   };
   /**
    * Default fuction for recovery action workflow
    */
 
 
-  var handleUpdateContact = /*#__PURE__*/function () {
+  var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var _campaignState$campai, changes, key, requestOptions, response, content, updatedCampaigns;
-
+      var changes, key, requestOptions, response, content, updatedActions;
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              setActionState({
                 loading: true,
                 error: null
-              }));
+              });
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
 
               for (key in changes) {
@@ -160,7 +186,7 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
                 body: JSON.stringify(changes)
               };
               _context.next = 8;
-              return fetch("".concat(ordering.root, "/marketing_campaigns/").concat(campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai = campaignState.campaign) === null || _campaignState$campai === void 0 ? void 0 : _campaignState$campai.id), requestOptions);
+              return fetch("".concat(ordering.root, "/event_rules/").concat(action.id), requestOptions);
 
             case 8:
               response = _context.sent;
@@ -171,30 +197,32 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
               content = _context.sent;
 
               if (!content.error) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                setRecoveryActionState(_objectSpread(_objectSpread({}, recoveryActionState), {}, {
+                  action: content.result
+                }));
+                setActionState({
                   loading: false,
                   error: null
-                }));
+                });
 
-                if (handleSuccessUpdateCampaign) {
-                  updatedCampaigns = campaignList === null || campaignList === void 0 ? void 0 : campaignList.campaigns.filter(function (_campaign) {
-                    var _campaignState$campai2;
-
-                    if (_campaign.id === (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai2 = campaignState.campaign) === null || _campaignState$campai2 === void 0 ? void 0 : _campaignState$campai2.id)) {
-                      Object.assign(_campaign, content.result);
+                if (handleSuccessUpdateRecoveryAction) {
+                  updatedActions = recoveryActionList === null || recoveryActionList === void 0 ? void 0 : recoveryActionList.actions.filter(function (_action) {
+                    if (_action.id === action.id) {
+                      Object.assign(_action, content.result);
                     }
 
                     return true;
                   });
-                  handleSuccessUpdateCampaign(updatedCampaigns);
+                  handleSuccessUpdateRecoveryAction(updatedActions);
                 }
 
-                showToast(_ToastContext.ToastType.Success, t('CAMPAIGN_SAVED', 'Campaign saved'));
+                cleanFormState();
+                showToast(_ToastContext.ToastType.Success, t('RECOVERY_ACTION_SAVED', 'Recovery action saved'));
               } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                setActionState({
                   loading: false,
                   error: content.result
-                }));
+                });
               }
 
               _context.next = 18;
@@ -203,10 +231,10 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
             case 15:
               _context.prev = 15;
               _context.t0 = _context["catch"](0);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              setActionState({
                 loading: false,
                 error: _context.t0.message
-              }));
+              });
 
             case 18:
             case "end":
@@ -216,93 +244,217 @@ var CampaignDetailContent = function CampaignDetailContent(props) {
       }, _callee, null, [[0, 15]]);
     }));
 
-    return function handleUpdateContact() {
+    return function handleUpdateClick() {
       return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to add new recovery action from API
+   */
+
+
+  var handleAddRecoveryAction = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var changes, requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState({
+                loading: true,
+                error: null
+              });
+              changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context2.next = 7;
+              return fetch("".concat(ordering.root, "/event_rules"), requestOptions);
+
+            case 7:
+              response = _context2.sent;
+              _context2.next = 10;
+              return response.json();
+
+            case 10:
+              content = _context2.sent;
+
+              if (!content.error) {
+                setActionState({
+                  error: null,
+                  loading: false
+                });
+                handleSuccessAddRecoveryAction && handleSuccessAddRecoveryAction(content.result);
+                showToast(_ToastContext.ToastType.Success, t('RECOVERY_ACTION_ADDED', 'Recovery action added'));
+                props.onClose && props.onClose();
+              } else {
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
+              }
+
+              _context2.next = 17;
+              break;
+
+            case 14:
+              _context2.prev = 14;
+              _context2.t0 = _context2["catch"](0);
+              setActionState({
+                loading: false,
+                error: _context2.t0.message
+              });
+
+            case 17:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 14]]);
+    }));
+
+    return function handleAddRecoveryAction() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to delete the recovery action
+   */
+
+
+  var handleDeleteRecoveryAction = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
+      var requestOptions, response, content;
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/event_rules/").concat(action.id), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                handleSuccessDeleteRecoveryAction && handleSuccessDeleteRecoveryAction(action.id);
+                showToast(_ToastContext.ToastType.Success, t('RECOVERY_ACTION_DELETED', 'Recovery action deleted'));
+                props.onClose && props.onClose();
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleDeleteRecoveryAction() {
+      return _ref3.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (isAddMode) return;
-
-    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
-      var _campaignState$campai3, _campaignState$campai4;
-
+    if (Object.keys(action).length === 0) {
+      setIsAddMode(true);
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: {
-          contact_type: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai3 = campaignState.campaign) === null || _campaignState$campai3 === void 0 ? void 0 : _campaignState$campai3.contact_type) || '',
-          contact_data: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai4 = campaignState.campaign) === null || _campaignState$campai4 === void 0 ? void 0 : _campaignState$campai4.contact_data) || {}
+          enabled: true,
+          launch_type: 'times',
+          name: '',
+          type: 'abandoned_cart'
         }
       }));
+    } else {
+      setIsAddMode(false);
+      cleanFormState();
     }
-  }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
-  (0, _react.useEffect)(function () {
-    if (isAddMode) return;
 
-    if (campaignState !== null && campaignState !== void 0 && campaignState.campaign && Object.keys(campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign).length > 0) {
-      var _campaignState$campai5, _campaignState$campai6;
-
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          contact_type: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai5 = campaignState.campaign) === null || _campaignState$campai5 === void 0 ? void 0 : _campaignState$campai5.contact_type) || '',
-          contact_data: (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai6 = campaignState.campaign) === null || _campaignState$campai6 === void 0 ? void 0 : _campaignState$campai6.contact_data) || {}
-        }
-      }));
-    }
-  }, [campaignState === null || campaignState === void 0 ? void 0 : campaignState.campaign]);
-  (0, _react.useEffect)(function () {
-    if (!isAddMode) return;
-
-    if (campaignFormState !== null && campaignFormState !== void 0 && campaignFormState.changes && Object.keys(campaignFormState === null || campaignFormState === void 0 ? void 0 : campaignFormState.changes).length > 0) {
-      var _campaignFormState$ch, _campaignFormState$ch2;
-
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          contact_type: (campaignFormState === null || campaignFormState === void 0 ? void 0 : (_campaignFormState$ch = campaignFormState.changes) === null || _campaignFormState$ch === void 0 ? void 0 : _campaignFormState$ch.contact_type) || '',
-          contact_data: (campaignFormState === null || campaignFormState === void 0 ? void 0 : (_campaignFormState$ch2 = campaignFormState.changes) === null || _campaignFormState$ch2 === void 0 ? void 0 : _campaignFormState$ch2.contact_data) || {}
-        }
-      }));
-    }
-  }, [campaignFormState === null || campaignFormState === void 0 ? void 0 : campaignFormState.changes]);
+    setRecoveryActionState(_objectSpread(_objectSpread({}, recoveryActionState), {}, {
+      action: action
+    }));
+  }, [action]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    contactState: formState,
-    handleChangeType: handleChangeType,
-    handleChangeData: handleChangeData,
-    handleUpdateContact: handleUpdateContact
+    isAddMode: isAddMode,
+    recoveryActionState: recoveryActionState,
+    formState: formState,
+    actionState: actionState,
+    handleChangeItem: handleChangeItem,
+    handleChangeInput: handleChangeInput,
+    handleAddRecoveryAction: handleAddRecoveryAction,
+    handleDeleteRecoveryAction: handleDeleteRecoveryAction,
+    handleUpdateClick: handleUpdateClick,
+    handleRemoveKey: handleRemoveKey
   })));
 };
 
-exports.CampaignDetailContent = CampaignDetailContent;
-CampaignDetailContent.propTypes = {
+exports.RecoveryActionDetail = RecoveryActionDetail;
+RecoveryActionDetail.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before my orders
+   * Components types before enterprise promotion details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
-   * Array of type components, the parent props will pass to these components
-   */
+  * Components types after enterprise promotion details
+  * Array of type components, the parent props will pass to these components
+  */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements before enterprise promotion details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
+  * Elements after enterprise promotion details
+  * Array of HTML/Components elements, these components will not get the parent props
+  */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CampaignDetailContent.defaultProps = {
+RecoveryActionDetail.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

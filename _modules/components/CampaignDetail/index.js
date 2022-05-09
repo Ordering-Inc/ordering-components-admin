@@ -11,8 +11,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _moment = _interopRequireDefault(require("moment"));
-
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
@@ -28,6 +26,14 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -101,6 +107,15 @@ var CampaignDetail = function CampaignDetail(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       isAddMode = _useState6[0],
       setIsAddMode = _useState6[1];
+
+  var _useState7 = (0, _react.useState)({
+    loading: false,
+    audience: 0,
+    error: null
+  }),
+      _useState8 = _slicedToArray(_useState7, 2),
+      audienceState = _useState8[0],
+      setAudienceState = _useState8[1];
   /**
    * Clean formState
    */
@@ -150,7 +165,7 @@ var CampaignDetail = function CampaignDetail(props) {
     var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value));
 
     if (key === 'scheduled_at') {
-      changes.status = value ? 'scheduled' : 'ended';
+      changes.status = value ? 'scheduled' : 'pending';
     }
 
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -523,6 +538,103 @@ var CampaignDetail = function CampaignDetail(props) {
       return _ref5.apply(this, arguments);
     };
   }();
+  /**
+   * Method to get audience from API
+   */
+
+
+  var getAudience = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee5(conditions) {
+      var _conditions, changes, requestOptions, response, content, _content$result;
+
+      return _regenerator.default.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                loading: true
+              }));
+              _conditions = _toConsumableArray(conditions);
+
+              _conditions.forEach(function (condition) {
+                Object.keys(condition).forEach(function (key) {
+                  if (condition[key] === null) {
+                    delete condition[key];
+                  }
+                });
+              });
+
+              changes = {
+                conditions: JSON.stringify(_conditions)
+              };
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context5.next = 8;
+              return fetch("".concat(ordering.root, "/marketing_campaigns/audience"), requestOptions);
+
+            case 8:
+              response = _context5.sent;
+              _context5.next = 11;
+              return response.json();
+
+            case 11:
+              content = _context5.sent;
+
+              if (!content.error) {
+                setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                  loading: false,
+                  error: null,
+                  audience: content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.audience
+                }));
+              } else {
+                setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context5.next = 18;
+              break;
+
+            case 15:
+              _context5.prev = 15;
+              _context5.t0 = _context5["catch"](0);
+              setAudienceState(_objectSpread(_objectSpread({}, audienceState), {}, {
+                loading: false,
+                error: _context5.t0.message
+              }));
+
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 15]]);
+    }));
+
+    return function getAudience(_x2) {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+
+  var isCheckBoxClick = function isCheckBoxClick() {
+    var valid = false;
+    formState.changes.conditions.forEach(function (item) {
+      var childValid = true;
+      Object.keys(item).forEach(function (key) {
+        if (key === 'condition' || key === 'date_condition') childValid = false;
+      });
+      if (childValid) valid = true;
+    });
+    return valid;
+  };
 
   (0, _react.useEffect)(function () {
     if (Object.keys(campaign).length === 0) {
@@ -530,9 +642,11 @@ var CampaignDetail = function CampaignDetail(props) {
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: {
           enabled: true,
-          conditions: []
+          conditions: [],
+          status: 'pending'
         }
       }));
+      getAudience(campaign === null || campaign === void 0 ? void 0 : campaign.conditions);
     } else {
       setIsAddMode(false);
       cleanFormState();
@@ -543,24 +657,20 @@ var CampaignDetail = function CampaignDetail(props) {
     }));
   }, [campaign]);
   (0, _react.useEffect)(function () {
-    var _formState$changes3, _formState$changes4;
+    var _formState$changes3, _formState$changes4, _formState$changes4$c;
 
-    if (!((_formState$changes3 = formState.changes) !== null && _formState$changes3 !== void 0 && _formState$changes3.audience_type)) return;
+    if (!isAddMode) return;
+    var valid = isCheckBoxClick();
 
-    if (((_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : _formState$changes4.audience_type) === 'dynamic') {
-      var _ref6, _formState$changes$en, _formState$changes5;
+    if (formState !== null && formState !== void 0 && (_formState$changes3 = formState.changes) !== null && _formState$changes3 !== void 0 && _formState$changes3.conditions && (formState === null || formState === void 0 ? void 0 : (_formState$changes4 = formState.changes) === null || _formState$changes4 === void 0 ? void 0 : (_formState$changes4$c = _formState$changes4.conditions) === null || _formState$changes4$c === void 0 ? void 0 : _formState$changes4$c.length) > 0 && !valid) {
+      var _formState$changes5;
 
-      var changes = _objectSpread(_objectSpread({}, formState.changes), {}, {
-        end_at: (_ref6 = (_formState$changes$en = (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.end_at) !== null && _formState$changes$en !== void 0 ? _formState$changes$en : campaign === null || campaign === void 0 ? void 0 : campaign.end_at) !== null && _ref6 !== void 0 ? _ref6 : (0, _moment.default)(new Date()).format('YYYY-MM-DD HH:mm:ss')
-      });
-
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: changes
-      }));
+      getAudience(formState === null || formState === void 0 ? void 0 : (_formState$changes5 = formState.changes) === null || _formState$changes5 === void 0 ? void 0 : _formState$changes5.conditions);
     }
-  }, [(_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.audience_type]);
+  }, [JSON.stringify(formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.conditions)]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
+    audienceState: audienceState,
     campaignState: campaignState,
     formState: formState,
     handleChangeItem: handleChangeItem,

@@ -674,7 +674,9 @@ var PlaceList = function PlaceList(props) {
   };
 
   var handleAllCheckboxClick = function handleAllCheckboxClick() {
-    var cities = countriesState.countries.reduce(function (_cities, country) {
+    var _countriesState$count;
+
+    var cities = (_countriesState$count = countriesState.countries) === null || _countriesState$count === void 0 ? void 0 : _countriesState$count.reduce(function (_cities, country) {
       return [].concat(_toConsumableArray(_cities), _toConsumableArray(country === null || country === void 0 ? void 0 : country.cities));
     }, []);
 

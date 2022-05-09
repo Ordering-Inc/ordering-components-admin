@@ -176,7 +176,7 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
 
   var getBrands = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var requestOptions, franchiseIds, _response, functionFetch, response, _yield$response$json, error, result, pagination, availableBrands;
+      var requestOptions, franchiseIds, _response, _response$content$res, functionFetch, response, _yield$response$json, error, result, pagination, availableBrands;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
@@ -215,7 +215,7 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
               _response = _context.sent;
 
               if (!_response.content.error) {
-                franchiseIds = _response.content.result.reduce(function (ids, business) {
+                franchiseIds = (_response$content$res = _response.content.result) === null || _response$content$res === void 0 ? void 0 : _response$content$res.reduce(function (ids, business) {
                   return [].concat(_toConsumableArray(ids), [business.franchise_id]);
                 }, []).filter(function (id) {
                   return id;
@@ -291,11 +291,11 @@ var ReportsBrandFilter = function ReportsBrandFilter(props) {
     return controller.abort();
   }, []);
   (0, _react.useEffect)(function () {
-    var _brandList$brands, _filterList$franchise;
+    var _brandList$brands, _brandList$brands2, _filterList$franchise;
 
     if ((brandList === null || brandList === void 0 ? void 0 : (_brandList$brands = brandList.brands) === null || _brandList$brands === void 0 ? void 0 : _brandList$brands.length) === 0) return;
 
-    var _brandIds = brandList.brands.reduce(function (prev, cur) {
+    var _brandIds = (_brandList$brands2 = brandList.brands) === null || _brandList$brands2 === void 0 ? void 0 : _brandList$brands2.reduce(function (prev, cur) {
       return [].concat(_toConsumableArray(prev), [cur.id]);
     }, []);
 

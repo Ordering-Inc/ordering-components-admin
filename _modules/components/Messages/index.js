@@ -419,7 +419,9 @@ var Messages = function Messages(props) {
     if (messages.loading || orderMessages && setOrderMessages) return;
 
     var handleNewMessage = function handleNewMessage(message) {
-      if (message.order.id === orderId) {
+      var _message$order;
+
+      if (((_message$order = message.order) === null || _message$order === void 0 ? void 0 : _message$order.id) === orderId) {
         var found = messages.messages.find(function (_message) {
           return _message.id === message.id;
         });

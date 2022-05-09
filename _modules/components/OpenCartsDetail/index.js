@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.MyOrders = void 0;
+exports.OpenCartsDetail = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -47,225 +47,154 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var MyOrders = function MyOrders(props) {
-  var UIComponent = props.UIComponent;
+var OpenCartsDetail = function OpenCartsDetail(props) {
+  var cart = props.cart,
+      UIComponent = props.UIComponent;
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
-  var requestsState = {};
-  /**
-   * Get token session
-   */
-
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      token = _useSession2[0].token;
-  /**
-   * Array to save active orders
-   */
-
-
   var _useState = (0, _react.useState)({
-    loading: true,
-    orders: [],
+    cart: null,
+    loading: false,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      activeOrdersStatus = _useState2[0],
-      setActiveOrdersStatus = _useState2[1];
-  /**
-   * Array to save previous orders
-   */
+      cartState = _useState2[0],
+      setCartState = _useState2[1];
 
-
-  var _useState3 = (0, _react.useState)({
-    loading: true,
-    orders: [],
-    error: null
-  }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      previousOrdersStatus = _useState4[0],
-      setPreviousOrdersStatus = _useState4[1];
-  /**
-   * Method to get active orders from API
-   */
-
-
-  var getActiveOrders = /*#__PURE__*/function () {
+  var getCartList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
-      var source, _yield$ordering$setAc, result;
+      var requestOptions, fetchEndpoint, response, content, _cart$address, _cart;
 
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              source = {};
-              requestsState.activeOrders = source;
-              _context.next = 5;
-              return ordering.setAccessToken(token).orders().where([{
-                attribute: 'status',
-                value: [0, 3, 4, 7, 8, 9]
-              }]).get({
-                cancelToken: source
-              });
-
-            case 5:
-              _yield$ordering$setAc = _context.sent;
-              result = _yield$ordering$setAc.content.result;
-              setActiveOrdersStatus(_objectSpread(_objectSpread({}, activeOrdersStatus), {}, {
-                loading: false,
-                orders: result
+              setCartState(_objectSpread(_objectSpread({}, cartState), {}, {
+                loading: true
               }));
-              _context.next = 13;
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              fetchEndpoint = "".concat(ordering.root, "/carts/").concat(cart === null || cart === void 0 ? void 0 : cart.uuid, "?user_id=").concat(cart === null || cart === void 0 ? void 0 : cart.user_id);
+              _context.next = 6;
+              return fetch(fetchEndpoint, requestOptions);
+
+            case 6:
+              response = _context.sent;
+              _context.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context.sent;
+
+              if (!content.error) {
+                _cart = _objectSpread(_objectSpread({}, content.result), {}, {
+                  id: cart === null || cart === void 0 ? void 0 : cart.id,
+                  business: _objectSpread(_objectSpread({}, content.result.business), cart === null || cart === void 0 ? void 0 : cart.business),
+                  user: _objectSpread(_objectSpread({}, cart === null || cart === void 0 ? void 0 : cart.user), (cart === null || cart === void 0 ? void 0 : (_cart$address = cart.address) === null || _cart$address === void 0 ? void 0 : _cart$address.address) && {
+                    address: cart.address.address
+                  }),
+                  updated_at: cart === null || cart === void 0 ? void 0 : cart.updated_at
+                });
+                setCartState({
+                  loading: false,
+                  cart: _cart,
+                  error: null
+                });
+              } else {
+                setCartState(_objectSpread(_objectSpread({}, cartState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context.next = 16;
               break;
 
-            case 10:
-              _context.prev = 10;
+            case 13:
+              _context.prev = 13;
               _context.t0 = _context["catch"](0);
-              setActiveOrdersStatus(_objectSpread(_objectSpread({}, activeOrdersStatus), {}, {
+              setCartState(_objectSpread(_objectSpread({}, cartState), {}, {
                 loading: false,
-                error: _context.t0.message
+                error: [_context.t0.message]
               }));
 
-            case 13:
+            case 16:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 10]]);
+      }, _callee, null, [[0, 13]]);
     }));
 
-    return function getActiveOrders() {
+    return function getCartList() {
       return _ref.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get previous orders from API
-   */
-
-
-  var getPreviousOrders = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var source, _yield$ordering$setAc2, result;
-
-      return _regenerator.default.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              source = {};
-              requestsState.previousOrders = source;
-              _context2.next = 5;
-              return ordering.setAccessToken(token).orders().where([{
-                attribute: 'status',
-                value: [1, 2, 5, 6, 10, 11, 12]
-              }]).get({
-                cancelToken: source
-              });
-
-            case 5:
-              _yield$ordering$setAc2 = _context2.sent;
-              result = _yield$ordering$setAc2.content.result;
-              setPreviousOrdersStatus(_objectSpread(_objectSpread({}, previousOrdersStatus), {}, {
-                loading: false,
-                orders: result
-              }));
-              _context2.next = 13;
-              break;
-
-            case 10:
-              _context2.prev = 10;
-              _context2.t0 = _context2["catch"](0);
-              setPreviousOrdersStatus(_objectSpread(_objectSpread({}, previousOrdersStatus), {}, {
-                loading: false,
-                error: _context2.t0.message
-              }));
-
-            case 13:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[0, 10]]);
-    }));
-
-    return function getPreviousOrders() {
-      return _ref2.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    getPreviousOrders();
-    getActiveOrders();
-    return function () {
-      if (requestsState.previousOrders) {
-        requestsState.previousOrders.cancel();
-      }
-
-      if (requestsState.activeOrders) {
-        requestsState.activeOrders.cancel();
-      }
-    };
-  }, []); // useEffect(() => {
-  //   if (orderState.loading) return
-  //   const handleUpdateOrder = (order) => {
-  //     if (order?.id !== orderState.order?.id) return
-  //     delete order.total
-  //     delete order.subtotal
-  //     setOrderState({
-  //       ...orderState,
-  //       order: Object.assign(orderState.order, order)
-  //     })
-  //   }
-  //   socket.join(`orders_${user.id}`)
-  //   socket.on('update_order', handleUpdateOrder)
-  //   return () => {
-  //     socket.leave(`orders_${user.id}`)
-  //     socket.off('update_order', handleUpdateOrder)
-  //   }
-  // }, [orderState.order, socket])
-
+    if (!cart) return;
+    getCartList();
+  }, [cart]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    activeOrders: activeOrdersStatus,
-    previousOrders: previousOrdersStatus
+    cartState: cartState
   })));
 };
 
-exports.MyOrders = MyOrders;
-MyOrders.propTypes = {
+exports.OpenCartsDetail = OpenCartsDetail;
+OpenCartsDetail.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before my orders
+   * This must be contains cartId to fetch
+   */
+  cartId: _propTypes.default.oneOfType([_propTypes.default.number, _propTypes.default.string]),
+
+  /**
+   * Order, this must be contains an object with all order info
+   */
+  order: _propTypes.default.object,
+
+  /**
+   * Components types before order details
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after my orders
+   * Components types after order details
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before my orders
+   * Elements before order details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after my orders
+   * Elements after order details
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-MyOrders.defaultProps = {
+OpenCartsDetail.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
