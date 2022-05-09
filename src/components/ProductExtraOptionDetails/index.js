@@ -141,6 +141,20 @@ export const ProductExtraOptionDetails = (props) => {
   }
 
   /**
+   * Method to change the suboption state
+   */
+  const handleChangeItem = (changes, id) => {
+    if (id !== undefined && editSubOptionId === id) setEditSubOptionId(id)
+    setChangesState({
+      result: {},
+      changes: {
+        ...changesState.changes,
+        ...changes
+      }
+    })
+  }
+
+  /**
    * Method to update the business state
    * @param {Object} updatedExtra updated extra
    */
@@ -487,6 +501,7 @@ export const ProductExtraOptionDetails = (props) => {
           handleDeteteOption={handleDeteteOption}
           handleChangeDefaultSuboption={handleChangeDefaultSuboption}
           handleUpdateSubOption={handleUpdateSubOption}
+          handleChangeItem={handleChangeItem}
         />
       )}
     </>
