@@ -514,6 +514,18 @@ var ProductGallery = function ProductGallery(props) {
     };
   };
   /**
+   * Method to change the option state
+   */
+
+
+  var handleChangeItem = function handleChangeItem(changes, id) {
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      changes: _objectSpread(_objectSpread({}, changesState === null || changesState === void 0 ? void 0 : changesState.changes), changes)
+    }, id && {
+      itemId: id
+    }));
+  };
+  /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    */
@@ -583,6 +595,7 @@ var ProductGallery = function ProductGallery(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     productGalleryState: productGalleryState,
     changesState: changesState,
+    handleChangeItem: handleChangeItem,
     handleChangeImage: handleChangeImage,
     handleChangeInput: handleChangeInput,
     handleAddGalleryProduct: handleAddGalleryProduct,
