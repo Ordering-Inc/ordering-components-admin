@@ -196,8 +196,10 @@ export const BusinessZoneGoogleMaps = (props) => {
     if (googleReady) {
       center.lat = location?.lat
       center.lng = location?.lng
-      googleMapMarker && googleMapMarker.setPosition(new window.google.maps.LatLng(center?.lat, center?.lng))
-      googleMap && googleMap.panTo(new window.google.maps.LatLng(center?.lat, center?.lng))
+      if (center.lat && center.lng) {
+        googleMapMarker && googleMapMarker.setPosition(new window.google.maps.LatLng(center?.lat, center?.lng))
+        googleMap && googleMap.panTo(new window.google.maps.LatLng(center?.lat, center?.lng))
+      }
     }
   }, [location])
 
