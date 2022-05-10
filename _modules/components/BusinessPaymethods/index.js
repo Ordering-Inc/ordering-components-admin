@@ -883,6 +883,12 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     handleUpdateBusiness();
   };
 
+  var handleSuccessPaymethodUpdate = function handleSuccessPaymethodUpdate(updatedPaymethods) {
+    setBusinessPaymethodsState(_objectSpread(_objectSpread({}, businessPaymethodsState), {}, {
+      paymethods: updatedPaymethods
+    }));
+  };
+
   (0, _react.useEffect)(function () {
     getAllPaymethods();
     getBusinessPaymethods();
@@ -908,7 +914,8 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     isSuccessDeleted: isSuccessDeleted,
     setIsSuccessDeleted: setIsSuccessDeleted,
     handleSelectAllPaymethods: handleSelectAllPaymethods,
-    handleSelectNonePaymethods: handleSelectNonePaymethods
+    handleSelectNonePaymethods: handleSelectNonePaymethods,
+    handleSuccessPaymethodUpdate: handleSuccessPaymethodUpdate
   })));
 };
 

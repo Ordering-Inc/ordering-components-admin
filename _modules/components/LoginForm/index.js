@@ -203,33 +203,38 @@ var LoginForm = function LoginForm(props) {
               error = _yield$ordering$users2.error;
               result = _yield$ordering$users2.result;
 
+              if (isReCaptchaEnable) {
+                window.grecaptcha.reset();
+                setReCaptchaValue(null);
+              }
+
               if (error) {
-                _context.next = 38;
+                _context.next = 39;
                 break;
               }
 
               if (!useDefualtSessionManager) {
-                _context.next = 35;
+                _context.next = 36;
                 break;
               }
 
               if (!(allowedLevels && (allowedLevels === null || allowedLevels === void 0 ? void 0 : allowedLevels.length) > 0)) {
-                _context.next = 34;
+                _context.next = 35;
                 break;
               }
 
               level = result.level, access_token = result.session.access_token;
 
               if (allowedLevels.includes(level)) {
-                _context.next = 34;
+                _context.next = 35;
                 break;
               }
 
-              _context.prev = 21;
-              _context.next = 24;
+              _context.prev = 22;
+              _context.next = 25;
               return ordering.setAccessToken(access_token).users().logout();
 
-            case 24:
+            case 25:
               _yield$ordering$setAc = _context.sent;
               logoutResp = _yield$ordering$setAc.content;
 
@@ -244,12 +249,12 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 33;
+              _context.next = 34;
               break;
 
-            case 30:
-              _context.prev = 30;
-              _context.t0 = _context["catch"](21);
+            case 31:
+              _context.prev = 31;
+              _context.t0 = _context["catch"](22);
               setFormState({
                 result: {
                   error: true,
@@ -258,17 +263,17 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 33:
+            case 34:
               return _context.abrupt("return");
 
-            case 34:
+            case 35:
               login({
                 user: result,
                 token: result.session.access_token,
                 project: ordering === null || ordering === void 0 ? void 0 : ordering.project
               });
 
-            case 35:
+            case 36:
               events.emit('userLogin', result);
 
               if (handleSuccessLogin) {
@@ -279,7 +284,7 @@ var LoginForm = function LoginForm(props) {
                 window.location.href = "".concat(window.location.origin).concat(urlToRedirect);
               }
 
-            case 38:
+            case 39:
               setFormState({
                 result: {
                   error: error,
@@ -287,11 +292,11 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 44;
+              _context.next = 45;
               break;
 
-            case 41:
-              _context.prev = 41;
+            case 42:
+              _context.prev = 42;
               _context.t1 = _context["catch"](0);
               setFormState({
                 result: {
@@ -301,12 +306,12 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 44:
+            case 45:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 41], [21, 30]]);
+      }, _callee, null, [[0, 42], [22, 31]]);
     }));
 
     return function handleLoginClick(_x) {
