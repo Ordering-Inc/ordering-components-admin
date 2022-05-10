@@ -263,6 +263,18 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     };
   };
   /**
+   * Method to change the suboption state
+   */
+
+
+  var handleChangeItem = function handleChangeItem(changes, id) {
+    if (id !== undefined && editSubOptionId === id) setEditSubOptionId(id);
+    setChangesState({
+      result: {},
+      changes: _objectSpread(_objectSpread({}, changesState.changes), changes)
+    });
+  };
+  /**
    * Method to update the business state
    * @param {Object} updatedExtra updated extra
    */
@@ -951,7 +963,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     handleAddOption: handleAddOption,
     handleDeteteOption: handleDeteteOption,
     handleChangeDefaultSuboption: handleChangeDefaultSuboption,
-    handleUpdateSubOption: handleUpdateSubOption
+    handleUpdateSubOption: handleUpdateSubOption,
+    handleChangeItem: handleChangeItem
   })));
 };
 

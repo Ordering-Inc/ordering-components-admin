@@ -235,7 +235,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
 
               if (!response.content.error) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  businesses: _objectSpread(_objectSpread({}, businessState.business), response.content)
+                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
                 }));
 
                 if (handleSuccessUpdate) {
@@ -301,7 +301,7 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
 
               if (!response.content.error) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  businesses: _objectSpread(_objectSpread({}, businessState.business), response.content)
+                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
                 }));
 
                 if (handleSucessAddBusiness) {

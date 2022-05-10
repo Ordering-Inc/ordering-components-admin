@@ -120,6 +120,18 @@ var BusinessTypeDetail = function BusinessTypeDetail(props) {
     };
   };
   /**
+   * Update business type field data
+   */
+
+
+  var handleChangeItem = function handleChangeItem(name, value) {
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, _defineProperty({}, name, value));
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
+  /**
    * Update credential data
    * @param {EventTarget} e Related HTML event
    */
@@ -401,7 +413,8 @@ var BusinessTypeDetail = function BusinessTypeDetail(props) {
     handlechangeImage: handlechangeImage,
     handleUpdateProductType: handleUpdateProductType,
     handleAddProductType: handleAddProductType,
-    handleDeleteProductType: handleDeleteProductType
+    handleDeleteProductType: handleDeleteProductType,
+    handleChangeItem: handleChangeItem
   })));
 };
 

@@ -167,6 +167,18 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
     }
   };
   /**
+   * Method to change the option state
+   */
+
+
+  var handleChangeItem = function handleChangeItem(changes, id) {
+    if (id !== undefined) setEditOptionId(id);
+    setChangesState({
+      result: {},
+      changes: _objectSpread(_objectSpread({}, changesState.changes), changes)
+    });
+  };
+  /**
    * Method to change the option enabled state
    * @param {Boolean} enabled
    */
@@ -654,6 +666,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     changesState: changesState,
     cleanChangesState: cleanChangesState,
+    handleChangeItem: handleChangeItem,
     extraState: extraState,
     editOptionId: editOptionId,
     addChangesState: addChangesState,

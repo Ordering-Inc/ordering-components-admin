@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessBrandGENDetail = void 0;
+exports.BusinessDeliveryZoneShare = void 0;
 
 var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
 
@@ -13,9 +13,9 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _SessionContext = require("../../contexts/SessionContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _SessionContext = require("../../contexts/SessionContext");
 
 var _LanguageContext = require("../../contexts/LanguageContext");
 
@@ -28,6 +28,8 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -59,19 +61,21 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to manage BusinessBrandGENDetail behavior without UI component
- */
-var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
+var BusinessDeliveryZoneShare = function BusinessDeliveryZoneShare(props) {
   var UIComponent = props.UIComponent,
-      brand = props.brand,
-      handleUpdateBrandList = props.handleUpdateBrandList,
-      brandListState = props.brandListState,
-      onSelectedBrand = props.onSelectedBrand;
+      business = props.business,
+      zone = props.zone,
+      businesses = props.businesses,
+      busienssesPropsToFetch = props.busienssesPropsToFetch,
+      handleUpdateBusinessDeliveryZone = props.handleUpdateBusinessDeliveryZone;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
+
+  var _useSession = (0, _SessionContext.useSession)(),
+      _useSession2 = _slicedToArray(_useSession, 1),
+      token = _useSession2[0].token;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
@@ -81,76 +85,152 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
-  var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      token = _useSession2[0].token;
-
   var _useState = (0, _react.useState)({
+    businesses: [],
     loading: false,
-    changes: {},
+    error: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      businessesState = _useState2[0],
+      setBusinessesState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
     result: {
       error: false
     }
   }),
-      _useState2 = _slicedToArray(_useState, 2),
-      formState = _useState2[0],
-      setFormState = _useState2[1];
+      _useState4 = _slicedToArray(_useState3, 2),
+      actionState = _useState4[0],
+      setActionState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)([]),
+      _useState6 = _slicedToArray(_useState5, 2),
+      selectedBusinessIds = _useState6[0],
+      setSelectedBusinessIds = _useState6[1];
   /**
-   * Method to update or create a brand
+   * Method to get all the business list from API
    */
 
 
-  var handleUpdateClick = /*#__PURE__*/function () {
+  var getAllBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
+      var functionFetch, _yield$functionFetch$, _yield$functionFetch$2, error, result, _businesses;
+
       return _regenerator.default.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (brand) {
-                updateBrand();
-              } else {
-                createBrand();
+              _context.prev = 0;
+              setBusinessesState(_objectSpread(_objectSpread({}, businessesState), {}, {
+                loading: true
+              }));
+              functionFetch = ordering.setAccessToken(token).businesses().select(busienssesPropsToFetch).asDashboard();
+              _context.next = 5;
+              return functionFetch.get();
+
+            case 5:
+              _yield$functionFetch$ = _context.sent;
+              _yield$functionFetch$2 = _yield$functionFetch$.content;
+              error = _yield$functionFetch$2.error;
+              result = _yield$functionFetch$2.result;
+
+              if (!error) {
+                _businesses = result.filter(function (_business) {
+                  return _business.id !== business.id;
+                });
+                setBusinessesState(_objectSpread(_objectSpread({}, businessesState), {}, {
+                  businesses: _businesses,
+                  loading: false
+                }));
               }
 
-            case 1:
+              _context.next = 15;
+              break;
+
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](0);
+              setBusinessesState(_objectSpread(_objectSpread({}, businessesState), {}, {
+                loading: false,
+                error: _context.t0.message
+              }));
+
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee);
+      }, _callee, null, [[0, 12]]);
     }));
 
-    return function handleUpdateClick() {
+    return function getAllBusinesses() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to create brand from API
+   * Method to share the business zone
+   * @param {Number} businessId business id
+   * @param {Boolean} checked checked state
    */
 
 
-  var createBrand = /*#__PURE__*/function () {
+  var handleSelectBusiness = function handleSelectBusiness(businessId, checked) {
+    if (checked) {
+      setSelectedBusinessIds([].concat(_toConsumableArray(selectedBusinessIds), [businessId]));
+    } else {
+      var _selectedBusinessIds = selectedBusinessIds.filter(function (id) {
+        return id !== businessId;
+      });
+
+      setSelectedBusinessIds(_selectedBusinessIds);
+    }
+  };
+  /**
+   * Method to share the business zone
+   * @param {Boolean} isAll state if all or none
+   */
+
+
+  var handleSelectAllBusiness = function handleSelectAllBusiness(isAll) {
+    if (isAll) {
+      var _businessesState$busi;
+
+      var businessIds = (_businessesState$busi = businessesState.businesses) === null || _businessesState$busi === void 0 ? void 0 : _businessesState$busi.reduce(function (ids, business) {
+        return [].concat(_toConsumableArray(ids), [business.id]);
+      }, []);
+      setSelectedBusinessIds(businessIds);
+    } else {
+      setSelectedBusinessIds([]);
+    }
+  };
+  /**
+   * Method to share the business zone
+   */
+
+
+  var handleShareBusinesses = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, response, content;
+      var requestOptions, response, content, zoneBusinesses, _iterator, _step, _loop, _businessZone, zones, _business;
+
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(formState.changes)
+                }
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/franchises"), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/deliveryzones/").concat(zone.id, "?businesses=[").concat(selectedBusinessIds, "]"), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -160,25 +240,57 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
             case 9:
               content = _context2.sent;
 
-              if (!(content !== null && content !== void 0 && content.error)) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: {},
-                  result: content,
-                  loading: false
-                }));
+              if (!content.error) {
+                zoneBusinesses = [];
+                _iterator = _createForOfIteratorHelper(selectedBusinessIds);
 
-                if (handleUpdateBrandList) {
-                  handleUpdateBrandList([].concat(_toConsumableArray(brandListState === null || brandListState === void 0 ? void 0 : brandListState.brands), [content.result]));
+                try {
+                  _loop = function _loop() {
+                    var _businessesState$busi2;
+
+                    var id = _step.value;
+                    zoneBusinesses.push({
+                      id: id,
+                      name: (_businessesState$busi2 = businessesState.businesses.find(function (_business) {
+                        return _business.id === id;
+                      })) === null || _businessesState$busi2 === void 0 ? void 0 : _businessesState$busi2.name,
+                      pivot: {
+                        business_id: id,
+                        zone_id: zone.id
+                      }
+                    });
+                  };
+
+                  for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                    _loop();
+                  }
+                } catch (err) {
+                  _iterator.e(err);
+                } finally {
+                  _iterator.f();
                 }
 
-                onSelectedBrand && onSelectedBrand(content.result);
-                showToast(_ToastContext.ToastType.Success, t('BRAND_ADDED', 'Brand added'));
-              } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: formState.changes,
-                  result: content,
-                  loading: false
-                }));
+                _businessZone = _objectSpread(_objectSpread({}, zone), {}, {
+                  businesses: zoneBusinesses
+                });
+                zones = business.zones.filter(function (_zone) {
+                  if (_zone.id === _businessZone.id) {
+                    Object.assign(_zone, _businessZone);
+                  }
+
+                  return true;
+                });
+                _business = _objectSpread(_objectSpread({}, business), {}, {
+                  zones: zones
+                });
+                handleUpdateBusinessDeliveryZone && handleUpdateBusinessDeliveryZone(_business);
+                setActionState({
+                  loading: false,
+                  result: {
+                    error: false
+                  }
+                });
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_SAVED', 'Business saved'));
               }
 
               _context2.next = 16;
@@ -187,13 +299,12 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
             case 13:
               _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              setActionState({
+                loading: false,
                 result: {
-                  error: true,
-                  result: _context2.t0.message
-                },
-                loading: false
-              }));
+                  error: false
+                }
+              });
 
             case 16:
             case "end":
@@ -203,210 +314,76 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
       }, _callee2, null, [[0, 13]]);
     }));
 
-    return function createBrand() {
+    return function handleShareBusinesses() {
       return _ref2.apply(this, arguments);
     };
   }();
-  /**
-   * Method to update a brand
-   */
-
-
-  var updateBrand = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var requestOptions, response, content, _brands;
-
-      return _regenerator.default.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                loading: true
-              }));
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(formState.changes)
-              };
-              _context3.next = 6;
-              return fetch("".concat(ordering.root, "/franchises/").concat(brand === null || brand === void 0 ? void 0 : brand.id), requestOptions);
-
-            case 6:
-              response = _context3.sent;
-              _context3.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context3.sent;
-
-              if (!(content !== null && content !== void 0 && content.error)) {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: {},
-                  result: content,
-                  loading: false
-                }));
-
-                if (handleUpdateBrandList) {
-                  _brands = brandListState === null || brandListState === void 0 ? void 0 : brandListState.brands.map(function (item) {
-                    if (item.id === content.result.id) {
-                      return _objectSpread(_objectSpread({}, item), content.result);
-                    }
-
-                    return item;
-                  });
-                  handleUpdateBrandList(_brands);
-                }
-
-                showToast(_ToastContext.ToastType.Success, t('BRAND_UPDATED', 'Brand updated'));
-              } else {
-                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                  changes: formState.changes,
-                  result: content,
-                  loading: false
-                }));
-              }
-
-              _context3.next = 16;
-              break;
-
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context3.t0.message
-                },
-                loading: false
-              }));
-
-            case 16:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 13]]);
-    }));
-
-    return function updateBrand() {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
-   * Update credential data
-   * @param {EventTarget} e Related HTML event
-   */
-
-
-  var handleChangeInput = function handleChangeInput(e) {
-    var currentChanges = _defineProperty({}, e.target.name, e.target.value);
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
-  /**
-   * Update business brand logo data
-   * @param {File} file Image to change business brand logo
-   */
-
-
-  var handlechangeImage = function handlechangeImage(file, name) {
-    var reader = new window.FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = function () {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, reader.result))
-      }));
-    };
-
-    reader.onerror = function (error) {
-      return console.log(error);
-    };
-  };
-
-  var handleChangeItem = function handleChangeItem(changes) {
-    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), changes);
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: currentChanges
-    }));
-  };
 
   (0, _react.useEffect)(function () {
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: {}
-    }));
-  }, [brand === null || brand === void 0 ? void 0 : brand.id]);
+    if (businesses) {
+      setBusinessesState(_objectSpread(_objectSpread({}, businessesState), {}, {
+        businesses: businesses,
+        loading: false
+      }));
+    } else {
+      getAllBusinesses();
+    }
+  }, [businesses]);
+  (0, _react.useEffect)(function () {
+    if (zone !== null && zone !== void 0 && zone.businesses) {
+      var _zone$businesses;
+
+      var businessIds = (_zone$businesses = zone.businesses) === null || _zone$businesses === void 0 ? void 0 : _zone$businesses.reduce(function (ids, business) {
+        return [].concat(_toConsumableArray(ids), [business.id]);
+      }, []);
+      setSelectedBusinessIds(businessIds);
+    }
+  }, [zone]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    brandFormState: formState,
-    handleUpdateClick: handleUpdateClick,
-    handleChangeInput: handleChangeInput,
-    handlechangeImage: handlechangeImage,
-    handleChangeItem: handleChangeItem
+    businessesState: businessesState,
+    actionState: actionState,
+    selectedBusinessIds: selectedBusinessIds,
+    handleSelectBusiness: handleSelectBusiness,
+    handleSelectAllBusiness: handleSelectAllBusiness,
+    handleShareBusinesses: handleShareBusinesses
   })));
 };
 
-exports.BusinessBrandGENDetail = BusinessBrandGENDetail;
-BusinessBrandGENDetail.propTypes = {
+exports.BusinessDeliveryZoneShare = BusinessDeliveryZoneShare;
+BusinessDeliveryZoneShare.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Object for a brand
-   */
-  brand: _propTypes.default.object,
-
-  /**
-   * Object for brand list
-   */
-  brandListState: _propTypes.default.object,
-
-  /**
-  * Function to set a business state
-  */
-  handleUpdateBrandList: _propTypes.default.func,
-
-  /**
-   * Function to set selected brand
-   */
-  onSelectedBrand: _propTypes.default.func,
-
-  /**
-   * Components types before business type filter
+   * Components types before my orders
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business type filter
+   * Components types after my orders
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business type filter
+   * Elements before my orders
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business type filter
+   * Elements after my orders
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessBrandGENDetail.defaultProps = {
+BusinessDeliveryZoneShare.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  busienssesPropsToFetch: ['id', 'name', 'logo']
 };
