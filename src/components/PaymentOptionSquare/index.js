@@ -7,6 +7,7 @@ import { useLanguage } from '../../contexts/LanguageContext'
 
 export const PaymentOptionSquare = (props) => {
   const {
+    businessPaymethod,
     UIComponent,
     business,
     businessPaymethods,
@@ -19,7 +20,11 @@ export const PaymentOptionSquare = (props) => {
   const [{ token }] = useSession()
 
   const [squareUrlState, setSquareUrlState] = useState({ url: null, loading: false, error: null })
-  const [squareData, setSquareData] = useState(null)
+  const [squareData, setSquareData] = useState({
+    sandbox: businessPaymethod?.sandbox,
+    data: businessPaymethod?.data,
+    data_sandbox: businessPaymethod?.data_sandbox
+  })
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
@@ -81,18 +86,7 @@ export const PaymentOptionSquare = (props) => {
       timeout = setTimeout(function () {
         connect.postMessage('close', ordering.url)
         if (e.data) {
-          const data = e.data.paymethod_credentials
-          setSquareData({
-            sandbox: data.sandbox,
-            data: {
-              application_id: data.data.application_id,
-              location_id: data.data.location_id
-            },
-            data_sandbox: {
-              application_id: data.data_sandbox.application_id,
-              location_id: data.data_sandbox.location_id
-            }
-          })
+          setSquareData(e.data.paymethod_credentials)
           connect.close()
         }
       }, 1000)
@@ -112,8 +106,7 @@ export const PaymentOptionSquare = (props) => {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-          'x-app-x': ordering?.appId
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           sandbox: squareData?.sandbox,
@@ -130,7 +123,7 @@ export const PaymentOptionSquare = (props) => {
           }
           return paymethod
         })
-        handleSuccessPaymethodUpdate(updatedPaymethods)
+        handleSuccessPaymethodUpdate && handleSuccessPaymethodUpdate(updatedPaymethods)
         showToast(ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'))
       }
       setActionState({
@@ -140,6 +133,34 @@ export const PaymentOptionSquare = (props) => {
     } catch (err) {
       setActionState({ error: [err.message], loading: false })
     }
+  }
+
+  /**
+   * Update square data
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeDataInput = (e) => {
+    setSquareData({
+      ...squareData,
+      data: {
+        ...squareData?.data,
+        [e.target.name]: e.target.value
+      }
+    })
+  }
+
+  /**
+   * Update square sandbox data
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeSanboxDataInput = (e) => {
+    setSquareData({
+      ...squareData,
+      data_sandbox: {
+        ...squareData?.data_sandbox,
+        [e.target.name]: e.target.value
+      }
+    })
   }
 
   useEffect(() => {
@@ -153,8 +174,11 @@ export const PaymentOptionSquare = (props) => {
           {...props}
           squareUrlState={squareUrlState}
           squareData={squareData}
+          actionState={actionState}
           handleConnectSquare={handleConnectSquare}
           handleSavePaymethod={handleSavePaymethod}
+          handleChangeDataInput={handleChangeDataInput}
+          handleChangeSanboxDataInput={handleChangeSanboxDataInput}
         />
       )}
     </>
