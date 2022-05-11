@@ -26,6 +26,7 @@ export const ProductExtraOptions = (props) => {
   const [addChangesState, setAddChangesState] = useState({
     conditioned: false,
     enabled: true,
+    name: '',
     min: 1,
     max: 1
   })
@@ -244,6 +245,7 @@ export const ProductExtraOptions = (props) => {
         setAddChangesState({
           conditioned: false,
           enabled: true,
+          name: '',
           min: 1,
           max: 1
         })
@@ -339,6 +341,16 @@ export const ProductExtraOptions = (props) => {
     setChangesState({ changes: {}, result: {} })
     setExtraState({ ...extraState, extra: extra })
   }, [extra])
+
+  useEffect(() => {
+    setAddChangesState({
+      conditioned: false,
+      enabled: true,
+      name: '',
+      min: 1,
+      max: 1
+    })
+  }, [extra?.id])
 
   return (
     <>

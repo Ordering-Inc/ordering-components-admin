@@ -153,6 +153,7 @@ import { ProductOption } from './components/ProductOption'
 import { ProductOptionSuboption } from './components/ProductOptionSuboption'
 import { ProductsList } from './components/ProductsList'
 import { ProductsListing } from './components/ProductsListing'
+import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
 import { RecoveryActionListing } from './components/RecoveryActionListing'
 import { RecoveryActionDetail } from './components/RecoveryActionDetail'
@@ -373,6 +374,7 @@ export {
   ProductsList,
   ProductsListing,
   ReportsDriverFilter,
+  ReCaptcha,
   RewardsPrograms,
   RecoveryActionListing,
   RecoveryActionDetail,
