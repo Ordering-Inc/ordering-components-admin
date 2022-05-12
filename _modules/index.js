@@ -345,6 +345,12 @@ Object.defineProperty(exports, "BusinessTypeFilter", {
     return _BusinessTypeFilter.BusinessTypeFilter;
   }
 });
+Object.defineProperty(exports, "BusinessWalletsList", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessWalletsList.BusinessWalletsList;
+  }
+});
 Object.defineProperty(exports, "BusinessWebhooks", {
   enumerable: true,
   get: function get() {
@@ -1577,6 +1583,8 @@ var _BusinessWebhooks = require("./components/BusinessWebhooks");
 var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 
 var _BusinessProductCreator = require("./components/BusinessProductCreator");
+
+var _BusinessWalletsList = require("./components/BusinessWalletsList");
 
 var _CampaignListing = require("./components/CampaignListing");
 
