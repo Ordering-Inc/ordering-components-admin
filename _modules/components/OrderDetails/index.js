@@ -362,8 +362,7 @@ var OrderDetails = function OrderDetails(props) {
 
   var handleUpdateOrderStatus = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee4(order) {
-      var requestsState, source, _yield$ordering$setAc, content;
-
+      var response, content;
       return _regenerator.default.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -372,40 +371,46 @@ var OrderDetails = function OrderDetails(props) {
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              requestsState = {};
-              source = {};
-              requestsState.updateOrder = source;
-              _context4.next = 7;
-              return ordering.setAccessToken(token).orders(order === null || order === void 0 ? void 0 : order.id).save({
-                status: order.newStatus
-              }, {
-                cancelToken: source
+              _context4.next = 4;
+              return fetch("".concat(ordering.root, "/orders/").concat(order === null || order === void 0 ? void 0 : order.id), {
+                method: 'PUT',
+                headers: {
+                  Authorization: "Bearer ".concat(token),
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                  status: order.newStatus
+                })
               });
 
+            case 4:
+              response = _context4.sent;
+              _context4.next = 7;
+              return response.json();
+
             case 7:
-              _yield$ordering$setAc = _context4.sent;
-              content = _yield$ordering$setAc.content;
+              content = _context4.sent;
               setActionStatus({
                 loading: false,
                 error: content.error ? content.result : null
               });
-              _context4.next = 15;
+              _context4.next = 14;
               break;
 
-            case 12:
-              _context4.prev = 12;
+            case 11:
+              _context4.prev = 11;
               _context4.t0 = _context4["catch"](0);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context4.t0.message]
               }));
 
-            case 15:
+            case 14:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 12]]);
+      }, _callee4, null, [[0, 11]]);
     }));
 
     return function handleUpdateOrderStatus(_x2) {
