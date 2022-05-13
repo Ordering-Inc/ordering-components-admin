@@ -164,6 +164,10 @@ var ProductDetailsAdvanced = function ProductDetailsAdvanced(props) {
                 showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  result: {
+                    error: true,
+                    result: result
+                  },
                   loading: false
                 }));
               }
