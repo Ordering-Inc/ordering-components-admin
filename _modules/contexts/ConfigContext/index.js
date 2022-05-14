@@ -188,10 +188,12 @@ var ConfigProvider = function ConfigProvider(_ref) {
                   calling_number: data && ((_data2 = data) === null || _data2 === void 0 ? void 0 : _data2.country_calling_code) || '+1'
                 }
               }, result);
-              setState(_objectSpread(_objectSpread({}, state), {}, {
-                loading: false,
-                configs: error ? {} : configsResult
-              }));
+              setState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: false,
+                  configs: error ? {} : token ? configsResult : _objectSpread(_objectSpread({}, prevState.configs), configsResult)
+                });
+              });
               _context.next = 35;
               break;
 
