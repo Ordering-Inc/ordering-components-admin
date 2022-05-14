@@ -80,11 +80,11 @@ export const ConfigProvider = ({ children }) => {
         },
         ...result
       }
-      setState({
-        ...state,
+      setState(prevState => ({
+        ...prevState,
         loading: false,
-        configs: error ? {} : configsResult
-      })
+        configs: error ? {} : token ? configsResult : { ...prevState.configs, ...configsResult }
+      }))
     } catch (err) {
       setState({ ...state, loading: false })
     }
