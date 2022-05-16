@@ -1,11 +1,13 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.ReCaptcha = void 0;
 
-var _react = _interopRequireDefault(require("react"));
+var _react = _interopRequireWildcard(require("react"));
 
 var _reactGoogleRecaptcha = _interopRequireDefault(require("react-google-recaptcha"));
 
@@ -14,6 +16,10 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _ConfigContext = require("../../contexts/ConfigContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+
+function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -33,6 +39,11 @@ var ReCaptcha = function ReCaptcha(props) {
   var _useConfig = (0, _ConfigContext.useConfig)(),
       _useConfig2 = _slicedToArray(_useConfig, 1),
       configs = _useConfig2[0].configs;
+
+  var _useState = (0, _react.useState)(null),
+      _useState2 = _slicedToArray(_useState, 2),
+      recaptchaSiteKey = _useState2[0],
+      setRecaptchaSiteKey = _useState2[1];
   /**
    * Change reCaptcha
    */
@@ -42,19 +53,19 @@ var ReCaptcha = function ReCaptcha(props) {
     handleReCaptcha(value);
   };
 
-  var getReCaptChaSiteKey = function getReCaptChaSiteKey() {
+  (0, _react.useEffect)(function () {
     var _configs$security_rec;
 
     if (configs && Object.keys(configs).length > 0 && configs !== null && configs !== void 0 && (_configs$security_rec = configs.security_recaptcha_site_key) !== null && _configs$security_rec !== void 0 && _configs$security_rec.value) {
-      return configs === null || configs === void 0 ? void 0 : configs.security_recaptcha_site_key.value;
+      setRecaptchaSiteKey(configs === null || configs === void 0 ? void 0 : configs.security_recaptcha_site_key.value);
     } else {
+      setRecaptchaSiteKey(null);
       console.log('ReCaptcha component: the config doesn\'t have recaptcha site key');
-      return null;
     }
-  };
-
-  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, getReCaptChaSiteKey() && /*#__PURE__*/_react.default.createElement(_reactGoogleRecaptcha.default, {
-    sitekey: getReCaptChaSiteKey(),
+  }, [configs]);
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, recaptchaSiteKey && /*#__PURE__*/_react.default.createElement(_reactGoogleRecaptcha.default, {
+    key: recaptchaSiteKey,
+    sitekey: recaptchaSiteKey,
     onChange: onChange,
     onErrored: function onErrored(e) {
       return console.log(e);
