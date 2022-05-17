@@ -532,12 +532,12 @@ export const DashboardOrdersList = (props) => {
     if (orderList.loading) return
     const handleUpdateOrder = (order) => {
       if (isOnlyDelivery && order?.delivery_type !== 1) return
-      const found = orderList.orders.find(_order => _order.id === order.id)
+      const found = orderList.orders.find(_order => _order?.id === order?.id)
       let orders = []
       if (found) {
         orders = orderList.orders.filter(_order => {
           let valid = true
-          if (_order.id === order.id) {
+          if (_order?.id === order?.id) {
             delete order.total
             delete order.subtotal
             Object.assign(_order, order)
