@@ -37,16 +37,30 @@ export const CampaignSignUpOption = (props) => {
     setRuleFormState({ ...ruleFormState, changes: changes })
   }
 
+  /**
+   * Change date range
+   * @param {string} date1 date
+   * @param {string} date2 max date
+   */
   const handleChangeDate = (date1, date2) => {
     const changes = { ...ruleFormState.changes, date: `${date1} 00:00:00`, max_date: `${date2} 00:00:00` }
     setRuleFormState({ ...ruleFormState, changes: changes })
   }
 
+  /**
+   * Change date
+   * @param {string} value date
+   */
   const handleChangeDateTime = (value) => {
     const changes = { ...ruleFormState.changes, date: value }
+    delete changes?.max_date
     setRuleFormState({ ...ruleFormState, changes: changes })
   }
 
+  /**
+   * Change option
+   * @param {string} index condition
+   */
   const handleChangeOption = (index) => {
     const changes = { ...ruleFormState.changes, date_condition: index, date: null }
     setRuleFormState({ ...ruleFormState, changes: changes })
@@ -183,7 +197,7 @@ export const CampaignSignUpOption = (props) => {
           ...(selectedRule?.id && { id: selectedRule?.id }),
           ...(selectedRule?.date_condition && { date_condition: selectedRule?.date_condition }),
           ...(selectedRule?.date && { date: selectedRule?.date }),
-          ...(selectedRule?.max_date && { date: selectedRule?.max_date }),
+          ...(selectedRule?.max_date && { max_date: selectedRule?.max_date }),
           type: type
         }
       })

@@ -53,10 +53,10 @@ export const OrdersManage = (props) => {
    */
   const [selectedSubOrderStatus, setSelectedSubOrderStatus] = useState({
     pending: [0, 13],
-    inProgress: [7, 8, 4, 9, 3, 14, 18, 19, 20, 21],
+    inProgress: [7, 8, 4, 9, 3, 14, 18, 19, 20, 21, 22, 23],
     completed: [1, 11, 15],
     cancelled: [2, 5, 6, 10, 12, 16, 17],
-    all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21]
+    all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
   })
 
   /**
@@ -238,12 +238,6 @@ export const OrdersManage = (props) => {
           loading: false,
           businesses: content.result.businesses
         })
-        if (user?.level !== 0 && user?.level !== 2) {
-          setDriversList({
-            ...driversList,
-            drivers: content.result.drivers
-          })
-        }
       } else {
         setActionStatus({ loading: false, error: content?.result })
       }
@@ -330,7 +324,7 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     if (loading) return
-    if (user?.level === 0 || user?.level === 2) {
+    if (user?.level === 0 || user?.level === 2 || user?.level === 5) {
       getDrivers()
     }
     getControlsOrders()

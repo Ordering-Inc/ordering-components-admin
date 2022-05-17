@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
@@ -24,6 +23,7 @@ export const CampaignDetail = (props) => {
   const [campaignState, setCampaignState] = useState({ campaign: campaign, loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
+  const [audienceState, setAudienceState] = useState({ loading: false, audience: 0, error: null })
 
   /**
    * Clean formState
@@ -61,12 +61,14 @@ export const CampaignDetail = (props) => {
    * @param {string} value parameters to change
    */
   const handleChangeItem = (key, value) => {
+    const changes = { ...formState.changes, [key]: value }
+    if (key === 'scheduled_at') {
+      changes.status = value ? 'scheduled' : 'pending'
+    }
+
     setFormState({
       ...formState,
-      changes: {
-        ...formState.changes,
-        [key]: value
-      }
+      changes: changes
     })
   }
 
@@ -149,12 +151,23 @@ export const CampaignDetail = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, error: null })
+
       const changes = { ...formState?.changes }
+
       for (const key in changes) {
+        // if (key === 'conditions' && changes[key].length > 0) {
+        //   changes[key].forEach(change => {
+        //     for (const innerKey in change) {
+        //       if (change[innerKey] === null) delete change[innerKey]
+        //     }
+        //   })
+        // }
+
         if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
           changes[key] = JSON.stringify(changes[key])
         }
       }
+
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -272,6 +285,64 @@ export const CampaignDetail = (props) => {
     }
   }
 
+  /**
+   * Method to get audience from API
+   */
+  const getAudience = async (conditions) => {
+    try {
+      setAudienceState({ ...audienceState, loading: true })
+      const _conditions = [...conditions]
+      _conditions.forEach(condition => {
+        Object.keys(condition).forEach(key => {
+          if (condition[key] === null) {
+            delete condition[key]
+          }
+        })
+      })
+
+      const changes = { conditions: JSON.stringify(_conditions) }
+
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+
+      const response = await fetch(`${ordering.root}/marketing_campaigns/audience`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setAudienceState({ ...audienceState, loading: false, error: null, audience: content?.result?.audience })
+      } else {
+        setAudienceState({
+          ...audienceState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (err) {
+      setAudienceState({
+        ...audienceState,
+        loading: false,
+        error: err.message
+      })
+    }
+  }
+
+  const isCheckBoxClick = () => {
+    let valid = false
+    formState.changes.conditions.forEach(item => {
+      let childValid = true
+      Object.keys(item).forEach(key => {
+        if (key === 'condition' || key === 'date_condition') childValid = false
+      })
+      if (childValid) valid = true
+    })
+    return valid
+  }
+
   useEffect(() => {
     if (Object.keys(campaign).length === 0) {
       setIsAddMode(true)
@@ -279,9 +350,11 @@ export const CampaignDetail = (props) => {
         ...formState,
         changes: {
           enabled: true,
-          conditions: []
+          conditions: [],
+          status: 'pending'
         }
       })
+      getAudience(campaign?.conditions)
     } else {
       setIsAddMode(false)
       cleanFormState()
@@ -290,15 +363,12 @@ export const CampaignDetail = (props) => {
   }, [campaign])
 
   useEffect(() => {
-    if (!formState.changes?.audience_type) return
-    if (formState.changes?.audience_type === 'dynamic') {
-      const changes = {
-        ...formState.changes,
-        end_at: formState.changes?.end_at ?? campaign?.end_at ?? moment(new Date()).format('YYYY-MM-DD HH:mm:ss')
-      }
-      setFormState({ ...formState, changes: changes })
+    if (!isAddMode) return
+    const valid = isCheckBoxClick()
+    if (formState?.changes?.conditions && formState?.changes?.conditions?.length > 0 && !valid) {
+      getAudience(formState?.changes?.conditions)
     }
-  }, [formState.changes?.audience_type])
+  }, [JSON.stringify(formState?.changes?.conditions)])
 
   return (
     <>
@@ -307,6 +377,7 @@ export const CampaignDetail = (props) => {
           <UIComponent
             {...props}
             isAddMode={isAddMode}
+            audienceState={audienceState}
             campaignState={campaignState}
             formState={formState}
             handleChangeItem={handleChangeItem}

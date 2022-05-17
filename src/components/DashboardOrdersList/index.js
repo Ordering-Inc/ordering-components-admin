@@ -70,14 +70,14 @@ export const DashboardOrdersList = (props) => {
       setActionStatus({ ...actionStatus, loading: true })
       const source = {}
       requestsState.updateOrders = source
-      const { content } = await ordering.setAccessToken(accessToken).orders(order.id).save({ status: order.newStatus }, { cancelToken: source })
+      const { content } = await ordering.setAccessToken(accessToken).orders(order?.id).save({ status: order.newStatus }, { cancelToken: source })
       setActionStatus({
         loading: false,
         error: content.error ? content.result : null
       })
       if (!content.error) {
         const orders = orderList.orders.filter(_order => {
-          return _order.id !== order.id
+          return _order?.id !== order?.id
         })
         setOrderList({ ...orderList, orders })
       }
@@ -468,7 +468,7 @@ export const DashboardOrdersList = (props) => {
   useEffect(() => {
     if (orderIdForUnreadCountUpdate === null || orderList.orders.length === 0) return
     const _orders = orderList.orders.filter(order => {
-      if (order.id === orderIdForUnreadCountUpdate) {
+      if (order?.id === orderIdForUnreadCountUpdate) {
         order.unread_count = 0
         order.unread_general_count = 0
         order.unread_direct_count = 0
@@ -484,7 +484,7 @@ export const DashboardOrdersList = (props) => {
   useEffect(() => {
     if (!deletedOrderId) return
     const orders = orderList.orders.filter(_order => {
-      return _order.id !== deletedOrderId
+      return _order?.id !== deletedOrderId
     })
 
     loadOrders()
@@ -576,7 +576,7 @@ export const DashboardOrdersList = (props) => {
     }
     const handleRegisterOrder = (order) => {
       if (isOnlyDelivery && order?.delivery_type !== 1) return
-      const found = orderList.orders.find(_order => _order.id === order.id)
+      const found = orderList.orders.find(_order => _order?.id === order?.id)
       if (found) return
       let orders = []
       if (isFilteredOrder(order)) {
@@ -597,10 +597,10 @@ export const DashboardOrdersList = (props) => {
 
     const handleNewMessage = (message) => {
       if (orderList.orders.length === 0) return
-      const found = orderList.orders.find(order => order.id === message.order.id)
+      const found = orderList.orders.find(order => order?.id === message.order?.id)
       if (found) {
         const _orders = orderList.orders.filter(order => {
-          if (order.id === message.order.id) {
+          if (order?.id === message.order?.id) {
             if (order.last_message_at !== message.created_at) {
               if (message.type === 1) {
                 order.last_general_message_at = message.created_at
@@ -649,7 +649,7 @@ export const DashboardOrdersList = (props) => {
   useEffect(() => {
     const handleCustomerReviewed = (review) => {
       const orders = orderList.orders.filter(_order => {
-        if (_order.id === review.order_id) {
+        if (_order?.id === review.order_id) {
           _order.user_review = review
         }
         return true
