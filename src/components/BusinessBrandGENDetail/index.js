@@ -42,13 +42,19 @@ export const BusinessBrandGENDetail = (props) => {
     try {
       setFormState({ ...formState, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const changes = { ...formState?.changes }
+      for (const key in changes) {
+        if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
+          changes[key] = JSON.stringify(changes[key])
+        }
+      }
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState.changes)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/franchises`, requestOptions)
       const content = await response.json()
@@ -91,13 +97,19 @@ export const BusinessBrandGENDetail = (props) => {
     try {
       setFormState({ ...formState, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const changes = { ...formState?.changes }
+      for (const key in changes) {
+        if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
+          changes[key] = JSON.stringify(changes[key])
+        }
+      }
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState.changes)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, requestOptions)
       const content = await response.json()
@@ -183,6 +195,21 @@ export const BusinessBrandGENDetail = (props) => {
     })
   }
 
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeRibbon = (changes) => {
+    const ribbonChanges = formState?.changes?.ribbon
+      ? { ...formState?.changes?.ribbon, ...changes }
+      : { ...changes }
+    const currentChanges = { ...formState?.changes, ribbon: ribbonChanges }
+    setFormState({
+      ...formState,
+      changes: currentChanges
+    })
+  }
+
   useEffect(() => {
     setFormState({
       ...formState,
@@ -200,6 +227,7 @@ export const BusinessBrandGENDetail = (props) => {
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
           handleChangeItem={handleChangeItem}
+          handleChangeRibbon={handleChangeRibbon}
         />
       )}
     </>
