@@ -213,7 +213,10 @@ var ProductDetatils = function ProductDetatils(props) {
               result = _yield$ordering$busin4.result;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: error ? formState.changes : {},
-                result: result,
+                result: {
+                  error: error,
+                  result: result
+                },
                 loading: false
               }));
 
@@ -377,6 +380,25 @@ var ProductDetatils = function ProductDetatils(props) {
   var handleChangeFormState = function handleChangeFormState(changes) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), changes)
+    }));
+  };
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+
+
+  var handleChangeRibbon = function handleChangeRibbon(changes) {
+    var _formState$changes, _formState$changes2;
+
+    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes = formState.changes) !== null && _formState$changes !== void 0 && _formState$changes.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.ribbon), changes) : _objectSpread({}, changes);
+
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
+      ribbon: ribbonChanges
+    });
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
     }));
   };
   /**
@@ -559,6 +581,7 @@ var ProductDetatils = function ProductDetatils(props) {
     productCart: productCart,
     formState: formState,
     cleanFormState: cleanFormState,
+    handleChangeRibbon: handleChangeRibbon,
     handleChangeProductActiveState: handleChangeProductActiveState,
     handleChangeInput: handleChangeInput,
     handlechangeImage: handlechangeImage,

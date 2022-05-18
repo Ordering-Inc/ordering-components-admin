@@ -376,6 +376,25 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
       return console.log(error);
     };
   };
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+
+
+  var handleChangeRibbon = function handleChangeRibbon(changes) {
+    var _formState$changes, _formState$changes2;
+
+    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes = formState.changes) !== null && _formState$changes !== void 0 && _formState$changes.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.ribbon), changes) : _objectSpread({}, changes);
+
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
+      ribbon: ribbonChanges
+    });
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
 
   var handleChangeSwtich = function handleChangeSwtich(name, checked) {
     var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, checked));
@@ -513,7 +532,8 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     handleAddBusiness: handleAddBusiness,
     handleChangeAddress: handleChangeAddress,
     handleChangeCenter: handleChangeCenter,
-    handleChangeSwtich: handleChangeSwtich
+    handleChangeSwtich: handleChangeSwtich,
+    handleChangeRibbon: handleChangeRibbon
   })));
 };
 

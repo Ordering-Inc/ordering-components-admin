@@ -1,7 +1,5 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -36,6 +34,8 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
@@ -131,7 +131,7 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
 
   var createBrand = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
-      var requestOptions, response, content;
+      var changes, key, requestOptions, response, content;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -141,23 +141,31 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 loading: true
               }));
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+
+              for (key in changes) {
+                if (_typeof(changes[key]) === 'object' && changes[key] !== null || Array.isArray(changes[key])) {
+                  changes[key] = JSON.stringify(changes[key]);
+                }
+              }
+
               requestOptions = {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState.changes)
+                body: JSON.stringify(changes)
               };
-              _context2.next = 6;
+              _context2.next = 8;
               return fetch("".concat(ordering.root, "/franchises"), requestOptions);
 
-            case 6:
+            case 8:
               response = _context2.sent;
-              _context2.next = 9;
+              _context2.next = 11;
               return response.json();
 
-            case 9:
+            case 11:
               content = _context2.sent;
 
               if (!(content !== null && content !== void 0 && content.error)) {
@@ -181,11 +189,11 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 }));
               }
 
-              _context2.next = 16;
+              _context2.next = 18;
               break;
 
-            case 13:
-              _context2.prev = 13;
+            case 15:
+              _context2.prev = 15;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -195,12 +203,12 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 loading: false
               }));
 
-            case 16:
+            case 18:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[0, 15]]);
     }));
 
     return function createBrand() {
@@ -214,7 +222,7 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
 
   var updateBrand = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {
-      var requestOptions, response, content, _brands;
+      var changes, key, requestOptions, response, content, _brands;
 
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
@@ -225,23 +233,31 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 loading: true
               }));
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+
+              for (key in changes) {
+                if (_typeof(changes[key]) === 'object' && changes[key] !== null || Array.isArray(changes[key])) {
+                  changes[key] = JSON.stringify(changes[key]);
+                }
+              }
+
               requestOptions = {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState.changes)
+                body: JSON.stringify(changes)
               };
-              _context3.next = 6;
+              _context3.next = 8;
               return fetch("".concat(ordering.root, "/franchises/").concat(brand === null || brand === void 0 ? void 0 : brand.id), requestOptions);
 
-            case 6:
+            case 8:
               response = _context3.sent;
-              _context3.next = 9;
+              _context3.next = 11;
               return response.json();
 
-            case 9:
+            case 11:
               content = _context3.sent;
 
               if (!(content !== null && content !== void 0 && content.error)) {
@@ -271,11 +287,11 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 }));
               }
 
-              _context3.next = 16;
+              _context3.next = 18;
               break;
 
-            case 13:
-              _context3.prev = 13;
+            case 15:
+              _context3.prev = 15;
               _context3.t0 = _context3["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -285,12 +301,12 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 loading: false
               }));
 
-            case 16:
+            case 18:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 13]]);
+      }, _callee3, null, [[0, 15]]);
     }));
 
     return function updateBrand() {
@@ -338,6 +354,25 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
       changes: currentChanges
     }));
   };
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+
+
+  var handleChangeRibbon = function handleChangeRibbon(changes) {
+    var _formState$changes, _formState$changes2;
+
+    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes = formState.changes) !== null && _formState$changes !== void 0 && _formState$changes.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.ribbon), changes) : _objectSpread({}, changes);
+
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
+      ribbon: ribbonChanges
+    });
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -349,7 +384,8 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
     handleUpdateClick: handleUpdateClick,
     handleChangeInput: handleChangeInput,
     handlechangeImage: handlechangeImage,
-    handleChangeItem: handleChangeItem
+    handleChangeItem: handleChangeItem,
+    handleChangeRibbon: handleChangeRibbon
   })));
 };
 
