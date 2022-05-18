@@ -76,6 +76,21 @@ export const BusinessProductsCategoyDetails = (props) => {
   }
 
   /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeRibbon = (changes) => {
+    const ribbonChanges = formState?.changes?.ribbon
+      ? { ...formState?.changes?.ribbon, ...changes }
+      : { ...changes }
+    const currentChanges = { ...formState?.changes, ribbon: ribbonChanges }
+    setFormState({
+      ...formState,
+      changes: currentChanges
+    })
+  }
+
+  /**
  * Update business photo data
  * @param {File} file Image to change business photo
  */
@@ -328,6 +343,7 @@ export const BusinessProductsCategoyDetails = (props) => {
           handleChangeItem={handleChangeItem}
           handleUpdateClick={handleUpdateClick}
           handleDeleteCategory={handleDeleteCategory}
+          handleChangeRibbon={handleChangeRibbon}
         />
       )}
     </>
