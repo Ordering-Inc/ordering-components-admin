@@ -163,10 +163,15 @@ export const OrderDetails = (props) => {
   const handleUpdateOrderStatus = async (order) => {
     try {
       setActionStatus({ ...actionStatus, loading: true })
-      const requestsState = {}
-      const source = {}
-      requestsState.updateOrder = source
-      const { content } = await ordering.setAccessToken(token).orders(order?.id).save({ status: order.newStatus }, { cancelToken: source })
+      const response = await fetch(`${ordering.root}/orders/${order?.id}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: order.newStatus })
+      })
+      const content = await response.json()
       setActionStatus({
         loading: false,
         error: content.error ? content.result : null
@@ -242,7 +247,7 @@ export const OrderDetails = (props) => {
   useEffect(() => {
     if (orderState.loading || loading) return
     const handleUpdateOrder = (order) => {
-      if (order?.id !== orderState.order?.id) return
+      if (order?.id !== orderState?.order?.id) return
       delete order.total
       delete order.subtotal
       setOrderState({
