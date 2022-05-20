@@ -18,6 +18,7 @@ export const BusinessWalletsList = (props) => {
   const [, { showToast }] = useToast()
 
   const [walletsListState, setWalletsListState] = useState({ wallets: business?.configs || [], loading: false, error: null })
+  const [loyaltyPlanState, setLoyaltyPlanState] = useState({ loading: true, created: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   const getWalletsList = async () => {
@@ -44,6 +45,46 @@ export const BusinessWalletsList = (props) => {
     } catch (err) {
       setWalletsListState({
         ...walletsListState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
+  const getLoyaltyPlans = async () => {
+    try {
+      setLoyaltyPlanState({ ...loyaltyPlanState, loading: true })
+      const reqLoyalty = await fetch(
+        `${ordering.root}/loyalty_plans`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      const content = await reqLoyalty.json()
+      if (!content.error) {
+        const loyaltyPlan = content.result.find(plan => plan.type === 'credit_point')
+        if (loyaltyPlan) {
+          const found = loyaltyPlan.businesses.find(_buiness => _buiness.business_id === business.id)
+          setLoyaltyPlanState({
+            ...loyaltyPlanState,
+            loading: false,
+            created: !!found
+          })
+        }
+      } else {
+        setLoyaltyPlanState({
+          ...loyaltyPlanState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (err) {
+      setLoyaltyPlanState({
+        ...loyaltyPlanState,
         loading: false,
         error: [err.message]
       })
@@ -85,6 +126,7 @@ export const BusinessWalletsList = (props) => {
   }
 
   useEffect(() => {
+    getLoyaltyPlans()
     if (business?.configs) return
     getWalletsList()
   }, [business?.configs])
@@ -95,6 +137,7 @@ export const BusinessWalletsList = (props) => {
         UIComponent && (
           <UIComponent
             {...props}
+            loyaltyPlanState={loyaltyPlanState}
             walletsListState={walletsListState}
             actionState={actionState}
             handleUpdateWallet={handleUpdateWallet}
