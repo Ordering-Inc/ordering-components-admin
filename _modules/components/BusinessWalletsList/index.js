@@ -82,12 +82,21 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
       setWalletsListState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
-    loading: false,
+    loading: true,
+    created: false,
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionState = _useState4[0],
-      setActionState = _useState4[1];
+      loyaltyPlanState = _useState4[0],
+      setLoyaltyPlanState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      actionState = _useState6[0],
+      setActionState = _useState6[1];
 
   var getWalletsList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {
@@ -154,15 +163,88 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
     };
   }();
 
-  var handleUpdateWallet = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2(walletId, params) {
-      var requestOptions, response, content, _wallets;
-
+  var getLoyaltyPlans = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {
+      var reqLoyalty, content, loyaltyPlan, found;
       return _regenerator.default.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              setLoyaltyPlanState(_objectSpread(_objectSpread({}, loyaltyPlanState), {}, {
+                loading: true
+              }));
+              _context2.next = 4;
+              return fetch("".concat(ordering.root, "/loyalty_plans"), {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              });
+
+            case 4:
+              reqLoyalty = _context2.sent;
+              _context2.next = 7;
+              return reqLoyalty.json();
+
+            case 7:
+              content = _context2.sent;
+
+              if (!content.error) {
+                loyaltyPlan = content.result.find(function (plan) {
+                  return plan.type === 'credit_point';
+                });
+
+                if (loyaltyPlan) {
+                  found = loyaltyPlan.businesses.find(function (_buiness) {
+                    return _buiness.business_id === business.id;
+                  });
+                  setLoyaltyPlanState(_objectSpread(_objectSpread({}, loyaltyPlanState), {}, {
+                    loading: false,
+                    created: !!found
+                  }));
+                }
+              } else {
+                setLoyaltyPlanState(_objectSpread(_objectSpread({}, loyaltyPlanState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context2.next = 14;
+              break;
+
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](0);
+              setLoyaltyPlanState(_objectSpread(_objectSpread({}, loyaltyPlanState), {}, {
+                loading: false,
+                error: [_context2.t0.message]
+              }));
+
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 11]]);
+    }));
+
+    return function getLoyaltyPlans() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var handleUpdateWallet = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(walletId, params) {
+      var requestOptions, response, content, _wallets;
+
+      return _regenerator.default.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
@@ -175,16 +257,16 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
                 },
                 body: JSON.stringify(params)
               };
-              _context2.next = 6;
+              _context3.next = 6;
               return fetch("".concat(ordering.root, "/business/").concat(business.id, "/configs/").concat(walletId), requestOptions);
 
             case 6:
-              response = _context2.sent;
-              _context2.next = 9;
+              response = _context3.sent;
+              _context3.next = 9;
               return response.json();
 
             case 9:
-              content = _context2.sent;
+              content = _context3.sent;
 
               if (!content.error) {
                 setActionState({
@@ -211,35 +293,37 @@ var BusinessWalletsList = function BusinessWalletsList(props) {
                 });
               }
 
-              _context2.next = 16;
+              _context3.next = 16;
               break;
 
             case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](0);
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
               setActionState({
                 loading: false,
-                error: [_context2.t0.message]
+                error: [_context3.t0.message]
               });
 
             case 16:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee3, null, [[0, 13]]);
     }));
 
     return function handleUpdateWallet(_x, _x2) {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
+    getLoyaltyPlans();
     if (business !== null && business !== void 0 && business.configs) return;
     getWalletsList();
   }, [business === null || business === void 0 ? void 0 : business.configs]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    loyaltyPlanState: loyaltyPlanState,
     walletsListState: walletsListState,
     actionState: actionState,
     handleUpdateWallet: handleUpdateWallet
