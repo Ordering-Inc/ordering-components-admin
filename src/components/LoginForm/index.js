@@ -236,10 +236,10 @@ export const LoginForm = (props) => {
   }
 
   useEffect(() => {
-    setIsReCaptchaEnable(configs &&
+    setIsReCaptchaEnable(ordering?.project && configs &&
       Object.keys(configs).length > 0 &&
       configs?.security_recaptcha_auth?.value === '1')
-  }, [configs])
+  }, [configs, ordering?.project])
 
   return (
     <>
