@@ -281,7 +281,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
                       }
                     }
 
-                    var categoryKeyOptions = ['name', 'enabled', 'header', 'description', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description'];
+                    var categoryKeyOptions = ['name', 'enabled', 'header', 'description', 'ribbon', 'image', 'slug', 'seo_image', 'seo_title', 'seo_description'];
 
                     if ((category === null || category === void 0 ? void 0 : category.id) === (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.id) && category.parent_category_id === (content === null || content === void 0 ? void 0 : content.result.parent_category_id)) {
                       Object.keys(category).forEach(function (key) {
