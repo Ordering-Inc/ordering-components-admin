@@ -196,7 +196,7 @@ export const EnterprisePromotionDetails = (props) => {
         body: JSON.stringify(changes)
       }
 
-      const response = await fetch(`${ordering.root}/offers/${promotion.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/offers/${promotion.id ?? promotionState.promotion?.id}`, requestOptions)
       const content = await response.json()
 
       if (!content.error) {
@@ -254,8 +254,13 @@ export const EnterprisePromotionDetails = (props) => {
       const content = await response.json()
       if (!content.error) {
         setActionState({ error: null, loading: false })
+        setPromotionState({
+          ...promotionState,
+          promotion: content.result
+        })
         handleSuccessAddPromotion && handleSuccessAddPromotion(content.result)
         showToast(ToastType.Success, t('PROMOTION_ADDED', 'Promotion added'))
+        setIsAddMode(false)
         !notCloseAdd && props.onClose && props.onClose()
       } else {
         setActionState({
