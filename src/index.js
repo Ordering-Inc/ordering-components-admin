@@ -155,6 +155,7 @@ import { ProductOption } from './components/ProductOption'
 import { ProductOptionSuboption } from './components/ProductOptionSuboption'
 import { ProductsList } from './components/ProductsList'
 import { ProductsListing } from './components/ProductsListing'
+import { QueryLogin } from './components/QueryLogin'
 import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
 import { RecoveryActionListing } from './components/RecoveryActionListing'
@@ -378,6 +379,7 @@ export {
   ProductsList,
   ProductsListing,
   ReportsDriverFilter,
+  QueryLogin,
   ReCaptcha,
   RewardsPrograms,
   RecoveryActionListing,
