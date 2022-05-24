@@ -5,17 +5,17 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AdvancedReports = void 0;
+exports.QueryLogin = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _dayjs = _interopRequireDefault(require("dayjs"));
-
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _EventContext = require("../../contexts/EventContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -50,78 +50,48 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage Advance Reports page behavior without UI component
+ * Component to manage query login behavior without UI component
  */
-var AdvancedReports = function AdvancedReports(props) {
+var QueryLogin = function QueryLogin(props) {
   var UIComponent = props.UIComponent,
-      endpoint = props.endpoint,
-      endpoint1 = props.endpoint1;
+      token = props.token,
+      allowedLevels = props.allowedLevels;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
       ordering = _useApi2[0];
 
   var _useSession = (0, _SessionContext.useSession)(),
-      _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      token = _useSession2$.token,
-      loading = _useSession2$.loading;
+      _useSession2 = _slicedToArray(_useSession, 2),
+      login = _useSession2[1].login;
+
+  var _useEvent = (0, _EventContext.useEvent)(),
+      _useEvent2 = _slicedToArray(_useEvent, 1),
+      events = _useEvent2[0];
 
   var _useState = (0, _react.useState)({
-    content: [],
-    loading: false,
+    loading: true,
+    user: {},
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      businessDistanceList = _useState2[0],
-      setBusinessDistanceList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)({
-    content: [],
-    loading: false,
-    error: null
-  }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      businessDistanceList1 = _useState4[0],
-      setBusinessDistanceList1 = _useState4[1];
-
-  var _useState5 = (0, _react.useState)({
-    from: '',
-    to: '',
-    businessIds: null,
-    drivers_ids: null,
-    franchises_id: null,
-    driver_companies_ids: null,
-    driver_groups_ids: null,
-    delivery_types_ids: null,
-    app_ids: null
-  }),
-      _useState6 = _slicedToArray(_useState5, 2),
-      filterList = _useState6[0],
-      setFilterList = _useState6[1];
+      userState = _useState2[0],
+      setUserState = _useState2[1];
   /**
-   * Function to get Business distance list from API
+   * Method to get the user from token
    */
 
 
-  var getBusinessDistanceList = /*#__PURE__*/function () {
+  var handleGetUser = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, params, functionFetch, response, _yield$response$json, error, result;
+      var requestOptions, response, _yield$response$json, error, result;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              if (!loading) {
-                _context.next = 2;
-                break;
-              }
-
-              return _context.abrupt("return");
-
-            case 2:
-              _context.prev = 2;
-              setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
+              _context.prev = 0;
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -131,209 +101,114 @@ var AdvancedReports = function AdvancedReports(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              params = '';
-              if ((filterList === null || filterList === void 0 ? void 0 : filterList.from) !== '' && (filterList === null || filterList === void 0 ? void 0 : filterList.to) !== '') params = "from=".concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.from).format('YYYY-MM-DD'), " 00:00:00&to=").concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.to).format('YYYY-MM-DD'), " 23:59:59");
-              if (filterList !== null && filterList !== void 0 && filterList.businessIds && (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.length) > 0) params = "".concat(params, "&businesses_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds));
-              if (filterList !== null && filterList !== void 0 && filterList.drivers_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&drivers_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.franchises_id && (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.length) > 0) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
-              if (filterList !== null && filterList !== void 0 && filterList.driver_companies_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.driver_groups_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids.length) > 0) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.delivery_types_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids.length) > 0) params = "".concat(params, "&delivery_types_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.app_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.app_ids.length) > 0) params = "".concat(params, "&app_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.app_ids));
-              functionFetch = "".concat(ordering.root, "/reports/").concat(endpoint, "?").concat(params);
-              _context.next = 17;
-              return fetch(functionFetch, requestOptions);
+              _context.next = 5;
+              return fetch("".concat(ordering.root, "/users/me"), requestOptions);
 
-            case 17:
+            case 5:
               response = _context.sent;
-              _context.next = 20;
+              _context.next = 8;
               return response.json();
 
-            case 20:
+            case 8:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
               if (!error) {
-                setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
-                  loading: false,
-                  content: result
-                }));
+                if (allowedLevels.includes(result.level)) {
+                  login({
+                    user: result,
+                    token: token,
+                    project: ordering === null || ordering === void 0 ? void 0 : ordering.project
+                  });
+                } else {
+                  handleGoToLogin();
+                }
               } else {
-                setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
+                setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                   loading: false,
                   error: result
                 }));
+                handleGoToLogin();
               }
 
-              _context.next = 29;
+              _context.next = 18;
               break;
 
-            case 26:
-              _context.prev = 26;
-              _context.t0 = _context["catch"](2);
-              setBusinessDistanceList(_objectSpread(_objectSpread({}, businessDistanceList), {}, {
+            case 14:
+              _context.prev = 14;
+              _context.t0 = _context["catch"](0);
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: false,
-                error: _context.t0
+                error: [_context.t0.message]
               }));
+              handleGoToLogin();
 
-            case 29:
+            case 18:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 26]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
-    return function getBusinessDistanceList() {
+    return function handleGetUser() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Function to get Business report data list from API
+   * Method to redirect login page
    */
 
 
-  var getReportsData = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var requestOptions, params, functionFetch, response, _yield$response$json2, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              if (!loading) {
-                _context2.next = 2;
-                break;
-              }
-
-              return _context2.abrupt("return");
-
-            case 2:
-              _context2.prev = 2;
-              setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              params = '';
-              if ((filterList === null || filterList === void 0 ? void 0 : filterList.from) !== '' && (filterList === null || filterList === void 0 ? void 0 : filterList.to) !== '') params = "from=".concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.from).format('YYYY-MM-DD'), " 00:00:00&to=").concat((0, _dayjs.default)(filterList === null || filterList === void 0 ? void 0 : filterList.to).format('YYYY-MM-DD'), " 23:59:59");
-              if (filterList !== null && filterList !== void 0 && filterList.businessIds && (filterList === null || filterList === void 0 ? void 0 : filterList.businessIds.length) > 0) params = "".concat(params, "&businesses_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.businessIds));
-              if (filterList !== null && filterList !== void 0 && filterList.drivers_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids.length) > 0) params = "".concat(params, "&drivers_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.drivers_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.franchises_id && (filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id.length) > 0) params = "".concat(params, "&franchises_id=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.franchises_id));
-              if (filterList !== null && filterList !== void 0 && filterList.driver_companies_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids.length) > 0) params = "".concat(params, "&driver_companies_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_companies_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.driver_groups_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids.length) > 0) params = "".concat(params, "&driver_groups_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.driver_groups_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.delivery_types_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids.length) > 0) params = "".concat(params, "&delivery_types_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.delivery_types_ids));
-              if (filterList !== null && filterList !== void 0 && filterList.app_ids && (filterList === null || filterList === void 0 ? void 0 : filterList.app_ids.length) > 0) params = "".concat(params, "&app_ids=").concat(JSON.stringify(filterList === null || filterList === void 0 ? void 0 : filterList.app_ids));
-              functionFetch = "".concat(ordering.root, "/reports/").concat(endpoint1, "?").concat(params);
-              _context2.next = 17;
-              return fetch(functionFetch, requestOptions);
-
-            case 17:
-              response = _context2.sent;
-              _context2.next = 20;
-              return response.json();
-
-            case 20:
-              _yield$response$json2 = _context2.sent;
-              error = _yield$response$json2.error;
-              result = _yield$response$json2.result;
-
-              if (!error) {
-                setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
-                  loading: false,
-                  content: result
-                }));
-              } else {
-                setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
-                  loading: false,
-                  error: result
-                }));
-              }
-
-              _context2.next = 29;
-              break;
-
-            case 26:
-              _context2.prev = 26;
-              _context2.t0 = _context2["catch"](2);
-              setBusinessDistanceList1(_objectSpread(_objectSpread({}, businessDistanceList1), {}, {
-                loading: false,
-                error: _context2.t0
-              }));
-
-            case 29:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[2, 26]]);
-    }));
-
-    return function getReportsData() {
-      return _ref2.apply(this, arguments);
-    };
-  }();
+  var handleGoToLogin = function handleGoToLogin() {
+    events.emit('go_to_page', {
+      page: 'login'
+    });
+  };
 
   (0, _react.useEffect)(function () {
-    getBusinessDistanceList();
-    if (endpoint1) getReportsData();
-  }, [filterList]);
+    if (ordering !== null && ordering !== void 0 && ordering.project) {
+      handleGetUser();
+    }
+  }, [ordering === null || ordering === void 0 ? void 0 : ordering.project]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    filterList: filterList,
-    handleChangeFilterList: setFilterList,
-    reportData: businessDistanceList,
-    reportData1: businessDistanceList1
+    userState: userState
   })));
 };
 
-exports.AdvancedReports = AdvancedReports;
-AdvancedReports.propTypes = {
+exports.QueryLogin = QueryLogin;
+QueryLogin.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * String to send API request
-   */
-  endpoint: _propTypes.default.string,
-
-  /**
-   * String to send API request
-   */
-  endpoint1: _propTypes.default.string,
-
-  /**
-   * Components types before Checkout
+   * Components types before login
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after Checkout
+   * Components types after login
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before Checkout
+   * Elements before login
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after Checkout
+   * Elements after login
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-AdvancedReports.defaultProps = {
+QueryLogin.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
