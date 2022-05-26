@@ -465,12 +465,6 @@ Object.defineProperty(exports, "CustomerContext", {
     return _CustomerContext.CustomerContext;
   }
 });
-Object.defineProperty(exports, "CustomerPointsWallet", {
-  enumerable: true,
-  get: function get() {
-    return _CustomerPointsWallet.CustomerPointsWallet;
-  }
-});
 Object.defineProperty(exports, "CustomerProvider", {
   enumerable: true,
   get: function get() {
@@ -1317,12 +1311,6 @@ Object.defineProperty(exports, "UpsellingPage", {
     return _UpsellingPage.UpsellingPage;
   }
 });
-Object.defineProperty(exports, "UserCashWallet", {
-  enumerable: true,
-  get: function get() {
-    return _UserCashWallet.UserCashWallet;
-  }
-});
 Object.defineProperty(exports, "UserDetails", {
   enumerable: true,
   get: function get() {
@@ -1351,6 +1339,12 @@ Object.defineProperty(exports, "UserTypeFilter", {
   enumerable: true,
   get: function get() {
     return _UserTypeFilter.UserTypeFilter;
+  }
+});
+Object.defineProperty(exports, "UserWallet", {
+  enumerable: true,
+  get: function get() {
+    return _UserWallet.UserWallet;
   }
 });
 Object.defineProperty(exports, "UsersExportCSV", {
@@ -1619,8 +1613,6 @@ var _CheckPassword = require("./components/CheckPassword");
 var _CityList = require("./components/CityList");
 
 var _CouponControl = require("./components/CouponControl");
-
-var _CustomerPointsWallet = require("./components/CustomerPointsWallet");
 
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
@@ -1912,8 +1904,6 @@ var _SitesList = require("./components/SitesList");
 
 var _Analitycs = require("./components/Analitycs");
 
-var _UserCashWallet = require("./components/UserCashWallet");
-
 var _UsersList = require("./components/UsersList");
 
 var _UserMetaFields = require("./components/UserMetaFields");
@@ -1921,5 +1911,7 @@ var _UserMetaFields = require("./components/UserMetaFields");
 var _UserTypeFilter = require("./components/UserTypeFilter");
 
 var _UserDetails = require("./components/UserDetails");
+
+var _UserWallet = require("./components/UserWallet");
 
 var _WebhookList = require("./components/WebhookList");

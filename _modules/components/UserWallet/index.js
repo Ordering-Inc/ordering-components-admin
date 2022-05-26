@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.CustomerPointsWallet = void 0;
+exports.UserWallet = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -14,6 +14,10 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 var _SessionContext = require("../../contexts/SessionContext");
 
 var _ApiContext = require("../../contexts/ApiContext");
+
+var _ToastContext = require("../../contexts/ToastContext");
+
+var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -47,9 +51,12 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var CustomerPointsWallet = function CustomerPointsWallet(props) {
+var UserWallet = function UserWallet(props) {
+  var _walletState$wallet6, _walletState$wallet7;
+
   var UIComponent = props.UIComponent,
-      userId = props.userId;
+      userId = props.userId,
+      walletType = props.walletType;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -59,16 +66,60 @@ var CustomerPointsWallet = function CustomerPointsWallet(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
 
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
   var _useState = (0, _react.useState)({
     loading: false,
-    wallets: [],
+    wallet: {},
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      WalletState = _useState2[0],
+      walletState = _useState2[0],
       setWalletState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
+    loading: false,
+    events: [],
+    error: null
+  }),
+      _useState4 = _slicedToArray(_useState3, 2),
+      walletEventsState = _useState4[0],
+      setWalletEventsState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    users: [],
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      usersState = _useState6[0],
+      setUsersState = _useState6[1];
+
+  var _useState7 = (0, _react.useState)({}),
+      _useState8 = _slicedToArray(_useState7, 2),
+      addWalletState = _useState8[0],
+      setAddWalletState = _useState8[1];
+
+  var _useState9 = (0, _react.useState)({}),
+      _useState10 = _slicedToArray(_useState9, 2),
+      reduceWalletState = _useState10[0],
+      setReduceWalletState = _useState10[1];
+
+  var _useState11 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState12 = _slicedToArray(_useState11, 2),
+      actionState = _useState12[0],
+      setActionState = _useState12[1];
   /**
-   * Method to get user cash wallet info from API
+   * Method to get user wallet info from API
    */
 
 
@@ -80,7 +131,7 @@ var CustomerPointsWallet = function CustomerPointsWallet(props) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setWalletState(_objectSpread(_objectSpread({}, WalletState), {}, {
+              setWalletState(_objectSpread(_objectSpread({}, walletState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -104,11 +155,13 @@ var CustomerPointsWallet = function CustomerPointsWallet(props) {
               if (!content.error) {
                 setWalletState({
                   loading: false,
-                  wallets: content.result,
+                  wallet: content.result.find(function (wallet) {
+                    return wallet.type === walletType;
+                  }) || {},
                   error: null
                 });
               } else {
-                setWalletState(_objectSpread(_objectSpread({}, WalletState), {}, {
+                setWalletState(_objectSpread(_objectSpread({}, walletState), {}, {
                   loading: false,
                   error: content.result
                 }));
@@ -120,7 +173,7 @@ var CustomerPointsWallet = function CustomerPointsWallet(props) {
             case 12:
               _context.prev = 12;
               _context.t0 = _context["catch"](0);
-              setWalletState(_objectSpread(_objectSpread({}, WalletState), {}, {
+              setWalletState(_objectSpread(_objectSpread({}, walletState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
@@ -137,17 +190,391 @@ var CustomerPointsWallet = function CustomerPointsWallet(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Method to get user wallet events from API
+   */
 
+
+  var getUserWalletHistory = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(walletId) {
+      var requestOptions, response, content;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setWalletEventsState(_objectSpread(_objectSpread({}, walletEventsState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/users/").concat(userId, "/wallets/").concat(walletId, "/events?orderBy=-id"), requestOptions);
+
+            case 5:
+              response = _context2.sent;
+              _context2.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context2.sent;
+
+              if (!content.error) {
+                setWalletEventsState({
+                  loading: false,
+                  events: content.result,
+                  error: null
+                });
+              } else {
+                setWalletEventsState(_objectSpread(_objectSpread({}, walletEventsState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context2.next = 15;
+              break;
+
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
+              setWalletEventsState(_objectSpread(_objectSpread({}, walletEventsState), {}, {
+                loading: false,
+                error: [_context2.t0.message]
+              }));
+
+            case 15:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 12]]);
+    }));
+
+    return function getUserWalletHistory(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var getUsers = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var _yield$ordering$setAc, _yield$ordering$setAc2, result, error;
+
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setUsersState(_objectSpread({
+                loading: true
+              }, usersState));
+              _context3.next = 4;
+              return ordering.setAccessToken(token).users().select(['name', 'lastname']).get();
+
+            case 4:
+              _yield$ordering$setAc = _context3.sent;
+              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
+              result = _yield$ordering$setAc2.result;
+              error = _yield$ordering$setAc2.error;
+
+              if (!error) {
+                setUsersState({
+                  loading: false,
+                  users: result,
+                  error: null
+                });
+              } else {
+                setUsersState(_objectSpread(_objectSpread({}, usersState), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context3.next = 14;
+              break;
+
+            case 11:
+              _context3.prev = 11;
+              _context3.t0 = _context3["catch"](0);
+              setUsersState(_objectSpread(_objectSpread({}, usersState), {}, {
+                loading: false,
+                error: [_context3.t0.message]
+              }));
+
+            case 14:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 11]]);
+    }));
+
+    return function getUsers() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to add wallet money from API
+   */
+
+
+  var handleAddWalletMoney = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var _walletState$wallet, requestOptions, response, content, _walletState$wallet2;
+
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              _context4.prev = 0;
+              setActionState({
+                loading: true,
+                error: null
+              });
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(addWalletState)
+              };
+              _context4.next = 6;
+              return fetch("".concat(ordering.root, "/users/").concat(userId, "/wallets/").concat((_walletState$wallet = walletState.wallet) === null || _walletState$wallet === void 0 ? void 0 : _walletState$wallet.id, "/events"), requestOptions);
+
+            case 6:
+              response = _context4.sent;
+              _context4.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context4.sent;
+
+              if (!content.error) {
+                setWalletState(_objectSpread(_objectSpread({}, walletState), {}, {
+                  wallet: _objectSpread(_objectSpread({}, walletState.wallet), {}, {
+                    balance: ((_walletState$wallet2 = walletState.wallet) === null || _walletState$wallet2 === void 0 ? void 0 : _walletState$wallet2.balance) + content.result.amount
+                  })
+                }));
+                setAddWalletState({});
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                showToast(_ToastContext.ToastType.Success, t('WALLET_MONEY_ADDED', 'Wallet money added'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context4.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleAddWalletMoney() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to add wallet money from API
+   */
+
+
+  var handleReduceWalletMoney = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var _walletState$wallet3, params, requestOptions, response, content, _walletState$wallet4;
+
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setActionState({
+                loading: true,
+                error: null
+              });
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              params = _objectSpread({}, reduceWalletState);
+              params.amount = '-' + reduceWalletState.amount;
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(params)
+              };
+              _context5.next = 8;
+              return fetch("".concat(ordering.root, "/users/").concat(userId, "/wallets/").concat((_walletState$wallet3 = walletState.wallet) === null || _walletState$wallet3 === void 0 ? void 0 : _walletState$wallet3.id, "/events"), requestOptions);
+
+            case 8:
+              response = _context5.sent;
+              _context5.next = 11;
+              return response.json();
+
+            case 11:
+              content = _context5.sent;
+
+              if (!content.error) {
+                setWalletState(_objectSpread(_objectSpread({}, walletState), {}, {
+                  wallet: _objectSpread(_objectSpread({}, walletState.wallet), {}, {
+                    balance: ((_walletState$wallet4 = walletState.wallet) === null || _walletState$wallet4 === void 0 ? void 0 : _walletState$wallet4.balance) + content.result.amount
+                  })
+                }));
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                setReduceWalletState({});
+                showToast(_ToastContext.ToastType.Success, t('WALLET_MONEY_REDUCED', 'Wallet money reduced'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
+              }
+
+              _context5.next = 18;
+              break;
+
+            case 15:
+              _context5.prev = 15;
+              _context5.t0 = _context5["catch"](0);
+              setActionState({
+                loading: false,
+                error: [_context5.t0.message]
+              });
+
+            case 18:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 15]]);
+    }));
+
+    return function handleReduceWalletMoney() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   * Update credential data
+   * @param {EventTarget} e Related HTML event
+   * @param {Boolean} isAddMoney variable to check if the add mode is or not
+   */
+
+
+  var handleChangeInput = function handleChangeInput(e, isAddMoney) {
+    if (isAddMoney) {
+      setAddWalletState(_objectSpread(_objectSpread({}, addWalletState), {}, _defineProperty({}, e.target.name, e.target.value)));
+    } else {
+      setReduceWalletState(_objectSpread(_objectSpread({}, reduceWalletState), {}, _defineProperty({}, e.target.name, e.target.value)));
+    }
+  };
+  /**
+   * Method to parse the transaction event
+   */
+
+
+  var parseEvent = function parseEvent(event) {
+    var eventLog = '';
+    var author = '';
+    var findUser = usersState.users.find(function (user) {
+      return user.id === event.author_id;
+    });
+
+    if (findUser) {
+      author = "".concat(findUser === null || findUser === void 0 ? void 0 : findUser.name, " ").concat(findUser === null || findUser === void 0 ? void 0 : findUser.lastname);
+    } else {
+      author = "".concat(event.author_id);
+    }
+
+    if (event.event_type === 'manual') {
+      switch (event.event) {
+        case 'movement':
+          if (Math.sign(event.amount) === -1) {
+            eventLog = t('TRANSACTION_REDUCE_MONEY', '<strong>_user_</strong> reduce money').replace('_user_', "".concat(author));
+          } else {
+            eventLog = t('TRANSACTION_ADD_MONEY', '<strong>_user_</strong> add money').replace('_user_', "".concat(author));
+          }
+
+          break;
+
+        case 'locked':
+          eventLog = t('TRANSACTION_LOCKED', '<strong>_user_</strong> locked').replace('_user_', "".concat(author));
+          break;
+
+        case 'unlocked':
+          eventLog = t('TRANSACTION_UNLOCKED', '<strong>_user_</strong> unlocked').replace('_user_', "".concat(author));
+          break;
+
+        default:
+          eventLog = event.event;
+          break;
+      }
+    }
+
+    if (event.event_type === 'refund') {
+      eventLog = t('REFUND_MONEY', 'Refund money');
+    }
+
+    if (event.event_type === 'payment') {
+      eventLog = t('PAID_MONEY', 'Paid money');
+    }
+
+    return eventLog;
+  };
+
+  (0, _react.useEffect)(function () {
+    var _walletState$wallet5;
+
+    if (!((_walletState$wallet5 = walletState.wallet) !== null && _walletState$wallet5 !== void 0 && _walletState$wallet5.id)) return;
+    getUserWalletHistory(walletState.wallet.id);
+  }, [(_walletState$wallet6 = walletState.wallet) === null || _walletState$wallet6 === void 0 ? void 0 : _walletState$wallet6.id, (_walletState$wallet7 = walletState.wallet) === null || _walletState$wallet7 === void 0 ? void 0 : _walletState$wallet7.balance]);
   (0, _react.useEffect)(function () {
     getUserWallet();
   }, [userId]);
+  (0, _react.useEffect)(function () {
+    getUsers();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    WalletState: WalletState
+    walletState: walletState,
+    walletEventsState: walletEventsState,
+    addWalletState: addWalletState,
+    reduceWalletState: reduceWalletState,
+    actionState: actionState,
+    handleChangeInput: handleChangeInput,
+    handleAddWalletMoney: handleAddWalletMoney,
+    handleReduceWalletMoney: handleReduceWalletMoney,
+    parseEvent: parseEvent
   })));
 };
 
-exports.CustomerPointsWallet = CustomerPointsWallet;
-CustomerPointsWallet.propTypes = {
+exports.UserWallet = UserWallet;
+UserWallet.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -182,7 +609,7 @@ CustomerPointsWallet.propTypes = {
     */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-CustomerPointsWallet.defaultProps = {
+UserWallet.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
