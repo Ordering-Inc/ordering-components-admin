@@ -65,7 +65,6 @@ import { CheckoutFieldsSetting } from './components/CheckoutFieldsSetting'
 import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CouponControl } from './components/CouponControl'
-import { CustomerPointsWallet } from './components/CustomerPointsWallet'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -211,11 +210,11 @@ import { ReportsDriverGroupFilter } from './components/ReportsDriverGroupFilter'
 import { SiteDetails } from './components/SiteDetails'
 import { SitesList } from './components/SitesList'
 import { Analytics } from './components/Analitycs'
-import { UserCashWallet } from './components/UserCashWallet'
 import { UsersList } from './components/UsersList'
 import { UserMetaFields } from './components/UserMetaFields'
 import { UserTypeFilter } from './components/UserTypeFilter'
 import { UserDetails } from './components/UserDetails'
+import { UserWallet } from './components/UserWallet'
 import { WebhookList } from './components/WebhookList'
 
 export {
@@ -286,7 +285,6 @@ export {
   CheckPassword,
   CityList,
   CouponControl,
-  CustomerPointsWallet,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
@@ -421,11 +419,11 @@ export {
   SiteDetails,
   SitesList,
   Analytics,
-  UserCashWallet,
   UsersList,
   UserTypeFilter,
   UserDetails,
   UserMetaFields,
+  UserWallet,
   WebhookList,
 
   // Contexts
