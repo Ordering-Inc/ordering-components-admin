@@ -155,6 +155,9 @@ import { ProductOption } from './components/ProductOption'
 import { ProductOptionSuboption } from './components/ProductOptionSuboption'
 import { ProductsList } from './components/ProductsList'
 import { ProductsListing } from './components/ProductsListing'
+import { ProfessionalBusinessService } from './components/ProfessionalBusinessService'
+import { ProfessionalSchedule } from './components/ProfessionalSchedule'
+import { ProfessionalServices } from './components/ProfessionalServices'
 import { QueryLogin } from './components/QueryLogin'
 import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
@@ -378,6 +381,9 @@ export {
   ProductReviews,
   ProductsList,
   ProductsListing,
+  ProfessionalBusinessService,
+  ProfessionalSchedule,
+  ProfessionalServices,
   ReportsDriverFilter,
   QueryLogin,
   ReCaptcha,
