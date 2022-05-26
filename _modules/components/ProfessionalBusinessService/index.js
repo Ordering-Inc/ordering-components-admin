@@ -312,7 +312,7 @@ var ProfessionalBusinessService = function ProfessionalBusinessService(props) {
 
   (0, _react.useEffect)(function () {
     getUserProducts();
-  }, []);
+  }, [user === null || user === void 0 ? void 0 : user.id]);
   (0, _react.useEffect)(function () {
     getBusinessList();
   }, [searchValue]);

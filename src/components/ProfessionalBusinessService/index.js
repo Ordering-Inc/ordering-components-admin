@@ -163,7 +163,7 @@ export const ProfessionalBusinessService = (props) => {
 
   useEffect(() => {
     getUserProducts()
-  }, [])
+  }, [user?.id])
 
   useEffect(() => {
     getBusinessList()
