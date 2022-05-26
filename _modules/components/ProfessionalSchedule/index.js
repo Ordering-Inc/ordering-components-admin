@@ -113,7 +113,7 @@ var ProfessionalSchedule = function ProfessionalSchedule(props) {
               }));
 
               if (!response.content.error) {
-                showToast(_ToastContext.ToastType.Success, t('USER_UPDATED', 'User updated'));
+                showToast(_ToastContext.ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'));
 
                 if (handleSuccessUpdate) {
                   handleSuccessUpdate(response.content.result);

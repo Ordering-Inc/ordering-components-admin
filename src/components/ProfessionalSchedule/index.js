@@ -38,7 +38,7 @@ export const ProfessionalSchedule = (props) => {
       })
 
       if (!response.content.error) {
-        showToast(ToastType.Success, t('USER_UPDATED', 'User updated'))
+        showToast(ToastType.Success, t('SCHEDULE_UPDATED', 'Schedule updated'))
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
         }
