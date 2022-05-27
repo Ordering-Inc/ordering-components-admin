@@ -5,19 +5,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessFormDetails = void 0;
+exports.ProfessionalBusinessService = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireDefault(require("prop-types"));
-
-var _SessionContext = require("../../contexts/SessionContext");
+var _propTypes = _interopRequireWildcard(require("prop-types"));
 
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _ConfigContext = require("../../contexts/ConfigContext");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+var _SessionContext = require("../../contexts/SessionContext");
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -37,6 +33,14 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -50,16 +54,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
- * Component to manage business form details behavior without UI component
+ * Component to manage ProfessionalBusinessService behavior without UI component
  */
-var BusinessFormDetails = function BusinessFormDetails(props) {
-  var _configs$google_maps_, _session$user;
-
+var ProfessionalBusinessService = function ProfessionalBusinessService(props) {
   var UIComponent = props.UIComponent,
-      business = props.business,
-      handleSuccessUpdate = props.handleSuccessUpdate,
-      handleSucessAddBusiness = props.handleSucessAddBusiness,
-      handleUpdateBusinessState = props.handleUpdateBusinessState;
+      propsToFetch = props.propsToFetch,
+      isSearchByName = props.isSearchByName,
+      user = props.user;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -67,515 +68,321 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      session = _useSession2[0];
+      token = _useSession2[0].token;
 
-  var _useConfig = (0, _ConfigContext.useConfig)(),
-      _useConfig2 = _slicedToArray(_useConfig, 1),
-      configs = _useConfig2[0].configs;
-
-  var _useState = (0, _react.useState)({
-    loading: false,
-    business: null,
-    error: null
-  }),
+  var _useState = (0, _react.useState)(null),
       _useState2 = _slicedToArray(_useState, 2),
-      businessState = _useState2[0],
-      setBusinessState = _useState2[1];
+      searchValue = _useState2[0],
+      setSearchValue = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
     loading: false,
-    changes: {},
+    businesses: [],
     result: {
-      error: false
+      error: null
     }
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      formState = _useState4[0],
-      setFormState = _useState4[1];
+      businessList = _useState4[0],
+      setBusinessList = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(null),
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    services: [],
+    result: {
+      error: null
+    }
+  }),
       _useState6 = _slicedToArray(_useState5, 2),
-      addressChange = _useState6[0],
-      setAddressChange = _useState6[1];
+      userServiceList = _useState6[0],
+      setUserServiceList = _useState6[1];
 
-  var timeout = null;
-  var googleMapsApiKey = configs === null || configs === void 0 ? void 0 : (_configs$google_maps_ = configs.google_maps_api_key) === null || _configs$google_maps_ === void 0 ? void 0 : _configs$google_maps_.value;
+  var _useState7 = (0, _react.useState)(),
+      _useState8 = _slicedToArray(_useState7, 2),
+      businessIds = _useState8[0],
+      setBusinessIds = _useState8[1];
+
+  var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
-   * Clean formState
+   * Change businessIds for checkbox
+   * @param {number} businessId business id
    */
 
-  var cleanFormState = function cleanFormState(values) {
-    return setFormState(_objectSpread(_objectSpread({}, formState), values));
+  var handleChangeCheckBox = function handleChangeCheckBox(businessId) {
+    var _businessIds = [];
+
+    if (businessIds !== null && businessIds !== void 0 && businessIds.includes(businessId)) {
+      _businessIds = businessIds.filter(function (id) {
+        return id !== businessId;
+      });
+    } else {
+      _businessIds = businessIds ? [].concat(_toConsumableArray(businessIds), [businessId]) : [businessId];
+    }
+
+    setBusinessIds(_businessIds);
   };
   /**
-   * deafult params to add the business newly
+   * Update businessIds
+   * @param {Array} ids arrary of business id
    */
 
 
-  var defaultAddBusinessParams = {
-    minimum: 0,
-    delivery_price: 0,
-    tax: 0,
-    tax_type: 1,
-    service_fee: 0,
-    enabled: true,
-    owner_id: session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id,
-    schedule: [{
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }, {
-      enabled: true,
-      lapses: [{
-        open: {
-          hour: 0,
-          minute: 0
-        },
-        close: {
-          hour: 23,
-          minute: 59
-        }
-      }]
-    }]
+  var handleUpdateBusinessIds = function handleUpdateBusinessIds(ids) {
+    setBusinessIds(ids);
   };
   /**
-   * Default fuction for business profile workflow
+   * Update services
+   * @param {Array} services arrary of service
    */
 
-  var handleUpdateClick = /*#__PURE__*/function () {
+
+  var handleUpdateServices = function handleUpdateServices(services) {
+    setUserServiceList(_objectSpread(_objectSpread({}, userServiceList), {}, {
+      services: services
+    }));
+  };
+  /**
+   * Method to get business list from API
+   */
+
+
+  var getBusinessList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var response;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination;
+
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).save(formState.changes, {
-                accessToken: session.token
-              });
+              where = null;
+              conditions = [];
 
-            case 4:
-              response = _context.sent;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: response.content.error ? formState.changes : {},
-                result: response.content,
-                loading: false
-              }));
+              if (searchValue) {
+                searchConditions = [];
+                isSpecialCharacter = rex.test(searchValue);
 
-              if (!response.content.error) {
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
-                }));
-
-                if (handleSuccessUpdate) {
-                  handleSuccessUpdate(response.content.result);
+                if (isSearchByName) {
+                  searchConditions.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: !isSpecialCharacter ? "%".concat(searchValue, "%") : encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
                 }
 
-                if (handleUpdateBusinessState) {
-                  handleUpdateBusinessState(response.content.result);
-                }
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
               }
 
-              _context.next = 12;
-              break;
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
+              fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
+              _context.next = 9;
+              return fetchEndpoint.get();
 
             case 9:
-              _context.prev = 9;
+              _yield$fetchEndpoint$ = _context.sent;
+              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
+              error = _yield$fetchEndpoint$2.error;
+              result = _yield$fetchEndpoint$2.result;
+              pagination = _yield$fetchEndpoint$2.pagination;
+
+              if (!error) {
+                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                  loading: false,
+                  businesses: result,
+                  pagination: pagination
+                }));
+              } else {
+                setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context.next = 20;
+              break;
+
+            case 17:
+              _context.prev = 17;
               _context.t0 = _context["catch"](0);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context.t0.message
-                },
-                loading: false
+              setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
+                loading: false,
+                error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 12:
+            case 20:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 9]]);
+      }, _callee, null, [[0, 17]]);
     }));
 
-    return function handleUpdateClick() {
+    return function getBusinessList() {
       return _ref.apply(this, arguments);
     };
-  }();
-  /**
-   * Method to add the business
-   */
+  }(); // Method to get service list from API
 
 
-  var handleAddBusiness = /*#__PURE__*/function () {
+  var getUserProducts = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var changes, response;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination;
+
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+              setUserServiceList(_objectSpread(_objectSpread({}, userServiceList), {}, {
                 loading: true
               }));
-              changes = _objectSpread(_objectSpread({}, formState.changes), defaultAddBusinessParams);
-              _context2.next = 5;
-              return ordering.businesses().save(changes, {
-                accessToken: session.token
-              });
-
-            case 5:
-              response = _context2.sent;
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                changes: response.content.error ? formState.changes : {},
-                result: response.content,
-                loading: false
-              }));
-
-              if (!response.content.error) {
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
-                }));
-
-                if (handleSucessAddBusiness) {
-                  handleSucessAddBusiness(response.content.result);
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
                 }
+              };
+              functionFetch = "".concat(ordering.root, "/users/").concat(user === null || user === void 0 ? void 0 : user.id, "/products");
+              _context2.next = 6;
+              return fetch(functionFetch, requestOptions);
+
+            case 6:
+              response = _context2.sent;
+              _context2.next = 9;
+              return response.json();
+
+            case 9:
+              _yield$response$json = _context2.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+              pagination = _yield$response$json.pagination;
+
+              if (!error) {
+                setUserServiceList(_objectSpread(_objectSpread({}, userServiceList), {}, {
+                  loading: false,
+                  services: result,
+                  pagination: pagination
+                }));
+              } else {
+                setUserServiceList(_objectSpread(_objectSpread({}, userServiceList), {}, {
+                  loading: false,
+                  error: result
+                }));
               }
 
-              _context2.next = 13;
+              _context2.next = 19;
               break;
 
-            case 10:
-              _context2.prev = 10;
+            case 16:
+              _context2.prev = 16;
               _context2.t0 = _context2["catch"](0);
-              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-                result: {
-                  error: true,
-                  result: _context2.t0.message
-                },
-                loading: false
+              setUserServiceList(_objectSpread(_objectSpread({}, userServiceList), {}, {
+                loading: false,
+                error: [_context2.t0 || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.toString()) || (_context2.t0 === null || _context2.t0 === void 0 ? void 0 : _context2.t0.message)]
               }));
 
-            case 13:
+            case 19:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 10]]);
+      }, _callee2, null, [[0, 16]]);
     }));
 
-    return function handleAddBusiness() {
+    return function getUserProducts() {
       return _ref2.apply(this, arguments);
     };
   }();
-  /**
-   * Update credential data
-   * @param {EventTarget} e Related HTML event
-   */
 
+  (0, _react.useEffect)(function () {
+    getUserProducts();
+  }, [user === null || user === void 0 ? void 0 : user.id]);
+  (0, _react.useEffect)(function () {
+    getBusinessList();
+  }, [searchValue]);
+  (0, _react.useEffect)(function () {
+    var _businessList$busines, _userServiceList$serv;
 
-  var handleChangeInput = function handleChangeInput(e, isMany) {
-    var currentChanges = {};
+    if (businessIds !== undefined) return;
 
-    if (isMany) {
-      Object.values(e).map(function (obj) {
-        currentChanges = _objectSpread(_objectSpread({}, currentChanges), {}, _defineProperty({}, obj.name, obj.value));
+    if ((businessList === null || businessList === void 0 ? void 0 : (_businessList$busines = businessList.businesses) === null || _businessList$busines === void 0 ? void 0 : _businessList$busines.length) > 0 && (userServiceList === null || userServiceList === void 0 ? void 0 : (_userServiceList$serv = userServiceList.services) === null || _userServiceList$serv === void 0 ? void 0 : _userServiceList$serv.length) > 0) {
+      var _businessIds = [];
+      businessList.businesses.forEach(function (business) {
+        if (userServiceList !== null && userServiceList !== void 0 && userServiceList.services.reduce(function (prev, current) {
+          return [].concat(_toConsumableArray(prev), [current.business_id]);
+        }, []).includes(business.id)) {
+          _businessIds.push(business.id);
+        }
       });
-    } else {
-      currentChanges = _defineProperty({}, e.target.name, e.target.value);
+      setBusinessIds(_businessIds);
     }
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), currentChanges)
-    }));
-  };
-  /**
-   * Update business photo data
-   * @param {File} file Image to change business photo
-   */
-
-
-  var handlechangeImage = function handlechangeImage(file, name) {
-    var reader = new window.FileReader();
-    reader.readAsDataURL(file);
-
-    reader.onload = function () {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, reader.result))
-      }));
-    };
-
-    reader.onerror = function (error) {
-      return console.log(error);
-    };
-  };
-  /**
-   * Update ribbon data
-   * @param {Object} changes Related HTML event
-   */
-
-
-  var handleChangeRibbon = function handleChangeRibbon(changes) {
-    var _formState$changes, _formState$changes2;
-
-    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes = formState.changes) !== null && _formState$changes !== void 0 && _formState$changes.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.ribbon), changes) : _objectSpread({}, changes);
-
-    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
-      ribbon: ribbonChanges
-    });
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: currentChanges
-    }));
-  };
-
-  var handleChangeSwtich = function handleChangeSwtich(name, checked) {
-    var changes = _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, name, checked));
-
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: changes
-    }));
-  };
-
-  var getTimeZone = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(lat, lng) {
-      var date, timestamp, url, response, result;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              date = new Date();
-              timestamp = Math.floor(date.getTime() / 1000);
-              url = "https://maps.googleapis.com/maps/api/timezone/json?location=".concat(lat, ",").concat(lng, "&timestamp=").concat(timestamp, "&key=").concat(googleMapsApiKey);
-              _context3.next = 5;
-              return fetch(url, {
-                method: 'GET'
-              });
-
-            case 5:
-              response = _context3.sent;
-              _context3.next = 8;
-              return response.json();
-
-            case 8:
-              result = _context3.sent;
-              return _context3.abrupt("return", result === null || result === void 0 ? void 0 : result.timeZoneId);
-
-            case 10:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }));
-
-    return function getTimeZone(_x, _x2) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-
-  var handleChangeAddress = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(address) {
-      var _address$location, _address$location2;
-
-      var timezone;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.next = 2;
-              return getTimeZone(address === null || address === void 0 ? void 0 : (_address$location = address.location) === null || _address$location === void 0 ? void 0 : _address$location.lat, address === null || address === void 0 ? void 0 : (_address$location2 = address.location) === null || _address$location2 === void 0 ? void 0 : _address$location2.lng);
-
-            case 2:
-              timezone = _context4.sent;
-              setAddressChange({
-                address: address === null || address === void 0 ? void 0 : address.address,
-                location: _objectSpread(_objectSpread({}, address === null || address === void 0 ? void 0 : address.location), {}, {
-                  zipcode: address !== null && address !== void 0 && address.zipcode ? address.zipcode : -1,
-                  zoom: 15
-                }),
-                timezone: timezone
-              });
-
-            case 4:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }));
-
-    return function handleChangeAddress(_x3) {
-      return _ref4.apply(this, arguments);
-    };
-  }();
-
-  var handleChangeCenter = function handleChangeCenter(address) {
-    var timezone;
-    clearTimeout(timeout);
-    timeout = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.next = 2;
-              return getTimeZone(address === null || address === void 0 ? void 0 : address.lat(), address === null || address === void 0 ? void 0 : address.lng());
-
-            case 2:
-              timezone = _context5.sent;
-              setAddressChange({
-                location: {
-                  lat: address === null || address === void 0 ? void 0 : address.lat(),
-                  lng: address === null || address === void 0 ? void 0 : address.lng(),
-                  zoom: 15,
-                  zipcode: -1
-                },
-                timezone: timezone
-              });
-
-            case 4:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    })), 200);
-  };
-
-  (0, _react.useEffect)(function () {
-    if (!addressChange) return;
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), addressChange)
-    }));
-  }, [addressChange]);
-  (0, _react.useEffect)(function () {
-    if (!business) return;
-    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-      business: business
-    }));
-  }, [business]);
+  }, [businessList === null || businessList === void 0 ? void 0 : businessList.businesses, userServiceList === null || userServiceList === void 0 ? void 0 : userServiceList.services, businessIds]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    cleanFormState: cleanFormState,
-    formState: formState,
-    businessState: businessState,
-    setFormState: setFormState,
-    handleChangeInput: handleChangeInput,
-    handleButtonUpdateClick: handleUpdateClick,
-    handlechangeImage: handlechangeImage,
-    handleAddBusiness: handleAddBusiness,
-    handleChangeAddress: handleChangeAddress,
-    handleChangeCenter: handleChangeCenter,
-    handleChangeSwtich: handleChangeSwtich,
-    handleChangeRibbon: handleChangeRibbon
+    searchValue: searchValue,
+    businessIds: businessIds,
+    onSearch: setSearchValue,
+    businessList: businessList,
+    userServiceList: userServiceList,
+    handleChangeCheckBox: handleChangeCheckBox,
+    handleUpdateBusinessIds: handleUpdateBusinessIds,
+    handleUpdateServices: handleUpdateServices
   })));
 };
 
-exports.BusinessFormDetails = BusinessFormDetails;
-BusinessFormDetails.propTypes = {
+exports.ProfessionalBusinessService = ProfessionalBusinessService;
+ProfessionalBusinessService.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Components types before business details form
+   * Array of business props to fetch
+   */
+  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
+
+  /**
+   * Components types before business type filter
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business details form
+   * Components types after business type filter
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business details form
+   * Elements before business type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business details form
+   * Elements after business type filter
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessFormDetails.defaultProps = {
+ProfessionalBusinessService.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  propsToFetch: ['id', 'name', 'header', 'logo', 'name', 'schedule', 'open', 'delivery_price', 'distance', 'delivery_time', 'pickup_time', 'reviews', 'featured', 'offers', 'food', 'laundry', 'alcohol', 'groceries', 'slug']
 };
