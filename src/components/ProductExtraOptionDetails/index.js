@@ -502,6 +502,7 @@ export const ProductExtraOptionDetails = (props) => {
           handleChangeDefaultSuboption={handleChangeDefaultSuboption}
           handleUpdateSubOption={handleUpdateSubOption}
           handleChangeItem={handleChangeItem}
+          handleUpdateOption={handleUpdateOption}
         />
       )}
     </>
