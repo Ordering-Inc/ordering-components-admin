@@ -964,7 +964,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     handleDeteteOption: handleDeteteOption,
     handleChangeDefaultSuboption: handleChangeDefaultSuboption,
     handleUpdateSubOption: handleUpdateSubOption,
-    handleChangeItem: handleChangeItem
+    handleChangeItem: handleChangeItem,
+    handleUpdateOption: handleUpdateOption
   })));
 };
 
