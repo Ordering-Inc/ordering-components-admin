@@ -12,7 +12,8 @@ export const BusinessFormDetails = (props) => {
     UIComponent,
     business,
     handleSuccessUpdate,
-    handleSucessAddBusiness
+    handleSucessAddBusiness,
+    handleUpdateBusinessState
   } = props
 
   const [ordering] = useApi()
@@ -79,6 +80,9 @@ export const BusinessFormDetails = (props) => {
         })
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
+        }
+        if (handleUpdateBusinessState) {
+          handleUpdateBusinessState(response.content.result)
         }
       }
     } catch (err) {
