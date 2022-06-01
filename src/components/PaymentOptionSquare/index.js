@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
@@ -96,6 +96,7 @@ export const PaymentOptionSquare = (props) => {
           loading: false,
           url: result?.data.url
         })
+        handleConnectSquare(result?.data.url)
       } else {
         setSquareUrlState({
           ...squareUrlState,
@@ -111,8 +112,8 @@ export const PaymentOptionSquare = (props) => {
   /**
    * Method to connect with Square
    */
-  const handleConnectSquare = () => {
-    const connect = window.open(squareUrlState.url, '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes')
+  const handleConnectSquare = (squareConnectUrl) => {
+    const connect = window.open(squareConnectUrl, '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes')
     const interval = setInterval(function () {
       if (!connect.closed) {
         connect.postMessage('data', ordering.url)
@@ -214,10 +215,6 @@ export const PaymentOptionSquare = (props) => {
     })
   }
 
-  useEffect(() => {
-    handleGetApiKey()
-  }, [])
-
   return (
     <>
       {UIComponent && (
@@ -226,7 +223,7 @@ export const PaymentOptionSquare = (props) => {
           squareUrlState={squareUrlState}
           squareData={squareData}
           actionState={actionState}
-          handleConnectSquare={handleConnectSquare}
+          handleConnectSquare={handleGetApiKey}
           handleSavePaymethod={handleSavePaymethod}
           handleChangeDataInput={handleChangeDataInput}
           handleChangeSanboxDataInput={handleChangeSanboxDataInput}
