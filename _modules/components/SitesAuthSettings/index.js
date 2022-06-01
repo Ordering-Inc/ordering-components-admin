@@ -5,15 +5,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.PaymentOptionSquare = void 0;
+exports.SitesAuthSettings = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _ApiContext = require("../../contexts/ApiContext");
-
 var _SessionContext = require("../../contexts/SessionContext");
+
+var _ApiContext = require("../../contexts/ApiContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
 
@@ -51,20 +51,11 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var PaymentOptionSquare = function PaymentOptionSquare(props) {
-  var businessPaymethod = props.businessPaymethod,
-      UIComponent = props.UIComponent,
-      business = props.business,
-      businessPaymethods = props.businessPaymethods,
-      handleSuccessPaymethodUpdate = props.handleSuccessPaymethodUpdate;
-
-  var _useToast = (0, _ToastContext.useToast)(),
-      _useToast2 = _slicedToArray(_useToast, 2),
-      showToast = _useToast2[1].showToast;
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
+/**
+ * Component to manage sites auth settings behavior without UI component
+ */
+var SitesAuthSettings = function SitesAuthSettings(props) {
+  var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -72,27 +63,33 @@ var PaymentOptionSquare = function PaymentOptionSquare(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      user = _useSession2$.user,
-      token = _useSession2$.token;
+      token = _useSession2[0].token;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
+
+  var _useToast = (0, _ToastContext.useToast)(),
+      _useToast2 = _slicedToArray(_useToast, 2),
+      showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
-    url: null,
     loading: true,
+    sites: [],
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      squareUrlState = _useState2[0],
-      setSquareUrlState = _useState2[1];
+      sitesState = _useState2[0],
+      setSitesState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
-    sandbox: businessPaymethod === null || businessPaymethod === void 0 ? void 0 : businessPaymethod.sandbox,
-    data: businessPaymethod === null || businessPaymethod === void 0 ? void 0 : businessPaymethod.data,
-    data_sandbox: businessPaymethod === null || businessPaymethod === void 0 ? void 0 : businessPaymethod.data_sandbox
+    loading: false,
+    configs: [],
+    error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      squareData = _useState4[0],
-      setSquareData = _useState4[1];
+      siteConfigsState = _useState4[0],
+      setSiteConfigsState = _useState4[1];
 
   var _useState5 = (0, _react.useState)({
     loading: false,
@@ -102,21 +99,91 @@ var PaymentOptionSquare = function PaymentOptionSquare(props) {
       actionState = _useState6[0],
       setActionState = _useState6[1];
   /**
-   * Method to get the api key
+   * Method to get the sites from API
    */
 
 
-  var handleGetApiKey = /*#__PURE__*/function () {
+  var handleGetSitesList = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, response, content, _content$result$, apiKey;
+      var requestOptions, response, _yield$response$json, error, result;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: false
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context.next = 4;
+              return fetch("".concat(ordering.root, "/sites"), requestOptions);
+
+            case 4:
+              response = _context.sent;
+              _context.next = 7;
+              return response.json();
+
+            case 7:
+              _yield$response$json = _context.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+
+              if (!error) {
+                setSitesState({
+                  loading: false,
+                  sites: result,
+                  error: null
+                });
+              } else {
+                setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context.next = 16;
+              break;
+
+            case 13:
+              _context.prev = 13;
+              _context.t0 = _context["catch"](0);
+              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+                loading: false,
+                error: [_context.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee, null, [[0, 13]]);
+    }));
+
+    return function handleGetSitesList() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to get the site configs from API
+   */
+
+
+  var handleGetSiteConfigs = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(siteId) {
+      var requestOptions, response, _yield$response$json2, error, result;
+
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setSiteConfigsState(_objectSpread(_objectSpread({}, siteConfigsState), {}, {
+                loading: true
               }));
               requestOptions = {
                 method: 'GET',
@@ -125,182 +192,63 @@ var PaymentOptionSquare = function PaymentOptionSquare(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context.next = 5;
-              return fetch("".concat(ordering.root, "/users/").concat(user === null || user === void 0 ? void 0 : user.id, "/keys"), requestOptions);
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/configs"), requestOptions);
 
             case 5:
-              response = _context.sent;
-              _context.next = 8;
+              response = _context2.sent;
+              _context2.next = 8;
               return response.json();
 
             case 8:
-              content = _context.sent;
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
 
-              if (!content.error) {
-                apiKey = (_content$result$ = content.result[0]) === null || _content$result$ === void 0 ? void 0 : _content$result$.key;
-
-                if (apiKey) {
-                  handleGetConnectUrl(apiKey);
-                  setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                    loading: false,
-                    error: null
-                  }));
-                } else {
-                  setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                    loading: false,
-                    error: t('NO_API_KEY_SQUARE', 'There is no Api Key for Square connection')
-                  }));
-                }
+              if (!error) {
+                setSiteConfigsState({
+                  loading: false,
+                  configs: result,
+                  error: null
+                });
               } else {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                  loading: false,
-                  error: content.result
-                }));
-              }
-
-              _context.next = 15;
-              break;
-
-            case 12:
-              _context.prev = 12;
-              _context.t0 = _context["catch"](0);
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: false,
-                error: [_context.t0.message]
-              }));
-
-            case 15:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, null, [[0, 12]]);
-    }));
-
-    return function handleGetApiKey() {
-      return _ref.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get connect url
-   */
-
-
-  var handleGetConnectUrl = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(apiKey) {
-      var requestOptions, url, response, _yield$response$json, status, result;
-
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              setSquareUrlState(_objectSpread(_objectSpread({}, squareUrlState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  business_id: business === null || business === void 0 ? void 0 : business.id,
-                  project_name: ordering === null || ordering === void 0 ? void 0 : ordering.project,
-                  api_key: apiKey
-                })
-              };
-              url = 'https://plugins-live.ordering.co/square/oauth/oauth';
-              _context2.next = 6;
-              return fetch(url, requestOptions);
-
-            case 6:
-              response = _context2.sent;
-              _context2.next = 9;
-              return response.json();
-
-            case 9:
-              _yield$response$json = _context2.sent;
-              status = _yield$response$json.status;
-              result = _yield$response$json.result;
-
-              if (status === 'ok') {
-                setSquareUrlState(_objectSpread(_objectSpread({}, squareUrlState), {}, {
-                  loading: false,
-                  url: result === null || result === void 0 ? void 0 : result.data.url
-                }));
-                handleConnectSquare(result === null || result === void 0 ? void 0 : result.data.url);
-              } else {
-                setSquareUrlState(_objectSpread(_objectSpread({}, squareUrlState), {}, {
-                  loading: false,
+                setSiteConfigsState(_objectSpread(_objectSpread({}, siteConfigsState), {}, {
                   error: result
                 }));
               }
 
-              _context2.next = 18;
+              _context2.next = 17;
               break;
 
-            case 15:
-              _context2.prev = 15;
+            case 14:
+              _context2.prev = 14;
               _context2.t0 = _context2["catch"](0);
-              setSquareUrlState(_objectSpread(_objectSpread({}, squareUrlState), {}, {
+              setSiteConfigsState(_objectSpread(_objectSpread({}, siteConfigsState), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
 
-            case 18:
+            case 17:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 15]]);
+      }, _callee2, null, [[0, 14]]);
     }));
 
-    return function handleGetConnectUrl(_x) {
+    return function handleGetSiteConfigs(_x) {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to connect with Square
+   * Method to update the site config from API
    */
 
 
-  var handleConnectSquare = function handleConnectSquare(squareConnectUrl) {
-    var connect = window.open(squareConnectUrl, '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
-    var interval = setInterval(function () {
-      if (!connect.closed) {
-        connect.postMessage('data', ordering.url);
-      } else {
-        clearInterval(interval);
-      }
-    }, 200);
-    var timeout = null;
-    window.addEventListener('message', function (e) {
-      if (e.origin.indexOf('.ordering.co') === -1) {
-        return;
-      }
+  var handleChangeConfig = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(value, siteId, configId) {
+      var requestOptions, response, _yield$response$json3, error, result;
 
-      clearInterval(interval);
-      if (timeout) clearTimeout(timeout);
-      timeout = setTimeout(function () {
-        connect.postMessage('close', ordering.url);
-
-        if (e.data) {
-          setSquareData(e.data.paymethod_credentials);
-          connect.close();
-        }
-      }, 1000);
-    });
-  };
-  /**
-   * Method to update the business paymethod option
-   * @param {Number} paymethodId business paymethod id to delete
-   * @param {Object} options parameters to update
-   */
-
-
-  var handleSavePaymethod = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(paymethodId) {
-      var requestOptions, response, content, updatedPaymethods;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -317,13 +265,11 @@ var PaymentOptionSquare = function PaymentOptionSquare(props) {
                   Authorization: "Bearer ".concat(token)
                 },
                 body: JSON.stringify({
-                  sandbox: squareData === null || squareData === void 0 ? void 0 : squareData.sandbox,
-                  data: JSON.stringify(squareData === null || squareData === void 0 ? void 0 : squareData.data),
-                  data_sandbox: JSON.stringify(squareData === null || squareData === void 0 ? void 0 : squareData.data_sandbox)
+                  value: value
                 })
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business.id, "/paymethods/").concat(paymethodId), requestOptions);
+              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/configs/").concat(configId), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -331,120 +277,91 @@ var PaymentOptionSquare = function PaymentOptionSquare(props) {
               return response.json();
 
             case 9:
-              content = _context3.sent;
+              _yield$response$json3 = _context3.sent;
+              error = _yield$response$json3.error;
+              result = _yield$response$json3.result;
 
-              if (!content.error) {
-                updatedPaymethods = businessPaymethods.map(function (paymethod) {
-                  if (paymethod.id === paymethodId) {
-                    Object.assign(paymethod, content.result);
-                  }
-
-                  return paymethod;
+              if (!error) {
+                setActionState({
+                  loading: false,
+                  error: null
                 });
-                handleSuccessPaymethodUpdate && handleSuccessPaymethodUpdate(updatedPaymethods);
-                showToast(_ToastContext.ToastType.Success, t('PAYMETHOD_SAVED', 'Payment method saved'));
+                showToast(_ToastContext.ToastType.Success, t('SETTINGS_UPDATE', 'Settings updated'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: result
+                });
               }
 
-              setActionState({
-                loading: false,
-                error: content.error ? content.result : null
-              });
-              _context3.next = 17;
+              _context3.next = 18;
               break;
 
-            case 14:
-              _context3.prev = 14;
+            case 15:
+              _context3.prev = 15;
               _context3.t0 = _context3["catch"](0);
               setActionState({
-                error: [_context3.t0.message],
-                loading: false
+                loading: false,
+                error: [_context3.t0.message]
               });
 
-            case 17:
+            case 18:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 14]]);
+      }, _callee3, null, [[0, 15]]);
     }));
 
-    return function handleSavePaymethod(_x2) {
+    return function handleChangeConfig(_x2, _x3, _x4) {
       return _ref3.apply(this, arguments);
     };
   }();
-  /**
-   * Update square data
-   * @param {EventTarget} e Related HTML event
-   */
 
-
-  var handleChangeDataInput = function handleChangeDataInput(e) {
-    setSquareData(_objectSpread(_objectSpread({}, squareData), {}, {
-      data: _objectSpread(_objectSpread({}, squareData === null || squareData === void 0 ? void 0 : squareData.data), {}, _defineProperty({}, e.target.name, e.target.value))
-    }));
-  };
-
-  var handleChangeSandbox = function handleChangeSandbox(checked) {
-    setSquareData(_objectSpread(_objectSpread({}, squareData), {}, {
-      sandbox: checked
-    }));
-  };
-  /**
-   * Update square sandbox data
-   * @param {EventTarget} e Related HTML event
-   */
-
-
-  var handleChangeSanboxDataInput = function handleChangeSanboxDataInput(e) {
-    setSquareData(_objectSpread(_objectSpread({}, squareData), {}, {
-      data_sandbox: _objectSpread(_objectSpread({}, squareData === null || squareData === void 0 ? void 0 : squareData.data_sandbox), {}, _defineProperty({}, e.target.name, e.target.value))
-    }));
-  };
-
+  (0, _react.useEffect)(function () {
+    handleGetSitesList();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    squareUrlState: squareUrlState,
-    squareData: squareData,
+    sitesState: sitesState,
+    siteConfigsState: siteConfigsState,
     actionState: actionState,
-    handleConnectSquare: handleGetApiKey,
-    handleSavePaymethod: handleSavePaymethod,
-    handleChangeDataInput: handleChangeDataInput,
-    handleChangeSanboxDataInput: handleChangeSanboxDataInput,
-    handleChangeSandbox: handleChangeSandbox
+    handleGetSiteConfigs: handleGetSiteConfigs,
+    handleChangeConfig: handleChangeConfig
   })));
 };
 
-exports.PaymentOptionSquare = PaymentOptionSquare;
-PaymentOptionSquare.propTypes = {
+exports.SitesAuthSettings = SitesAuthSettings;
+SitesAuthSettings.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-    * Components types before business promotions
-    * Array of type components, the parent props will pass to these components
-    */
+   * Components types before Checkout
+   * Array of type components, the parent props will pass to these components
+   */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after business promotions
+   * Components types after Checkout
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before business promotions
+   * Elements before Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after business promotions
+   * Elements after Checkout
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-PaymentOptionSquare.defaultProps = {
+SitesAuthSettings.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
