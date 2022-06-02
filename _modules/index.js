@@ -237,6 +237,18 @@ Object.defineProperty(exports, "BusinessPickupDetails", {
     return _BusinessPickupDetails.BusinessPickupDetails;
   }
 });
+Object.defineProperty(exports, "BusinessPlace", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlace.BusinessPlace;
+  }
+});
+Object.defineProperty(exports, "BusinessPlaceList", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlaceList.BusinessPlaceList;
+  }
+});
 Object.defineProperty(exports, "BusinessProductCreator", {
   enumerable: true,
   get: function get() {
@@ -1575,6 +1587,10 @@ var _BusinessMenuShare = require("./components/BusinessMenuShare");
 var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessPaymethods = require("./components/BusinessPaymethods");
+
+var _BusinessPlace = require("./components/BusinessPlace");
+
+var _BusinessPlaceList = require("./components/BusinessPlaceList");
 
 var _BusinessPickupDetails = require("./components/BusinessPickupDetails");
 
