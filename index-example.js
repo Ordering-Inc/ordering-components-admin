@@ -19,13 +19,15 @@ const configFile = {
 }
 
 Sentry.init({
-  environment: window?.location?.hostname === 'localhost' ? 'development' : process.env.NODE_ENV,
+  environment: process.env.NODE_ENV,
   dsn: 'https://c75f5b39a050458a920ce16a2878352a@o460529.ingest.sentry.io/5681465',
-  integrations: [
-    new Integrations.BrowserTracing()
-  ],
   release: 'ordering-components-admin@' + process.env.npm_package_version,
-  tracesSampleRate: window?.location?.hostname === 'localhost' ? 0 : 0.5
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 0.2,
+  // Release health
+  autoSessionTracking: true,
+  integrations: [new Integrations.BrowserTracing()]
 })
 
 const wrapper = document.getElementById('app')
