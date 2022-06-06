@@ -25,7 +25,7 @@ function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "functio
 
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 
-function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -178,23 +178,17 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     })) === null || _optionState$option2$2 === void 0 ? void 0 : _optionState$option2$2.length;
 
     if (suboptionPreselected) {
-      setEditSubOptionId(id);
-      setChangesState({
-        result: {},
-        changes: {
-          preselected: false
-        }
+      handleUpdateSubOption({
+        id: id,
+        preselected: false
       });
     } else {
       var _optionState$option3;
 
       if ((optionState === null || optionState === void 0 ? void 0 : (_optionState$option3 = optionState.option) === null || _optionState$option3 === void 0 ? void 0 : _optionState$option3.max) > defaultSubOptionsLength) {
-        setEditSubOptionId(id);
-        setChangesState({
-          result: {},
-          changes: {
-            preselected: true
-          }
+        handleUpdateSubOption({
+          id: id,
+          preselected: true
         });
       } else {
         showToast(_ToastContext.ToastType.Error, t('MAX_PRESELECTED_OPTIONS_ERROR', 'Maximum number of options exceeded'), 4000);
@@ -964,7 +958,8 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
     handleDeteteOption: handleDeteteOption,
     handleChangeDefaultSuboption: handleChangeDefaultSuboption,
     handleUpdateSubOption: handleUpdateSubOption,
-    handleChangeItem: handleChangeItem
+    handleChangeItem: handleChangeItem,
+    handleUpdateOption: handleUpdateOption
   })));
 };
 
