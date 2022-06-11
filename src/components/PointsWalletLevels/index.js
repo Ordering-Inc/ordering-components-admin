@@ -16,7 +16,6 @@ export const PointsWalletLevels = (props) => {
   const [, t] = useLanguage()
   const [levelList, setLevelList] = useState({ loading: false, levels: [], error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
-  const [editFormState, setEditFormState] = useState({ loading: false, error: null, changes: {} })
 
   /**
    * Update level data
@@ -25,6 +24,15 @@ export const PointsWalletLevels = (props) => {
   const handleChangeInput = (evt) => {
     const changes = { ...formState?.changes, [evt.target.name]: evt.target.value }
     setFormState({ ...formState, changes: changes })
+  }
+
+  /**
+   * Update level data
+   * @param {EventTarget} evt Related HTML event
+   */
+  const handleChangeItem = (changes) => {
+    const currentChanges = { ...formState?.changes, ...changes }
+    setFormState({ ...formState, changes: currentChanges })
   }
 
   /**
@@ -59,22 +67,6 @@ export const PointsWalletLevels = (props) => {
   }
 
   /**
-   * Update a level
-   * @param {EventTarget} evt Related HTML event
-   * @param {Number} levelId id of level
-   */
-  const handleUpdateLevel = (evt, levelId) => {
-    const changes = levelId === editFormState?.changes?.id
-      ? { ...editFormState?.changes, [evt.target.name]: evt.target.value }
-      : { [evt.target.name]: evt.target.value, id: levelId }
-    setEditFormState({ ...editFormState, changes: changes })
-  }
-
-  const handleUpdateBtnClick = () => {
-    updateLevel(editFormState?.changes, editFormState?.changes?.id)
-  }
-
-  /**
    * Default fuction to add a level
    */
   const handleUpdateAddClick = async () => {
@@ -96,35 +88,6 @@ export const PointsWalletLevels = (props) => {
         showToast(ToastType.Success, t('LEVEL_ADDED', 'Level added'))
         setFormState({ ...formState, loading: false, error: null, changes: {} })
         handleAddLevelList(result)
-      } else {
-        setFormState({ ...formState, loading: false, error: result })
-      }
-    } catch (error) {
-      setFormState({ ...formState, loading: false, error: error.message })
-    }
-  }
-
-  /**
-   * Default fuction to delete a level
-   */
-  const handleUpdateDeleteClick = async (id) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({ ...formState, loading: true })
-      const requestOptions = {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const fetchEndpoint = `${ordering.root}/loyalty_levels/${id}`
-      const response = await fetch(fetchEndpoint, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        showToast(ToastType.Success, t('LEVEL_DELETED', 'Level deleted'))
-        setFormState({ ...formState, loading: false, error: null, changes: {} })
-        handleDeleteLevelList(result)
       } else {
         setFormState({ ...formState, loading: false, error: result })
       }
@@ -159,35 +122,6 @@ export const PointsWalletLevels = (props) => {
     }
   }
 
-  /**
-   * Function to update a webhook
-   */
-  const updateLevel = async (changes, id) => {
-    try {
-      showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setEditFormState({ ...editFormState, loading: true })
-      const requestOptions = {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(changes)
-      }
-      const response = await fetch(`${ordering.root}/loyalty_levels/${id}`, requestOptions)
-      const { error, result } = await response.json()
-      if (!error) {
-        setEditFormState({ changes: {}, loading: false, error: null })
-        handleUpdateLevelList(result)
-        showToast(ToastType.Success, t('LEVEL_UPDATED', 'Level updated'))
-      } else {
-        setEditFormState({ ...editFormState, loading: false, error: result })
-      }
-    } catch (error) {
-      setEditFormState({ ...editFormState, loading: false, error: error.message })
-    }
-  }
-
   useEffect(() => {
     getLevelList()
   }, [])
@@ -199,12 +133,11 @@ export const PointsWalletLevels = (props) => {
           {...props}
           levelList={levelList}
           formState={formState}
-          editFormState={editFormState}
+          handleChangeItem={handleChangeItem}
           handleChangeInput={handleChangeInput}
           handleUpdateAddClick={handleUpdateAddClick}
-          handleUpdateDeleteClick={handleUpdateDeleteClick}
-          handleUpdateLevel={handleUpdateLevel}
-          handleUpdateBtnClick={handleUpdateBtnClick}
+          handleUpdateLevelList={handleUpdateLevelList}
+          handleDeleteLevelList={handleDeleteLevelList}
         />
       )}
     </>
