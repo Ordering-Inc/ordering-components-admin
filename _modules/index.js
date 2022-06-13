@@ -243,10 +243,16 @@ Object.defineProperty(exports, "BusinessPlace", {
     return _BusinessPlace.BusinessPlace;
   }
 });
-Object.defineProperty(exports, "BusinessPlaceList", {
+Object.defineProperty(exports, "BusinessPlaceGroup", {
   enumerable: true,
   get: function get() {
-    return _BusinessPlaceList.BusinessPlaceList;
+    return _BusinessPlaceGroup.BusinessPlaceGroup;
+  }
+});
+Object.defineProperty(exports, "BusinessPlaceGroupList", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlaceGroupList.BusinessPlaceGroupList;
   }
 });
 Object.defineProperty(exports, "BusinessProductCreator", {
@@ -1275,6 +1281,12 @@ Object.defineProperty(exports, "SingleBusinessProduct", {
     return _SingleBusinessProduct.SingleBusinessProduct;
   }
 });
+Object.defineProperty(exports, "SingleLoyaltyLevel", {
+  enumerable: true,
+  get: function get() {
+    return _SingleLoyaltyLevel.SingleLoyaltyLevel;
+  }
+});
 Object.defineProperty(exports, "SingleOrderCard", {
   enumerable: true,
   get: function get() {
@@ -1590,7 +1602,9 @@ var _BusinessPaymethods = require("./components/BusinessPaymethods");
 
 var _BusinessPlace = require("./components/BusinessPlace");
 
-var _BusinessPlaceList = require("./components/BusinessPlaceList");
+var _BusinessPlaceGroupList = require("./components/BusinessPlaceGroupList");
+
+var _BusinessPlaceGroup = require("./components/BusinessPlaceGroup");
 
 var _BusinessPickupDetails = require("./components/BusinessPickupDetails");
 
@@ -1857,6 +1871,8 @@ var _Schedule = require("./components/Schedule");
 var _SignupForm = require("./components/SignupForm");
 
 var _SingleBusinessCard = require("./components/SingleBusinessCard");
+
+var _SingleLoyaltyLevel = require("./components/SingleLoyaltyLevel");
 
 var _SingleOrderCard = require("./components/SingleOrderCard");
 

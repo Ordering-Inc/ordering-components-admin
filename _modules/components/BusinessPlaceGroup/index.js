@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessPlaceList = void 0;
+exports.BusinessPlaceGroup = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -33,12 +33,6 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -46,6 +40,12 @@ function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread n
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -59,9 +59,14 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var BusinessPlaceList = function BusinessPlaceList(props) {
+var BusinessPlaceGroup = function BusinessPlaceGroup(props) {
   var UIComponent = props.UIComponent,
-      business = props.business;
+      placeGroup = props.placeGroup,
+      businessId = props.businessId,
+      handleSuccessAddPlaceGroup = props.handleSuccessAddPlaceGroup,
+      handleSuccessUpdatePlaceGroup = props.handleSuccessUpdatePlaceGroup,
+      handleSuccessDeletePlaceGroup = props.handleSuccessDeletePlaceGroup,
+      handleUpdateSelectedPlaceGroup = props.handleUpdateSelectedPlaceGroup;
 
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
       _useLanguage2 = _slicedToArray(_useLanguage, 2),
@@ -90,15 +95,32 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
 
   var _useState3 = (0, _react.useState)({
     loading: false,
+    changes: {},
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionState = _useState4[0],
-      setActionState = _useState4[1];
+      formState = _useState4[0],
+      setFormState = _useState4[1];
+
+  var _useState5 = (0, _react.useState)({
+    loading: false,
+    error: null
+  }),
+      _useState6 = _slicedToArray(_useState5, 2),
+      actionState = _useState6[0],
+      setActionState = _useState6[1];
+
+  var handleChangeInput = function handleChangeInput(e) {
+    var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, _defineProperty({}, e.target.name, e.target.value));
+
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: currentChanges
+    }));
+  };
   /**
-   * Method to add the campaign in the campaign list
-   * @param {Object} result campaign to add
-   */
+  * Method to add the campaign in the campaign list
+  * @param {Object} result campaign to add
+  */
 
 
   var handleSuccessAddPlace = function handleSuccessAddPlace(result) {
@@ -160,7 +182,19 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
     }));
   };
 
-  var getPlaceList = /*#__PURE__*/function () {
+  var getMultiPlaceCheckStatus = function getMultiPlaceCheckStatus() {
+    var isChecked = true;
+    placeList.places.forEach(function (placeGroup) {
+      if (!placeGroup.enabled) isChecked = false;
+    });
+    return isChecked;
+  };
+  /**
+   * Method to add new place group from API
+   */
+
+
+  var handleAddPlaceGroup = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -168,69 +202,77 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
-                loading: true
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true,
+                error: null
               }));
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
               };
-              _context2.next = 5;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/place_groups"), requestOptions);
+              _context2.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups"), requestOptions);
 
-            case 5:
+            case 6:
               response = _context2.sent;
-              _context2.next = 8;
+              _context2.next = 9;
               return response.json();
 
-            case 8:
+            case 9:
               content = _context2.sent;
 
               if (!content.error) {
-                setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
-                  places: content.result
+                  error: null
                 }));
+                handleSuccessAddPlaceGroup && handleSuccessAddPlaceGroup(_objectSpread(_objectSpread({}, content.result), {}, {
+                  enabled: true
+                }));
+                showToast(_ToastContext.ToastType.Success, t('PLACE_ADDED', 'Place added'));
+                props.onClose && props.onClose();
               } else {
-                setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
               }
 
-              _context2.next = 15;
+              _context2.next = 16;
               break;
 
-            case 12:
-              _context2.prev = 12;
+            case 13:
+              _context2.prev = 13;
               _context2.t0 = _context2["catch"](0);
-              setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
-                error: [_context2.t0.message]
+                error: _context2.t0.message
               }));
 
-            case 15:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 12]]);
+      }, _callee2, null, [[0, 13]]);
     }));
 
-    return function getPlaceList() {
+    return function handleAddPlaceGroup() {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Function to update place data
+   * Function to update place group data
    */
 
 
-  var handleChangeEnabled = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(placeId, changes, isMulti) {
+  var handleUpdatePlaceGroup = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
       var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) {
@@ -238,8 +280,9 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
             case 0:
               _context3.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true,
+                error: null
               }));
               requestOptions = {
                 method: 'PUT',
@@ -247,10 +290,10 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(changes)
+                body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/place_groups/").concat(placeId), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups/").concat(placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -261,14 +304,16 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
-                  error: null
+                  error: null,
+                  changes: {}
                 }));
-                !isMulti && handleSuccessUpdatePlace(content.result);
-                showToast(_ToastContext.ToastType.Success, t('PLACE_UPDATED', 'Place updated'));
+                handleUpdateSelectedPlaceGroup && handleUpdateSelectedPlaceGroup(content.result);
+                handleSuccessUpdatePlaceGroup && handleSuccessUpdatePlaceGroup(content.result);
+                showToast(_ToastContext.ToastType.Success, t('PLACE_SAVED', 'Place saved'));
               } else {
-                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: content.result
                 }));
@@ -280,7 +325,7 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
             case 13:
               _context3.prev = 13;
               _context3.t0 = _context3["catch"](0);
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: _context3.t0.message
               }));
@@ -293,38 +338,250 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
       }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleChangeEnabled(_x2, _x3, _x4) {
+    return function handleUpdatePlaceGroup() {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * Method to delete a place group
+   */
 
-  var getMultiCheckStatus = function getMultiCheckStatus() {
-    var isChecked = true;
-    placeList.places.forEach(function (place) {
-      if (!place.enabled) isChecked = false;
-    });
-    return isChecked;
-  };
 
-  var handleMultiChangeEnabled = /*#__PURE__*/function () {
+  var handleDeletePlaceGroup = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _placeList$places3;
-
-      var allPromise, isChecked, updatedPlaceList;
+      var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
+              _context4.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: true,
+                error: null
+              }));
+              requestOptions = {
+                method: 'DELETE',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context4.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups/").concat(placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id), requestOptions);
+
+            case 6:
+              response = _context4.sent;
+              _context4.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context4.sent;
+
+              if (!content.error) {
+                handleSuccessDeletePlaceGroup && handleSuccessDeletePlaceGroup(placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id);
+                showToast(_ToastContext.ToastType.Success, t('PLACE_DELETED', 'Place deleted'));
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: null
+                }));
+                props.onClose && props.onClose();
+              } else {
+                setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context4.next = 16;
+              break;
+
+            case 13:
+              _context4.prev = 13;
+              _context4.t0 = _context4["catch"](0);
+              setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+                loading: false,
+                error: _context4.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4, null, [[0, 13]]);
+    }));
+
+    return function handleDeletePlaceGroup() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+  /**
+   * Function to get placeList from API
+   */
+
+
+  var getPlaceList = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var requestOptions, response, content, _placesList;
+
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context5.next = 5;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/places"), requestOptions);
+
+            case 5:
+              response = _context5.sent;
+              _context5.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context5.sent;
+              _placesList = content === null || content === void 0 ? void 0 : content.result.filter(function (item) {
+                return item.place_group_id === (placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id);
+              });
+
+              if (!content.error) {
+                setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                  loading: false,
+                  places: _placesList
+                }));
+              } else {
+                setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context5.next = 16;
+              break;
+
+            case 13:
+              _context5.prev = 13;
+              _context5.t0 = _context5["catch"](0);
+              setPlaceList(_objectSpread(_objectSpread({}, placeList), {}, {
+                loading: false,
+                error: [_context5.t0.message]
+              }));
+
+            case 16:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 13]]);
+    }));
+
+    return function getPlaceList() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   * Function to update place data
+   */
+
+
+  var handleChangePlaceEnabled = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(placeId, changes, isMulti) {
+      var requestOptions, response, content;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'PUT',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context6.next = 6;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/places/").concat(placeId), requestOptions);
+
+            case 6:
+              response = _context6.sent;
+              _context6.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context6.sent;
+
+              if (!content.error) {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false,
+                  error: null
+                }));
+                !isMulti && handleSuccessUpdatePlace(content.result);
+                showToast(_ToastContext.ToastType.Success, t('OPTION_UPDATED', 'Option updated'));
+              } else {
+                setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context6.next = 16;
+              break;
+
+            case 13:
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](0);
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: false,
+                error: _context6.t0.message
+              }));
+
+            case 16:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6, null, [[0, 13]]);
+    }));
+
+    return function handleChangePlaceEnabled(_x2, _x3, _x4) {
+      return _ref6.apply(this, arguments);
+    };
+  }();
+
+  var handleMultiPlaceChangeEnabled = /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+      var _placeList$places3;
+
+      var allPromise, isChecked, updatedPlaceList;
+      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) {
+          switch (_context7.prev = _context7.next) {
+            case 0:
               allPromise = [];
-              isChecked = getMultiCheckStatus();
+              isChecked = getMultiPlaceCheckStatus();
               placeList.places.forEach(function (place) {
                 allPromise.push(new Promise(function (resolve, reject) {
-                  resolve(handleChangeEnabled(place.id, {
+                  resolve(handleChangePlaceEnabled(place.id, {
                     enabled: !isChecked
                   }, true));
                 }));
               });
-              _context4.next = 5;
+              _context7.next = 5;
               return Promise.all(allPromise);
 
             case 5:
@@ -339,34 +596,41 @@ var BusinessPlaceList = function BusinessPlaceList(props) {
 
             case 7:
             case "end":
-              return _context4.stop();
+              return _context7.stop();
           }
         }
-      }, _callee4);
+      }, _callee7);
     }));
 
-    return function handleMultiChangeEnabled() {
-      return _ref4.apply(this, arguments);
+    return function handleMultiPlaceChangeEnabled() {
+      return _ref7.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (!business) return;
-    getPlaceList();
-  }, [business]);
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: {}
+    }));
+    if (placeGroup) getPlaceList();
+  }, [placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    formState: formState,
     placeList: placeList,
+    handleChangeInput: handleChangeInput,
+    handleAddPlaceGroup: handleAddPlaceGroup,
+    handleUpdatePlaceGroup: handleUpdatePlaceGroup,
+    handleDeletePlaceGroup: handleDeletePlaceGroup,
     handleSuccessAddPlace: handleSuccessAddPlace,
     handleSuccessUpdatePlace: handleSuccessUpdatePlace,
     handleSuccessDeletePlace: handleSuccessDeletePlace,
-    handleChangeEnabled: handleChangeEnabled,
-    handleMultiChangeEnabled: handleMultiChangeEnabled,
-    getMultiCheckStatus: getMultiCheckStatus
+    handleChangePlaceEnabled: handleChangePlaceEnabled,
+    getMultiPlaceCheckStatus: getMultiPlaceCheckStatus,
+    handleMultiPlaceChangeEnabled: handleMultiPlaceChangeEnabled
   })));
 };
 
-exports.BusinessPlaceList = BusinessPlaceList;
-BusinessPlaceList.propTypes = {
+exports.BusinessPlaceGroup = BusinessPlaceGroup;
+BusinessPlaceGroup.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -396,7 +660,7 @@ BusinessPlaceList.propTypes = {
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessPlaceList.defaultProps = {
+BusinessPlaceGroup.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

@@ -54,6 +54,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var BusinessPlace = function BusinessPlace(props) {
   var UIComponent = props.UIComponent,
       place = props.place,
+      placeGroup = props.placeGroup,
       businessId = props.businessId,
       handleSuccessAddPlace = props.handleSuccessAddPlace,
       handleSuccessUpdatePlace = props.handleSuccessUpdatePlace,
@@ -99,7 +100,7 @@ var BusinessPlace = function BusinessPlace(props) {
 
   var handleAddPlace = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, response, content;
+      var changes, requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -110,23 +111,26 @@ var BusinessPlace = function BusinessPlace(props) {
                 loading: true,
                 error: null
               }));
+              changes = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
+                place_group_id: placeGroup === null || placeGroup === void 0 ? void 0 : placeGroup.id
+              });
               requestOptions = {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
                 },
-                body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
+                body: JSON.stringify(changes)
               };
-              _context.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups"), requestOptions);
+              _context.next = 7;
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/places"), requestOptions);
 
-            case 6:
+            case 7:
               response = _context.sent;
-              _context.next = 9;
+              _context.next = 10;
               return response.json();
 
-            case 9:
+            case 10:
               content = _context.sent;
 
               if (!content.error) {
@@ -137,7 +141,7 @@ var BusinessPlace = function BusinessPlace(props) {
                 handleSuccessAddPlace && handleSuccessAddPlace(_objectSpread(_objectSpread({}, content.result), {}, {
                   enabled: true
                 }));
-                showToast(_ToastContext.ToastType.Success, t('PLACE_ADDED', 'Place added'));
+                showToast(_ToastContext.ToastType.Success, t('OPTION_ADDED', 'Option added'));
                 props.onClose && props.onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -146,23 +150,23 @@ var BusinessPlace = function BusinessPlace(props) {
                 }));
               }
 
-              _context.next = 16;
+              _context.next = 17;
               break;
 
-            case 13:
-              _context.prev = 13;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: false,
                 error: _context.t0.message
               }));
 
-            case 16:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 13]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function handleAddPlace() {
@@ -196,7 +200,7 @@ var BusinessPlace = function BusinessPlace(props) {
                 body: JSON.stringify(formState === null || formState === void 0 ? void 0 : formState.changes)
               };
               _context2.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups/").concat(place === null || place === void 0 ? void 0 : place.id), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/places/").concat(place === null || place === void 0 ? void 0 : place.id), requestOptions);
 
             case 6:
               response = _context2.sent;
@@ -214,7 +218,7 @@ var BusinessPlace = function BusinessPlace(props) {
                 }));
                 handleUpdateSelectedPlace && handleUpdateSelectedPlace(content.result);
                 handleSuccessUpdatePlace && handleSuccessUpdatePlace(content.result);
-                showToast(_ToastContext.ToastType.Success, t('PLACE_SAVED', 'Place saved'));
+                showToast(_ToastContext.ToastType.Success, t('OPTION_SAVED', 'Option saved'));
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -271,7 +275,7 @@ var BusinessPlace = function BusinessPlace(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/place_groups/").concat(place === null || place === void 0 ? void 0 : place.id), requestOptions);
+              return fetch("".concat(ordering.root, "/business/").concat(businessId, "/places/").concat(place === null || place === void 0 ? void 0 : place.id), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -283,7 +287,7 @@ var BusinessPlace = function BusinessPlace(props) {
 
               if (!content.error) {
                 handleSuccessDeletePlace && handleSuccessDeletePlace(place === null || place === void 0 ? void 0 : place.id);
-                showToast(_ToastContext.ToastType.Success, t('PLACE_DELETED', 'Place deleted'));
+                showToast(_ToastContext.ToastType.Success, t('OPTION_DELETED', 'Option deleted'));
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
                   error: null
@@ -324,7 +328,7 @@ var BusinessPlace = function BusinessPlace(props) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: {}
     }));
-  }, [place]);
+  }, [place === null || place === void 0 ? void 0 : place.id]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     handleChangeInput: handleChangeInput,
