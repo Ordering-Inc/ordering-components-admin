@@ -9,6 +9,7 @@ export const BusinessPlace = (props) => {
   const {
     UIComponent,
     place,
+    placeGroup,
     businessId,
     handleSuccessAddPlace,
     handleSuccessUpdatePlace,
@@ -38,6 +39,7 @@ export const BusinessPlace = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true, error: null })
+      const changes = { ...formState?.changes, place_group_id: placeGroup?.id }
 
       const requestOptions = {
         method: 'POST',
@@ -45,15 +47,15 @@ export const BusinessPlace = (props) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState?.changes)
+        body: JSON.stringify(changes)
       }
 
-      const response = await fetch(`${ordering.root}/business/${businessId}/place_groups`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${businessId}/places`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setFormState({ ...formState, loading: false, error: null })
         handleSuccessAddPlace && handleSuccessAddPlace({ ...content.result, enabled: true })
-        showToast(ToastType.Success, t('PLACE_ADDED', 'Place added'))
+        showToast(ToastType.Success, t('OPTION_ADDED', 'Option added'))
         props.onClose && props.onClose()
       } else {
         setFormState({
@@ -87,14 +89,14 @@ export const BusinessPlace = (props) => {
         body: JSON.stringify(formState?.changes)
       }
 
-      const response = await fetch(`${ordering.root}/business/${businessId}/place_groups/${place?.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${businessId}/places/${place?.id}`, requestOptions)
       const content = await response.json()
 
       if (!content.error) {
         setFormState({ ...formState, loading: false, error: null, changes: {} })
         handleUpdateSelectedPlace && handleUpdateSelectedPlace(content.result)
         handleSuccessUpdatePlace && handleSuccessUpdatePlace(content.result)
-        showToast(ToastType.Success, t('PLACE_SAVED', 'Place saved'))
+        showToast(ToastType.Success, t('OPTION_SAVED', 'Option saved'))
       } else {
         setFormState({
           ...formState,
@@ -125,11 +127,11 @@ export const BusinessPlace = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${businessId}/place_groups/${place?.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${businessId}/places/${place?.id}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         handleSuccessDeletePlace && handleSuccessDeletePlace(place?.id)
-        showToast(ToastType.Success, t('PLACE_DELETED', 'Place deleted'))
+        showToast(ToastType.Success, t('OPTION_DELETED', 'Option deleted'))
         setFormState({ ...formState, loading: false, error: null })
         props.onClose && props.onClose()
       } else {
@@ -153,7 +155,7 @@ export const BusinessPlace = (props) => {
       ...formState,
       changes: {}
     })
-  }, [place])
+  }, [place?.id])
 
   return (
     <>
