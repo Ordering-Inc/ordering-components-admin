@@ -5,7 +5,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
-export const BusinessPlaceList = (props) => {
+export const BusinessPlaceGroupList = (props) => {
   const {
     UIComponent,
     business
@@ -16,51 +16,51 @@ export const BusinessPlaceList = (props) => {
   const [{ token }] = useSession()
   const [, { showToast }] = useToast()
 
-  const [placeList, setPlaceList] = useState({ loading: false, places: [], error: null })
+  const [placeGroupList, setPlaceGroupList] = useState({ loading: false, placeGroups: [], error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
 
   /**
    * Method to add the campaign in the campaign list
    * @param {Object} result campaign to add
    */
-  const handleSuccessAddPlace = (result) => {
-    const places = [...placeList.places, result]
-    setPlaceList({ ...placeList, places })
+  const handleSuccessAddPlaceGroup = (result) => {
+    const placeGroups = [...placeGroupList.placeGroups, result]
+    setPlaceGroupList({ ...placeGroupList, placeGroups })
   }
 
   /**
    * Method to update the place list
    */
-  const handleSuccessUpdatePlace = async (result) => {
-    const updatedPlaceList = placeList?.places?.map(place => {
-      if (result?.id === place?.id) {
+  const handleSuccessUpdatePlaceGroup = async (result) => {
+    const updatedPlaceList = placeGroupList?.placeGroups?.map(placeGroup => {
+      if (result?.id === placeGroup?.id) {
         return {
-          ...place,
+          ...placeGroup,
           ...result
         }
       }
-      return place
+      return placeGroup
     })
-    setPlaceList({
-      ...placeList,
-      places: updatedPlaceList
+    setPlaceGroupList({
+      ...placeGroupList,
+      placeGroups: updatedPlaceList
     })
   }
 
   /**
    * Method to delete place
    */
-  const handleSuccessDeletePlace = (placeId) => {
-    const updatedPlaceList = placeList?.places?.filter(place => place.id !== placeId)
-    setPlaceList({
-      ...placeList,
-      places: updatedPlaceList
+  const handleSuccessDeletePlaceGroup = (placeId) => {
+    const updatedPlaceList = placeGroupList?.placeGroups?.filter(place => place.id !== placeId)
+    setPlaceGroupList({
+      ...placeGroupList,
+      placeGroups: updatedPlaceList
     })
   }
 
-  const getPlaceList = async () => {
+  const getPlaceGroupList = async () => {
     try {
-      setPlaceList({ ...placeList, loading: true })
+      setPlaceGroupList({ ...placeGroupList, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -71,21 +71,21 @@ export const BusinessPlaceList = (props) => {
       const response = await fetch(`${ordering.root}/business/${business?.id}/place_groups`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        setPlaceList({
-          ...placeList,
+        setPlaceGroupList({
+          ...placeGroupList,
           loading: false,
-          places: content.result
+          placeGroups: content.result
         })
       } else {
-        setPlaceList({
-          ...placeList,
+        setPlaceGroupList({
+          ...placeGroupList,
           loading: false,
           error: content.result
         })
       }
     } catch (err) {
-      setPlaceList({
-        ...placeList,
+      setPlaceGroupList({
+        ...placeGroupList,
         loading: false,
         error: [err.message]
       })
@@ -117,7 +117,7 @@ export const BusinessPlaceList = (props) => {
           loading: false,
           error: null
         })
-        !isMulti && handleSuccessUpdatePlace(content.result)
+        !isMulti && handleSuccessUpdatePlaceGroup(content.result)
         showToast(ToastType.Success, t('PLACE_UPDATED', 'Place updated'))
       } else {
         setActionState({
@@ -137,8 +137,8 @@ export const BusinessPlaceList = (props) => {
 
   const getMultiCheckStatus = () => {
     let isChecked = true
-    placeList.places.forEach(place => {
-      if (!place.enabled) isChecked = false
+    placeGroupList.placeGroups.forEach(placeGroup => {
+      if (!placeGroup.enabled) isChecked = false
     })
     return isChecked
   }
@@ -146,27 +146,27 @@ export const BusinessPlaceList = (props) => {
   const handleMultiChangeEnabled = async () => {
     const allPromise = []
     const isChecked = getMultiCheckStatus()
-    placeList.places.forEach(place => {
+    placeGroupList.placeGroups.forEach(placeGroup => {
       allPromise.push(new Promise((resolve, reject) => {
-        resolve(handleChangeEnabled(place.id, { enabled: !isChecked }, true))
+        resolve(handleChangeEnabled(placeGroup.id, { enabled: !isChecked }, true))
       }))
     })
     await Promise.all(allPromise)
-    const updatedPlaceList = placeList?.places?.map(place => {
+    const updatedPlaceList = placeGroupList?.placeGroups?.map(placeGroup => {
       return {
-        ...place,
+        ...placeGroup,
         enabled: !isChecked
       }
     })
-    setPlaceList({
-      ...placeList,
-      places: updatedPlaceList
+    setPlaceGroupList({
+      ...placeGroupList,
+      placeGroups: updatedPlaceList
     })
   }
 
   useEffect(() => {
     if (!business) return
-    getPlaceList()
+    getPlaceGroupList()
   }, [business])
 
   return (
@@ -175,10 +175,10 @@ export const BusinessPlaceList = (props) => {
         UIComponent && (
           <UIComponent
             {...props}
-            placeList={placeList}
-            handleSuccessAddPlace={handleSuccessAddPlace}
-            handleSuccessUpdatePlace={handleSuccessUpdatePlace}
-            handleSuccessDeletePlace={handleSuccessDeletePlace}
+            placeGroupList={placeGroupList}
+            handleSuccessAddPlaceGroup={handleSuccessAddPlaceGroup}
+            handleSuccessUpdatePlaceGroup={handleSuccessUpdatePlaceGroup}
+            handleSuccessDeletePlaceGroup={handleSuccessDeletePlaceGroup}
             handleChangeEnabled={handleChangeEnabled}
             handleMultiChangeEnabled={handleMultiChangeEnabled}
             getMultiCheckStatus={getMultiCheckStatus}
@@ -189,7 +189,7 @@ export const BusinessPlaceList = (props) => {
   )
 }
 
-BusinessPlaceList.propTypes = {
+BusinessPlaceGroupList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -216,7 +216,7 @@ BusinessPlaceList.propTypes = {
   afterElements: PropTypes.arrayOf(PropTypes.element)
 }
 
-BusinessPlaceList.defaultProps = {
+BusinessPlaceGroupList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
