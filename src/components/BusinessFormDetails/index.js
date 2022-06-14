@@ -12,7 +12,8 @@ export const BusinessFormDetails = (props) => {
     UIComponent,
     business,
     handleSuccessUpdate,
-    handleSucessAddBusiness
+    handleSucessAddBusiness,
+    handleUpdateBusinessState
   } = props
 
   const [ordering] = useApi()
@@ -79,6 +80,9 @@ export const BusinessFormDetails = (props) => {
         })
         if (handleSuccessUpdate) {
           handleSuccessUpdate(response.content.result)
+        }
+        if (handleUpdateBusinessState) {
+          handleUpdateBusinessState(response.content.result)
         }
       }
     } catch (err) {
@@ -179,6 +183,21 @@ export const BusinessFormDetails = (props) => {
     reader.onerror = error => console.log(error)
   }
 
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeRibbon = (changes) => {
+    const ribbonChanges = formState?.changes?.ribbon
+      ? { ...formState?.changes?.ribbon, ...changes }
+      : { ...changes }
+    const currentChanges = { ...formState?.changes, ribbon: ribbonChanges }
+    setFormState({
+      ...formState,
+      changes: currentChanges
+    })
+  }
+
   const handleChangeSwtich = (name, checked) => {
     const changes = { ...formState.changes, [name]: checked }
     setFormState({
@@ -257,6 +276,7 @@ export const BusinessFormDetails = (props) => {
           handleChangeAddress={handleChangeAddress}
           handleChangeCenter={handleChangeCenter}
           handleChangeSwtich={handleChangeSwtich}
+          handleChangeRibbon={handleChangeRibbon}
         />
       )}
     </>

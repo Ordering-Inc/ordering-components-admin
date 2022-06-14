@@ -81,7 +81,10 @@ export const ProductDetatils = (props) => {
       setFormState({
         ...formState,
         changes: error ? formState.changes : {},
-        result: result,
+        result: {
+          error: error,
+          result: result
+        },
         loading: false
       })
 
@@ -189,6 +192,21 @@ export const ProductDetatils = (props) => {
         ...formState.changes,
         ...changes
       }
+    })
+  }
+
+  /**
+   * Update ribbon data
+   * @param {Object} changes Related HTML event
+   */
+  const handleChangeRibbon = (changes) => {
+    const ribbonChanges = formState?.changes?.ribbon
+      ? { ...formState?.changes?.ribbon, ...changes }
+      : { ...changes }
+    const currentChanges = { ...formState?.changes, ribbon: ribbonChanges }
+    setFormState({
+      ...formState,
+      changes: currentChanges
     })
   }
 
@@ -341,6 +359,7 @@ export const ProductDetatils = (props) => {
           productCart={productCart}
           formState={formState}
           cleanFormState={cleanFormState}
+          handleChangeRibbon={handleChangeRibbon}
           handleChangeProductActiveState={handleChangeProductActiveState}
           handleChangeInput={handleChangeInput}
           handlechangeImage={handlechangeImage}
