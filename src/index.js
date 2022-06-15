@@ -35,7 +35,8 @@ import { BusinessMenuShare } from './components/BusinessMenuShare'
 import { BusinessMetaFields } from './components/BusinessMetaFields'
 import { BusinessPaymethods } from './components/BusinessPaymethods'
 import { BusinessPlace } from './components/BusinessPlace'
-import { BusinessPlaceList } from './components/BusinessPlaceList'
+import { BusinessPlaceGroupList } from './components/BusinessPlaceGroupList'
+import { BusinessPlaceGroup } from './components/BusinessPlaceGroup'
 import { BusinessPickupDetails } from './components/BusinessPickupDetails'
 import { BusinessProductsCategoyDetails } from './components/BusinessProductsCategoyDetails'
 import { BusinessProductsCategories } from './components/BusinessProductsCategories'
@@ -169,6 +170,7 @@ import { SearchOptions } from './components/SearchOptions'
 import { Schedule } from './components/Schedule'
 import { SignupForm } from './components/SignupForm'
 import { SingleBusinessCard } from './components/SingleBusinessCard'
+import { SingleLoyaltyLevel } from './components/SingleLoyaltyLevel'
 import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
 import { SingleRecoveryNotification } from './components/SingleRecoveryNotification'
@@ -264,7 +266,8 @@ export {
   BusinessMenuShare,
   BusinessPaymethods,
   BusinessPlace,
-  BusinessPlaceList,
+  BusinessPlaceGroup,
+  BusinessPlaceGroupList,
   BusinessPickupDetails,
   BusinessProductsCategoyDetails,
   BusinessProductsCategories,
@@ -400,6 +403,7 @@ export {
   Schedule,
   SignupForm,
   SingleBusinessCard,
+  SingleLoyaltyLevel,
   SingleOrderCard,
   SingleProductCard,
   SingleBusinessProduct,
