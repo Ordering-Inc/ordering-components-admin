@@ -43,6 +43,7 @@ export const BusinessBrandGENDetail = (props) => {
       setFormState({ ...formState, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = { ...formState?.changes }
+      if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
       for (const key in changes) {
         if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
           changes[key] = JSON.stringify(changes[key])
@@ -89,6 +90,29 @@ export const BusinessBrandGENDetail = (props) => {
       })
     }
   }
+  /**
+   * Function to update brand
+   */
+  const updateResult = (content) => {
+    setFormState({
+      ...formState,
+      changes: {},
+      result: content,
+      loading: false
+    })
+    if (handleUpdateBrandList) {
+      const _brands = brandListState?.brands.map(item => {
+        if (item.id === content.result.id) {
+          return {
+            ...item,
+            ...content.result
+          }
+        }
+        return item
+      })
+      handleUpdateBrandList(_brands)
+    }
+  }
 
   /**
    * Method to update a brand
@@ -114,23 +138,21 @@ export const BusinessBrandGENDetail = (props) => {
       const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        setFormState({
-          ...formState,
-          changes: {},
-          result: content,
-          loading: false
-        })
-        if (handleUpdateBrandList) {
-          const _brands = brandListState?.brands.map(item => {
-            if (item.id === content.result.id) {
-              return {
-                ...item,
-                ...content.result
-              }
-            }
-            return item
-          })
-          handleUpdateBrandList(_brands)
+        if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
+          const updatedChanges = { ribbon: JSON.stringify({ enabled: false }) }
+          const Options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedChanges)
+          }
+          const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, Options)
+          const content = await response.json()
+          updateResult(content)
+        } else {
+          updateResult(content)
         }
         showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
       } else {
