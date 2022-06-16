@@ -226,7 +226,7 @@ export const BusinessProductsCategoyDetails = (props) => {
       })
       const changes = { ...formState?.changes }
       if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
-      const { content } = await ordering.businesses(parseInt(businessState?.business?.id)).categories().save(formState.changes)
+      const { content } = await ordering.businesses(parseInt(businessState?.business?.id)).categories().save(changes)
       if (!content.error) {
         const newCategory = { ...content.result }
         newCategory.parent_category_id = content.result?.parent_category_id || null

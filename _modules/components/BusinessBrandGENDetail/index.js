@@ -143,6 +143,7 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
               }));
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
+              if (typeof (changes === null || changes === void 0 ? void 0 : changes.ribbon) !== 'undefined' && !(changes !== null && changes !== void 0 && (_changes$ribbon = changes.ribbon) !== null && _changes$ribbon !== void 0 && _changes$ribbon.enabled)) delete changes.ribbon;
 
               for (key in changes) {
                 if (_typeof(changes[key]) === 'object' && changes[key] !== null || Array.isArray(changes[key])) {
@@ -150,7 +151,6 @@ var BusinessBrandGENDetail = function BusinessBrandGENDetail(props) {
                 }
               }
 
-              if (typeof (changes === null || changes === void 0 ? void 0 : changes.ribbon) !== 'undefined' && !(changes !== null && changes !== void 0 && (_changes$ribbon = changes.ribbon) !== null && _changes$ribbon !== void 0 && _changes$ribbon.enabled)) delete changes.ribbon;
               requestOptions = {
                 method: 'POST',
                 headers: {

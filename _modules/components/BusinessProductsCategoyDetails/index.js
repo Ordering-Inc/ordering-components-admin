@@ -453,7 +453,7 @@ var BusinessProductsCategoyDetails = function BusinessProductsCategoyDetails(pro
               changes = _objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes);
               if (typeof (changes === null || changes === void 0 ? void 0 : changes.ribbon) !== 'undefined' && !(changes !== null && changes !== void 0 && (_changes$ribbon = changes.ribbon) !== null && _changes$ribbon !== void 0 && _changes$ribbon.enabled)) delete changes.ribbon;
               _context3.next = 9;
-              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.id)).categories().save(formState.changes);
+              return ordering.businesses(parseInt(businessState === null || businessState === void 0 ? void 0 : (_businessState$busine3 = businessState.business) === null || _businessState$busine3 === void 0 ? void 0 : _businessState$busine3.id)).categories().save(changes);
 
             case 9:
               _yield$ordering$busin3 = _context3.sent;

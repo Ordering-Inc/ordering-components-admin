@@ -43,12 +43,12 @@ export const BusinessBrandGENDetail = (props) => {
       setFormState({ ...formState, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       const changes = { ...formState?.changes }
+      if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
       for (const key in changes) {
         if ((typeof changes[key] === 'object' && changes[key] !== null) || Array.isArray(changes[key])) {
           changes[key] = JSON.stringify(changes[key])
         }
       }
-      if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
       const requestOptions = {
         method: 'POST',
         headers: {
