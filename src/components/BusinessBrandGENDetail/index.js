@@ -90,6 +90,29 @@ export const BusinessBrandGENDetail = (props) => {
       })
     }
   }
+  /**
+   * Function to update brand
+   */
+  const updateResult = (content) => {
+    setFormState({
+      ...formState,
+      changes: {},
+      result: content,
+      loading: false
+    })
+    if (handleUpdateBrandList) {
+      const _brands = brandListState?.brands.map(item => {
+        if (item.id === content.result.id) {
+          return {
+            ...item,
+            ...content.result
+          }
+        }
+        return item
+      })
+      handleUpdateBrandList(_brands)
+    }
+  }
 
   /**
    * Method to update a brand
@@ -127,43 +150,9 @@ export const BusinessBrandGENDetail = (props) => {
           }
           const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, Options)
           const content = await response.json()
-          setFormState({
-            ...formState,
-            changes: {},
-            result: content,
-            loading: false
-          })
-          if (handleUpdateBrandList) {
-            const _brands = brandListState?.brands.map(item => {
-              if (item.id === content.result.id) {
-                return {
-                  ...item,
-                  ...content.result
-                }
-              }
-              return item
-            })
-            handleUpdateBrandList(_brands)
-          }
+          updateResult(content)
         } else {
-          setFormState({
-            ...formState,
-            changes: {},
-            result: content,
-            loading: false
-          })
-          if (handleUpdateBrandList) {
-            const _brands = brandListState?.brands.map(item => {
-              if (item.id === content.result.id) {
-                return {
-                  ...item,
-                  ...content.result
-                }
-              }
-              return item
-            })
-            handleUpdateBrandList(_brands)
-          }
+          updateResult(content)
         }
         showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
       } else {
