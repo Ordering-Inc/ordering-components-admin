@@ -55,14 +55,35 @@ export const BusinessFormDetails = (props) => {
   }
 
   /**
+   * Function to update a business
+   */
+  const updateResult = (response) => {
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState.business,
+        ...response.content.result
+      }
+    })
+    if (handleSuccessUpdate) {
+      handleSuccessUpdate(response.content.result)
+    }
+    if (handleUpdateBusinessState) {
+      handleUpdateBusinessState(response.content.result)
+    }
+  }
+
+  /**
    * Default fuction for business profile workflow
    */
   const handleUpdateClick = async () => {
     try {
       setFormState({ ...formState, loading: true })
-      const response = await ordering.businesses(business?.id).save(formState.changes, {
+      const changes = { ...formState.changes }
+      const response = await ordering.businesses(business?.id).save(changes, {
         accessToken: session.token
       })
+      const originalChanges = { ...formState.changes }
       setFormState({
         ...formState,
         changes: response.content.error ? formState.changes : {},
@@ -71,18 +92,14 @@ export const BusinessFormDetails = (props) => {
       })
 
       if (!response.content.error) {
-        setBusinessState({
-          ...businessState,
-          business: {
-            ...businessState.business,
-            ...response.content.result
-          }
-        })
-        if (handleSuccessUpdate) {
-          handleSuccessUpdate(response.content.result)
-        }
-        if (handleUpdateBusinessState) {
-          handleUpdateBusinessState(response.content.result)
+        if ((typeof originalChanges?.ribbon?.enabled) !== 'undefined' && !originalChanges?.ribbon?.enabled && response.content?.result?.ribbon?.enabled) {
+          const updatedChanges = { ribbon: { enabled: false } }
+          const response = await ordering.businesses(business?.id).save(updatedChanges, {
+            accessToken: session.token
+          })
+          updateResult(response)
+        } else {
+          updateResult(response)
         }
       }
     } catch (err) {
