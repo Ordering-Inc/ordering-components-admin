@@ -207,12 +207,31 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
     }]
   };
   /**
+   * Function to update a business
+   */
+
+  var updateResult = function updateResult(response) {
+    setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+      business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
+    }));
+
+    if (handleSuccessUpdate) {
+      handleSuccessUpdate(response.content.result);
+    }
+
+    if (handleUpdateBusinessState) {
+      handleUpdateBusinessState(response.content.result);
+    }
+  };
+  /**
    * Default fuction for business profile workflow
    */
 
+
   var handleUpdateClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var response;
+      var changes, response, originalChanges, _originalChanges$ribb, _originalChanges$ribb2, _response$content, _response$content$res, _response$content$res2, updatedChanges, _response;
+
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -221,38 +240,56 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 4;
-              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).save(formState.changes, {
+              changes = _objectSpread({}, formState.changes);
+              _context.next = 5;
+              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).save(changes, {
                 accessToken: session.token
               });
 
-            case 4:
+            case 5:
               response = _context.sent;
+              originalChanges = _objectSpread({}, formState.changes);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
                 result: response.content,
                 loading: false
               }));
 
-              if (!response.content.error) {
-                setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
-                  business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
-                }));
-
-                if (handleSuccessUpdate) {
-                  handleSuccessUpdate(response.content.result);
-                }
-
-                if (handleUpdateBusinessState) {
-                  handleUpdateBusinessState(response.content.result);
-                }
+              if (response.content.error) {
+                _context.next = 18;
+                break;
               }
 
-              _context.next = 12;
+              if (!(typeof (originalChanges === null || originalChanges === void 0 ? void 0 : (_originalChanges$ribb = originalChanges.ribbon) === null || _originalChanges$ribb === void 0 ? void 0 : _originalChanges$ribb.enabled) !== 'undefined' && !(originalChanges !== null && originalChanges !== void 0 && (_originalChanges$ribb2 = originalChanges.ribbon) !== null && _originalChanges$ribb2 !== void 0 && _originalChanges$ribb2.enabled) && (_response$content = response.content) !== null && _response$content !== void 0 && (_response$content$res = _response$content.result) !== null && _response$content$res !== void 0 && (_response$content$res2 = _response$content$res.ribbon) !== null && _response$content$res2 !== void 0 && _response$content$res2.enabled)) {
+                _context.next = 17;
+                break;
+              }
+
+              updatedChanges = {
+                ribbon: {
+                  enabled: false
+                }
+              };
+              _context.next = 13;
+              return ordering.businesses(business === null || business === void 0 ? void 0 : business.id).save(updatedChanges, {
+                accessToken: session.token
+              });
+
+            case 13:
+              _response = _context.sent;
+              updateResult(_response);
+              _context.next = 18;
               break;
 
-            case 9:
-              _context.prev = 9;
+            case 17:
+              updateResult(response);
+
+            case 18:
+              _context.next = 23;
+              break;
+
+            case 20:
+              _context.prev = 20;
               _context.t0 = _context["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -262,12 +299,12 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
                 loading: false
               }));
 
-            case 12:
+            case 23:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 9]]);
+      }, _callee, null, [[0, 20]]);
     }));
 
     return function handleUpdateClick() {
