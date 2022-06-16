@@ -75,6 +75,7 @@ export const ProductDetatils = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = params ? { ...params } : { ...formState.changes }
+      const originalChanges = params ? { ...params } : { ...formState.changes }
       const { content: { error, result } } = await ordering.businesses(business?.id).categories(productState?.product?.category_id).products(productState?.product?.id).save(changes, {
         accessToken: session.token
       })
@@ -89,7 +90,15 @@ export const ProductDetatils = (props) => {
       })
 
       if (!error) {
-        handleSuccessUpdate(result)
+        if ((typeof originalChanges?.ribbon?.enabled) !== 'undefined' && !originalChanges?.ribbon?.enabled && result?.ribbon?.enabled) {
+          const updatedChanges = { ribbon: { enabled: false } }
+          const { content } = await ordering.businesses(business?.id).categories(productState?.product?.category_id).products(productState?.product?.id).save(updatedChanges, {
+            accessToken: session.token
+          })
+          handleSuccessUpdate(content?.result)
+        } else {
+          handleSuccessUpdate(result)
+        }
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
       }
     } catch (err) {

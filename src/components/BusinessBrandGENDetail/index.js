@@ -48,6 +48,7 @@ export const BusinessBrandGENDetail = (props) => {
           changes[key] = JSON.stringify(changes[key])
         }
       }
+      if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -114,23 +115,55 @@ export const BusinessBrandGENDetail = (props) => {
       const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
-        setFormState({
-          ...formState,
-          changes: {},
-          result: content,
-          loading: false
-        })
-        if (handleUpdateBrandList) {
-          const _brands = brandListState?.brands.map(item => {
-            if (item.id === content.result.id) {
-              return {
-                ...item,
-                ...content.result
-              }
-            }
-            return item
+        if ((typeof formState.changes?.ribbon?.enabled) !== 'undefined' && !formState.changes?.ribbon?.enabled && content?.result?.ribbon?.enabled) {
+          const updatedChanges = { ribbon: JSON.stringify({ enabled: false }) }
+          const Options = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(updatedChanges)
+          }
+          const response = await fetch(`${ordering.root}/franchises/${brand?.id}`, Options)
+          const content = await response.json()
+          setFormState({
+            ...formState,
+            changes: {},
+            result: content,
+            loading: false
           })
-          handleUpdateBrandList(_brands)
+          if (handleUpdateBrandList) {
+            const _brands = brandListState?.brands.map(item => {
+              if (item.id === content.result.id) {
+                return {
+                  ...item,
+                  ...content.result
+                }
+              }
+              return item
+            })
+            handleUpdateBrandList(_brands)
+          }
+        } else {
+          setFormState({
+            ...formState,
+            changes: {},
+            result: content,
+            loading: false
+          })
+          if (handleUpdateBrandList) {
+            const _brands = brandListState?.brands.map(item => {
+              if (item.id === content.result.id) {
+                return {
+                  ...item,
+                  ...content.result
+                }
+              }
+              return item
+            })
+            handleUpdateBrandList(_brands)
+          }
         }
         showToast(ToastType.Success, t('BRAND_UPDATED', 'Brand updated'))
       } else {
