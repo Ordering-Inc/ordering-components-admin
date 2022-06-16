@@ -55,6 +55,25 @@ export const BusinessFormDetails = (props) => {
   }
 
   /**
+   * Function to update a business
+   */
+  const updateResult = (response) => {
+    setBusinessState({
+      ...businessState,
+      business: {
+        ...businessState.business,
+        ...response.content.result
+      }
+    })
+    if (handleSuccessUpdate) {
+      handleSuccessUpdate(response.content.result)
+    }
+    if (handleUpdateBusinessState) {
+      handleUpdateBusinessState(response.content.result)
+    }
+  }
+
+  /**
    * Default fuction for business profile workflow
    */
   const handleUpdateClick = async () => {
@@ -78,33 +97,9 @@ export const BusinessFormDetails = (props) => {
           const response = await ordering.businesses(business?.id).save(updatedChanges, {
             accessToken: session.token
           })
-          setBusinessState({
-            ...businessState,
-            business: {
-              ...businessState.business,
-              ...response.content.result
-            }
-          })
-          if (handleSuccessUpdate) {
-            handleSuccessUpdate(response.content.result)
-          }
-          if (handleUpdateBusinessState) {
-            handleUpdateBusinessState(response.content.result)
-          }
+          updateResult(response)
         } else {
-          setBusinessState({
-            ...businessState,
-            business: {
-              ...businessState.business,
-              ...response.content.result
-            }
-          })
-          if (handleSuccessUpdate) {
-            handleSuccessUpdate(response.content.result)
-          }
-          if (handleUpdateBusinessState) {
-            handleUpdateBusinessState(response.content.result)
-          }
+          updateResult(response)
         }
       }
     } catch (err) {
