@@ -417,6 +417,12 @@ Object.defineProperty(exports, "CampaignSignUpOption", {
     return _CampaignSignUpOption.CampaignSignUpOption;
   }
 });
+Object.defineProperty(exports, "CannyIdentification", {
+  enumerable: true,
+  get: function get() {
+    return _CannyIdentification.CannyIdentification;
+  }
+});
 Object.defineProperty(exports, "CardForm", {
   enumerable: true,
   get: function get() {
@@ -1547,6 +1553,8 @@ var _AnalyticsStatusSubFilter = require("./components/AnalyticsStatusSubFilter")
 var _ApiKeysList = require("./components/ApiKeysList");
 
 var _BaseComponent = require("./components/BaseComponent");
+
+var _CannyIdentification = require("./components/CannyIdentification");
 
 var _Settings = require("./components/Settings");
 

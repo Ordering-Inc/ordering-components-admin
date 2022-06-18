@@ -64,7 +64,7 @@ export const SessionProvider = ({ children, strategy }) => {
       token: values.token,
       loading: false
     })
-    Canny('identify', {
+    window.Canny('identify', {
       appID: '5b05e5e2d3f6c47201694ad4',
       user: {
         // Replace these values with the current user's data
