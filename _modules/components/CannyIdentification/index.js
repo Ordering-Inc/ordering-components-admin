@@ -50,22 +50,34 @@ var CannyIdentification = function CannyIdentification(props) {
         if (!d.getElementById(i)) {
           var f = d.getElementsByTagName(s)[0],
               e = d.createElement(s);
-          e.type = "text/javascript", e.async = !0, e.src = "https://canny.io/sdk.js", f.parentNode.insertBefore(e, f);
+          e.type = 'text/javascript', e.async = !0, e.src = 'https://canny.io/sdk.js', f.parentNode.insertBefore(e, f);
         }
       }
 
-      if ("function" != typeof w.Canny) {
+      if ('function' != typeof w.Canny) {
         var c = function c() {
           c.q.push(arguments);
         };
 
-        c.q = [], w.Canny = c, "complete" === d.readyState ? l() : w.attachEvent ? w.attachEvent("onload", l) : w.addEventListener("load", l, !1);
+        c.q = [], w.Canny = c, 'complete' === d.readyState ? l() : w.attachEvent ? w.attachEvent('onload', l) : w.addEventListener('load', l, !1);
       }
-    }(window, document, "canny-jssdk", "script");
+    }(window, document, 'canny-jssdk', 'script');
   }, [appId]);
   (0, _react.useEffect)(function () {
-    if (user) console.log(user);
-  }, [user]);
+    if (!user) return;
+    window.Canny('identify', {
+      appID: appId,
+      user: {
+        // Replace these values with the current user's data
+        email: user.email,
+        name: user.name,
+        id: user.id,
+        // These fields are optional, but recommended:
+        avatarURL: user === null || user === void 0 ? void 0 : user.photo,
+        created: new Date(user.created_at).toISOString()
+      }
+    });
+  }, [user, appId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, children);
 };
 

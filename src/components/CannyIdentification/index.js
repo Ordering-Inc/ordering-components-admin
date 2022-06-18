@@ -15,12 +15,25 @@ export const CannyIdentification = (props) => {
       return
     }
     if (window.document.getElementById('canny-jssdk')) return
-    !function (w, d, i, s) { function l() { if (!d.getElementById(i)) { var f = d.getElementsByTagName(s)[0], e = d.createElement(s); e.type = "text/javascript", e.async = !0, e.src = "https://canny.io/sdk.js", f.parentNode.insertBefore(e, f) } } if ("function" != typeof w.Canny) { var c = function () { c.q.push(arguments) }; c.q = [], w.Canny = c, "complete" === d.readyState ? l() : w.attachEvent ? w.attachEvent("onload", l) : w.addEventListener("load", l, !1) } }(window, document, "canny-jssdk", "script")
+    !function (w, d, i, s) { function l() { if (!d.getElementById(i)) { var f = d.getElementsByTagName(s)[0], e = d.createElement(s); e.type = 'text/javascript', e.async = !0, e.src = 'https://canny.io/sdk.js', f.parentNode.insertBefore(e, f) } } if ('function' != typeof w.Canny) { var c = function () { c.q.push(arguments) }; c.q = [], w.Canny = c, 'complete' === d.readyState ? l() : w.attachEvent ? w.attachEvent('onload', l) : w.addEventListener('load', l, !1) } }(window, document, 'canny-jssdk', 'script')
   }, [appId])
 
   useEffect(() => {
-    if (user) console.log(user)
-  }, [user])
+    if (!user) return
+    window.Canny('identify', {
+      appID: appId,
+      user: {
+        // Replace these values with the current user's data
+        email: user.email,
+        name: user.name,
+        id: user.id,
+
+        // These fields are optional, but recommended:
+        avatarURL: user?.photo,
+        created: new Date(user.created_at).toISOString()
+      }
+    })
+  }, [user, appId])
 
   return (
     <>
