@@ -181,8 +181,6 @@ var SessionProvider = function SessionProvider(_ref) {
 
   var login = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3(values) {
-      var _values$user;
-
       return _regenerator.default.wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -205,20 +203,8 @@ var SessionProvider = function SessionProvider(_ref) {
                 token: values.token,
                 loading: false
               }));
-              window.Canny('identify', {
-                appID: '5b05e5e2d3f6c47201694ad4',
-                user: {
-                  // Replace these values with the current user's data
-                  email: values.user.email,
-                  name: values.user.name,
-                  id: values.user.id,
-                  // These fields are optional, but recommended:
-                  avatarURL: values === null || values === void 0 ? void 0 : (_values$user = values.user) === null || _values$user === void 0 ? void 0 : _values$user.photo,
-                  created: new Date(values === null || values === void 0 ? void 0 : values.user.created_at).toISOString()
-                }
-              });
 
-            case 8:
+            case 7:
             case "end":
               return _context3.stop();
           }
@@ -349,23 +335,6 @@ var SessionProvider = function SessionProvider(_ref) {
   }, [state]);
   (0, _react.useEffect)(function () {
     setValuesFromLocalStorage();
-    !function (w, d, i, s) {
-      function l() {
-        if (!d.getElementById(i)) {
-          var f = d.getElementsByTagName(s)[0],
-              e = d.createElement(s);
-          e.type = "text/javascript", e.async = !0, e.src = "https://canny.io/sdk.js", f.parentNode.insertBefore(e, f);
-        }
-      }
-
-      if ("function" != typeof w.Canny) {
-        var c = function c() {
-          c.q.push(arguments);
-        };
-
-        c.q = [], w.Canny = c, "complete" === d.readyState ? l() : w.attachEvent ? w.attachEvent("onload", l) : w.addEventListener("load", l, !1);
-      }
-    }(window, document, "canny-jssdk", "script");
   }, []);
   var functions = {
     login: login,
