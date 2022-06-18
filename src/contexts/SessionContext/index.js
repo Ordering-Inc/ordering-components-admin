@@ -64,6 +64,19 @@ export const SessionProvider = ({ children, strategy }) => {
       token: values.token,
       loading: false
     })
+    Canny('identify', {
+      appID: '5b05e5e2d3f6c47201694ad4',
+      user: {
+        // Replace these values with the current user's data
+        email: values.user.email,
+        name: values.user.name,
+        id: values.user.id,
+
+        // These fields are optional, but recommended:
+        avatarURL: values?.user?.photo,
+        created: new Date(values?.user.created_at).toISOString()
+      }
+    })
   }
 
   const logout = async () => {
@@ -112,6 +125,7 @@ export const SessionProvider = ({ children, strategy }) => {
 
   useEffect(() => {
     setValuesFromLocalStorage()
+    !function (w, d, i, s) { function l() { if (!d.getElementById(i)) { var f = d.getElementsByTagName(s)[0], e = d.createElement(s); e.type = "text/javascript", e.async = !0, e.src = "https://canny.io/sdk.js", f.parentNode.insertBefore(e, f) } } if ("function" != typeof w.Canny) { var c = function () { c.q.push(arguments) }; c.q = [], w.Canny = c, "complete" === d.readyState ? l() : w.attachEvent ? w.attachEvent("onload", l) : w.addEventListener("load", l, !1) } }(window, document, "canny-jssdk", "script")
   }, [])
 
   const functions = {
@@ -132,5 +146,5 @@ export const SessionProvider = ({ children, strategy }) => {
  */
 export const useSession = () => {
   const sessionManager = useContext(SessionContext)
-  return sessionManager || [{}, () => {}]
+  return sessionManager || [{}, () => { }]
 }
