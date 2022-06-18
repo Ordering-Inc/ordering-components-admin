@@ -19,7 +19,7 @@ export const CannyIdentification = (props) => {
   }, [appId])
 
   useEffect(() => {
-    if (!user) return
+    if (!user || !appId) return
     window.Canny('identify', {
       appID: appId,
       user: {

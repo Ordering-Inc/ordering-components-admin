@@ -64,7 +64,7 @@ var CannyIdentification = function CannyIdentification(props) {
     }(window, document, 'canny-jssdk', 'script');
   }, [appId]);
   (0, _react.useEffect)(function () {
-    if (!user) return;
+    if (!user || !appId) return;
     window.Canny('identify', {
       appID: appId,
       user: {
