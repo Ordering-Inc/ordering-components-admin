@@ -511,7 +511,15 @@ var ImporterForm = function ImporterForm(props) {
       seo_keywords: 'test key',
       hide_special_instructions: 1,
       maximum_per_order: 2,
-      minimum_per_order: 1
+      minimum_per_order: 1,
+      extra_id: 10,
+      external_extra_id: 100,
+      extra_option_id: 10,
+      external_extra_option_id: 100,
+      extra_option_suboption_id: 10,
+      external_extra_option_suboption_id: 100,
+      min: 1,
+      max: 1
     };
 
     var _mappingState = _objectSpread({}, mappingState);
@@ -532,7 +540,7 @@ var ImporterForm = function ImporterForm(props) {
       var fieldName = key.replaceAll('_', ' ');
       csvHeaders[csvFields[key]] = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
       csvRow1[csvFields[key]] = allowedBusinessImporters[key] || ' ';
-      var integerKeys = ['busines_id', 'external_business_id', 'category_id', 'external_category_id', 'external_parent_category_id', 'product_id', 'rank', 'external_product_id'];
+      var integerKeys = ['busines_id', 'external_business_id', 'category_id', 'external_category_id', 'external_parent_category_id', 'product_id', 'rank', 'external_product_id', 'extra_id', 'external_extra_id', 'extra_option_id', 'external_extra_option_id', 'extra_option_suboption_id', 'external_extra_option_suboption_id'];
       var uniqueKeys = ['slug', 'name', 'sku', 'seo_keywords'];
 
       if (integerKeys.includes(key)) {
