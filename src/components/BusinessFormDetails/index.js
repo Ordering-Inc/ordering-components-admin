@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useConfig } from '../../contexts/ConfigContext'
+import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage business form details behavior without UI component
@@ -19,6 +21,8 @@ export const BusinessFormDetails = (props) => {
   const [ordering] = useApi()
   const [session] = useSession()
   const [{ configs }] = useConfig()
+  const [, { showToast }] = useToast()
+  const [, t] = useLanguage()
 
   const [businessState, setBusinessState] = useState({ loading: false, business: null, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
@@ -78,6 +82,7 @@ export const BusinessFormDetails = (props) => {
    */
   const handleUpdateClick = async () => {
     try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
       const changes = { ...formState.changes }
       const response = await ordering.businesses(business?.id).save(changes, {
@@ -101,6 +106,7 @@ export const BusinessFormDetails = (props) => {
         } else {
           updateResult(response)
         }
+        showToast(ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'))
       }
     } catch (err) {
       setFormState({
