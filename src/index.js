@@ -8,6 +8,7 @@ import { AnalyticsDriversFilter } from './components/AnalyticsDriversFilter'
 import { AnalyticsStatusSubFilter } from './components/AnalyticsStatusSubFilter'
 import { ApiKeysList } from './components/ApiKeysList'
 import { BaseComponent } from './components/BaseComponent'
+import { CannyIdentification } from './components/CannyIdentification'
 import { Settings } from './components/Settings'
 import { BatchImageForm } from './components/BatchImageForm'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
@@ -232,6 +233,7 @@ export {
   AnalyticsStatusSubFilter,
   ApiKeysList,
   BaseComponent,
+  CannyIdentification,
   Settings,
   BatchImageForm,
   BusinessAndProductList,
