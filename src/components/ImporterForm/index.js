@@ -334,7 +334,37 @@ export const ImporterForm = (props) => {
       front_layout: 'food',
       seo_image: '"https://res.cloudinary.com/ordering2/image/upload/f_auto,q_auto,h_100,c_limit/v1539095959/crya6ibldlsz4hjyo03e.jpg"',
       seo_title: 'seo title',
-      seo_description: 'seo description'
+      seo_description: 'seo description',
+
+      category_id: 10,
+      external_category_id: 120,
+      external_parent_category_id: 130,
+      product_id: 10,
+      image: '"https://s3.amazonaws.com/ordering-images2/res/ordering/image/upload/wmpfkcedo4y2kwxcamve/1534167067.png"',
+      rank: 10,
+      parent_category_id: 20,
+
+      external_product_id: 100,
+      price: 10,
+      images: '"https://s3.amazonaws.com/ordering-images2/res/ordering/image/upload/lx0zuprnuozhqmaa97jj/1534200630.jpg"',
+      sku: 'test_sku',
+      inventoried: 1,
+      quantity: 10,
+      upselling: 1,
+      in_offer: 1,
+      offer_price: 10,
+      offer_rate: 0,
+      offer_rate_type: 1,
+      offer_include_options: 1,
+      tax_id: 10,
+      fee_id: 10,
+      estimated_person: '"test person"',
+      barcode: '"0123456789"',
+      barcode_alternative: '"0123"',
+      seo_keywords: 'test key',
+      hide_special_instructions: 1,
+      maximum_per_order: 2,
+      minimum_per_order: 1
     }
 
     const _mappingState = { ...mappingState }
@@ -351,9 +381,11 @@ export const ImporterForm = (props) => {
       const fieldName = key.replaceAll('_', ' ')
       csvHeaders[csvFields[key]] = fieldName.charAt(0).toUpperCase() + fieldName.slice(1)
       csvRow1[csvFields[key]] = allowedBusinessImporters[key] || ' '
-      if (key === 'busines_id' || key === 'external_business_id') {
+      const integerKeys = ['busines_id', 'external_business_id', 'category_id', 'external_category_id', 'external_parent_category_id', 'product_id', 'rank', 'external_product_id']
+      const uniqueKeys = ['slug', 'name', 'sku', 'seo_keywords']
+      if (integerKeys.includes(key)) {
         csvRow2[csvFields[key]] = allowedBusinessImporters[key] + 1
-      } else if (key === 'slug' || key === 'name') {
+      } else if (uniqueKeys.includes(key)) {
         csvRow2[csvFields[key]] = allowedBusinessImporters[key] + '_2'
       } else {
         csvRow2[csvFields[key]] = allowedBusinessImporters[key] || ' '
