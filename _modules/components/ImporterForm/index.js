@@ -560,6 +560,7 @@ var ImporterForm = function ImporterForm(props) {
         }
 
         delete _mapping.fields;
+        delete _mapping.metafields;
         delete _mapping.type;
 
         var _csvFields = _objectSpread(_objectSpread({}, _mapping), newFields);
@@ -572,6 +573,7 @@ var ImporterForm = function ImporterForm(props) {
       var fields = _objectSpread({}, _mappingState.fields);
 
       delete _mappingState.fields;
+      delete _mappingState.metafields;
       csvFields = _objectSpread(_objectSpread({}, _mappingState), fields);
     }
 
@@ -638,7 +640,7 @@ var ImporterForm = function ImporterForm(props) {
       return e.join(',');
     }).join('\n');
     var link = document.createElement('a');
-    link.download = 'example.csv';
+    link.download = (editState === null || editState === void 0 ? void 0 : editState.type) + '.csv';
     var blob = new Blob(["\uFEFF", csvContent], {
       type: 'text/csv'
     });
