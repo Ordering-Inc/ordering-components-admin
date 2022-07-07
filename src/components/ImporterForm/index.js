@@ -404,6 +404,7 @@ export const ImporterForm = (props) => {
           newFields[typeName + ' ' + key] = fields[key]
         }
         delete _mapping.fields
+        delete _mapping.metafields
         delete _mapping.type
         const _csvFields = { ..._mapping, ...newFields }
         csvFields = { ...csvFields, ..._csvFields }
@@ -412,6 +413,7 @@ export const ImporterForm = (props) => {
       const _mappingState = { ...mappingState }
       const fields = { ..._mappingState.fields }
       delete _mappingState.fields
+      delete _mappingState.metafields
       csvFields = { ..._mappingState, ...fields }
     }
 
@@ -472,7 +474,7 @@ export const ImporterForm = (props) => {
     ]
     const csvContent = rows.map(e => e.join(',')).join('\n')
     const link = document.createElement('a')
-    link.download = 'example.csv'
+    link.download = editState?.type + '.csv'
     const blob = new Blob(['\ufeff', csvContent], { type: 'text/csv' })
     const reader = new FileReader()
     reader.readAsDataURL(blob)
