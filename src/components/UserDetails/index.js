@@ -70,6 +70,32 @@ export const UserDetails = (props) => {
     }
   }
 
+  /**
+   * Method to connect with Google calendar
+   */
+  const handleGoogleCalendarSync = async () => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionStatus({ loading: true, error: null })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/users/${userState.user?.id}/google/calendar/sync`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        showToast(ToastType.Success, t('YOUR_CALENDAR_WILL_BE_SYNCHRONIZED', 'Your calendar will be synchronized'))
+      } else {
+        setActionStatus({ loading: false, error: content.result })
+      }
+    } catch (err) {
+      setActionStatus({ loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
     if (props.user) {
       setUserState({
@@ -99,6 +125,7 @@ export const UserDetails = (props) => {
             actionStatus={actionStatus}
             handleDeleteUser={handleDeleteUser}
             handleSuccessUserUpdate={handleSuccessUserUpdate}
+            handleGoogleCalendarSync={handleGoogleCalendarSync}
           />
         )
       }
@@ -156,6 +183,7 @@ UserDetails.defaultProps = {
   propsToFetch: [
     'name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address',
     'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'loyalty_level',
-    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified', 'schedule', 'max_days_in_future'
+    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified', 'schedule', 'max_days_in_future',
+    'occupation_id', 'occupation', 'session'
   ]
 }
