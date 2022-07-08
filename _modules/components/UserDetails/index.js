@@ -199,6 +199,75 @@ var UserDetails = function UserDetails(props) {
       return _ref2.apply(this, arguments);
     };
   }();
+  /**
+   * Method to connect with Google calendar
+   */
+
+
+  var handleGoogleCalendarSync = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var _userState$user, requestOptions, response, content;
+
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionStatus({
+                loading: true,
+                error: null
+              });
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/users/").concat((_userState$user = userState.user) === null || _userState$user === void 0 ? void 0 : _userState$user.id, "/google/calendar/sync"), requestOptions);
+
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+
+            case 9:
+              content = _context3.sent;
+
+              if (!content.error) {
+                showToast(_ToastContext.ToastType.Success, t('YOUR_CALENDAR_WILL_BE_SYNCHRONIZED', 'Your calendar will be synchronized'));
+              } else {
+                setActionStatus({
+                  loading: false,
+                  error: content.result
+                });
+              }
+
+              _context3.next = 16;
+              break;
+
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setActionStatus({
+                loading: false,
+                error: [_context3.t0.message]
+              });
+
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+
+    return function handleGoogleCalendarSync() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
 
   (0, _react.useEffect)(function () {
     if (props.user) {
@@ -221,7 +290,8 @@ var UserDetails = function UserDetails(props) {
     userState: userState,
     actionStatus: actionStatus,
     handleDeleteUser: handleDeleteUser,
-    handleSuccessUserUpdate: handleSuccessUserUpdate
+    handleSuccessUserUpdate: handleSuccessUserUpdate,
+    handleGoogleCalendarSync: handleGoogleCalendarSync
   })));
 };
 
@@ -276,5 +346,5 @@ UserDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'loyalty_level', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified', 'schedule', 'max_days_in_future']
+  propsToFetch: ['name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'address_notes', 'driver_zone_restriction', 'dropdown_option_id', 'dropdown_option', 'location', 'loyalty_level', 'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'phone_verified', 'email_verified', 'schedule', 'max_days_in_future', 'occupation_id', 'occupation', 'session']
 };
