@@ -17,7 +17,8 @@ export const UsersList = (props) => {
     isBusinessOwners,
     defaultUserTypesSelected,
     disabledActiveStateCondition,
-    isDriver
+    isDriver,
+    isProfessional
   } = props
 
   const [ordering] = useApi()
@@ -40,8 +41,10 @@ export const UsersList = (props) => {
   const [selectedUserActiveState, setSelectedUserActiveState] = useState(true)
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [selectedUsers, setSelectedUsers] = useState([])
-
   const [deleteUsersActionState, setDeleteUsersActionState] = useState({ loading: false, error: null })
+  const [occupationsState, setOccupationsState] = useState({ occupations: [], loading: false, error: null })
+  const [selectedOccupation, setSelectedOccupation] = useState(null)
+
   /**
    * Get users by params, order options and filters
    * @param {boolean} newFetch Make a new request or next page
@@ -89,6 +92,10 @@ export const UsersList = (props) => {
 
       if (userTypesSelected.length > 0) {
         conditions.push({ attribute: 'level', value: userTypesSelected })
+      }
+
+      if (selectedOccupation) {
+        conditions.push({ attribute: 'occupation_id', value: selectedOccupation })
       }
 
       if (searchValue) {
@@ -274,6 +281,46 @@ export const UsersList = (props) => {
           error: [err.message]
         })
       }
+    }
+  }
+
+  /**
+   * Get the occupations from API
+   */
+  const getOccupations = async () => {
+    try {
+      setOccupationsState({
+        ...occupationsState,
+        loading: true
+      })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session?.token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/occupations`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setOccupationsState({
+          loading: false,
+          occupations: content.result,
+          error: null
+        })
+      } else {
+        setOccupationsState({
+          ...occupationsState,
+          loading: false,
+          error: content.result
+        })
+      }
+    } catch (error) {
+      setOccupationsState({
+        ...occupationsState,
+        loading: false,
+        error: [error.message]
+      })
     }
   }
 
@@ -503,11 +550,17 @@ export const UsersList = (props) => {
   useEffect(() => {
     if (usersList.loading) return
     getUsers(1, null)
-  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified])
+  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified, selectedOccupation])
 
   useEffect(() => {
     if ((Object.keys(filterValues?.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null)
   }, [filterValues])
+
+  useEffect(() => {
+    if (isProfessional) {
+      getOccupations()
+    }
+  }, [isProfessional])
 
   return (
     <>
@@ -541,6 +594,9 @@ export const UsersList = (props) => {
             handleSuccessAddUser={handleSuccessAddUser}
             handleSuccessDeleteUser={handleSuccessDeleteUser}
             handleSuccessAddressesUpdate={handleSuccessAddressesUpdate}
+            occupationsState={occupationsState}
+            selectedOccupation={selectedOccupation}
+            handleSelectOccupation={setSelectedOccupation}
           />
         )
       }
