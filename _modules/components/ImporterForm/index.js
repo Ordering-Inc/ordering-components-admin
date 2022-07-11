@@ -25,14 +25,6 @@ function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && 
 
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
-
 function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/facebook/regenerator/blob/main/LICENSE */ _regeneratorRuntime = function _regeneratorRuntime() { return exports; }; var exports = {}, Op = Object.prototype, hasOwn = Op.hasOwnProperty, $Symbol = "function" == typeof Symbol ? Symbol : {}, iteratorSymbol = $Symbol.iterator || "@@iterator", asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator", toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag"; function define(obj, key, value) { return Object.defineProperty(obj, key, { value: value, enumerable: !0, configurable: !0, writable: !0 }), obj[key]; } try { define({}, ""); } catch (err) { define = function define(obj, key, value) { return obj[key] = value; }; } function wrap(innerFn, outerFn, self, tryLocsList) { var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator, generator = Object.create(protoGenerator.prototype), context = new Context(tryLocsList || []); return generator._invoke = function (innerFn, self, context) { var state = "suspendedStart"; return function (method, arg) { if ("executing" === state) throw new Error("Generator is already running"); if ("completed" === state) { if ("throw" === method) throw arg; return doneResult(); } for (context.method = method, context.arg = arg;;) { var delegate = context.delegate; if (delegate) { var delegateResult = maybeInvokeDelegate(delegate, context); if (delegateResult) { if (delegateResult === ContinueSentinel) continue; return delegateResult; } } if ("next" === context.method) context.sent = context._sent = context.arg;else if ("throw" === context.method) { if ("suspendedStart" === state) throw state = "completed", context.arg; context.dispatchException(context.arg); } else "return" === context.method && context.abrupt("return", context.arg); state = "executing"; var record = tryCatch(innerFn, self, context); if ("normal" === record.type) { if (state = context.done ? "completed" : "suspendedYield", record.arg === ContinueSentinel) continue; return { value: record.arg, done: context.done }; } "throw" === record.type && (state = "completed", context.method = "throw", context.arg = record.arg); } }; }(innerFn, self, context), generator; } function tryCatch(fn, obj, arg) { try { return { type: "normal", arg: fn.call(obj, arg) }; } catch (err) { return { type: "throw", arg: err }; } } exports.wrap = wrap; var ContinueSentinel = {}; function Generator() {} function GeneratorFunction() {} function GeneratorFunctionPrototype() {} var IteratorPrototype = {}; define(IteratorPrototype, iteratorSymbol, function () { return this; }); var getProto = Object.getPrototypeOf, NativeIteratorPrototype = getProto && getProto(getProto(values([]))); NativeIteratorPrototype && NativeIteratorPrototype !== Op && hasOwn.call(NativeIteratorPrototype, iteratorSymbol) && (IteratorPrototype = NativeIteratorPrototype); var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype = Object.create(IteratorPrototype); function defineIteratorMethods(prototype) { ["next", "throw", "return"].forEach(function (method) { define(prototype, method, function (arg) { return this._invoke(method, arg); }); }); } function AsyncIterator(generator, PromiseImpl) { function invoke(method, arg, resolve, reject) { var record = tryCatch(generator[method], generator, arg); if ("throw" !== record.type) { var result = record.arg, value = result.value; return value && "object" == _typeof(value) && hasOwn.call(value, "__await") ? PromiseImpl.resolve(value.__await).then(function (value) { invoke("next", value, resolve, reject); }, function (err) { invoke("throw", err, resolve, reject); }) : PromiseImpl.resolve(value).then(function (unwrapped) { result.value = unwrapped, resolve(result); }, function (error) { return invoke("throw", error, resolve, reject); }); } reject(record.arg); } var previousPromise; this._invoke = function (method, arg) { function callInvokeWithMethodAndArg() { return new PromiseImpl(function (resolve, reject) { invoke(method, arg, resolve, reject); }); } return previousPromise = previousPromise ? previousPromise.then(callInvokeWithMethodAndArg, callInvokeWithMethodAndArg) : callInvokeWithMethodAndArg(); }; } function maybeInvokeDelegate(delegate, context) { var method = delegate.iterator[context.method]; if (undefined === method) { if (context.delegate = null, "throw" === context.method) { if (delegate.iterator.return && (context.method = "return", context.arg = undefined, maybeInvokeDelegate(delegate, context), "throw" === context.method)) return ContinueSentinel; context.method = "throw", context.arg = new TypeError("The iterator does not provide a 'throw' method"); } return ContinueSentinel; } var record = tryCatch(method, delegate.iterator, context.arg); if ("throw" === record.type) return context.method = "throw", context.arg = record.arg, context.delegate = null, ContinueSentinel; var info = record.arg; return info ? info.done ? (context[delegate.resultName] = info.value, context.next = delegate.nextLoc, "return" !== context.method && (context.method = "next", context.arg = undefined), context.delegate = null, ContinueSentinel) : info : (context.method = "throw", context.arg = new TypeError("iterator result is not an object"), context.delegate = null, ContinueSentinel); } function pushTryEntry(locs) { var entry = { tryLoc: locs[0] }; 1 in locs && (entry.catchLoc = locs[1]), 2 in locs && (entry.finallyLoc = locs[2], entry.afterLoc = locs[3]), this.tryEntries.push(entry); } function resetTryEntry(entry) { var record = entry.completion || {}; record.type = "normal", delete record.arg, entry.completion = record; } function Context(tryLocsList) { this.tryEntries = [{ tryLoc: "root" }], tryLocsList.forEach(pushTryEntry, this), this.reset(!0); } function values(iterable) { if (iterable) { var iteratorMethod = iterable[iteratorSymbol]; if (iteratorMethod) return iteratorMethod.call(iterable); if ("function" == typeof iterable.next) return iterable; if (!isNaN(iterable.length)) { var i = -1, next = function next() { for (; ++i < iterable.length;) { if (hasOwn.call(iterable, i)) return next.value = iterable[i], next.done = !1, next; } return next.value = undefined, next.done = !0, next; }; return next.next = next; } } return { next: doneResult }; } function doneResult() { return { value: undefined, done: !0 }; } return GeneratorFunction.prototype = GeneratorFunctionPrototype, define(Gp, "constructor", GeneratorFunctionPrototype), define(GeneratorFunctionPrototype, "constructor", GeneratorFunction), GeneratorFunction.displayName = define(GeneratorFunctionPrototype, toStringTagSymbol, "GeneratorFunction"), exports.isGeneratorFunction = function (genFun) { var ctor = "function" == typeof genFun && genFun.constructor; return !!ctor && (ctor === GeneratorFunction || "GeneratorFunction" === (ctor.displayName || ctor.name)); }, exports.mark = function (genFun) { return Object.setPrototypeOf ? Object.setPrototypeOf(genFun, GeneratorFunctionPrototype) : (genFun.__proto__ = GeneratorFunctionPrototype, define(genFun, toStringTagSymbol, "GeneratorFunction")), genFun.prototype = Object.create(Gp), genFun; }, exports.awrap = function (arg) { return { __await: arg }; }, defineIteratorMethods(AsyncIterator.prototype), define(AsyncIterator.prototype, asyncIteratorSymbol, function () { return this; }), exports.AsyncIterator = AsyncIterator, exports.async = function (innerFn, outerFn, self, tryLocsList, PromiseImpl) { void 0 === PromiseImpl && (PromiseImpl = Promise); var iter = new AsyncIterator(wrap(innerFn, outerFn, self, tryLocsList), PromiseImpl); return exports.isGeneratorFunction(outerFn) ? iter : iter.next().then(function (result) { return result.done ? result.value : iter.next(); }); }, defineIteratorMethods(Gp), define(Gp, toStringTagSymbol, "Generator"), define(Gp, iteratorSymbol, function () { return this; }), define(Gp, "toString", function () { return "[object Generator]"; }), exports.keys = function (object) { var keys = []; for (var key in object) { keys.push(key); } return keys.reverse(), function next() { for (; keys.length;) { var key = keys.pop(); if (key in object) return next.value = key, next.done = !1, next; } return next.done = !0, next; }; }, exports.values = values, Context.prototype = { constructor: Context, reset: function reset(skipTempReset) { if (this.prev = 0, this.next = 0, this.sent = this._sent = undefined, this.done = !1, this.delegate = null, this.method = "next", this.arg = undefined, this.tryEntries.forEach(resetTryEntry), !skipTempReset) for (var name in this) { "t" === name.charAt(0) && hasOwn.call(this, name) && !isNaN(+name.slice(1)) && (this[name] = undefined); } }, stop: function stop() { this.done = !0; var rootRecord = this.tryEntries[0].completion; if ("throw" === rootRecord.type) throw rootRecord.arg; return this.rval; }, dispatchException: function dispatchException(exception) { if (this.done) throw exception; var context = this; function handle(loc, caught) { return record.type = "throw", record.arg = exception, context.next = loc, caught && (context.method = "next", context.arg = undefined), !!caught; } for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i], record = entry.completion; if ("root" === entry.tryLoc) return handle("end"); if (entry.tryLoc <= this.prev) { var hasCatch = hasOwn.call(entry, "catchLoc"), hasFinally = hasOwn.call(entry, "finallyLoc"); if (hasCatch && hasFinally) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } else if (hasCatch) { if (this.prev < entry.catchLoc) return handle(entry.catchLoc, !0); } else { if (!hasFinally) throw new Error("try statement without catch or finally"); if (this.prev < entry.finallyLoc) return handle(entry.finallyLoc); } } } }, abrupt: function abrupt(type, arg) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc <= this.prev && hasOwn.call(entry, "finallyLoc") && this.prev < entry.finallyLoc) { var finallyEntry = entry; break; } } finallyEntry && ("break" === type || "continue" === type) && finallyEntry.tryLoc <= arg && arg <= finallyEntry.finallyLoc && (finallyEntry = null); var record = finallyEntry ? finallyEntry.completion : {}; return record.type = type, record.arg = arg, finallyEntry ? (this.method = "next", this.next = finallyEntry.finallyLoc, ContinueSentinel) : this.complete(record); }, complete: function complete(record, afterLoc) { if ("throw" === record.type) throw record.arg; return "break" === record.type || "continue" === record.type ? this.next = record.arg : "return" === record.type ? (this.rval = this.arg = record.arg, this.method = "return", this.next = "end") : "normal" === record.type && afterLoc && (this.next = afterLoc), ContinueSentinel; }, finish: function finish(finallyLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.finallyLoc === finallyLoc) return this.complete(entry.completion, entry.afterLoc), resetTryEntry(entry), ContinueSentinel; } }, catch: function _catch(tryLoc) { for (var i = this.tryEntries.length - 1; i >= 0; --i) { var entry = this.tryEntries[i]; if (entry.tryLoc === tryLoc) { var record = entry.completion; if ("throw" === record.type) { var thrown = record.arg; resetTryEntry(entry); } return thrown; } } throw new Error("illegal catch attempt"); }, delegateYield: function delegateYield(iterable, resultName, nextLoc) { return this.delegate = { iterator: values(iterable), resultName: resultName, nextLoc: nextLoc }, "next" === this.method && (this.arg = undefined), ContinueSentinel; } }, exports; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -66,7 +58,9 @@ var ImporterForm = function ImporterForm(props) {
   var UIComponent = props.UIComponent,
       handleSuccessAdd = props.handleSuccessAdd,
       handleSuccessUpdateImporter = props.handleSuccessUpdateImporter,
-      selectedImporter = props.selectedImporter;
+      selectedImporter = props.selectedImporter,
+      handleCustomEditImporter = props.handleCustomEditImporter,
+      handleCustomAddImporter = props.handleCustomAddImporter;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -257,16 +251,25 @@ var ImporterForm = function ImporterForm(props) {
   };
 
   var handleCreateImporter = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(updatedChanges) {
       var data, requestOptions, response, _yield$response$json, error, result;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              if (!handleCustomAddImporter) {
+                _context.next = 3;
+                break;
+              }
+
+              handleCustomAddImporter(formState.changes);
+              return _context.abrupt("return");
+
+            case 3:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              data = _objectSpread({}, formState.changes);
-              _context.prev = 2;
+              data = updatedChanges ? _objectSpread({}, updatedChanges) : _objectSpread({}, formState.changes);
+              _context.prev = 5;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -278,15 +281,15 @@ var ImporterForm = function ImporterForm(props) {
                 },
                 body: JSON.stringify(data)
               };
-              _context.next = 7;
+              _context.next = 10;
               return fetch("".concat(ordering.root, "/importers"), requestOptions);
 
-            case 7:
+            case 10:
               response = _context.sent;
-              _context.next = 10;
+              _context.next = 13;
               return response.json();
 
-            case 10:
+            case 13:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -320,12 +323,12 @@ var ImporterForm = function ImporterForm(props) {
                 }
               }
 
-              _context.next = 19;
+              _context.next = 22;
               break;
 
-            case 16:
-              _context.prev = 16;
-              _context.t0 = _context["catch"](2);
+            case 19:
+              _context.prev = 19;
+              _context.t0 = _context["catch"](5);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
@@ -334,15 +337,15 @@ var ImporterForm = function ImporterForm(props) {
                 loading: false
               }));
 
-            case 19:
+            case 22:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 16]]);
+      }, _callee, null, [[5, 19]]);
     }));
 
-    return function handleCreateImporter() {
+    return function handleCreateImporter(_x) {
       return _ref.apply(this, arguments);
     };
   }();
@@ -352,16 +355,25 @@ var ImporterForm = function ImporterForm(props) {
 
 
   var editImporter = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(updatedChanges) {
       var data, requestOptions, response, _yield$response$json2, error, result;
 
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
+              if (!handleCustomEditImporter) {
+                _context2.next = 3;
+                break;
+              }
+
+              handleCustomEditImporter(formState.changes);
+              return _context2.abrupt("return");
+
+            case 3:
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              data = _objectSpread({}, formState.changes);
-              _context2.prev = 2;
+              data = updatedChanges ? _objectSpread({}, updatedChanges) : _objectSpread({}, formState.changes);
+              _context2.prev = 5;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
@@ -373,15 +385,15 @@ var ImporterForm = function ImporterForm(props) {
                 },
                 body: JSON.stringify(data)
               };
-              _context2.next = 7;
+              _context2.next = 10;
               return fetch("".concat(ordering.root, "/importers/").concat(selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.id), requestOptions);
 
-            case 7:
+            case 10:
               response = _context2.sent;
-              _context2.next = 10;
+              _context2.next = 13;
               return response.json();
 
-            case 10:
+            case 13:
               _yield$response$json2 = _context2.sent;
               error = _yield$response$json2.error;
               result = _yield$response$json2.result;
@@ -409,12 +421,12 @@ var ImporterForm = function ImporterForm(props) {
                 props.onClos && props.onClos();
               }
 
-              _context2.next = 19;
+              _context2.next = 22;
               break;
 
-            case 16:
-              _context2.prev = 16;
-              _context2.t0 = _context2["catch"](2);
+            case 19:
+              _context2.prev = 19;
+              _context2.t0 = _context2["catch"](5);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
                   error: true,
@@ -423,15 +435,15 @@ var ImporterForm = function ImporterForm(props) {
                 loading: false
               }));
 
-            case 19:
+            case 22:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[2, 16]]);
+      }, _callee2, null, [[5, 19]]);
     }));
 
-    return function editImporter() {
+    return function editImporter(_x2) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -511,19 +523,54 @@ var ImporterForm = function ImporterForm(props) {
       seo_keywords: 'test key',
       hide_special_instructions: 1,
       maximum_per_order: 2,
-      minimum_per_order: 1
+      minimum_per_order: 1,
+      extra_id: 10,
+      external_extra_id: 100,
+      extra_option_id: 10,
+      external_extra_option_id: 100,
+      extra_option_suboption_id: 10,
+      external_extra_option_suboption_id: 100,
+      min: 1,
+      max: 1
     };
+    var integerKeys = ['busines_id', 'external_business_id', 'category_id', 'external_category_id', 'external_parent_category_id', 'product_id', 'rank', 'external_product_id', 'extra_id', 'external_extra_id', 'extra_option_id', 'external_extra_option_id', 'extra_option_suboption_id', 'external_extra_option_suboption_id'];
+    var uniqueKeys = ['slug', 'name', 'sku', 'seo_keywords'];
+    var csvFields = {};
 
-    var _mappingState = _objectSpread({}, mappingState);
+    if ((selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.type) === 'sync_multiple') {
+      selectedImporter.mapping.forEach(function (mapping) {
+        var _mapping = _objectSpread({}, mapping);
 
-    var fields = _objectSpread({}, _mappingState.fields);
+        var fields = _objectSpread({}, _mapping.fields);
 
-    delete _mappingState.fields;
+        var typeName = _mapping.type.replace('sync_', '').replaceAll('_', ' ');
 
-    var csvFields = _objectSpread(_objectSpread({}, _mappingState), fields);
+        var newFields = {};
+
+        for (var key in fields) {
+          newFields[typeName + ' ' + key] = fields[key];
+        }
+
+        delete _mapping.fields;
+        delete _mapping.metafields;
+        delete _mapping.type;
+
+        var _csvFields = _objectSpread(_objectSpread({}, _mapping), newFields);
+
+        csvFields = _objectSpread(_objectSpread({}, csvFields), _csvFields);
+      });
+    } else {
+      var _mappingState = _objectSpread({}, mappingState);
+
+      var fields = _objectSpread({}, _mappingState.fields);
+
+      delete _mappingState.fields;
+      delete _mappingState.metafields;
+      csvFields = _objectSpread(_objectSpread({}, _mappingState), fields);
+    }
 
     var values = Object.values(csvFields);
-    var max = Math.max.apply(Math, _toConsumableArray(values));
+    var max = Math.max.apply(Math, values);
     var csvHeaders = Array(max + 1).fill('');
     var csvRow1 = Array(max + 1).fill('');
     var csvRow2 = Array(max + 1).fill('');
@@ -531,17 +578,53 @@ var ImporterForm = function ImporterForm(props) {
     for (var key in csvFields) {
       var fieldName = key.replaceAll('_', ' ');
       csvHeaders[csvFields[key]] = fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
-      csvRow1[csvFields[key]] = allowedBusinessImporters[key] || ' ';
-      var integerKeys = ['busines_id', 'external_business_id', 'category_id', 'external_category_id', 'external_parent_category_id', 'product_id', 'rank', 'external_product_id'];
-      var uniqueKeys = ['slug', 'name', 'sku', 'seo_keywords'];
 
-      if (integerKeys.includes(key)) {
-        csvRow2[csvFields[key]] = allowedBusinessImporters[key] + 1;
-      } else if (uniqueKeys.includes(key)) {
-        csvRow2[csvFields[key]] = allowedBusinessImporters[key] + '_2';
-      } else {
-        csvRow2[csvFields[key]] = allowedBusinessImporters[key] || ' ';
+      if ((selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.type) !== 'sync_multiple') {
+        csvRow1[csvFields[key]] = allowedBusinessImporters[key] || ' ';
+
+        if (integerKeys.includes(key)) {
+          csvRow2[csvFields[key]] = allowedBusinessImporters[key] + 1;
+        } else if (uniqueKeys.includes(key)) {
+          csvRow2[csvFields[key]] = allowedBusinessImporters[key] + '_2';
+        } else {
+          csvRow2[csvFields[key]] = allowedBusinessImporters[key] || ' ';
+        }
       }
+    }
+
+    if ((selectedImporter === null || selectedImporter === void 0 ? void 0 : selectedImporter.type) === 'sync_multiple') {
+      selectedImporter.mapping.forEach(function (mapping) {
+        var _mapping = _objectSpread({}, mapping);
+
+        var fields = _objectSpread({}, _mapping.fields);
+
+        delete _mapping.fields;
+        delete _mapping.type;
+
+        for (var _key in _mapping) {
+          csvRow1[_mapping[_key]] = allowedBusinessImporters[_key] || ' ';
+
+          if (integerKeys.includes(_key)) {
+            csvRow2[_mapping[_key]] = allowedBusinessImporters[_key] + 1;
+          } else if (uniqueKeys.includes(_key)) {
+            csvRow2[_mapping[_key]] = allowedBusinessImporters[_key] + '_2';
+          } else {
+            csvRow2[_mapping[_key]] = allowedBusinessImporters[_key] || ' ';
+          }
+        }
+
+        for (var _key2 in fields) {
+          csvRow1[fields[_key2]] = allowedBusinessImporters[_key2] || ' ';
+
+          if (integerKeys.includes(_key2)) {
+            csvRow2[fields[_key2]] = allowedBusinessImporters[_key2] + 1;
+          } else if (uniqueKeys.includes(_key2)) {
+            csvRow2[fields[_key2]] = allowedBusinessImporters[_key2] + '_2';
+          } else {
+            csvRow2[fields[_key2]] = allowedBusinessImporters[_key2] || ' ';
+          }
+        }
+      });
     }
 
     var rows = [csvHeaders, csvRow1, csvRow2];
@@ -549,7 +632,7 @@ var ImporterForm = function ImporterForm(props) {
       return e.join(',');
     }).join('\n');
     var link = document.createElement('a');
-    link.download = 'example.csv';
+    link.download = (editState === null || editState === void 0 ? void 0 : editState.type) + '.csv';
     var blob = new Blob(["\uFEFF", csvContent], {
       type: 'text/csv'
     });
@@ -560,6 +643,17 @@ var ImporterForm = function ImporterForm(props) {
       link.href = reader.result;
       link.click();
     };
+  };
+
+  var handleUpdateMultipleMapping = function handleUpdateMultipleMapping(updatedMapping) {
+    setEditState(_objectSpread(_objectSpread({}, editState), {}, {
+      mapping: updatedMapping
+    }));
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
+        mapping: JSON.stringify(updatedMapping)
+      })
+    }));
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
@@ -581,7 +675,8 @@ var ImporterForm = function ImporterForm(props) {
     handleCreateImporter: handleCreateImporter,
     handleEditState: handleEditState,
     editImporter: editImporter,
-    downloadCSV: downloadCSV
+    downloadCSV: downloadCSV,
+    handleUpdateMultipleMapping: handleUpdateMultipleMapping
   })));
 };
 
