@@ -126,12 +126,20 @@ var OrdersManage = function OrdersManage(props) {
       deletedOrderId = _useState16[0],
       setDeletedOrderId = _useState16[1];
 
-  var _useState17 = (0, _react.useState)({}),
+  var _useState17 = (0, _react.useState)({
+    result: [],
+    loading: false,
+    error: false
+  }),
       _useState18 = _slicedToArray(_useState17, 2),
       numberOfOrdersByStatus = _useState18[0],
       setNumberOfOrdersByStatus = _useState18[1];
 
-  var _useState19 = (0, _react.useState)({}),
+  var _useState19 = (0, _react.useState)({
+    result: [],
+    loading: false,
+    error: false
+  }),
       _useState20 = _slicedToArray(_useState19, 2),
       numberOfOrdersBySubstatus = _useState20[0],
       setNumberOfOrdersBySubstatus = _useState20[1];
@@ -341,8 +349,6 @@ var OrdersManage = function OrdersManage(props) {
                 }
 
                 setSelectedOrderIds(_ordersIds);
-                getOrderNumbersByStatus();
-                getOrderNumbersBySubstatus();
               }
 
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
@@ -425,13 +431,11 @@ var OrdersManage = function OrdersManage(props) {
                 loading: false,
                 error: content.error ? content.result : null
               });
-              getOrderNumbersByStatus();
-              getOrderNumbersBySubstatus();
-              _context2.next = 18;
+              _context2.next = 16;
               break;
 
-            case 14:
-              _context2.prev = 14;
+            case 12:
+              _context2.prev = 12;
               _context2.t0 = _context2["catch"](0);
               setActionStatus({
                 loading: false,
@@ -439,12 +443,12 @@ var OrdersManage = function OrdersManage(props) {
               });
               setStartMulitOrderDelete(false);
 
-            case 18:
+            case 16:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 14]]);
+      }, _callee2, null, [[0, 12]]);
     }));
 
     return function deleteOrder(_x2) {
@@ -549,6 +553,9 @@ var OrdersManage = function OrdersManage(props) {
                   loading: false,
                   businesses: content.result.businesses
                 }));
+                setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+                  loading: false
+                }));
               } else {
                 setActionStatus({
                   loading: false,
@@ -641,183 +648,258 @@ var OrdersManage = function OrdersManage(props) {
     };
   }, [socket, loading, driversList.drivers]);
 
-  var _getOrderNumbersByStatus = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(orderStatusList) {
-      var options, conditions, where;
+  var getOrderNumbersByStatus = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var where, conditions, filterConditons, searchConditions, requestOptions, response, content, _content$result, _content$result2, _orderStatusNumbers;
+
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              if (token) {
-                _context5.next = 2;
-                break;
+              where = [];
+              conditions = [];
+
+              if (Object.keys(filterValues).length > 0) {
+                filterConditons = [];
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.statuses.length) > 0) {
+                  filterConditons.push({
+                    attribute: 'status',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.statuses
+                  });
+                }
+
+                if (filterValues !== null && filterValues !== void 0 && filterValues.orderId) {
+                  filterConditons.push({
+                    attribute: 'id',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId, "%"))
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryFromDatetime) !== null) {
+                  filterConditons.push({
+                    attribute: 'delivery_datetime',
+                    value: {
+                      condition: '>=',
+                      value: encodeURI(filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryFromDatetime)
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryEndDatetime) !== null) {
+                  filterConditons.push({
+                    attribute: 'delivery_datetime',
+                    value: {
+                      condition: '<=',
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryEndDatetime
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.businessIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'business_id',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.businessIds
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds.length) > 0) {
+                  filterConditons.push({
+                    attribute: 'driver_id',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryTypes.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'delivery_type',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryTypes
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverGroupIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'driver_id',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverGroupIds
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.paymethodIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'paymethod_id',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.paymethodIds
+                  });
+                }
+
+                if (filterConditons.length) {
+                  conditions.push({
+                    conector: 'AND',
+                    conditions: filterConditons
+                  });
+                }
               }
 
-              return _context5.abrupt("return");
+              if (searchValue) {
+                searchConditions = [];
+                searchConditions.push({
+                  attribute: 'id',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI("%".concat(searchValue, "%"))
+                  }
+                });
+                searchConditions.push({
+                  attribute: 'customer',
+                  conditions: [{
+                    attribute: 'email',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  }]
+                });
+                searchConditions.push({
+                  attribute: 'customer',
+                  conditions: [{
+                    attribute: 'cellphone',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  }]
+                });
+                searchConditions.push({
+                  attribute: 'business',
+                  conditions: [{
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  }]
+                });
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
 
-            case 2:
-              options = {
-                query: {
-                  page: 1,
-                  page_size: 1
+              if (conditions.length) {
+                where = {
+                  conditions: conditions,
+                  conector: 'AND'
+                };
+              }
+
+              _context5.prev = 5;
+              setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
+                loading: true
+              }));
+              setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
                 }
               };
-              conditions = [{
-                attribute: 'status',
-                value: orderStatusList
-              }];
-              where = {
-                conditions: conditions,
-                conector: 'AND'
-              };
-              _context5.next = 7;
-              return ordering.setAccessToken(token).orders().asDashboard().select(['id']).where(where).get(options);
+              _context5.next = 11;
+              return fetch("".concat(ordering.root, "/orders/dashboard?where=").concat(JSON.stringify(where)), requestOptions);
 
-            case 7:
-              return _context5.abrupt("return", _context5.sent);
+            case 11:
+              response = _context5.sent;
+              _context5.next = 14;
+              return response.json();
 
-            case 8:
+            case 14:
+              content = _context5.sent;
+
+              if (!(content !== null && content !== void 0 && content.error)) {
+                _orderStatusNumbers = Object.keys(orderStatuesList).reduce(function (sum, curr, index) {
+                  var _currRe = content === null || content === void 0 ? void 0 : content.result.filter(function (ele) {
+                    return orderStatuesList[curr].indexOf(ele === null || ele === void 0 ? void 0 : ele.status) >= 0;
+                  });
+
+                  if (index === 1) {
+                    var _sumRe$, _currRe$, _ref6;
+
+                    var _sumRe = content === null || content === void 0 ? void 0 : content.result.filter(function (ele) {
+                      return orderStatuesList[sum].indexOf(ele === null || ele === void 0 ? void 0 : ele.status) >= 0;
+                    });
+
+                    return _ref6 = {}, _defineProperty(_ref6, sum, _sumRe.length > 1 ? _sumRe.reduce(function (_sum, _curr) {
+                      return Number((_sum === null || _sum === void 0 ? void 0 : _sum.quantity) || _sum || 0) + Number(_curr === null || _curr === void 0 ? void 0 : _curr.quantity);
+                    }) : ((_sumRe$ = _sumRe[0]) === null || _sumRe$ === void 0 ? void 0 : _sumRe$.quantity) || 0), _defineProperty(_ref6, curr, _currRe.length > 1 ? _currRe.reduce(function (_sum, _curr) {
+                      return Number((_sum === null || _sum === void 0 ? void 0 : _sum.quantity) || _sum || 0) + Number(_curr === null || _curr === void 0 ? void 0 : _curr.quantity);
+                    }) : ((_currRe$ = _currRe[0]) === null || _currRe$ === void 0 ? void 0 : _currRe$.quantity) || 0), _ref6;
+                  } else {
+                    var _currRe$2;
+
+                    return _objectSpread(_objectSpread({}, sum), {}, _defineProperty({}, curr, _currRe.length > 1 ? _currRe.reduce(function (_sum, _curr) {
+                      return Number((_sum === null || _sum === void 0 ? void 0 : _sum.quantity) || _sum || 0) + Number(_curr === null || _curr === void 0 ? void 0 : _curr.quantity);
+                    }) : ((_currRe$2 = _currRe[0]) === null || _currRe$2 === void 0 ? void 0 : _currRe$2.quantity) || 0));
+                  }
+                });
+                setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
+                  loading: false,
+                  error: false,
+                  result: _orderStatusNumbers
+                }));
+                setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
+                  loading: false,
+                  error: false,
+                  result: (content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.length) > 1 ? content === null || content === void 0 ? void 0 : content.result.reduce(function (sum, curr, index) {
+                    var _ref7;
+
+                    return index === 1 ? (_ref7 = {}, _defineProperty(_ref7, sum === null || sum === void 0 ? void 0 : sum.status, sum === null || sum === void 0 ? void 0 : sum.quantity), _defineProperty(_ref7, curr === null || curr === void 0 ? void 0 : curr.status, curr === null || curr === void 0 ? void 0 : curr.quantity), _ref7) : _objectSpread(_objectSpread({}, sum), {}, _defineProperty({}, curr === null || curr === void 0 ? void 0 : curr.status, curr === null || curr === void 0 ? void 0 : curr.quantity));
+                  }) : (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.length) === 1 ? _defineProperty({}, content === null || content === void 0 ? void 0 : content.result[0].status, content === null || content === void 0 ? void 0 : content.result[0].quantity) : null
+                }));
+              } else {
+                setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
+                  loading: false,
+                  error: true
+                }));
+                setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
+                  loading: false,
+                  error: true
+                }));
+              }
+
+              _context5.next = 22;
+              break;
+
+            case 18:
+              _context5.prev = 18;
+              _context5.t0 = _context5["catch"](5);
+              setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
+                loading: false,
+                error: [_context5.t0.message]
+              }));
+              setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
+                loading: false,
+                error: [_context5.t0.message]
+              }));
+
+            case 22:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5);
-    }));
-
-    return function _getOrderNumbersByStatus(_x3) {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-
-  var getOrderNumbersByStatus = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-      var OrderNumbersByStatus, allPromise, result;
-      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              OrderNumbersByStatus = {};
-              allPromise = Object.keys(orderStatuesList).map(function (orderStatus) {
-                return new Promise(function (resolve, reject) {
-                  resolve([orderStatus, _getOrderNumbersByStatus(orderStatuesList[orderStatus])]);
-                });
-              });
-              _context7.next = 4;
-              return Promise.all(allPromise);
-
-            case 4:
-              result = _context7.sent;
-              result.forEach( /*#__PURE__*/function () {
-                var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(ele, i) {
-                  var _res$content$paginati, _res$content, _res$content$paginati2;
-
-                  var res, total, orderStatusNumber;
-                  return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-                    while (1) {
-                      switch (_context6.prev = _context6.next) {
-                        case 0:
-                          _context6.next = 2;
-                          return ele[1];
-
-                        case 2:
-                          res = _context6.sent;
-                          total = (_res$content$paginati = res === null || res === void 0 ? void 0 : (_res$content = res.content) === null || _res$content === void 0 ? void 0 : (_res$content$paginati2 = _res$content.pagination) === null || _res$content$paginati2 === void 0 ? void 0 : _res$content$paginati2.total) !== null && _res$content$paginati !== void 0 ? _res$content$paginati : 0;
-                          orderStatusNumber = _defineProperty({}, ele[0], total);
-                          OrderNumbersByStatus = _objectSpread(_objectSpread({}, OrderNumbersByStatus), orderStatusNumber);
-                          setNumberOfOrdersByStatus(OrderNumbersByStatus);
-
-                        case 7:
-                        case "end":
-                          return _context6.stop();
-                      }
-                    }
-                  }, _callee6);
-                }));
-
-                return function (_x4, _x5) {
-                  return _ref7.apply(this, arguments);
-                };
-              }());
-
-            case 6:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      }, _callee7);
+      }, _callee5, null, [[5, 18]]);
     }));
 
     return function getOrderNumbersByStatus() {
-      return _ref6.apply(this, arguments);
-    };
-  }();
-
-  var getOrderNumbersBySubstatus = /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9() {
-      var allPromise, OrderNumbersByStatus, result;
-      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-        while (1) {
-          switch (_context9.prev = _context9.next) {
-            case 0:
-              allPromise = orderStatuesList[ordersStatusGroup].map(function (orderStatus) {
-                return new Promise(function (resolve, reject) {
-                  resolve([orderStatus, _getOrderNumbersByStatus([orderStatus])]);
-                });
-              });
-              OrderNumbersByStatus = {};
-              _context9.next = 4;
-              return Promise.all(allPromise);
-
-            case 4:
-              result = _context9.sent;
-              result.forEach( /*#__PURE__*/function () {
-                var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(ele, i) {
-                  var _res$content$paginati3, _res$content2, _res$content2$paginat;
-
-                  var res, total, orderStatusNumber;
-                  return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-                    while (1) {
-                      switch (_context8.prev = _context8.next) {
-                        case 0:
-                          _context8.next = 2;
-                          return ele[1];
-
-                        case 2:
-                          res = _context8.sent;
-                          total = (_res$content$paginati3 = res === null || res === void 0 ? void 0 : (_res$content2 = res.content) === null || _res$content2 === void 0 ? void 0 : (_res$content2$paginat = _res$content2.pagination) === null || _res$content2$paginat === void 0 ? void 0 : _res$content2$paginat.total) !== null && _res$content$paginati3 !== void 0 ? _res$content$paginati3 : 0;
-                          orderStatusNumber = _defineProperty({}, ele[0], total);
-                          OrderNumbersByStatus = _objectSpread(_objectSpread({}, OrderNumbersByStatus), orderStatusNumber);
-                          setNumberOfOrdersBySubstatus(OrderNumbersByStatus);
-
-                        case 7:
-                        case "end":
-                          return _context8.stop();
-                      }
-                    }
-                  }, _callee8);
-                }));
-
-                return function (_x6, _x7) {
-                  return _ref9.apply(this, arguments);
-                };
-              }());
-
-            case 6:
-            case "end":
-              return _context9.stop();
-          }
-        }
-      }, _callee9);
-    }));
-
-    return function getOrderNumbersBySubstatus() {
-      return _ref8.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
 
   var handleUpdateOrder = function handleUpdateOrder() {
     getOrderNumbersByStatus();
-    getOrderNumbersBySubstatus();
   };
 
   (0, _react.useEffect)(function () {
@@ -871,11 +953,10 @@ var OrdersManage = function OrdersManage(props) {
     };
   }, [user, loading]);
   (0, _react.useEffect)(function () {
-    getOrderNumbersByStatus();
-  }, []);
-  (0, _react.useEffect)(function () {
-    getOrderNumbersBySubstatus();
-  }, [ordersStatusGroup]);
+    if (!(actionStatus !== null && actionStatus !== void 0 && actionStatus.error) && !(actionStatus !== null && actionStatus !== void 0 && actionStatus.loading)) {
+      getOrderNumbersByStatus();
+    }
+  }, [actionStatus, filterValues, searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     searchValue: searchValue,
     driverGroupList: driverGroupList,
