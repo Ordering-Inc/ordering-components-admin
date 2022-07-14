@@ -547,7 +547,7 @@ export const OrdersManage = (props) => {
       socket.off('update_order', handleUpdateOrder)
       socket.off('orders_register', handleUpdateOrder)
     }
-  }, [socket])
+  }, [socket, filterValues, searchValue])
 
   useEffect(() => {
     if (!user) return
