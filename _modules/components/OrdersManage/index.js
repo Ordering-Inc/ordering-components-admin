@@ -909,7 +909,7 @@ var OrdersManage = function OrdersManage(props) {
       socket.off('update_order', handleUpdateOrder);
       socket.off('orders_register', handleUpdateOrder);
     };
-  }, [socket]);
+  }, [socket, filterValues, searchValue]);
   (0, _react.useEffect)(function () {
     if (!user) return;
     socket.join('drivers');
