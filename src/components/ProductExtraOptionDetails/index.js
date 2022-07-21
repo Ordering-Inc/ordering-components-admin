@@ -236,7 +236,7 @@ export const ProductExtraOptionDetails = (props) => {
       const response = await fetch(`${ordering.root}/business/${business.id}/extras/${extra.id}/options/${option.id}/suboptions/${changesParam?.id || editSubOptionId}`, requestOptions)
       const content = await response.json()
       setChangesState({
-        changes: content.error ? changesState : {},
+        changes: content.error ? changesState.changes : {},
         result: content?.result
       })
       if (!content.error) {
