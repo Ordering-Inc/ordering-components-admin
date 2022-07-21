@@ -7,7 +7,8 @@ import { useLanguage } from '../../contexts/LanguageContext'
 
 export const PluginList = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    projectCode
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -43,7 +44,7 @@ export const PluginList = (props) => {
       let sysError = null
 
       try {
-        const resSysPlugins = await fetch(`${ordering.url}/${ordering.version}/system/plugins`, requestOptions)
+        const resSysPlugins = await fetch(`${ordering.url}/${ordering.version}/system/plugins?project_code=${projectCode}`, requestOptions)
         const contentSysPlugins = await resSysPlugins.json()
 
         if (!contentSysPlugins.error) {
@@ -122,7 +123,17 @@ export const PluginList = (props) => {
       if (!content.error) {
         setActionState({ ...actionState, loading: false })
         const plugins = pluginListState.plugins.filter(plugin => plugin.id !== pluginId)
-        setPluginListState({ ...pluginListState, plugins: plugins })
+        const sysPlugins = pluginListState.sysPlugins.map(p => ({
+          ...p,
+          installed: p.id === content?.result?.system_plugin_id
+            ? false
+            : p.installed
+        }))
+        setPluginListState({
+          ...pluginListState,
+          plugins: plugins,
+          sysPlugins
+        })
         showToast(ToastType.Success, t('PLUGIN_REMOVED', 'Plugin removed'))
       } else {
         setActionState({ loading: false, error: content.result })
@@ -190,6 +201,14 @@ export const PluginList = (props) => {
       const response = await fetch(`${ordering.root}/plugins`, requestOptions)
       const content = await response.json()
       if (!content.error) {
+        setPluginListState({
+          ...pluginListState,
+          plugins: [...pluginListState.plugins, content?.result],
+          sysPlugins: pluginListState.sysPlugins.map(p => ({
+            ...p,
+            installed: content?.result?.system_plugin_id === p.id
+          }))
+        })
         setActionState({ ...actionState, loading: false })
         showToast(ToastType.Success, t('SYSTEM_PLUGIN_INSTALLED', 'Plugin installed'))
       } else {
