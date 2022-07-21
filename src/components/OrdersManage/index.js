@@ -32,7 +32,7 @@ export const OrdersManage = (props) => {
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [deletedOrderId, setDeletedOrderId] = useState(null)
   const [numberOfOrdersByStatus, setNumberOfOrdersByStatus] = useState({ result: [], loading: false, error: false })
-  const [numberOfOrdersBySubstatus, setNumberOfOrdersBySubstatus] = useState({ result: [], loading: false, error: false })
+  // const [numberOfOrdersBySubstatus, setNumberOfOrdersBySubstatus] = useState({ result: [], loading: false, error: false })
   /**
    * Object to save driver group list
    */
@@ -467,7 +467,7 @@ export const OrdersManage = (props) => {
     }
     try {
       setNumberOfOrdersByStatus({ ...numberOfOrdersByStatus, loading: true })
-      setNumberOfOrdersBySubstatus({ ...numberOfOrdersBySubstatus, loading: true })
+      // setNumberOfOrdersBySubstatus({ ...numberOfOrdersBySubstatus, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -498,17 +498,17 @@ export const OrdersManage = (props) => {
           result: _orderStatusNumbers
         })
 
-        setNumberOfOrdersBySubstatus({
-          ...numberOfOrdersBySubstatus,
-          loading: false,
-          error: false,
-          result: content?.result?.length > 1
-            ? content?.result.reduce((sum, curr, index) => index === 1
-              ? { [sum?.status]: sum?.quantity, [curr?.status]: curr?.quantity }
-              : { ...sum, [curr?.status]: curr?.quantity })
-            : content?.result?.length === 1
-              ? { [content?.result[0].status]: content?.result[0].quantity } : null
-        })
+        // setNumberOfOrdersBySubstatus({
+        //   ...numberOfOrdersBySubstatus,
+        //   loading: false,
+        //   error: false,
+        //   result: content?.result?.length > 1
+        //     ? content?.result.reduce((sum, curr, index) => index === 1
+        //       ? { [sum?.status]: sum?.quantity, [curr?.status]: curr?.quantity }
+        //       : { ...sum, [curr?.status]: curr?.quantity })
+        //     : content?.result?.length === 1
+        //       ? { [content?.result[0].status]: content?.result[0].quantity } : null
+        // })
       } else {
         setNumberOfOrdersByStatus({
           ...numberOfOrdersByStatus,
@@ -516,11 +516,11 @@ export const OrdersManage = (props) => {
           error: true
         })
 
-        setNumberOfOrdersBySubstatus({
-          ...numberOfOrdersBySubstatus,
-          loading: false,
-          error: true
-        })
+        // setNumberOfOrdersBySubstatus({
+        //   ...numberOfOrdersBySubstatus,
+        //   loading: false,
+        //   error: true
+        // })
       }
     } catch (err) {
       setNumberOfOrdersByStatus({
@@ -529,11 +529,11 @@ export const OrdersManage = (props) => {
         error: [err.message]
       })
 
-      setNumberOfOrdersBySubstatus({
-        ...numberOfOrdersBySubstatus,
-        loading: false,
-        error: [err.message]
-      })
+      // setNumberOfOrdersBySubstatus({
+      //   ...numberOfOrdersBySubstatus,
+      //   loading: false,
+      //   error: [err.message]
+      // })
     }
   }
 
@@ -626,7 +626,7 @@ export const OrdersManage = (props) => {
           handleDeleteMultiOrders={handleDeleteMultiOrders}
           setSelectedOrderIds={setSelectedOrderIds}
           numberOfOrdersByStatus={numberOfOrdersByStatus}
-          numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
+        // numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
         />
       )}
     </>
