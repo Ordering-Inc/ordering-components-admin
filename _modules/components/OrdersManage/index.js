@@ -133,101 +133,93 @@ var OrdersManage = function OrdersManage(props) {
   }),
       _useState18 = _slicedToArray(_useState17, 2),
       numberOfOrdersByStatus = _useState18[0],
-      setNumberOfOrdersByStatus = _useState18[1];
+      setNumberOfOrdersByStatus = _useState18[1]; // const [numberOfOrdersBySubstatus, setNumberOfOrdersBySubstatus] = useState({ result: [], loading: false, error: false })
 
-  var _useState19 = (0, _react.useState)({
-    result: [],
-    loading: false,
-    error: false
-  }),
-      _useState20 = _slicedToArray(_useState19, 2),
-      numberOfOrdersBySubstatus = _useState20[0],
-      setNumberOfOrdersBySubstatus = _useState20[1];
   /**
    * Object to save driver group list
    */
 
 
-  var _useState21 = (0, _react.useState)({
+  var _useState19 = (0, _react.useState)({
     groups: [],
     loading: false,
     error: null
   }),
-      _useState22 = _slicedToArray(_useState21, 2),
-      driverGroupList = _useState22[0],
-      setDriverGroupList = _useState22[1];
+      _useState20 = _slicedToArray(_useState19, 2),
+      driverGroupList = _useState20[0],
+      setDriverGroupList = _useState20[1];
   /**
    * Object to save drivers
    */
 
 
-  var _useState23 = (0, _react.useState)({
+  var _useState21 = (0, _react.useState)({
     drivers: [],
     loading: true,
     error: null
   }),
-      _useState24 = _slicedToArray(_useState23, 2),
-      driversList = _useState24[0],
-      setDriversList = _useState24[1];
+      _useState22 = _slicedToArray(_useState21, 2),
+      driversList = _useState22[0],
+      setDriversList = _useState22[1];
   /**
    * Object to save paymethods
    */
 
 
-  var _useState25 = (0, _react.useState)({
+  var _useState23 = (0, _react.useState)({
     paymethods: [],
     loading: true,
     error: null
   }),
-      _useState26 = _slicedToArray(_useState25, 2),
-      paymethodsList = _useState26[0],
-      setPaymethodsList = _useState26[1];
+      _useState24 = _slicedToArray(_useState23, 2),
+      paymethodsList = _useState24[0],
+      setPaymethodsList = _useState24[1];
   /**
    * Object to save businesses
    */
 
 
-  var _useState27 = (0, _react.useState)({
+  var _useState25 = (0, _react.useState)({
     businesses: [],
     loading: true,
     error: null
   }),
-      _useState28 = _slicedToArray(_useState27, 2),
-      businessesList = _useState28[0],
-      setBusinessesList = _useState28[1];
+      _useState26 = _slicedToArray(_useState25, 2),
+      businessesList = _useState26[0],
+      setBusinessesList = _useState26[1];
   /**
    * Array to save the cities
    */
 
 
-  var _useState29 = (0, _react.useState)([]),
-      _useState30 = _slicedToArray(_useState29, 2),
-      citiesList = _useState30[0],
-      setCitiesList = _useState30[1];
+  var _useState27 = (0, _react.useState)([]),
+      _useState28 = _slicedToArray(_useState27, 2),
+      citiesList = _useState28[0],
+      setCitiesList = _useState28[1];
   /**
    * Object to save selected order ids
    */
 
 
-  var _useState31 = (0, _react.useState)([]),
-      _useState32 = _slicedToArray(_useState31, 2),
-      selectedOrderIds = _useState32[0],
-      setSelectedOrderIds = _useState32[1];
+  var _useState29 = (0, _react.useState)([]),
+      _useState30 = _slicedToArray(_useState29, 2),
+      selectedOrderIds = _useState30[0],
+      setSelectedOrderIds = _useState30[1];
   /**
    * Object to save order substatuses
    */
 
 
-  var _useState33 = (0, _react.useState)({
+  var _useState31 = (0, _react.useState)({
     pending: orderStatuesList.pending,
     inProgress: orderStatuesList.inProgress,
     completed: orderStatuesList.completed,
     cancelled: orderStatuesList.cancelled,
     all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
   }),
-      _useState34 = _slicedToArray(_useState33, 2),
-      selectedSubOrderStatus = _useState34[0],
-      setSelectedSubOrderStatus = _useState34[1];
+      _useState32 = _slicedToArray(_useState31, 2),
+      selectedSubOrderStatus = _useState32[0],
+      setSelectedSubOrderStatus = _useState32[1];
   /**
    * Save ids of orders selected
    * @param {string} orderId order id
@@ -650,7 +642,7 @@ var OrdersManage = function OrdersManage(props) {
 
   var getOrderNumbersByStatus = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var where, conditions, filterConditons, searchConditions, requestOptions, response, content, _content$result, _content$result2, _orderStatusNumbers;
+      var where, conditions, filterConditons, searchConditions, requestOptions, response, content, _orderStatusNumbers;
 
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
@@ -797,10 +789,8 @@ var OrdersManage = function OrdersManage(props) {
               _context5.prev = 5;
               setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                 loading: true
-              }));
-              setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
-                loading: true
-              }));
+              })); // setNumberOfOrdersBySubstatus({ ...numberOfOrdersBySubstatus, loading: true })
+
               requestOptions = {
                 method: 'GET',
                 headers: {
@@ -808,15 +798,15 @@ var OrdersManage = function OrdersManage(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context5.next = 11;
+              _context5.next = 10;
               return fetch("".concat(ordering.root, "/orders/dashboard?where=").concat(JSON.stringify(where)), requestOptions);
 
-            case 11:
+            case 10:
               response = _context5.sent;
-              _context5.next = 14;
+              _context5.next = 13;
               return response.json();
 
-            case 14:
+            case 13:
               content = _context5.sent;
 
               if (!(content !== null && content !== void 0 && content.error)) {
@@ -849,48 +839,49 @@ var OrdersManage = function OrdersManage(props) {
                   loading: false,
                   error: false,
                   result: _orderStatusNumbers
-                }));
-                setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
-                  loading: false,
-                  error: false,
-                  result: (content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.length) > 1 ? content === null || content === void 0 ? void 0 : content.result.reduce(function (sum, curr, index) {
-                    var _ref7;
-
-                    return index === 1 ? (_ref7 = {}, _defineProperty(_ref7, sum === null || sum === void 0 ? void 0 : sum.status, sum === null || sum === void 0 ? void 0 : sum.quantity), _defineProperty(_ref7, curr === null || curr === void 0 ? void 0 : curr.status, curr === null || curr === void 0 ? void 0 : curr.quantity), _ref7) : _objectSpread(_objectSpread({}, sum), {}, _defineProperty({}, curr === null || curr === void 0 ? void 0 : curr.status, curr === null || curr === void 0 ? void 0 : curr.quantity));
-                  }) : (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.length) === 1 ? _defineProperty({}, content === null || content === void 0 ? void 0 : content.result[0].status, content === null || content === void 0 ? void 0 : content.result[0].quantity) : null
-                }));
+                })); // setNumberOfOrdersBySubstatus({
+                //   ...numberOfOrdersBySubstatus,
+                //   loading: false,
+                //   error: false,
+                //   result: content?.result?.length > 1
+                //     ? content?.result.reduce((sum, curr, index) => index === 1
+                //       ? { [sum?.status]: sum?.quantity, [curr?.status]: curr?.quantity }
+                //       : { ...sum, [curr?.status]: curr?.quantity })
+                //     : content?.result?.length === 1
+                //       ? { [content?.result[0].status]: content?.result[0].quantity } : null
+                // })
               } else {
                 setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                   loading: false,
                   error: true
-                }));
-                setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
-                  loading: false,
-                  error: true
-                }));
+                })); // setNumberOfOrdersBySubstatus({
+                //   ...numberOfOrdersBySubstatus,
+                //   loading: false,
+                //   error: true
+                // })
               }
 
-              _context5.next = 22;
+              _context5.next = 20;
               break;
 
-            case 18:
-              _context5.prev = 18;
+            case 17:
+              _context5.prev = 17;
               _context5.t0 = _context5["catch"](5);
               setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                 loading: false,
                 error: [_context5.t0.message]
-              }));
-              setNumberOfOrdersBySubstatus(_objectSpread(_objectSpread({}, numberOfOrdersBySubstatus), {}, {
-                loading: false,
-                error: [_context5.t0.message]
-              }));
+              })); // setNumberOfOrdersBySubstatus({
+              //   ...numberOfOrdersBySubstatus,
+              //   loading: false,
+              //   error: [err.message]
+              // })
 
-            case 22:
+            case 20:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[5, 18]]);
+      }, _callee5, null, [[5, 17]]);
     }));
 
     return function getOrderNumbersByStatus() {
@@ -981,8 +972,8 @@ var OrdersManage = function OrdersManage(props) {
     handleChangeMultiOrdersStatus: handleChangeMultiOrdersStatus,
     handleDeleteMultiOrders: handleDeleteMultiOrders,
     setSelectedOrderIds: setSelectedOrderIds,
-    numberOfOrdersByStatus: numberOfOrdersByStatus,
-    numberOfOrdersBySubstatus: numberOfOrdersBySubstatus
+    numberOfOrdersByStatus: numberOfOrdersByStatus // numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
+
   })));
 };
 

@@ -60,7 +60,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var PluginList = function PluginList(props) {
-  var UIComponent = props.UIComponent;
+  var UIComponent = props.UIComponent,
+      projectCode = props.projectCode;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -133,7 +134,7 @@ var PluginList = function PluginList(props) {
               sysError = null;
               _context.prev = 5;
               _context.next = 8;
-              return fetch("".concat(ordering.url, "/").concat(ordering.version, "/system/plugins"), requestOptions);
+              return fetch("".concat(ordering.url, "/").concat(ordering.version, "/system/plugins?project_code=").concat(projectCode), requestOptions);
 
             case 8:
               resSysPlugins = _context.sent;
@@ -286,7 +287,7 @@ var PluginList = function PluginList(props) {
 
   var handleDeletePlugin = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(pluginId) {
-      var requestOptions, response, content, plugins;
+      var requestOptions, response, content, plugins, sysPlugins;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) {
           switch (_context3.prev = _context3.next) {
@@ -321,8 +322,16 @@ var PluginList = function PluginList(props) {
                 plugins = pluginListState.plugins.filter(function (plugin) {
                   return plugin.id !== pluginId;
                 });
+                sysPlugins = pluginListState.sysPlugins.map(function (p) {
+                  var _content$result;
+
+                  return _objectSpread(_objectSpread({}, p), {}, {
+                    installed: p.id === (content === null || content === void 0 ? void 0 : (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.system_plugin_id) ? false : p.installed
+                  });
+                });
                 setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
-                  plugins: plugins
+                  plugins: plugins,
+                  sysPlugins: sysPlugins
                 }));
                 showToast(_ToastContext.ToastType.Success, t('PLUGIN_REMOVED', 'Plugin removed'));
               } else {
@@ -478,6 +487,16 @@ var PluginList = function PluginList(props) {
               content = _context5.sent;
 
               if (!content.error) {
+                setPluginListState(_objectSpread(_objectSpread({}, pluginListState), {}, {
+                  plugins: [].concat(_toConsumableArray(pluginListState.plugins), [content === null || content === void 0 ? void 0 : content.result]),
+                  sysPlugins: pluginListState.sysPlugins.map(function (p) {
+                    var _content$result2;
+
+                    return _objectSpread(_objectSpread({}, p), {}, {
+                      installed: (content === null || content === void 0 ? void 0 : (_content$result2 = content.result) === null || _content$result2 === void 0 ? void 0 : _content$result2.system_plugin_id) === p.id
+                    });
+                  })
+                }));
                 setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                   loading: false
                 }));
