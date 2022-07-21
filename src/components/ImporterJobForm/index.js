@@ -24,7 +24,17 @@ export const ImporterJobForm = (props) => {
     },
     result: { error: false }
   })
-  const [fileState, setFileState] = useState({ fileName: null, fileType: null, csvFile: null, importOptions: {} })
+  const [fileState, setFileState] = useState({
+    fileName: null,
+    fileType: null,
+    csvFile: null,
+    importOptions: {
+      separator: ',',
+      enclosure: '"',
+      escape: '/',
+      start_line: 2
+    }
+  })
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
 
