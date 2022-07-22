@@ -127,14 +127,13 @@ var OrdersManage = function OrdersManage(props) {
       setDeletedOrderId = _useState16[1];
 
   var _useState17 = (0, _react.useState)({
-    result: [],
+    result: null,
     loading: false,
     error: false
   }),
       _useState18 = _slicedToArray(_useState17, 2),
       numberOfOrdersByStatus = _useState18[0],
-      setNumberOfOrdersByStatus = _useState18[1]; // const [numberOfOrdersBySubstatus, setNumberOfOrdersBySubstatus] = useState({ result: [], loading: false, error: false })
-
+      setNumberOfOrdersByStatus = _useState18[1];
   /**
    * Object to save driver group list
    */
@@ -789,8 +788,7 @@ var OrdersManage = function OrdersManage(props) {
               _context5.prev = 5;
               setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                 loading: true
-              })); // setNumberOfOrdersBySubstatus({ ...numberOfOrdersBySubstatus, loading: true })
-
+              }));
               requestOptions = {
                 method: 'GET',
                 headers: {
@@ -839,26 +837,12 @@ var OrdersManage = function OrdersManage(props) {
                   loading: false,
                   error: false,
                   result: _orderStatusNumbers
-                })); // setNumberOfOrdersBySubstatus({
-                //   ...numberOfOrdersBySubstatus,
-                //   loading: false,
-                //   error: false,
-                //   result: content?.result?.length > 1
-                //     ? content?.result.reduce((sum, curr, index) => index === 1
-                //       ? { [sum?.status]: sum?.quantity, [curr?.status]: curr?.quantity }
-                //       : { ...sum, [curr?.status]: curr?.quantity })
-                //     : content?.result?.length === 1
-                //       ? { [content?.result[0].status]: content?.result[0].quantity } : null
-                // })
+                }));
               } else {
                 setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                   loading: false,
                   error: true
-                })); // setNumberOfOrdersBySubstatus({
-                //   ...numberOfOrdersBySubstatus,
-                //   loading: false,
-                //   error: true
-                // })
+                }));
               }
 
               _context5.next = 20;
@@ -870,11 +854,7 @@ var OrdersManage = function OrdersManage(props) {
               setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
                 loading: false,
                 error: [_context5.t0.message]
-              })); // setNumberOfOrdersBySubstatus({
-              //   ...numberOfOrdersBySubstatus,
-              //   loading: false,
-              //   error: [err.message]
-              // })
+              }));
 
             case 20:
             case "end":
@@ -900,7 +880,7 @@ var OrdersManage = function OrdersManage(props) {
       socket.off('update_order', handleUpdateOrder);
       socket.off('orders_register', handleUpdateOrder);
     };
-  }, [socket, filterValues, searchValue]);
+  }, [socket, filterValues, searchValue, numberOfOrdersByStatus]);
   (0, _react.useEffect)(function () {
     if (!user) return;
     socket.join('drivers');
@@ -972,8 +952,7 @@ var OrdersManage = function OrdersManage(props) {
     handleChangeMultiOrdersStatus: handleChangeMultiOrdersStatus,
     handleDeleteMultiOrders: handleDeleteMultiOrders,
     setSelectedOrderIds: setSelectedOrderIds,
-    numberOfOrdersByStatus: numberOfOrdersByStatus // numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
-
+    numberOfOrdersByStatus: numberOfOrdersByStatus
   })));
 };
 
