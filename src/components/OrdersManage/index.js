@@ -31,8 +31,7 @@ export const OrdersManage = (props) => {
   const [startMulitOrderDelete, setStartMulitOrderDelete] = useState(false)
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [deletedOrderId, setDeletedOrderId] = useState(null)
-  const [numberOfOrdersByStatus, setNumberOfOrdersByStatus] = useState({ result: [], loading: false, error: false })
-  const [numberOfOrdersBySubstatus, setNumberOfOrdersBySubstatus] = useState({ result: [], loading: false, error: false })
+  const [numberOfOrdersByStatus, setNumberOfOrdersByStatus] = useState({ result: null, loading: false, error: false })
   /**
    * Object to save driver group list
    */
@@ -467,7 +466,6 @@ export const OrdersManage = (props) => {
     }
     try {
       setNumberOfOrdersByStatus({ ...numberOfOrdersByStatus, loading: true })
-      setNumberOfOrdersBySubstatus({ ...numberOfOrdersBySubstatus, loading: true })
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -484,7 +482,7 @@ export const OrdersManage = (props) => {
             const _sumRe = content?.result.filter(ele => orderStatuesList[sum].indexOf(ele?.status) >= 0)
             return {
               [sum]: _sumRe.length > 1 ? _sumRe.reduce((_sum, _curr) => Number(_sum?.quantity || _sum || 0) + Number(_curr?.quantity)) : _sumRe[0]?.quantity || 0,
-              [curr]: _currRe.length > 1 ? _currRe.reduce((_sum, _curr) => Number(_sum?.quantity || _sum || 0) + Number(_curr?.quantity)) : _currRe[0]?.quantity || 0,
+              [curr]: _currRe.length > 1 ? _currRe.reduce((_sum, _curr) => Number(_sum?.quantity || _sum || 0) + Number(_curr?.quantity)) : _currRe[0]?.quantity || 0
             }
           } else {
             return { ...sum, [curr]: _currRe.length > 1 ? _currRe.reduce((_sum, _curr) => Number(_sum?.quantity || _sum || 0) + Number(_curr?.quantity)) : _currRe[0]?.quantity || 0 }
@@ -497,27 +495,9 @@ export const OrdersManage = (props) => {
           error: false,
           result: _orderStatusNumbers
         })
-
-        setNumberOfOrdersBySubstatus({
-          ...numberOfOrdersBySubstatus,
-          loading: false,
-          error: false,
-          result: content?.result?.length > 1
-            ? content?.result.reduce((sum, curr, index) => index === 1
-              ? { [sum?.status]: sum?.quantity, [curr?.status]: curr?.quantity }
-              : { ...sum, [curr?.status]: curr?.quantity })
-            : content?.result?.length === 1
-              ? { [content?.result[0].status]: content?.result[0].quantity } : null
-        })
       } else {
         setNumberOfOrdersByStatus({
           ...numberOfOrdersByStatus,
-          loading: false,
-          error: true
-        })
-
-        setNumberOfOrdersBySubstatus({
-          ...numberOfOrdersBySubstatus,
           loading: false,
           error: true
         })
@@ -525,12 +505,6 @@ export const OrdersManage = (props) => {
     } catch (err) {
       setNumberOfOrdersByStatus({
         ...numberOfOrdersByStatus,
-        loading: false,
-        error: [err.message]
-      })
-
-      setNumberOfOrdersBySubstatus({
-        ...numberOfOrdersBySubstatus,
         loading: false,
         error: [err.message]
       })
@@ -547,7 +521,7 @@ export const OrdersManage = (props) => {
       socket.off('update_order', handleUpdateOrder)
       socket.off('orders_register', handleUpdateOrder)
     }
-  }, [socket, filterValues, searchValue])
+  }, [socket, filterValues, searchValue, numberOfOrdersByStatus])
 
   useEffect(() => {
     if (!user) return
@@ -626,7 +600,6 @@ export const OrdersManage = (props) => {
           handleDeleteMultiOrders={handleDeleteMultiOrders}
           setSelectedOrderIds={setSelectedOrderIds}
           numberOfOrdersByStatus={numberOfOrdersByStatus}
-          numberOfOrdersBySubstatus={numberOfOrdersBySubstatus}
         />
       )}
     </>
