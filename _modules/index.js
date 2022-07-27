@@ -75,6 +75,12 @@ Object.defineProperty(exports, "ApiProvider", {
     return _ApiContext.ApiProvider;
   }
 });
+Object.defineProperty(exports, "Appointments", {
+  enumerable: true,
+  get: function get() {
+    return _Appointments.Appointments;
+  }
+});
 Object.defineProperty(exports, "BaseComponent", {
   enumerable: true,
   get: function get() {
@@ -1551,6 +1557,8 @@ var _AnalyticsDriversFilter = require("./components/AnalyticsDriversFilter");
 var _AnalyticsStatusSubFilter = require("./components/AnalyticsStatusSubFilter");
 
 var _ApiKeysList = require("./components/ApiKeysList");
+
+var _Appointments = require("./components/Appointments");
 
 var _BaseComponent = require("./components/BaseComponent");
 
