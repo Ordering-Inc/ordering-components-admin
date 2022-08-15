@@ -186,7 +186,7 @@ export const DashboardOrdersList = (props) => {
             attribute: 'id',
             value: {
               condition: 'ilike',
-              value: searchValue
+              value: encodeURI(`%${searchValue}%`)
             }
           }
         )
@@ -256,7 +256,7 @@ export const DashboardOrdersList = (props) => {
             attribute: 'id',
             value: {
               condition: 'ilike',
-              value: filterValues?.orderId
+              value: encodeURI(`%${filterValues?.orderId}%`)
             }
           }
         )
