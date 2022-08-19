@@ -62,7 +62,7 @@ export const BusinessMenu = (props) => {
    * @param {Number} menuId menu id to change the business menu state
    * @param {Boolean} enabled menu enabled to change the business menu state
    */
-  const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
+   const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setBusinessMenusState({ ...businessMenusState, loading: true })
@@ -97,15 +97,15 @@ export const BusinessMenu = (props) => {
           })
           _business = { ...business, menus: menus }
         } else {
-          const menusShared = businessMenusState.menusShared.filter(menu => {
+          const menusShared = businessMenusState.menusShared.map(menu => {
             if (menu.id === menuId) {
-              menu = {
+              return {
                 ...menu,
                 ...content.result,
                 id: menu?.id
               }
             }
-            return true
+            return menu
           })
           setBusinessMenusState({
             ...businessMenusState,
@@ -131,6 +131,7 @@ export const BusinessMenu = (props) => {
       })
     }
   }
+
 
   /**
    * Method to delete the business menu from API
