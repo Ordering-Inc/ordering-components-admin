@@ -62,7 +62,7 @@ export const BusinessMenu = (props) => {
    * @param {Number} menuId menu id to change the business menu state
    * @param {Boolean} enabled menu enabled to change the business menu state
    */
-   const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
+  const handleChangeBusinessMenuActiveState = async (menuId, enabled) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setBusinessMenusState({ ...businessMenusState, loading: true })
