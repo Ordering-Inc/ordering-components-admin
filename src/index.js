@@ -118,6 +118,7 @@ import { MenuControl } from './components/MenuControl'
 import { Messages } from './components/Messages'
 import { MetaFields } from './components/MetaFields'
 import { MomentOption } from './components/MomentOption'
+import { MultiCountrySettings } from './components/MultiCountrySettings'
 import { MyOrders } from './components/MyOrders'
 import { MyOrdersList } from './components/MyOrdersList'
 import { OpenCartListing } from './components/OpenCartListing'
@@ -350,6 +351,7 @@ export {
   MomentOption,
   MyOrders,
   MyOrdersList,
+  MultiCountrySettings,
   OpenCartListing,
   OpenCartsDetail,
   OpenCartFilter,
