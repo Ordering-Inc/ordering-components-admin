@@ -49,7 +49,7 @@ export const LanguageProvider = ({ children, strategy }) => {
   const setLanguage = async (language) => {
     if (!language || language.id === state.language?.id) return
     try {
-      const { content: { error, result } } = await ordering.languages(language.id).save({ default: true })
+      const { content: { error, result } } = await ordering.languages(language.id).save({ enabled: true })
       if (!error) {
         const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
         await strategy.setItem('language', defaultLanguage, true)
