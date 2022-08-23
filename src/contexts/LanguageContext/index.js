@@ -46,10 +46,11 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
     }
   }
 
-  const setLanguage = async (language) => {
+  const setLanguage = async (language, key) => {
     if (!language || language.id === state.language?.id) return
     try {
-      const { content: { error, result } } = await ordering.languages(language.id).save({ enabled: true })
+      const options = key ? { [key]: true } : { default: true }
+      const { content: { error, result } } = await ordering.languages(language.id).save(options)
       if (!error) {
         const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
         await strategy.setItem('language', defaultLanguage, true)
@@ -76,7 +77,6 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
       if (!error) {
         const language = await strategy.getItem('language', true)
         const localLanguage = language ? result.find(_language => _language.id === language.id) : {enabled: false}
-        console.log('islocalLanguageDisabled',localLanguage)
         const _defaultLanguage = (language && localLanguage.enabled) ? language : result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
         await strategy.setItem('language', defaultLanguage, true)
@@ -112,25 +112,15 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
   useEffect(() => {
     if (!ordering?.project) return
     if (state.language?.code && state.language?.code === ordering.language) {
-      console.log('useEffect refresh', state.language, ordering.language)
       refreshTranslations()
     }
   }, [state.language?.code, ordering?.project, ordering.language])
 
   useEffect(() => {
-    console.log('useEffect localstorage', ordering)
     setLanguageFromLocalStorage()
     if (!ordering?.project) return
     refreshLanguages()
   }, [ordering?.language, ordering?.project])
-
-  useEffect(() => {
-    console.log('useEffect Ordering', ordering)
-  }, [ordering])
-
-  useEffect(() => {
-    console.log('useEffect Settings', settings)
-  }, [settings])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key
