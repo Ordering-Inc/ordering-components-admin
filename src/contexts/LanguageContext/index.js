@@ -12,7 +12,7 @@ export const LanguageContext = createContext()
  * This provider has a reducer for manage languages state
  * @param {props} props
  */
-export const LanguageProvider = ({ children, strategy, settings }) => {
+export const LanguageProvider = ({ children, strategy }) => {
   const [state, setState] = useState({
     loading: true,
     dictionary: {},
@@ -46,10 +46,10 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
     }
   }
 
-  const setLanguage = async (language, key) => {
+  const setLanguage = async (language, optionKey) => {
     if (!language || language.id === state.language?.id) return
     try {
-      const options = key ? { [key]: true } : { default: true }
+      const options = optionKey ? { [optionKey.key]: optionKey.value } : { default: true }
       const { content: { error, result } } = await ordering.languages(language.id).save(options)
       if (!error) {
         const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
