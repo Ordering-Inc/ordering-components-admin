@@ -46,10 +46,11 @@ export const LanguageProvider = ({ children, strategy }) => {
     }
   }
 
-  const setLanguage = async (language) => {
+  const setLanguage = async (language, optionKey) => {
     if (!language || language.id === state.language?.id) return
     try {
-      const { content: { error, result } } = await ordering.languages(language.id).save({ default: true })
+      const options = optionKey ? { [optionKey.key]: optionKey.value } : { default: true }
+      const { content: { error, result } } = await ordering.languages(language.id).save(options)
       if (!error) {
         const defaultLanguage = { id: result.id, code: result.code, rtl: result.rtl }
         await strategy.setItem('language', defaultLanguage, true)
@@ -74,7 +75,9 @@ export const LanguageProvider = ({ children, strategy }) => {
       setState({ ...state, loading: true })
       const { content: { error, result } } = await ordering.languages().get()
       if (!error) {
-        const _defaultLanguage = result.find(language => language.default)
+        const language = await strategy.getItem('language', true)
+        const localLanguage = language ? result.find(_language => _language.id === language.id) : {enabled: false}
+        const _defaultLanguage = (language && localLanguage.enabled) ? language : result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
         await strategy.setItem('language', defaultLanguage, true)
         apiHelper.setLanguage(defaultLanguage?.code)
