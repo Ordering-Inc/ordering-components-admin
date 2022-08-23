@@ -12,7 +12,7 @@ export const LanguageContext = createContext()
  * This provider has a reducer for manage languages state
  * @param {props} props
  */
-export const LanguageProvider = ({ children, strategy }) => {
+export const LanguageProvider = ({ children, strategy, settings }) => {
   const [state, setState] = useState({
     loading: true,
     dictionary: {},
@@ -109,15 +109,25 @@ export const LanguageProvider = ({ children, strategy }) => {
   useEffect(() => {
     if (!ordering?.project) return
     if (state.language?.code && state.language?.code === ordering.language) {
+      console.log('useEffect refresh', state.language, ordering.language)
       refreshTranslations()
     }
   }, [state.language?.code, ordering?.project, ordering.language])
 
   useEffect(() => {
+    console.log('useEffect localstorage', ordering)
     setLanguageFromLocalStorage()
     if (!ordering?.project) return
     refreshLanguages()
   }, [ordering?.language, ordering?.project])
+
+  useEffect(() => {
+    console.log('useEffect Ordering', ordering)
+  }, [ordering])
+
+  useEffect(() => {
+    console.log('useEffect Settings', settings)
+  }, [settings])
 
   const t = (key, fallback = null) => {
     return (state?.dictionary && Object.keys(state?.dictionary).length > 0 && state.dictionary[key]) || fallback || key

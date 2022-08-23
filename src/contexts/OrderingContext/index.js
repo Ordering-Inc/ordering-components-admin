@@ -29,7 +29,7 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
     <OrderingContext.Provider>
       <EventProvider>
         <ApiProvider settings={settings}>
-          <LanguageProvider strategy={webStrategy}>
+          <LanguageProvider strategy={webStrategy} settings={settings}>
             <SessionProvider strategy={webStrategy}>
               <ConfigProvider>
                 <UtilsProviders>
