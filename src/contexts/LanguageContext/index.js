@@ -74,7 +74,8 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
       setState({ ...state, loading: true })
       const { content: { error, result } } = await ordering.languages().get()
       if (!error) {
-        const _defaultLanguage = result.find(language => language.default)
+        const language = await strategy.getItem('language', true)
+        const _defaultLanguage = language ? language : result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
         await strategy.setItem('language', defaultLanguage, true)
         apiHelper.setLanguage(defaultLanguage?.code)
