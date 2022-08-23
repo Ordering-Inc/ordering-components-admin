@@ -58,8 +58,7 @@ var OrderingProvider = function OrderingProvider(_ref) {
   return /*#__PURE__*/_react.default.createElement(OrderingContext.Provider, null, /*#__PURE__*/_react.default.createElement(_EventContext.EventProvider, null, /*#__PURE__*/_react.default.createElement(_ApiContext.ApiProvider, {
     settings: settings
   }, /*#__PURE__*/_react.default.createElement(_LanguageContext.LanguageProvider, {
-    strategy: webStrategy,
-    settings: settings
+    strategy: webStrategy
   }, /*#__PURE__*/_react.default.createElement(_SessionContext.SessionProvider, {
     strategy: webStrategy
   }, /*#__PURE__*/_react.default.createElement(_ConfigContext.ConfigProvider, null, /*#__PURE__*/_react.default.createElement(_UtilsContext.UtilsProviders, null, /*#__PURE__*/_react.default.createElement(_ToastContext.ToastProvider, null, /*#__PURE__*/_react.default.createElement(_ValidationsFieldsContext.ValidationFieldsProvider, null, /*#__PURE__*/_react.default.createElement(_WebsocketContext.WebsocketProvider, {
