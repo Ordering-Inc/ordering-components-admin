@@ -56,7 +56,8 @@ var LanguageProvider = function LanguageProvider(_ref) {
   var _state$language4;
 
   var children = _ref.children,
-      strategy = _ref.strategy;
+      strategy = _ref.strategy,
+      settings = _ref.settings;
 
   var _useState = (0, _react.useState)({
     loading: true,
@@ -341,14 +342,22 @@ var LanguageProvider = function LanguageProvider(_ref) {
     if (!(ordering !== null && ordering !== void 0 && ordering.project)) return;
 
     if ((_state$language2 = state.language) !== null && _state$language2 !== void 0 && _state$language2.code && ((_state$language3 = state.language) === null || _state$language3 === void 0 ? void 0 : _state$language3.code) === ordering.language) {
+      console.log('useEffect refresh', state.language, ordering.language);
       refreshTranslations();
     }
   }, [(_state$language4 = state.language) === null || _state$language4 === void 0 ? void 0 : _state$language4.code, ordering === null || ordering === void 0 ? void 0 : ordering.project, ordering.language]);
   (0, _react.useEffect)(function () {
+    console.log('useEffect localstorage', ordering);
     setLanguageFromLocalStorage();
     if (!(ordering !== null && ordering !== void 0 && ordering.project)) return;
     refreshLanguages();
   }, [ordering === null || ordering === void 0 ? void 0 : ordering.language, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
+  (0, _react.useEffect)(function () {
+    console.log('useEffect Ordering', ordering);
+  }, [ordering]);
+  (0, _react.useEffect)(function () {
+    console.log('useEffect Settings', settings);
+  }, [settings]);
 
   var t = function t(key) {
     var fallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
