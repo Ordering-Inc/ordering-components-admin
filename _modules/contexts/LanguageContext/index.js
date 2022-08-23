@@ -56,8 +56,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
   var _state$language4;
 
   var children = _ref.children,
-      strategy = _ref.strategy,
-      settings = _ref.settings;
+      strategy = _ref.strategy;
 
   var _useState = (0, _react.useState)({
     loading: true,
@@ -164,7 +163,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
   }();
 
   var setLanguage = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(language, key) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(language, optionKey) {
       var _state$language;
 
       var options, _yield$ordering$langu, _yield$ordering$langu2, error, result, defaultLanguage, _languageList;
@@ -182,7 +181,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
             case 2:
               _context3.prev = 2;
-              options = key ? _defineProperty({}, key, true) : {
+              options = optionKey ? _defineProperty({}, optionKey.key, optionKey.value) : {
                 default: true
               };
               _context3.next = 6;
