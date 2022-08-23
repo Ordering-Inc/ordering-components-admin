@@ -75,7 +75,7 @@ export const LanguageProvider = ({ children, strategy, settings }) => {
       const { content: { error, result } } = await ordering.languages().get()
       if (!error) {
         const language = await strategy.getItem('language', true)
-        const localLanguage = language ? result.find(_language => _language.id === language.id) : null
+        const localLanguage = language ? result.find(_language => _language.id === language.id) : {enabled: false}
         console.log('islocalLanguageDisabled',localLanguage)
         const _defaultLanguage = (language && localLanguage.enabled) ? language : result.find(language => language.default)
         const defaultLanguage = { id: _defaultLanguage.id, code: _defaultLanguage.code, rtl: _defaultLanguage.rtl }
