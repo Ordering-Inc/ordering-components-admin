@@ -219,7 +219,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
               result = _ref5$content.result;
 
               if (error) {
-                _context3.next = 27;
+                _context3.next = 28;
                 break;
               }
 
@@ -227,7 +227,7 @@ var LanguageProvider = function LanguageProvider(_ref) {
 
               if (_localLanguage && fromSelector) {
                 localLanguage = result.find(function (_language) {
-                  return _language.id === _localLanguage.id;
+                  return _language.id === language.id;
                 });
                 defaultLanguage = {
                   id: localLanguage.id,
@@ -242,10 +242,11 @@ var LanguageProvider = function LanguageProvider(_ref) {
                 };
               }
 
-              _context3.next = 24;
+              console.log('defaultLanguage', defaultLanguage);
+              _context3.next = 25;
               return strategy.setItem('language', defaultLanguage, true);
 
-            case 24:
+            case 25:
               _languageList = state.languageList.filter(function (_language) {
                 if (_language.id === language.id) {
                   Object.assign(_language, language);
@@ -259,26 +260,26 @@ var LanguageProvider = function LanguageProvider(_ref) {
               }));
               apiHelper.setLanguage(language === null || language === void 0 ? void 0 : language.code);
 
-            case 27:
-              _context3.next = 32;
+            case 28:
+              _context3.next = 33;
               break;
 
-            case 29:
-              _context3.prev = 29;
+            case 30:
+              _context3.prev = 30;
               _context3.t1 = _context3["catch"](2);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
 
-            case 32:
+            case 33:
               location.reload();
 
-            case 33:
+            case 34:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[2, 29]]);
+      }, _callee3, null, [[2, 30]]);
     }));
 
     return function setLanguage(_x, _x2) {
