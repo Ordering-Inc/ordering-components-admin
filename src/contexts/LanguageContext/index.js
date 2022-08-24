@@ -50,7 +50,7 @@ export const LanguageProvider = ({ children, strategy }) => {
     if (!language || language.id === state.language?.id) return
       try {
         const _localLanguage = await strategy.getItem('language', true)
-        const { content: { error, result } } = _localLanguage && fromSelector ? await ordering.translations().asDictionary().get() : await ordering.languages(language.id).save({ default: true })
+        const { content: { error, result } } =_localLanguage && fromSelector ? await ordering.languages().where([{ attribute: 'id', value: language.id }]).get() : await ordering.languages(language.id).save({ default: true })
         if (!error) {
           let defaultLanguage = {}
           if (_localLanguage && fromSelector) {
