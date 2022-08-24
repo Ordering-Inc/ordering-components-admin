@@ -193,7 +193,10 @@ var LanguageProvider = function LanguageProvider(_ref) {
               }
 
               _context3.next = 9;
-              return ordering.translations().asDictionary().get();
+              return ordering.languages().where([{
+                attribute: 'id',
+                value: language.id
+              }]).get();
 
             case 9:
               _context3.t0 = _context3.sent;
