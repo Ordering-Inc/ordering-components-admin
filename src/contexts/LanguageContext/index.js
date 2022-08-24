@@ -51,6 +51,7 @@ export const LanguageProvider = ({ children, strategy }) => {
       try {
         const _localLanguage = await strategy.getItem('language', true)
         const { content: { error, result } } = (_localLanguage && fromSelector) ? await ordering.languages().where([{ attribute: 'id', value: language.id }]).get() : await ordering.languages(language.id).save({ default: true })
+        
         if (!error) {
           let defaultLanguage = {}
           if (_localLanguage && fromSelector) {
