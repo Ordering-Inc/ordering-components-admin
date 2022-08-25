@@ -20,7 +20,7 @@ export const LanguageSelector = (props) => {
   /**
    * This method is used for change the current language
    */
-  const onChangeLanguage = (code, optionKey) => {
+  const onChangeLanguage = (code, fromSelector) => {
     const language = languageListState.languages.find(language => language.code === code)
     if (props.handlerCustomChangeLanguage) {
       props.handlerCustomChangeLanguage(language)
@@ -28,7 +28,7 @@ export const LanguageSelector = (props) => {
       return
     }
     props.onChangeLanguage && props.onChangeLanguage(language)
-    setLanguage(language, optionKey)
+    setLanguage(language, fromSelector)
   }
 
   useEffect(() => {
