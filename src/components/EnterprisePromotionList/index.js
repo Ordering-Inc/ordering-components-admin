@@ -185,7 +185,7 @@ export const EnterprisePromotionList = (props) => {
     if (transferPromotionRank === null && dropPromotionRank === null) {
       dropPromotionRank = 1
     }
-    // handleChangeCategoryRank(transferPromotionId, { rank: dropPromotionRank })
+    handleChangeCategoryRank(transferPromotionId, { rank: dropPromotionRank })
   }
 
   /**
@@ -215,9 +215,15 @@ export const EnterprisePromotionList = (props) => {
         body: JSON.stringify(params)
       }
       const response = await fetch(`${ordering.root}/offers/${transferCategoryId}`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
+      const { error, result } = await response.json()
+      if (!error) {
         showToast(ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'))
+        const _promotions = promotionListState?.promotions.map(promotion => promotion?.id === result?.id ? { ...promotion, rank: result?.rank } : promotion)
+        setPromotionListState({
+          promotions: _promotions,
+          loading: false,
+          error: false
+        })
       }
     } catch (err) {
       setActionState({

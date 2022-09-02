@@ -178,6 +178,7 @@ import { SingleOrderCard } from './components/SingleOrderCard'
 import { SingleProductCard } from './components/SingleProductCard'
 import { SingleRecoveryNotification } from './components/SingleRecoveryNotification'
 import { SitesAuthSettings } from './components/SitesAuthSettings'
+import { SiteTheme } from './components/SiteTheme'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UsersExportCSV } from './components/UsersExportCSV'
 import { UpsellingPage } from './components/UpsellingPage'
@@ -440,6 +441,7 @@ export {
   ReviewCustomer,
   SiteDetails,
   SitesList,
+  SiteTheme,
   Analytics,
   UsersList,
   UserTypeFilter,
