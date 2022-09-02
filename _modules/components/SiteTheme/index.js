@@ -5,11 +5,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.EnterprisePromotionList = void 0;
+exports.SiteTheme = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
-var _propTypes = _interopRequireWildcard(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
@@ -18,6 +18,8 @@ var _ApiContext = require("../../contexts/ApiContext");
 var _LanguageContext = require("../../contexts/LanguageContext");
 
 var _ToastContext = require("../../contexts/ToastContext");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 
@@ -57,14 +59,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var EnterprisePromotionList = function EnterprisePromotionList(props) {
-  var _paginationSettings$p;
+var SiteTheme = function SiteTheme(props) {
+  var siteId = props.siteId,
+      UIComponent = props.UIComponent;
 
-  var UIComponent = props.UIComponent,
-      paginationSettings = props.paginationSettings,
-      propsToFetch = props.propsToFetch,
-      isSearchByPromotionName = props.isSearchByPromotionName,
-      isSearchByPromotionDescription = props.isSearchByPromotionDescription;
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -74,132 +75,57 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
 
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
   var _useToast = (0, _ToastContext.useToast)(),
       _useToast2 = _slicedToArray(_useToast, 2),
       showToast = _useToast2[1].showToast;
 
   var _useState = (0, _react.useState)({
-    promotions: [],
-    loading: false,
+    loading: true,
+    result: [],
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
-      promotionListState = _useState2[0],
-      setPromotionListState = _useState2[1];
+      siteThemesState = _useState2[0],
+      setSiteThemesState = _useState2[1];
 
   var _useState3 = (0, _react.useState)({
-    loading: false,
+    loading: true,
+    result: [],
     error: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
-      actionState = _useState4[0],
-      setActionState = _useState4[1];
+      themesList = _useState4[0],
+      setThemesList = _useState4[1];
 
   var _useState5 = (0, _react.useState)(null),
       _useState6 = _slicedToArray(_useState5, 2),
-      searchValue = _useState6[0],
-      setSearchValue = _useState6[1];
+      selectedTheme = _useState6[0],
+      setSelectedTheme = _useState6[1];
 
   var _useState7 = (0, _react.useState)({
-    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
-    pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
-    totalItems: null,
-    totalPages: null
+    loading: false,
+    error: null
   }),
       _useState8 = _slicedToArray(_useState7, 2),
-      paginationProps = _useState8[0],
-      setPaginationProps = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(null),
-      _useState10 = _slicedToArray(_useState9, 2),
-      dataSelected = _useState10[0],
-      setDataSelected = _useState10[1];
-
-  var _useState11 = (0, _react.useState)({
-    loading: false,
-    sites: [],
-    error: null
-  }),
-      _useState12 = _slicedToArray(_useState11, 2),
-      sitesState = _useState12[0],
-      setSitesState = _useState12[1];
-
-  var _useState13 = (0, _react.useState)({
-    loading: false,
-    paymethods: [],
-    error: null
-  }),
-      _useState14 = _slicedToArray(_useState13, 2),
-      paymethodsState = _useState14[0],
-      setPaymethodsState = _useState14[1];
-
-  var _useState15 = (0, _react.useState)({
-    businesses: [],
-    loading: false,
-    error: null
-  }),
-      _useState16 = _slicedToArray(_useState15, 2),
-      businessesList = _useState16[0],
-      setBusinessesList = _useState16[1];
+      actionState = _useState8[0],
+      setActionState = _useState8[1];
   /**
-   * Method to get the promotions from API
+   * Method to get the themes from API
    */
 
 
-  var getPromotions = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize) {
-      var where, conditions, searchConditions, requestOptions, fetchEndpoint, response, content;
+  var getThemes = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var requestOptions, response, _yield$response$json, error, result;
+
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
+              setThemesList(_objectSpread(_objectSpread({}, themesList), {}, {
                 loading: true
               }));
-              where = null;
-              conditions = [];
-
-              if (searchValue) {
-                searchConditions = [];
-
-                if (isSearchByPromotionName) {
-                  searchConditions.push({
-                    attribute: 'name',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURI("%".concat(searchValue, "%"))
-                    }
-                  });
-                }
-
-                if (isSearchByPromotionDescription) {
-                  searchConditions.push({
-                    attribute: 'description',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURI("%".concat(searchValue, "%"))
-                    }
-                  });
-                }
-
-                conditions.push({
-                  conector: 'OR',
-                  conditions: searchConditions
-                });
-              }
-
-              if (conditions.length) {
-                where = {
-                  conditions: conditions,
-                  conector: 'AND'
-                };
-              }
-
               requestOptions = {
                 method: 'GET',
                 headers: {
@@ -207,81 +133,136 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              fetchEndpoint = where ? "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "&params=").concat(propsToFetch.toString(), "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/offers?page=").concat(page, "&page_size=").concat(pageSize, "&params=").concat(propsToFetch.toString());
-              _context.next = 10;
-              return fetch(fetchEndpoint, requestOptions);
+              _context.next = 5;
+              return fetch("".concat(ordering.root, "/themes"), requestOptions);
 
-            case 10:
+            case 5:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 8;
               return response.json();
 
-            case 13:
-              content = _context.sent;
-
-              if (!content.error) {
-                setPromotionListState({
-                  promotions: content.result,
-                  loading: false,
-                  error: null
-                });
-                setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
-                  currentPage: content.pagination.current_page,
-                  pageSize: content.pagination.page_size === 0 ? paginationProps.pageSize : content.pagination.page_size,
-                  totalPages: content.pagination.total_pages,
-                  totalItems: content.pagination.total,
-                  from: content.pagination.from,
-                  to: content.pagination.to
-                }));
-              } else {
-                setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-                  loading: false,
-                  error: content.result
-                }));
-              }
-
-              _context.next = 20;
+            case 8:
+              _yield$response$json = _context.sent;
+              error = _yield$response$json.error;
+              result = _yield$response$json.result;
+              setThemesList({
+                loading: false,
+                result: error ? [] : result,
+                error: error ? result : null
+              });
+              _context.next = 17;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
-              setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
+              setThemesList(_objectSpread(_objectSpread({}, themesList), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 20:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
-    return function getPromotions(_x, _x2) {
+    return function getThemes() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to control the business promotion enabled state
-   * @param {Number} promotionId promotion id
+   * Method to get the site theme from API
    */
 
 
-  var handleEnablePromotion = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(promotionId, enabled) {
-      var requestOptions, response, content, _promotions;
+  var getSiteTheme = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var requestOptions, response, _yield$response$json2, error, result;
 
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setSiteThemesState(_objectSpread(_objectSpread({}, siteThemesState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes"), requestOptions);
+
+            case 5:
+              response = _context2.sent;
+              _context2.next = 8;
+              return response.json();
+
+            case 8:
+              _yield$response$json2 = _context2.sent;
+              error = _yield$response$json2.error;
+              result = _yield$response$json2.result;
+              setSiteThemesState({
+                loading: false,
+                result: error ? [] : result,
+                error: error ? result : null
+              });
+              _context2.next = 17;
+              break;
+
+            case 14:
+              _context2.prev = 14;
+              _context2.t0 = _context2["catch"](0);
+              setSiteThemesState(_objectSpread(_objectSpread({}, siteThemesState), {}, {
+                loading: false,
+                error: [_context2.t0.message]
+              }));
+
+            case 17:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 14]]);
+    }));
+
+    return function getSiteTheme() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var handleSelectTheme = function handleSelectTheme(themeId) {
+    var _selectedTheme = themesList.result.find(function (theme) {
+      return theme.id === themeId;
+    });
+
+    setSelectedTheme(_selectedTheme);
+  };
+  /**
+   * Method to assign the theme to site
+   */
+
+
+  var handleAssignTheme = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var requestOptions, response, _yield$response$json3, error, result;
+
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
                 method: 'POST',
                 headers: {
@@ -289,143 +270,12 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
                   Authorization: "Bearer ".concat(token)
                 },
                 body: JSON.stringify({
-                  enabled: enabled
+                  theme_id: selectedTheme === null || selectedTheme === void 0 ? void 0 : selectedTheme.id,
+                  values: JSON.stringify(selectedTheme === null || selectedTheme === void 0 ? void 0 : selectedTheme.values_default)
                 })
               };
-              _context2.next = 6;
-              return fetch("".concat(ordering.root, "/offers/").concat(promotionId), requestOptions);
-
-            case 6:
-              response = _context2.sent;
-              _context2.next = 9;
-              return response.json();
-
-            case 9:
-              content = _context2.sent;
-
-              if (!content.error) {
-                _promotions = promotionListState.promotions.filter(function (promotion) {
-                  if (promotion.id === promotionId) {
-                    Object.assign(promotion, content.result);
-                  }
-
-                  return true;
-                });
-                setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-                  promotions: _promotions
-                }));
-                showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
-              }
-
-              _context2.next = 16;
-              break;
-
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](0);
-              setActionState({
-                loading: false,
-                error: [_context2.t0.message]
-              });
-
-            case 16:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[0, 13]]);
-    }));
-
-    return function handleEnablePromotion(_x3, _x4) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to handle drag start
-   */
-
-
-  var handleDragStart = function handleDragStart(event, promotion) {
-    event.dataTransfer.setData('transferPromotionId', promotion.id);
-    var ghostEle = document.createElement('div');
-    ghostEle.classList.add('ghostDragging');
-    ghostEle.innerHTML = promotion === null || promotion === void 0 ? void 0 : promotion.name;
-    document.body.appendChild(ghostEle);
-    event.dataTransfer.setDragImage(ghostEle, 0, 0);
-  };
-  /**
-   * Method to handle drag over
-   */
-
-
-  var handleAllowDrop = function handleAllowDrop(event, promotionId) {
-    event.preventDefault();
-    setDataSelected(promotionId);
-  };
-  /**
-   * Method to handle drag drop
-   */
-
-
-  var handleDrop = function handleDrop(event, promotion) {
-    event.preventDefault();
-    var transferPromotionId = parseInt(event.dataTransfer.getData('transferPromotionId'));
-    var transferPromotion = promotionListState.promotions.find(function (_promotion) {
-      return _promotion.id === transferPromotionId;
-    });
-    var transferPromotionRank = transferPromotion === null || transferPromotion === void 0 ? void 0 : transferPromotion.rank;
-    var dropPromotionRank = promotion === null || promotion === void 0 ? void 0 : promotion.rank;
-
-    if (transferPromotionRank === null && dropPromotionRank === null) {
-      dropPromotionRank = 1;
-    }
-
-    handleChangeCategoryRank(transferPromotionId, {
-      rank: dropPromotionRank
-    });
-  };
-  /**
-   * Method to handle drag end
-   */
-
-
-  var handleDragEnd = function handleDragEnd() {
-    var elements = document.getElementsByClassName('ghostDragging');
-
-    while (elements.length > 0) {
-      elements[0].parentNode.removeChild(elements[0]);
-    }
-
-    setDataSelected('');
-  };
-  /**
-   * Method to change the rank of transfer category
-   */
-
-
-  var handleChangeCategoryRank = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(transferCategoryId, params) {
-      var requestOptions, response, _yield$response$json, error, result, _promotions;
-
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(params)
-              };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/offers/").concat(transferCategoryId), requestOptions);
+              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes"), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -433,355 +283,240 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
               return response.json();
 
             case 9:
-              _yield$response$json = _context3.sent;
-              error = _yield$response$json.error;
-              result = _yield$response$json.result;
+              _yield$response$json3 = _context3.sent;
+              error = _yield$response$json3.error;
+              result = _yield$response$json3.result;
 
               if (!error) {
-                showToast(_ToastContext.ToastType.Success, t('CATEOGORY_UPDATED', 'Category updated'));
-                _promotions = promotionListState === null || promotionListState === void 0 ? void 0 : promotionListState.promotions.map(function (promotion) {
-                  return (promotion === null || promotion === void 0 ? void 0 : promotion.id) === (result === null || result === void 0 ? void 0 : result.id) ? _objectSpread(_objectSpread({}, promotion), {}, {
-                    rank: result === null || result === void 0 ? void 0 : result.rank
-                  }) : promotion;
-                });
-                setPromotionListState({
-                  promotions: _promotions,
-                  loading: false,
-                  error: false
-                });
+                showToast(_ToastContext.ToastType.Success, t('THEME_ADDED', 'Theme added'));
+                getSiteTheme();
               }
 
-              _context3.next = 18;
+              setActionState({
+                loading: false,
+                error: error ? result : null
+              });
+              _context3.next = 19;
               break;
 
-            case 15:
-              _context3.prev = 15;
+            case 16:
+              _context3.prev = 16;
               _context3.t0 = _context3["catch"](0);
               setActionState({
                 loading: false,
                 error: [_context3.t0.message]
               });
 
-            case 18:
+            case 19:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 15]]);
+      }, _callee3, null, [[0, 16]]);
     }));
 
-    return function handleChangeCategoryRank(_x5, _x6) {
+    return function handleAssignTheme() {
       return _ref3.apply(this, arguments);
     };
   }();
   /**
-   * Method to update the promotion list
+   * Method to update the site theme from API
    */
 
 
-  var handleSuccessUpdatePromotions = function handleSuccessUpdatePromotions(updatedPromotions) {
-    setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-      promotions: updatedPromotions
-    }));
-  };
-  /**
-   * Method to add the promotion in the promotion list
-   * @param {Object} promotion promotion to add
-   */
+  var handleUpdateSiteTheme = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(values) {
+      var _siteThemesState$resu, themeId, requestOptions, response, _yield$response$json4, error, result;
 
-
-  var handleSuccessAddPromotion = function handleSuccessAddPromotion(promotion) {
-    var promotions = [].concat(_toConsumableArray(promotionListState.promotions), [promotion]);
-    setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
-      to: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.to) + 1,
-      total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) + 1
-    }));
-    setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-      promotions: promotions
-    }));
-  };
-  /**
-   * Method to delete the promotion in the promotion list
-   * @param {Number} promotionId promotion to delete
-   */
-
-
-  var handleSuccessDeletePromotion = function handleSuccessDeletePromotion(promotionId) {
-    var promotions = promotionListState.promotions.filter(function (promotion) {
-      return promotion.id !== promotionId;
-    });
-    setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
-      total: (paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.total) - 1
-    }));
-    setPromotionListState(_objectSpread(_objectSpread({}, promotionListState), {}, {
-      promotions: promotions
-    }));
-  };
-  /**
-   * Method to get all the sites from API
-   */
-
-
-  var getSites = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
             case 0:
               _context4.prev = 0;
-              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              themeId = (_siteThemesState$resu = siteThemesState.result[0]) === null || _siteThemesState$resu === void 0 ? void 0 : _siteThemesState$resu.theme_id;
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify({
+                  values: JSON.stringify(values)
+                })
               };
-              _context4.next = 5;
-              return fetch("".concat(ordering.root, "/sites"), requestOptions);
+              _context4.next = 7;
+              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes/").concat(themeId), requestOptions);
 
-            case 5:
+            case 7:
               response = _context4.sent;
-              _context4.next = 8;
+              _context4.next = 10;
               return response.json();
 
-            case 8:
-              content = _context4.sent;
+            case 10:
+              _yield$response$json4 = _context4.sent;
+              error = _yield$response$json4.error;
+              result = _yield$response$json4.result;
 
-              if (!content.error) {
-                setSitesState({
-                  sites: content.result,
-                  loading: false,
-                  error: null
-                });
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('THEME_UPDATED', 'Theme updated'));
+                setSiteThemesState(_objectSpread(_objectSpread({}, siteThemesState), {}, {
+                  result: [].concat(_toConsumableArray(siteThemesState.result), _toConsumableArray(result))
+                }));
               }
 
-              _context4.next = 15;
+              setActionState({
+                loading: false,
+                error: error ? result : null
+              });
+              _context4.next = 20;
               break;
 
-            case 12:
-              _context4.prev = 12;
+            case 17:
+              _context4.prev = 17;
               _context4.t0 = _context4["catch"](0);
-              setSitesState(_objectSpread(_objectSpread({}, sitesState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context4.t0.message]
-              }));
+              });
 
-            case 15:
+            case 20:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 12]]);
+      }, _callee4, null, [[0, 17]]);
     }));
 
-    return function getSites() {
+    return function handleUpdateSiteTheme(_x) {
       return _ref4.apply(this, arguments);
     };
   }();
   /**
-   * Method to get all the paymethods from API
+   * Method to add the theme gallery item from API
    */
 
 
-  var getPaymethods = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var requestOptions, response, content;
+  var handleAddThemeGallery = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(base64Image) {
+      var _siteThemesState$resu2, themeId, requestOptions, response, _yield$response$json5, error, result;
+
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
               _context5.prev = 0;
-              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: true
               }));
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              themeId = (_siteThemesState$resu2 = siteThemesState.result[0]) === null || _siteThemesState$resu2 === void 0 ? void 0 : _siteThemesState$resu2.theme_id;
               requestOptions = {
-                method: 'GET',
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                }
+                },
+                body: JSON.stringify({
+                  type: 'image',
+                  file: base64Image
+                })
               };
-              _context5.next = 5;
-              return fetch("".concat(ordering.root, "/paymethods?where=").concat(JSON.stringify({
-                enabled: true
-              })), requestOptions);
+              _context5.next = 7;
+              return fetch("".concat(ordering.root, "/themes/").concat(themeId, "/gallery"), requestOptions);
 
-            case 5:
+            case 7:
               response = _context5.sent;
-              _context5.next = 8;
+              _context5.next = 10;
               return response.json();
 
-            case 8:
-              content = _context5.sent;
+            case 10:
+              _yield$response$json5 = _context5.sent;
+              error = _yield$response$json5.error;
+              result = _yield$response$json5.result;
 
-              if (!content.error) {
-                setPaymethodsState({
-                  paymethods: content.result,
-                  loading: false,
-                  error: null
-                });
+              if (!error) {
+                showToast(_ToastContext.ToastType.Success, t('IMAGE_SAVED', 'Image saved'));
               }
 
-              _context5.next = 15;
+              setActionState({
+                loading: false,
+                error: error ? result : null
+              });
+              _context5.next = 20;
               break;
 
-            case 12:
-              _context5.prev = 12;
+            case 17:
+              _context5.prev = 17;
               _context5.t0 = _context5["catch"](0);
-              setPaymethodsState(_objectSpread(_objectSpread({}, paymethodsState), {}, {
+              setActionState({
                 loading: false,
                 error: [_context5.t0.message]
-              }));
+              });
 
-            case 15:
+            case 20:
             case "end":
               return _context5.stop();
           }
         }
-      }, _callee5, null, [[0, 12]]);
+      }, _callee5, null, [[0, 17]]);
     }));
 
-    return function getPaymethods() {
+    return function handleAddThemeGallery(_x2) {
       return _ref5.apply(this, arguments);
     };
   }();
-  /**
-   * Method to get businesses from API
-   */
-
-
-  var getBusinesses = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
-                loading: false
-              }));
-              _context6.next = 4;
-              return ordering.setAccessToken(token).businesses().select(['name', 'logo', 'slug']).asDashboard().get();
-
-            case 4:
-              _yield$ordering$setAc = _context6.sent;
-              _yield$ordering$setAc2 = _yield$ordering$setAc.content;
-              error = _yield$ordering$setAc2.error;
-              result = _yield$ordering$setAc2.result;
-
-              if (!error) {
-                setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
-                  loading: false,
-                  businesses: result
-                }));
-              }
-
-              _context6.next = 14;
-              break;
-
-            case 11:
-              _context6.prev = 11;
-              _context6.t0 = _context6["catch"](0);
-              setBusinessesList(_objectSpread(_objectSpread({}, businessesList), {}, {
-                loading: false,
-                error: [_context6.t0.message]
-              }));
-
-            case 14:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6, null, [[0, 11]]);
-    }));
-
-    return function getBusinesses() {
-      return _ref6.apply(this, arguments);
-    };
-  }();
 
   (0, _react.useEffect)(function () {
-    if (promotionListState.loading) return;
-    getPromotions(1, paginationProps.pageSize);
-  }, [searchValue]);
+    getSiteTheme();
+  }, [siteId]);
   (0, _react.useEffect)(function () {
-    getSites();
-    getBusinesses();
-    getPaymethods();
+    getThemes();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    sitesState: sitesState,
-    businessesList: businessesList,
-    paymethodsState: paymethodsState,
-    promotionListState: promotionListState,
-    paginationProps: paginationProps,
-    setPaginationProps: setPaginationProps,
-    searchValue: searchValue,
-    onSearch: setSearchValue,
-    getPromotions: getPromotions,
-    dataSelected: dataSelected,
-    handleDragStart: handleDragStart,
-    handleAllowDrop: handleAllowDrop,
-    handleDrop: handleDrop,
-    handleDragEnd: handleDragEnd,
-    handleEnablePromotion: handleEnablePromotion,
-    handleSuccessUpdatePromotions: handleSuccessUpdatePromotions,
-    handleSuccessAddPromotion: handleSuccessAddPromotion,
-    handleSuccessDeletePromotion: handleSuccessDeletePromotion
+    siteThemesState: siteThemesState,
+    themesList: themesList,
+    actionState: actionState,
+    selectedTheme: selectedTheme,
+    handleSelectTheme: handleSelectTheme,
+    handleAssignTheme: handleAssignTheme,
+    handleUpdateSiteTheme: handleUpdateSiteTheme,
+    handleAddThemeGallery: handleAddThemeGallery
   })));
 };
 
-exports.EnterprisePromotionList = EnterprisePromotionList;
-EnterprisePromotionList.propTypes = {
+exports.SiteTheme = SiteTheme;
+SiteTheme.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Array of drivers props to fetch
-   */
-  propsToFetch: _propTypes.default.arrayOf(_propTypes.string),
-
-  /**
-   * Components types before business promotions
+   * Components types before site theme
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-  * Components types after business promotions
+  * Components types after site theme
   * Array of type components, the parent props will pass to these components
   */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-  * Elements before business promotions
+  * Elements before site theme
   * Array of HTML/Components elements, these components will not get the parent props
   */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-  * Elements after business promotions
+  * Elements after site theme
   * Array of HTML/Components elements, these components will not get the parent props
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-EnterprisePromotionList.defaultProps = {
-  beforeComponents: [],
-  afterComponents: [],
-  beforeElements: [],
-  afterElements: [],
-  paginationSettings: {
-    initialPage: 1,
-    pageSize: 10,
-    controlType: 'infinity'
-  },
-  propsToFetch: ['name', 'auto', 'enabled', 'end', 'description', 'image', 'label', 'order_priority', 'sites', 'stackable', 'start', 'target', 'type', 'limit_per_user', 'user_order_count', 'user_order_count_condition', 'valid_from_after_user_last_order_minutes', 'valid_until_after_user_last_order_minutes', 'users', 'delivery_zones', 'paymethods', 'order_types_allowed', 'max_discount', 'rank', 'rate_type', 'rate', 'public', 'coupon', 'businesses', 'condition_type', 'minimum', 'products', 'categories', 'schedule', 'limit', 'include_options']
-};
+SiteTheme.defaultProps = {};
