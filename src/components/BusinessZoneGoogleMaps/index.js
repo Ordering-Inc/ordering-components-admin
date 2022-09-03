@@ -304,7 +304,7 @@ export const BusinessZoneGoogleMaps = (props) => {
       if (isAddMode) {
         const bounds = new window.google.maps.LatLngBounds()
         for (const deliveryZone of businessZones) {
-          if (deliveryZone.type === 1) {
+          if (deliveryZone.type === 1 && deliveryZone?.data?.center && deliveryZone?.data?.radio) {
             const newCircleZone = new window.google.maps.Circle({
               ...greenFillStyle,
               editable: false,
