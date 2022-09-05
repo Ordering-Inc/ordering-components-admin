@@ -203,7 +203,7 @@ export const EnterprisePromotionList = (props) => {
       dropPromotionRank = 1
     }
     if (isPromotionBottom) {
-      dropPromotionRank = dropPromotionRank + 1
+      dropPromotionRank = Number(dropPromotionRank) + 1
     }
     handleChangeCategoryRank(transferPromotionId, { rank: dropPromotionRank })
   }
