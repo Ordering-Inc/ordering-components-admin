@@ -119,32 +119,37 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
       dataSelected = _useState10[0],
       setDataSelected = _useState10[1];
 
-  var _useState11 = (0, _react.useState)({
+  var _useState11 = (0, _react.useState)(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      isPromotionBottom = _useState12[0],
+      setIsPromotionBottom = _useState12[1];
+
+  var _useState13 = (0, _react.useState)({
     loading: false,
     sites: [],
     error: null
   }),
-      _useState12 = _slicedToArray(_useState11, 2),
-      sitesState = _useState12[0],
-      setSitesState = _useState12[1];
+      _useState14 = _slicedToArray(_useState13, 2),
+      sitesState = _useState14[0],
+      setSitesState = _useState14[1];
 
-  var _useState13 = (0, _react.useState)({
+  var _useState15 = (0, _react.useState)({
     loading: false,
     paymethods: [],
     error: null
   }),
-      _useState14 = _slicedToArray(_useState13, 2),
-      paymethodsState = _useState14[0],
-      setPaymethodsState = _useState14[1];
+      _useState16 = _slicedToArray(_useState15, 2),
+      paymethodsState = _useState16[0],
+      setPaymethodsState = _useState16[1];
 
-  var _useState15 = (0, _react.useState)({
+  var _useState17 = (0, _react.useState)({
     businesses: [],
     loading: false,
     error: null
   }),
-      _useState16 = _slicedToArray(_useState15, 2),
-      businessesList = _useState16[0],
-      setBusinessesList = _useState16[1];
+      _useState18 = _slicedToArray(_useState17, 2),
+      businessesList = _useState18[0],
+      setBusinessesList = _useState18[1];
   /**
    * Method to get the promotions from API
    */
@@ -358,9 +363,27 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
    */
 
 
-  var handleAllowDrop = function handleAllowDrop(event, promotionId) {
+  var handleAllowDrop = function handleAllowDrop(event, promotionId, promoIndex) {
     event.preventDefault();
-    setDataSelected(promotionId);
+    var element = event.target.closest('.draggable_promotion');
+
+    if (element) {
+      if (promoIndex < (promotionListState === null || promotionListState === void 0 ? void 0 : promotionListState.promotions.length) - 1) {
+        setDataSelected(promotionId);
+        setIsPromotionBottom(false);
+      } else {
+        var middlePositionY = window.scrollY + event.target.getBoundingClientRect().top + event.target.offsetHeight / 2;
+        var dragPositionY = event.clientY;
+
+        if (dragPositionY > middlePositionY) {
+          setIsPromotionBottom(true);
+          setDataSelected('');
+        } else {
+          setIsPromotionBottom(false);
+          setDataSelected(promotionId);
+        }
+      }
+    }
   };
   /**
    * Method to handle drag drop
@@ -380,6 +403,10 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
       dropPromotionRank = 1;
     }
 
+    if (isPromotionBottom) {
+      dropPromotionRank = Number(dropPromotionRank) + 1;
+    }
+
     handleChangeCategoryRank(transferPromotionId, {
       rank: dropPromotionRank
     });
@@ -397,6 +424,7 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
     }
 
     setDataSelected('');
+    setIsPromotionBottom(false);
   };
   /**
    * Method to change the rank of transfer category
@@ -730,6 +758,7 @@ var EnterprisePromotionList = function EnterprisePromotionList(props) {
     handleAllowDrop: handleAllowDrop,
     handleDrop: handleDrop,
     handleDragEnd: handleDragEnd,
+    isPromotionBottom: isPromotionBottom,
     handleEnablePromotion: handleEnablePromotion,
     handleSuccessUpdatePromotions: handleSuccessUpdatePromotions,
     handleSuccessAddPromotion: handleSuccessAddPromotion,
