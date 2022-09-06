@@ -29,6 +29,7 @@ export const EnterprisePromotionList = (props) => {
     totalPages: null
   })
   const [dataSelected, setDataSelected] = useState(null)
+  const [isPromotionBottom, setIsPromotionBottom] = useState(false)
   const [sitesState, setSitesState] = useState({ loading: false, sites: [], error: null })
   const [paymethodsState, setPaymethodsState] = useState({ loading: false, paymethods: [], error: null })
   const [businessesList, setBusinessesList] = useState({ businesses: [], loading: false, error: null })
@@ -167,9 +168,25 @@ export const EnterprisePromotionList = (props) => {
   /**
    * Method to handle drag over
    */
-  const handleAllowDrop = (event, promotionId) => {
+  const handleAllowDrop = (event, promotionId, promoIndex) => {
     event.preventDefault()
-    setDataSelected(promotionId)
+    const element = event.target.closest('.draggable_promotion')
+    if (element) {
+      if (promoIndex < promotionListState?.promotions.length - 1) {
+        setDataSelected(promotionId)
+        setIsPromotionBottom(false)
+      } else {
+        const middlePositionY = window.scrollY + event.target.getBoundingClientRect().top + event.target.offsetHeight / 2
+        const dragPositionY = event.clientY
+        if (dragPositionY > middlePositionY) {
+          setIsPromotionBottom(true)
+          setDataSelected('')
+        } else {
+          setIsPromotionBottom(false)
+          setDataSelected(promotionId)
+        }
+      }
+    }
   }
 
   /**
@@ -185,6 +202,9 @@ export const EnterprisePromotionList = (props) => {
     if (transferPromotionRank === null && dropPromotionRank === null) {
       dropPromotionRank = 1
     }
+    if (isPromotionBottom) {
+      dropPromotionRank = Number(dropPromotionRank) + 1
+    }
     handleChangeCategoryRank(transferPromotionId, { rank: dropPromotionRank })
   }
 
@@ -197,6 +217,7 @@ export const EnterprisePromotionList = (props) => {
       elements[0].parentNode.removeChild(elements[0])
     }
     setDataSelected('')
+    setIsPromotionBottom(false)
   }
 
   /**
@@ -375,6 +396,7 @@ export const EnterprisePromotionList = (props) => {
             handleAllowDrop={handleAllowDrop}
             handleDrop={handleDrop}
             handleDragEnd={handleDragEnd}
+            isPromotionBottom={isPromotionBottom}
             handleEnablePromotion={handleEnablePromotion}
             handleSuccessUpdatePromotions={handleSuccessUpdatePromotions}
             handleSuccessAddPromotion={handleSuccessAddPromotion}
