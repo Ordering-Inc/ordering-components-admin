@@ -483,6 +483,12 @@ Object.defineProperty(exports, "ConfigProvider", {
     return _ConfigContext.ConfigProvider;
   }
 });
+Object.defineProperty(exports, "CountryList", {
+  enumerable: true,
+  get: function get() {
+    return _CountryList.CountryList;
+  }
+});
 Object.defineProperty(exports, "CouponControl", {
   enumerable: true,
   get: function get() {
@@ -1693,6 +1699,8 @@ var _CheckoutFieldsSetting = require("./components/CheckoutFieldsSetting");
 var _CheckPassword = require("./components/CheckPassword");
 
 var _CityList = require("./components/CityList");
+
+var _CountryList = require("./components/CountryList");
 
 var _CouponControl = require("./components/CouponControl");
 
