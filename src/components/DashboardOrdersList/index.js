@@ -291,6 +291,14 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues?.countryCode.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'country_code',
+            value: filterValues?.countryCode
+          }
+        )
+      }
       if (filterValues.driverIds.length !== 0) {
         filterConditons.push(
           {
