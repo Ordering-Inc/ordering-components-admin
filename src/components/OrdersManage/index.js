@@ -365,6 +365,14 @@ export const OrdersManage = (props) => {
           }
         )
       }
+      if (filterValues?.currency.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'currency',
+            value: filterValues?.currency
+          }
+        )
+      }
       if (filterValues?.driverIds.length > 0) {
         filterConditons.push(
           {

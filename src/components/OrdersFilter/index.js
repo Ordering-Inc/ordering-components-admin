@@ -23,7 +23,8 @@ export const OrdersFilter = (props) => {
     statuses: [],
     deliveryTypes: [],
     paymethodIds: [],
-    countryCode: []
+    countryCode: [],
+    currency: []
   })
 
   /**
@@ -166,6 +167,21 @@ export const OrdersFilter = (props) => {
     }
     setFilterValues({ ...filterValues, countryCode: _countryCode })
   }
+
+  /**
+   * Change currency
+   * * @param {string} code code of country
+  */
+  const handleChangeCurrency = (code) => {
+    let _currency = [...filterValues.currency]
+    if (!_currency.includes(code)) {
+      _currency.push(code)
+    } else {
+      _currency = _currency.filter((_code) => _code !== code)
+    }
+    setFilterValues({ ...filterValues, currency: _currency })
+  }
+
   /**
    * Change order status
    * * @param {number} status status
@@ -220,7 +236,8 @@ export const OrdersFilter = (props) => {
       statuses: [],
       deliveryTypes: [],
       paymethodIds: [],
-      countryCode: []
+      countryCode: [],
+      currency: []
     })
   }
 
@@ -258,6 +275,7 @@ export const OrdersFilter = (props) => {
           handleChangePaymethodType={handleChangePaymethodType}
           handleResetFilterValues={handleResetFilterValues}
           handleChangeCountryCode={handleChangeCountryCode}
+          handleChangeCurrency={handleChangeCurrency}
         />
       )}
     </>
