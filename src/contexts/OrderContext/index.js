@@ -598,10 +598,10 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
 
   useEffect(() => {
     if (session.loading || languageState.loading) return
-    if (session.auth) {
+    if (session.auth && session?.user?.level !== 8) {
       refreshOrderOptions()
     }
-  }, [session.auth, session.loading, languageState.loading])
+  }, [session.auth, session.loading, languageState.loading, session?.user])
 
   useEffect(() => {
     if (session.loading || configState.loading) return
