@@ -69,7 +69,8 @@ var OrdersFilter = function OrdersFilter(props) {
     statuses: [],
     deliveryTypes: [],
     paymethodIds: [],
-    countryCode: []
+    countryCode: [],
+    currency: []
   }),
       _useState2 = _slicedToArray(_useState, 2),
       filterValues = _useState2[0],
@@ -301,6 +302,27 @@ var OrdersFilter = function OrdersFilter(props) {
     }));
   };
   /**
+   * Change currency
+   * * @param {string} code code of country
+  */
+
+
+  var handleChangeCurrency = function handleChangeCurrency(code) {
+    var _currency = _toConsumableArray(filterValues.currency);
+
+    if (!_currency.includes(code)) {
+      _currency.push(code);
+    } else {
+      _currency = _currency.filter(function (_code) {
+        return _code !== code;
+      });
+    }
+
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      currency: _currency
+    }));
+  };
+  /**
    * Change order status
    * * @param {number} status status
   */
@@ -380,7 +402,8 @@ var OrdersFilter = function OrdersFilter(props) {
       statuses: [],
       deliveryTypes: [],
       paymethodIds: [],
-      countryCode: []
+      countryCode: [],
+      currency: []
     });
   };
 
@@ -434,7 +457,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangeDeliveryType: handleChangeDeliveryType,
     handleChangePaymethodType: handleChangePaymethodType,
     handleResetFilterValues: handleResetFilterValues,
-    handleChangeCountryCode: handleChangeCountryCode
+    handleChangeCountryCode: handleChangeCountryCode,
+    handleChangeCurrency: handleChangeCurrency
   })));
 };
 
