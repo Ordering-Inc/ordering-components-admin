@@ -62,7 +62,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var DashboardOrdersList = function DashboardOrdersList(props) {
-  var _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, _paginationSettings$p;
+  var _paginationSettings$p;
 
   var UIComponent = props.UIComponent,
       propsToFetch = props.propsToFetch,
@@ -113,13 +113,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       setOrderList = _useState2[1];
 
   var allowColumnsModel = {
-    status: {
-      visable: true,
-      title: t('STATUS', 'Status'),
-      className: 'statusInfo',
-      draggable: true,
+    slaBar: {
+      visable: false,
+      title: '',
+      className: '',
+      draggable: false,
       colSpan: 1,
-      order: 1
+      order: -2
     },
     orderNumber: {
       visable: true,
@@ -129,13 +129,21 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       colSpan: 1,
       order: -1
     },
+    status: {
+      visable: true,
+      title: t('STATUS', 'Status'),
+      className: 'statusInfo',
+      draggable: true,
+      colSpan: 1,
+      order: 1
+    },
     dateTime: {
       visable: true,
       title: '',
       className: '',
       draggable: false,
       colSpan: 1,
-      order: -1
+      order: 0
     },
     business: {
       visable: true,
@@ -170,20 +178,12 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       order: 5
     },
     timer: {
-      visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs = configState.configs) === null || _configState$configs === void 0 ? void 0 : (_configState$configs$ = _configState$configs.order_deadlines_enabled) === null || _configState$configs$ === void 0 ? void 0 : _configState$configs$.value) === '1',
+      visable: false,
       title: t('SLA_TIMER', 'SLA’s timer'),
       className: 'timer',
       draggable: true,
-      colSpan: 2,
-      order: 6
-    },
-    slaBar: {
-      visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 ? void 0 : (_configState$configs3 = _configState$configs2.order_deadlines_enabled) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value) === '1',
-      title: '',
-      className: '',
-      draggable: false,
       colSpan: 1,
-      order: -1
+      order: 6
     },
     total: {
       visable: true,
@@ -191,11 +191,11 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       className: '',
       draggable: false,
       colSpan: 1,
-      order: -1
+      order: 10
     }
   };
 
-  var _useState3 = (0, _react.useState)(allowColumnsModel),
+  var _useState3 = (0, _react.useState)(null),
       _useState4 = _slicedToArray(_useState3, 2),
       allowColumns = _useState4[0],
       setAllowColumns = _useState4[1];
@@ -1159,11 +1159,11 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     };
   }, [orderList, orderBy]);
   (0, _react.useEffect)(function () {
-    if (!(session !== null && session !== void 0 && session.user.id)) return;
+    if (!(session !== null && session !== void 0 && session.user.id) || !configState || allowColumns) return;
 
     var getUser = /*#__PURE__*/function () {
       var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
-        var _result$settings, response, _response$content, error, result, _result$settings2;
+        var _result$settings, _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, response, _response$content, error, result, _result$settings2, _configState$configs4, _configState$configs5, _configState$configs6, _configState$configs7;
 
         return _regeneratorRuntime().wrap(function _callee7$(_context7) {
           while (1) {
@@ -1186,14 +1186,28 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 return _context7.abrupt("return");
 
               case 8:
-                setAllowColumns(allowColumnsModel);
+                setAllowColumns(_objectSpread(_objectSpread({}, allowColumnsModel), {}, {
+                  slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
+                    visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs = configState.configs) === null || _configState$configs === void 0 ? void 0 : (_configState$configs$ = _configState$configs.order_deadlines_enabled) === null || _configState$configs$ === void 0 ? void 0 : _configState$configs$.value) === '1'
+                  }),
+                  timer: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.timer), {}, {
+                    visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 ? void 0 : (_configState$configs3 = _configState$configs2.order_deadlines_enabled) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value) === '1'
+                  })
+                }));
                 _context7.next = 14;
                 break;
 
               case 11:
                 _context7.prev = 11;
                 _context7.t0 = _context7["catch"](0);
-                setAllowColumns(allowColumnsModel);
+                setAllowColumns(_objectSpread(_objectSpread({}, allowColumnsModel), {}, {
+                  slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
+                    visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 ? void 0 : (_configState$configs5 = _configState$configs4.order_deadlines_enabled) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value) === '1'
+                  }),
+                  timer: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.timer), {}, {
+                    visable: (configState === null || configState === void 0 ? void 0 : (_configState$configs6 = configState.configs) === null || _configState$configs6 === void 0 ? void 0 : (_configState$configs7 = _configState$configs6.order_deadlines_enabled) === null || _configState$configs7 === void 0 ? void 0 : _configState$configs7.value) === '1'
+                  })
+                }));
 
               case 14:
               case "end":
@@ -1209,7 +1223,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     }();
 
     getUser();
-  }, [session === null || session === void 0 ? void 0 : session.user]);
+  }, [session === null || session === void 0 ? void 0 : session.user, configState]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     orderList: orderList,
     pagination: pagination,
