@@ -40,19 +40,19 @@ export const DashboardOrdersList = (props) => {
 
   const [orderList, setOrderList] = useState({ loading: !orders, error: null, orders: [] })
   const allowColumnsModel = {
-    status: { visable: true, title: t('STATUS', 'Status'), className: 'statusInfo', draggable: true, colSpan: 1, order: 1 },
+    slaBar: { visable: false, title: '', className: '', draggable: false, colSpan: 1, order: -2 },
     orderNumber: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
-    dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
+    status: { visable: true, title: t('STATUS', 'Status'), className: 'statusInfo', draggable: true, colSpan: 1, order: 1 },
+    dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: 0 },
     business: { visable: true, title: t('BUSINESS', 'Business'), className: 'businessInfo', draggable: true, colSpan: 1, order: 2 },
     customer: { visable: true, title: t('CUSTOMER', 'Customer'), className: 'customerInfo', draggable: true, colSpan: 1, order: 3 },
     driver: { visable: true, title: t('DRIVER', 'Driver'), className: 'driverInfo', draggable: true, colSpan: 1, order: 4 },
     advanced: { visable: true, title: t('ADVANCED_LOGISTICS', 'Advanced logistics'), className: 'advanced', draggable: true, colSpan: 3, order: 5 },
-    timer: { visable: configState?.configs?.order_deadlines_enabled?.value === '1', title: t('SLA_TIMER', 'SLA’s timer'), className: 'timer', draggable: true, colSpan: 2, order: 6 },
-    slaBar: { visable: configState?.configs?.order_deadlines_enabled?.value === '1', title: '', className: '', draggable: false, colSpan: 1, order: -1 },
-    total: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: -1 }
+    timer: { visable: false, title: t('SLA_TIMER', 'SLA’s timer'), className: 'timer', draggable: true, colSpan: 1, order: 6 },
+    total: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: 10 }
   }
 
-  const [allowColumns, setAllowColumns] = useState(allowColumnsModel)
+  const [allowColumns, setAllowColumns] = useState(null)
   const [pagination, setPagination] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
     pageSize: paginationSettings.pageSize ?? 10
@@ -742,7 +742,7 @@ export const DashboardOrdersList = (props) => {
   }, [orderList, orderBy])
 
   useEffect(() => {
-    if (!session?.user.id) return
+    if (!session?.user.id || !configState || allowColumns) return
     const getUser = async () => {
       try {
         const response = await ordering.users(session?.user.id).select(['settings']).get()
@@ -751,13 +751,22 @@ export const DashboardOrdersList = (props) => {
           setAllowColumns(result.settings?.orderColumns)
           return
         }
-        setAllowColumns(allowColumnsModel)
+
+        setAllowColumns({
+          ...allowColumnsModel,
+          slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' },
+          timer: { ...allowColumnsModel?.timer, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
+        })
       } catch (err) {
-        setAllowColumns(allowColumnsModel)
+        setAllowColumns({
+          ...allowColumnsModel,
+          slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' },
+          timer: { ...allowColumnsModel?.timer, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
+        })
       }
     }
     getUser()
-  }, [session?.user])
+  }, [session?.user, configState])
   return (
     <>
       {UIComponent && (
