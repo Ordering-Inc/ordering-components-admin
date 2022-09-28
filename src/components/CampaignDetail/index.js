@@ -371,7 +371,6 @@ export const CampaignDetail = (props) => {
         }
       })
     } else {
-      // getAudience(campaign?.conditions)
       setIsAddMode(false)
       cleanFormState()
     }
@@ -384,7 +383,8 @@ export const CampaignDetail = (props) => {
 
   useEffect(() => {
     if (!isAddMode || !formState?.changes?.conditions) return
-    if (formState?.changes?.conditions?.length > 0) getAudience(formState?.changes?.conditions, campaignState?.campaign?.contact_type)
+    const contactType = formState?.changes?.contact_type || campaignState?.campaign?.contact_type
+    if (formState?.changes?.conditions?.length > 0 && contactType) getAudience(formState?.changes?.conditions, contactType)
   }, [JSON.stringify(formState?.changes?.conditions)])
 
   return (
