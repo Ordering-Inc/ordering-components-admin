@@ -18,7 +18,8 @@ export const LoginForm = (props) => {
     useLoginByCellphone,
     useDefualtSessionManager,
     urlToRedirect,
-    allowedLevels
+    allowedLevels,
+    billingUrl
   } = props
 
   const [ordering] = useApi()
@@ -73,7 +74,11 @@ export const LoginForm = (props) => {
       }
 
       setFormState({ ...formState, loading: true })
-      const { content: { error, result } } = await ordering.users().auth(_credentials)
+      const { content: { error, result, action } } = await ordering.users().auth(_credentials)
+
+      if (action && action?.type === 'billing_autologin') {
+        window.open(`${billingUrl}?token=${action?.data?.access_token}&projectId=${action?.data?.project_id}&userId=${action?.data?.user_id}`, '_blank').focus()
+      }
 
       if (isReCaptchaEnable && window.grecaptcha) {
         _credentials.recaptcha_type === 'v2' && window.grecaptcha.reset()
