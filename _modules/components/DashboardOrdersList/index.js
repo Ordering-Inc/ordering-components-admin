@@ -515,6 +515,20 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   });
                 }
 
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.countryCode.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'country_code',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.countryCode
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.currency.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'currency',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.currency
+                  });
+                }
+
                 if (filterValues.driverIds.length !== 0) {
                   filterConditons.push({
                     attribute: 'driver_id',
