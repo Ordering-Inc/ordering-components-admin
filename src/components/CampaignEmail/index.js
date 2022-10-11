@@ -18,7 +18,6 @@ export const CampaignEmail = (props) => {
   const [imageListState, setImageListState] = useState({ images: [], loading: false, error: null })
   const [insertImageState, setInsertImageState] = useState({ loading: false, change: {}, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
-  const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [selectedImageUrl, setSelectedImageUrl] = useState(null)
 
   /**
@@ -119,16 +118,6 @@ export const CampaignEmail = (props) => {
     reader.onerror = error => console.log(error)
   }
 
-  const handleChangeFormState = (field, value) => {
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        [field]: value
-      }
-    })
-  }
-
   useEffect(() => {
     if (Object.keys(insertImageState.change).length === 0) return
     handleAddImage()
@@ -145,12 +134,10 @@ export const CampaignEmail = (props) => {
           {...props}
           imageListState={imageListState}
           insertImageState={insertImageState}
-          emailFormState={formState}
           selectedImageUrl={selectedImageUrl}
           setSelectedImageUrl={setSelectedImageUrl}
           handleInsertImage={handleInsertImage}
           handleDeleteImage={handleDeleteImage}
-          handleChangeEmailFormState={handleChangeFormState}
         />
       )}
     </>
