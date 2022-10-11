@@ -104,19 +104,10 @@ var CampaignEmail = function CampaignEmail(props) {
       actionState = _useState6[0],
       setActionState = _useState6[1];
 
-  var _useState7 = (0, _react.useState)({
-    loading: false,
-    changes: {},
-    error: null
-  }),
+  var _useState7 = (0, _react.useState)(null),
       _useState8 = _slicedToArray(_useState7, 2),
-      formState = _useState8[0],
-      setFormState = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(null),
-      _useState10 = _slicedToArray(_useState9, 2),
-      selectedImageUrl = _useState10[0],
-      setSelectedImageUrl = _useState10[1];
+      selectedImageUrl = _useState8[0],
+      setSelectedImageUrl = _useState8[1];
   /**
    * Method to get the image files from API
    */
@@ -357,12 +348,6 @@ var CampaignEmail = function CampaignEmail(props) {
     };
   };
 
-  var handleChangeFormState = function handleChangeFormState(field, value) {
-    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, field, value))
-    }));
-  };
-
   (0, _react.useEffect)(function () {
     if (Object.keys(insertImageState.change).length === 0) return;
     handleAddImage();
@@ -373,12 +358,10 @@ var CampaignEmail = function CampaignEmail(props) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     imageListState: imageListState,
     insertImageState: insertImageState,
-    emailFormState: formState,
     selectedImageUrl: selectedImageUrl,
     setSelectedImageUrl: setSelectedImageUrl,
     handleInsertImage: handleInsertImage,
-    handleDeleteImage: handleDeleteImage,
-    handleChangeEmailFormState: handleChangeFormState
+    handleDeleteImage: handleDeleteImage
   })));
 };
 

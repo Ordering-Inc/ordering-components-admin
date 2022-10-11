@@ -60,7 +60,7 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var CampaignDetail = function CampaignDetail(props) {
-  var _campaignState$campai4, _formState$changes8;
+  var _campaignState$campai4, _formState$changes9;
 
   var campaign = props.campaign,
       campaignList = props.campaignList,
@@ -665,7 +665,6 @@ var CampaignDetail = function CampaignDetail(props) {
         }
       }));
     } else {
-      // getAudience(campaign?.conditions)
       setIsAddMode(false);
       cleanFormState();
     }
@@ -680,11 +679,12 @@ var CampaignDetail = function CampaignDetail(props) {
     getAudience(campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai2 = campaignState.campaign) === null || _campaignState$campai2 === void 0 ? void 0 : _campaignState$campai2.conditions, campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai3 = campaignState.campaign) === null || _campaignState$campai3 === void 0 ? void 0 : _campaignState$campai3.contact_type);
   }, [JSON.stringify(campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai4 = campaignState.campaign) === null || _campaignState$campai4 === void 0 ? void 0 : _campaignState$campai4.conditions)]);
   (0, _react.useEffect)(function () {
-    var _formState$changes5, _formState$changes6, _formState$changes6$c, _formState$changes7, _campaignState$campai5;
+    var _formState$changes5, _formState$changes6, _campaignState$campai5, _formState$changes7, _formState$changes7$c, _formState$changes8;
 
     if (!isAddMode || !(formState !== null && formState !== void 0 && (_formState$changes5 = formState.changes) !== null && _formState$changes5 !== void 0 && _formState$changes5.conditions)) return;
-    if ((formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : (_formState$changes6$c = _formState$changes6.conditions) === null || _formState$changes6$c === void 0 ? void 0 : _formState$changes6$c.length) > 0) getAudience(formState === null || formState === void 0 ? void 0 : (_formState$changes7 = formState.changes) === null || _formState$changes7 === void 0 ? void 0 : _formState$changes7.conditions, campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai5 = campaignState.campaign) === null || _campaignState$campai5 === void 0 ? void 0 : _campaignState$campai5.contact_type);
-  }, [JSON.stringify(formState === null || formState === void 0 ? void 0 : (_formState$changes8 = formState.changes) === null || _formState$changes8 === void 0 ? void 0 : _formState$changes8.conditions)]);
+    var contactType = (formState === null || formState === void 0 ? void 0 : (_formState$changes6 = formState.changes) === null || _formState$changes6 === void 0 ? void 0 : _formState$changes6.contact_type) || (campaignState === null || campaignState === void 0 ? void 0 : (_campaignState$campai5 = campaignState.campaign) === null || _campaignState$campai5 === void 0 ? void 0 : _campaignState$campai5.contact_type);
+    if ((formState === null || formState === void 0 ? void 0 : (_formState$changes7 = formState.changes) === null || _formState$changes7 === void 0 ? void 0 : (_formState$changes7$c = _formState$changes7.conditions) === null || _formState$changes7$c === void 0 ? void 0 : _formState$changes7$c.length) > 0 && contactType) getAudience(formState === null || formState === void 0 ? void 0 : (_formState$changes8 = formState.changes) === null || _formState$changes8 === void 0 ? void 0 : _formState$changes8.conditions, contactType);
+  }, [JSON.stringify(formState === null || formState === void 0 ? void 0 : (_formState$changes9 = formState.changes) === null || _formState$changes9 === void 0 ? void 0 : _formState$changes9.conditions)]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
     audienceState: audienceState,
