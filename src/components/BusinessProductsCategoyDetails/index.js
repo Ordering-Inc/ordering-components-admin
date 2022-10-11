@@ -216,6 +216,31 @@ export const BusinessProductsCategoyDetails = (props) => {
     }
   }
 
+  /**
+   * Method to convert the str to slug
+   */
+  const stringToSlug = str => {
+    str = str.replace(/^\s+|\s+$/g, '') // trim
+    str = str?.toLowerCase()
+
+    // remove accents, swap ñ for n, etc
+    var from = 'åàáãäâèéëêìíïîòóöôùúüûñç·/_,:;'
+    var to = 'aaaaaaeeeeiiiioooouuuunc------'
+
+    for (var i = 0, l = from.length; i < l; i++) {
+      str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i))
+    }
+
+    str = str
+      .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+      .replace(/\s+/g, '_') // collapse whitespace and replace by -
+      .replace(/-+/g, '_') // collapse dashes
+      .replace(/^-+/, '') // trim - from start of text
+      .replace(/-+$/, '') // trim - from end of text
+
+    return str
+  }
+
   const createBusinessCategory = async () => {
     if (loading) return
     try {
@@ -224,7 +249,10 @@ export const BusinessProductsCategoyDetails = (props) => {
         ...formState,
         loading: true
       })
-      const changes = { ...formState?.changes }
+      const changes = {
+        ...formState?.changes,
+        slug: stringToSlug(formState?.changes?.name || '')
+      }
       if (typeof changes?.ribbon !== 'undefined' && !changes?.ribbon?.enabled) delete changes.ribbon
       const { content } = await ordering.businesses(parseInt(businessState?.business?.id)).categories().save(changes)
       if (!content.error) {
