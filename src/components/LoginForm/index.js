@@ -18,7 +18,8 @@ export const LoginForm = (props) => {
     useLoginByCellphone,
     useDefualtSessionManager,
     urlToRedirect,
-    allowedLevels
+    allowedLevels,
+    billingUrl
   } = props
 
   const [ordering] = useApi()
@@ -31,7 +32,7 @@ export const LoginForm = (props) => {
 
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
-  const [reCaptchaValue, setReCaptchaValue] = useState(null)
+  const [reCaptchaValue, setReCaptchaValue] = useState({ code: '', version: '' })
   const [isReCaptchaEnable, setIsReCaptchaEnable] = useState(false)
 
   if (!useLoginByEmail && !useLoginByCellphone) {
@@ -57,7 +58,7 @@ export const LoginForm = (props) => {
       }
 
       if (isReCaptchaEnable) {
-        if (reCaptchaValue === null) {
+        if (reCaptchaValue?.code === '') {
           setFormState({
             result: {
               error: true,
@@ -67,16 +68,21 @@ export const LoginForm = (props) => {
           })
           return
         } else {
-          _credentials.verification_code = reCaptchaValue
+          _credentials.verification_code = reCaptchaValue?.code
+          _credentials.recaptcha_type = reCaptchaValue?.version
         }
       }
 
       setFormState({ ...formState, loading: true })
-      const { content: { error, result } } = await ordering.users().auth(_credentials)
+      const { content: { error, result, action } } = await ordering.users().auth(_credentials)
 
-      if (isReCaptchaEnable) {
-        window.grecaptcha.reset()
-        setReCaptchaValue(null)
+      if (action && action?.type === 'billing_autologin') {
+        window.open(`${billingUrl}?token=${action?.data?.access_token}&projectId=${action?.data?.project_id}&userId=${action?.data?.user_id}`, '_blank').focus()
+      }
+
+      if (isReCaptchaEnable && window.grecaptcha) {
+        _credentials.recaptcha_type === 'v2' && window.grecaptcha.reset()
+        setReCaptchaValue({ code: '', version: '' })
       }
 
       if (!error) {

@@ -9,7 +9,11 @@ import { useSession } from '../../contexts/SessionContext'
 export const GiftCardsList = (props) => {
   const {
     UIComponent,
-    paginationSettings
+    paginationSettings,
+    isSearchById,
+    isSearchByAuthorName,
+    isSearchByAuthorEmail,
+    isSearchByAuthorPhone
   } = props
 
   const [ordering] = useApi()
@@ -22,6 +26,7 @@ export const GiftCardsList = (props) => {
     totalPages: null
   })
   const [activeStatus, setActiveStatus] = useState('pending')
+  const [searchValue, setSearchValue] = useState(null)
 
   /**
    * Method to get the gift cards from API
@@ -41,6 +46,72 @@ export const GiftCardsList = (props) => {
             value: activeStatus
           }
         )
+      }
+      if (searchValue) {
+        const searchConditions = []
+        if (isSearchById) {
+          searchConditions.push(
+            {
+              attribute: 'id',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${searchValue}%`)
+              }
+            }
+          )
+        }
+        if (isSearchByAuthorName) {
+          searchConditions.push(
+            {
+              attribute: 'author',
+              conditions: [
+                {
+                  attribute: 'name',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI(`%${searchValue}%`)
+                  }
+                }
+              ]
+            }
+          )
+        }
+        if (isSearchByAuthorEmail) {
+          searchConditions.push(
+            {
+              attribute: 'author',
+              conditions: [
+                {
+                  attribute: 'email',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI(`%${searchValue}%`)
+                  }
+                }
+              ]
+            }
+          )
+        }
+        if (isSearchByAuthorPhone) {
+          searchConditions.push(
+            {
+              attribute: 'author',
+              conditions: [
+                {
+                  attribute: 'phone',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI(`%${searchValue}%`)
+                  }
+                }
+              ]
+            }
+          )
+        }
+        conditions.push({
+          conector: 'OR',
+          conditions: searchConditions
+        })
       }
       if (conditions.length) {
         where = {
@@ -88,7 +159,7 @@ export const GiftCardsList = (props) => {
 
   useEffect(() => {
     getGiftCards(0, paginationProps.pageSize)
-  }, [activeStatus])
+  }, [activeStatus, searchValue])
 
   return (
     <>
@@ -100,6 +171,8 @@ export const GiftCardsList = (props) => {
           activeStatus={activeStatus}
           setActiveStatus={setActiveStatus}
           getGiftCards={getGiftCards}
+          searchValue={searchValue}
+          onSearch={setSearchValue}
         />
       )}
     </>
