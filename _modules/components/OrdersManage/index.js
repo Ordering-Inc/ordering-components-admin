@@ -707,6 +707,13 @@ var OrdersManage = function OrdersManage(props) {
                   });
                 }
 
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.currency.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'currency',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.currency
+                  });
+                }
+
                 if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds.length) > 0) {
                   filterConditons.push({
                     attribute: 'driver_id',

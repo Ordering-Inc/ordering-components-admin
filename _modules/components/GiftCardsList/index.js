@@ -54,7 +54,11 @@ var GiftCardsList = function GiftCardsList(props) {
   var _paginationSettings$p;
 
   var UIComponent = props.UIComponent,
-      paginationSettings = props.paginationSettings;
+      paginationSettings = props.paginationSettings,
+      isSearchById = props.isSearchById,
+      isSearchByAuthorName = props.isSearchByAuthorName,
+      isSearchByAuthorEmail = props.isSearchByAuthorEmail,
+      isSearchByAuthorPhone = props.isSearchByAuthorPhone;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -87,6 +91,11 @@ var GiftCardsList = function GiftCardsList(props) {
       _useState6 = _slicedToArray(_useState5, 2),
       activeStatus = _useState6[0],
       setActiveStatus = _useState6[1];
+
+  var _useState7 = (0, _react.useState)(null),
+      _useState8 = _slicedToArray(_useState7, 2),
+      searchValue = _useState8[0],
+      setSearchValue = _useState8[1];
   /**
    * Method to get the gift cards from API
    */
@@ -94,7 +103,7 @@ var GiftCardsList = function GiftCardsList(props) {
 
   var getGiftCards = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize) {
-      var where, conditions, requestOptions, fetchEndpoint, response, _yield$response$json, error, result, pagination;
+      var where, conditions, searchConditions, requestOptions, fetchEndpoint, response, _yield$response$json, error, result, pagination;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -114,6 +123,64 @@ var GiftCardsList = function GiftCardsList(props) {
                 });
               }
 
+              if (searchValue) {
+                searchConditions = [];
+
+                if (isSearchById) {
+                  searchConditions.push({
+                    attribute: 'id',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  });
+                }
+
+                if (isSearchByAuthorName) {
+                  searchConditions.push({
+                    attribute: 'author',
+                    conditions: [{
+                      attribute: 'name',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    }]
+                  });
+                }
+
+                if (isSearchByAuthorEmail) {
+                  searchConditions.push({
+                    attribute: 'author',
+                    conditions: [{
+                      attribute: 'email',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    }]
+                  });
+                }
+
+                if (isSearchByAuthorPhone) {
+                  searchConditions.push({
+                    attribute: 'author',
+                    conditions: [{
+                      attribute: 'phone',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    }]
+                  });
+                }
+
+                conditions.push({
+                  conector: 'OR',
+                  conditions: searchConditions
+                });
+              }
+
               if (conditions.length) {
                 where = {
                   conditions: conditions,
@@ -129,15 +196,15 @@ var GiftCardsList = function GiftCardsList(props) {
                 }
               };
               fetchEndpoint = where ? "".concat(ordering.root, "/gift_cards?page=").concat(page, "&page_size=").concat(pageSize, "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/gift_cards?page=").concat(page, "&page_size=").concat(pageSize);
-              _context.next = 10;
+              _context.next = 11;
               return fetch(fetchEndpoint, requestOptions);
 
-            case 10:
+            case 11:
               response = _context.sent;
-              _context.next = 13;
+              _context.next = 14;
               return response.json();
 
-            case 13:
+            case 14:
               _yield$response$json = _context.sent;
               error = _yield$response$json.error;
               result = _yield$response$json.result;
@@ -159,23 +226,23 @@ var GiftCardsList = function GiftCardsList(props) {
                 list: error ? [] : result,
                 error: error ? result : null
               });
-              _context.next = 24;
+              _context.next = 25;
               break;
 
-            case 21:
-              _context.prev = 21;
+            case 22:
+              _context.prev = 22;
               _context.t0 = _context["catch"](0);
               setGiftCards(_objectSpread(_objectSpread({}, giftCards), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 24:
+            case 25:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 21]]);
+      }, _callee, null, [[0, 22]]);
     }));
 
     return function getGiftCards(_x, _x2) {
@@ -185,13 +252,15 @@ var GiftCardsList = function GiftCardsList(props) {
 
   (0, _react.useEffect)(function () {
     getGiftCards(0, paginationProps.pageSize);
-  }, [activeStatus]);
+  }, [activeStatus, searchValue]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     giftCards: giftCards,
     paginationProps: paginationProps,
     activeStatus: activeStatus,
     setActiveStatus: setActiveStatus,
-    getGiftCards: getGiftCards
+    getGiftCards: getGiftCards,
+    searchValue: searchValue,
+    onSearch: setSearchValue
   })));
 };
 

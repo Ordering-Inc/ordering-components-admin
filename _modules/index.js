@@ -411,6 +411,12 @@ Object.defineProperty(exports, "CampaignDetailContent", {
     return _CampaignDetailContent.CampaignDetailContent;
   }
 });
+Object.defineProperty(exports, "CampaignEmail", {
+  enumerable: true,
+  get: function get() {
+    return _CampaignEmail.CampaignEmail;
+  }
+});
 Object.defineProperty(exports, "CampaignListing", {
   enumerable: true,
   get: function get() {
@@ -1587,6 +1593,8 @@ var _Appointments = require("./components/Appointments");
 var _BaseComponent = require("./components/BaseComponent");
 
 var _CannyIdentification = require("./components/CannyIdentification");
+
+var _CampaignEmail = require("./components/CampaignEmail");
 
 var _Settings = require("./components/Settings");
 

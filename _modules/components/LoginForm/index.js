@@ -64,7 +64,8 @@ var LoginForm = function LoginForm(props) {
       useLoginByCellphone = props.useLoginByCellphone,
       useDefualtSessionManager = props.useDefualtSessionManager,
       urlToRedirect = props.urlToRedirect,
-      allowedLevels = props.allowedLevels;
+      allowedLevels = props.allowedLevels,
+      billingUrl = props.billingUrl;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -123,7 +124,10 @@ var LoginForm = function LoginForm(props) {
       _useConfig2 = _slicedToArray(_useConfig, 1),
       configs = _useConfig2[0].configs;
 
-  var _useState9 = (0, _react.useState)(null),
+  var _useState9 = (0, _react.useState)({
+    code: '',
+    version: ''
+  }),
       _useState10 = _slicedToArray(_useState9, 2),
       reCaptchaValue = _useState10[0],
       setReCaptchaValue = _useState10[1];
@@ -159,7 +163,7 @@ var LoginForm = function LoginForm(props) {
 
   var handleLoginClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(values) {
-      var _credentials2, _credentials, _yield$ordering$users, _yield$ordering$users2, error, result, level, access_token, _yield$ordering$setAc, logoutResp;
+      var _credentials2, _credentials, _yield$ordering$users, _yield$ordering$users2, error, result, action, _action$data, _action$data2, _action$data3, level, access_token, _yield$ordering$setAc, logoutResp;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -169,11 +173,11 @@ var LoginForm = function LoginForm(props) {
               _credentials = (_credentials2 = {}, _defineProperty(_credentials2, loginTab, values && values[loginTab] || credentials[loginTab]), _defineProperty(_credentials2, "password", values && (values === null || values === void 0 ? void 0 : values.password) || credentials.password), _credentials2);
 
               if (!isReCaptchaEnable) {
-                _context.next = 9;
+                _context.next = 10;
                 break;
               }
 
-              if (!(reCaptchaValue === null)) {
+              if (!((reCaptchaValue === null || reCaptchaValue === void 0 ? void 0 : reCaptchaValue.code) === '')) {
                 _context.next = 8;
                 break;
               }
@@ -188,53 +192,62 @@ var LoginForm = function LoginForm(props) {
               return _context.abrupt("return");
 
             case 8:
-              _credentials.verification_code = reCaptchaValue;
+              _credentials.verification_code = reCaptchaValue === null || reCaptchaValue === void 0 ? void 0 : reCaptchaValue.code;
+              _credentials.recaptcha_type = reCaptchaValue === null || reCaptchaValue === void 0 ? void 0 : reCaptchaValue.version;
 
-            case 9:
+            case 10:
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 12;
+              _context.next = 13;
               return ordering.users().auth(_credentials);
 
-            case 12:
+            case 13:
               _yield$ordering$users = _context.sent;
               _yield$ordering$users2 = _yield$ordering$users.content;
               error = _yield$ordering$users2.error;
               result = _yield$ordering$users2.result;
+              action = _yield$ordering$users2.action;
 
-              if (isReCaptchaEnable) {
-                window.grecaptcha.reset();
-                setReCaptchaValue(null);
+              if (action && (action === null || action === void 0 ? void 0 : action.type) === 'billing_autologin') {
+                window.open("".concat(billingUrl, "?token=").concat(action === null || action === void 0 ? void 0 : (_action$data = action.data) === null || _action$data === void 0 ? void 0 : _action$data.access_token, "&projectId=").concat(action === null || action === void 0 ? void 0 : (_action$data2 = action.data) === null || _action$data2 === void 0 ? void 0 : _action$data2.project_id, "&userId=").concat(action === null || action === void 0 ? void 0 : (_action$data3 = action.data) === null || _action$data3 === void 0 ? void 0 : _action$data3.user_id), '_blank').focus();
+              }
+
+              if (isReCaptchaEnable && window.grecaptcha) {
+                _credentials.recaptcha_type === 'v2' && window.grecaptcha.reset();
+                setReCaptchaValue({
+                  code: '',
+                  version: ''
+                });
               }
 
               if (error) {
-                _context.next = 39;
+                _context.next = 42;
                 break;
               }
 
               if (!useDefualtSessionManager) {
-                _context.next = 36;
+                _context.next = 39;
                 break;
               }
 
               if (!(allowedLevels && (allowedLevels === null || allowedLevels === void 0 ? void 0 : allowedLevels.length) > 0)) {
-                _context.next = 35;
+                _context.next = 38;
                 break;
               }
 
               level = result.level, access_token = result.session.access_token;
 
               if (allowedLevels.includes(level)) {
-                _context.next = 35;
+                _context.next = 38;
                 break;
               }
 
-              _context.prev = 22;
-              _context.next = 25;
+              _context.prev = 25;
+              _context.next = 28;
               return ordering.setAccessToken(access_token).users().logout();
 
-            case 25:
+            case 28:
               _yield$ordering$setAc = _context.sent;
               logoutResp = _yield$ordering$setAc.content;
 
@@ -249,12 +262,12 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 34;
+              _context.next = 37;
               break;
 
-            case 31:
-              _context.prev = 31;
-              _context.t0 = _context["catch"](22);
+            case 34:
+              _context.prev = 34;
+              _context.t0 = _context["catch"](25);
               setFormState({
                 result: {
                   error: true,
@@ -263,17 +276,17 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 34:
+            case 37:
               return _context.abrupt("return");
 
-            case 35:
+            case 38:
               login({
                 user: result,
                 token: result.session.access_token,
                 project: ordering === null || ordering === void 0 ? void 0 : ordering.project
               });
 
-            case 36:
+            case 39:
               events.emit('userLogin', result);
 
               if (handleSuccessLogin) {
@@ -284,7 +297,7 @@ var LoginForm = function LoginForm(props) {
                 window.location.href = "".concat(window.location.origin).concat(urlToRedirect);
               }
 
-            case 39:
+            case 42:
               setFormState({
                 result: {
                   error: error,
@@ -292,11 +305,11 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 45;
+              _context.next = 48;
               break;
 
-            case 42:
-              _context.prev = 42;
+            case 45:
+              _context.prev = 45;
               _context.t1 = _context["catch"](0);
               setFormState({
                 result: {
@@ -306,12 +319,12 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 45:
+            case 48:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 42], [22, 31]]);
+      }, _callee, null, [[0, 45], [25, 34]]);
     }));
 
     return function handleLoginClick(_x) {
