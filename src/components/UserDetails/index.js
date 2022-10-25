@@ -84,7 +84,7 @@ export const UserDetails = (props) => {
         showToast(ToastType.Info, t('LOADING', 'Loading'))
         setScheduleState({ ...scheduleState, loading: true })
 
-        const _change = { schedule: JSON.stringify(scheduleState?.change) }
+        const _change = { schedule: null }
         const { content: { error, result } } = await ordering.users(userState?.user?.id).save(_change, {
           accessToken: accessToken
         })
