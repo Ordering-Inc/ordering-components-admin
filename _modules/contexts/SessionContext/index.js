@@ -77,7 +77,7 @@ var SessionProvider = function SessionProvider(_ref) {
               return fetch("".concat(ordering.root, "/order_options"), requestOptions);
             case 10:
               response = _context.sent;
-              if (!response.ok) {
+              if (!response.ok && (user === null || user === void 0 ? void 0 : user.level) !== 8) {
                 logout();
               }
             case 12:

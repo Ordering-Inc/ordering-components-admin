@@ -109,7 +109,7 @@ var OrderProvider = function OrderProvider(_ref) {
    */
   var refreshOrderOptions = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var _res$content, _res$content2, customerFromLocalStorage, userCustomerId, options, res, error, result, carts, _options, localOptions, _options2, _localOptions$address, conditions, userId, addressesResponse, address, _yield$ordering$setAc, _yield$ordering$setAc2, _error, _result, _err$message, message;
+      var _res$content, _res$content2, customerFromLocalStorage, userCustomerId, options, res, error, result, carts, _options, _session$user, _session$user2, localOptions, _options2, _localOptions$address, conditions, userId, addressesResponse, address, _yield$ordering$setAc, _yield$ordering$setAc2, _error, _result, _err$message, message;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -146,11 +146,13 @@ var OrderProvider = function OrderProvider(_ref) {
                 state.options = _objectSpread(_objectSpread({}, state.options), _options);
               }
               if (error) {
-                setAlert({
-                  show: true,
-                  content: result
-                });
-                if ((res === null || res === void 0 ? void 0 : res.status) === 401) {
+                if ((session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.level) !== 8) {
+                  setAlert({
+                    show: true,
+                    content: result
+                  });
+                }
+                if ((res === null || res === void 0 ? void 0 : res.status) === 401 && (session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.level) !== 8) {
                   session.auth && logout();
                 }
               }
@@ -1241,7 +1243,7 @@ var OrderProvider = function OrderProvider(_ref) {
     if (session.auth) {
       refreshOrderOptions();
     }
-  }, [session.auth, session.loading, languageState.loading]);
+  }, [session.auth, session.loading, languageState.loading, session === null || session === void 0 ? void 0 : session.user]);
   (0, _react.useEffect)(function () {
     if (session.loading || configState.loading) return;
     if (!session.auth) {
@@ -1297,14 +1299,14 @@ var OrderProvider = function OrderProvider(_ref) {
    * Join to carts room
    */
   (0, _react.useEffect)(function () {
-    var _session$user, _session$user2;
+    var _session$user3, _session$user4;
     if (!session.auth || session.loading) return;
-    socket.join("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id));
-    socket.join("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.id));
+    socket.join("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id));
+    socket.join("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user4 = session.user) === null || _session$user4 === void 0 ? void 0 : _session$user4.id));
     return function () {
-      var _session$user3, _session$user4;
-      socket.leave("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id));
-      socket.leave("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user4 = session.user) === null || _session$user4 === void 0 ? void 0 : _session$user4.id));
+      var _session$user5, _session$user6;
+      socket.leave("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user5 = session.user) === null || _session$user5 === void 0 ? void 0 : _session$user5.id));
+      socket.leave("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user6 = session.user) === null || _session$user6 === void 0 ? void 0 : _session$user6.id));
     };
   }, [socket, session]);
   var functions = {
