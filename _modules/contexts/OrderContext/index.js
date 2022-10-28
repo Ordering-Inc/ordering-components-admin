@@ -152,7 +152,7 @@ var OrderProvider = function OrderProvider(_ref) {
 
   var refreshOrderOptions = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var _res$content, _res$content2, customerFromLocalStorage, userCustomerId, options, res, error, result, carts, _options, localOptions, _options2, _localOptions$address, conditions, userId, addressesResponse, address, _yield$ordering$setAc, _yield$ordering$setAc2, _error, _result, _err$message, message;
+      var _res$content, _res$content2, customerFromLocalStorage, userCustomerId, options, res, error, result, carts, _options, _session$user, localOptions, _options2, _localOptions$address, conditions, userId, addressesResponse, address, _yield$ordering$setAc, _yield$ordering$setAc2, _error, _result, _err$message, message;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -203,7 +203,7 @@ var OrderProvider = function OrderProvider(_ref) {
                   content: result
                 });
 
-                if ((res === null || res === void 0 ? void 0 : res.status) === 401) {
+                if ((res === null || res === void 0 ? void 0 : res.status) === 401 && (session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.level) !== 8) {
                   session.auth && logout();
                 }
               }
@@ -1468,11 +1468,9 @@ var OrderProvider = function OrderProvider(_ref) {
   }();
 
   (0, _react.useEffect)(function () {
-    var _session$user;
-
     if (session.loading || languageState.loading) return;
 
-    if (session.auth && (session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.level) !== 8) {
+    if (session.auth) {
       refreshOrderOptions();
     }
   }, [session.auth, session.loading, languageState.loading, session === null || session === void 0 ? void 0 : session.user]);
