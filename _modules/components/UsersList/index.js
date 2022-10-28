@@ -644,17 +644,24 @@ var UsersList = function UsersList(props) {
                 if (isDriver) {
                   handleSuccessUpdate(result);
                 } else if (!disabledActiveStateCondition) {
-                  users = usersList.users.filter(function (_user) {
-                    var valid = true;
+                  users = _toConsumableArray(usersList === null || usersList === void 0 ? void 0 : usersList.users);
 
-                    if (_user.id === user.id) {
-                      if (user.enabled === !selectedUserActiveState) {
-                        valid = false;
+                  if (!user.enabled && selectedUserActiveState || user !== null && user !== void 0 && user.enabled && !selectedUserActiveState) {
+                    users = usersList.users.filter(function (_user) {
+                      var valid = true;
+
+                      if (_user.id === user.id) {
+                        if (user.enabled === !selectedUserActiveState) {
+                          valid = false;
+                        }
                       }
-                    }
 
-                    return valid;
-                  });
+                      return valid;
+                    });
+                  } else {
+                    users.push(user);
+                  }
+
                   setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
                     users: users
                   }));
@@ -921,7 +928,8 @@ var UsersList = function UsersList(props) {
     handleSuccessAddressesUpdate: handleSuccessAddressesUpdate,
     occupationsState: occupationsState,
     selectedOccupation: selectedOccupation,
-    handleSelectOccupation: setSelectedOccupation
+    handleSelectOccupation: setSelectedOccupation,
+    setSelectedUsers: setSelectedUsers
   })));
 };
 
