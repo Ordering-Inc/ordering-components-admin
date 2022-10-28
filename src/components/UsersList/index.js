@@ -395,15 +395,20 @@ export const UsersList = (props) => {
         if (isDriver) {
           handleSuccessUpdate(result)
         } else if (!disabledActiveStateCondition) {
-          const users = usersList.users.filter(_user => {
-            let valid = true
-            if (_user.id === user.id) {
-              if (user.enabled === !selectedUserActiveState) {
-                valid = false
+          let users = [...usersList?.users]
+          if ((!user.enabled && selectedUserActiveState) || (user?.enabled && !selectedUserActiveState)) {
+            users = usersList.users.filter(_user => {
+              let valid = true
+              if (_user.id === user.id) {
+                if (user.enabled === !selectedUserActiveState) {
+                  valid = false
+                }
               }
-            }
-            return valid
-          })
+              return valid
+            })
+          } else {
+            users.push(user)
+          }
           setUsersList({ ...usersList, users })
         }
         showToast(ToastType.Success, t('UPDATED', 'Updated'))
@@ -597,6 +602,7 @@ export const UsersList = (props) => {
             occupationsState={occupationsState}
             selectedOccupation={selectedOccupation}
             handleSelectOccupation={setSelectedOccupation}
+            setSelectedUsers={setSelectedUsers}
           />
         )
       }
