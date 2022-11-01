@@ -174,6 +174,7 @@ import { RecoveryActionDetail } from './components/RecoveryActionDetail'
 import { RecoveryNotificationList } from './components/RecoveryNotificationList'
 import { SearchOptions } from './components/SearchOptions'
 import { Schedule } from './components/Schedule'
+import { SidebarMenu } from './components/SidebarMenu'
 import { SignupForm } from './components/SignupForm'
 import { SingleBusinessCard } from './components/SingleBusinessCard'
 import { LoyaltyLevelDetail } from './components/LoyaltyLevelDetail'
@@ -414,6 +415,7 @@ export {
   SitesAuthSettings,
   SearchOptions,
   Schedule,
+  SidebarMenu,
   SignupForm,
   SingleBusinessCard,
   LoyaltyLevelDetail,
