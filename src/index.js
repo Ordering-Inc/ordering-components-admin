@@ -1,3 +1,4 @@
+import { AdBannersList } from './components/AdBannersList'
 import { AddressDetails } from './components/AddressDetails'
 import { AddressFieldsSetting } from './components/AddressFieldsSetting'
 import { AddressForm } from './components/AddressForm'
@@ -12,6 +13,7 @@ import { BaseComponent } from './components/BaseComponent'
 import { CannyIdentification } from './components/CannyIdentification'
 import { CampaignEmail } from './components/CampaignEmail'
 import { Settings } from './components/Settings'
+import { BannerDetails } from './components/BannerDetails'
 import { BatchImageForm } from './components/BatchImageForm'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
@@ -234,6 +236,7 @@ import { UserWallet } from './components/UserWallet'
 import { WebhookList } from './components/WebhookList'
 
 export {
+  AdBannersList,
   AddressDetails,
   AddressFieldsSetting,
   AddressForm,
@@ -248,6 +251,7 @@ export {
   CannyIdentification,
   CampaignEmail,
   Settings,
+  BannerDetails,
   BatchImageForm,
   BusinessAndProductList,
   BusinessAnalytics,
