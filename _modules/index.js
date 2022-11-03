@@ -1299,6 +1299,12 @@ Object.defineProperty(exports, "SessionProvider", {
     return _SessionContext.SessionProvider;
   }
 });
+Object.defineProperty(exports, "Sessions", {
+  enumerable: true,
+  get: function get() {
+    return _Sessions.Sessions;
+  }
+});
 Object.defineProperty(exports, "Settings", {
   enumerable: true,
   get: function get() {
@@ -1806,6 +1812,7 @@ var _ReviewCustomer = require("./components/ReviewCustomer");
 var _StripeElementsForm = require("./components/StripeElementsForm");
 var _SingleBusinessProduct = require("./components/SingleBusinessProduct");
 var _SingleBusinessCategory = require("./components/SingleBusinessCategory");
+var _Sessions = require("./components/Sessions");
 var _SettingsList = require("./components/SettingsList");
 var _CardForm = require("./components/StripeElementsForm/CardForm");
 var _StripeRedirectForm = require("./components/PaymentOptionStripeRedirect/StripeRedirectForm");
