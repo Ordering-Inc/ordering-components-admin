@@ -217,6 +217,7 @@ import { ReviewCustomer } from './components/ReviewCustomer'
 import { StripeElementsForm } from './components/StripeElementsForm'
 import { SingleBusinessProduct } from './components/SingleBusinessProduct'
 import { SingleBusinessCategory } from './components/SingleBusinessCategory'
+import { Sessions } from './components/Sessions'
 import { SettingsList } from './components/SettingsList'
 import { CardForm } from './components/StripeElementsForm/CardForm'
 import { StripeRedirectForm } from './components/PaymentOptionStripeRedirect/StripeRedirectForm'
@@ -453,6 +454,7 @@ export {
   ReviewCustomer,
   SiteDetails,
   SitesList,
+  Sessions,
   SiteTheme,
   Analytics,
   UsersList,
