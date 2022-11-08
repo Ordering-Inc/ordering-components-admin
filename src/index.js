@@ -207,6 +207,7 @@ import { OrderingContext, OrderingProvider } from './contexts/OrderingContext'
 import { CustomerContext, CustomerProvider, useCustomer } from './contexts/CustomerContext'
 import { ValidationFieldsContext, ValidationFieldsProvider, useValidationFields } from './contexts/ValidationsFieldsContext'
 import { ToastContext, ToastProvider, useToast, ToastType } from './contexts/ToastContext'
+import { SiteContext, SiteProvider, useSite } from './contexts/SiteContext'
 import { PaymentOptionCash } from './components/PaymentOptionCash'
 import { PaymentOptionPaypal } from './components/PaymentOptionPaypal'
 import { PaymentOptionStripe } from './components/PaymentOptionStripe'
@@ -503,5 +504,8 @@ export {
   ToastContext,
   ToastProvider,
   useToast,
-  ToastType
+  ToastType,
+  SiteContext,
+  SiteProvider,
+  useSite
 }
