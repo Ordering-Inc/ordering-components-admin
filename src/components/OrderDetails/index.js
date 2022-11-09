@@ -253,9 +253,9 @@ export const OrderDetails = (props) => {
       delete order.total
       delete order.subtotal
       if (!order?.driver && order?.driver_id) {
-        const udpatedDriver = drivers.find(driver => driver.id === order.driver_id)
-        if (udpatedDriver) {
-          order.driver = { ...udpatedDriver }
+        const updatedDriver = drivers.find(driver => driver.id === order.driver_id)
+        if (updatedDriver) {
+          order.driver = { ...updatedDriver }
         }
       }
       setOrderState({

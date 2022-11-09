@@ -609,9 +609,9 @@ export const DashboardOrdersList = (props) => {
     const handleUpdateOrder = (order) => {
       if (isOnlyDelivery && order?.delivery_type !== 1) return
       if (!order?.driver && order?.driver_id) {
-        const udpatedDriver = driversList?.drivers.find(driver => driver.id === order.driver_id)
-        if (udpatedDriver) {
-          order.driver = { ...udpatedDriver }
+        const updatedDriver = driversList?.drivers.find(driver => driver.id === order.driver_id)
+        if (updatedDriver) {
+          order.driver = { ...updatedDriver }
         }
       }
       const found = orderList.orders.find(_order => _order?.id === order?.id)
