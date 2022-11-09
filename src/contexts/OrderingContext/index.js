@@ -11,6 +11,7 @@ import { UtilsProviders } from '../UtilsContext'
 import { ToastProvider } from '../ToastContext'
 import { WebStrategy } from '../../webStrategy'
 import { ValidationFieldsProvider } from '../ValidationsFieldsContext'
+import { SiteProvider } from '../SiteContext'
 
 /**
  * Create OrderingContext
@@ -38,7 +39,9 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
                       <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
                         <OrderProvider strategy={webStrategy} Alert={Alert}>
                           <BusinessProvider>
-                            {children}
+                            <SiteProvider>
+                              {children}
+                            </SiteProvider>
                           </BusinessProvider>
                         </OrderProvider>
                       </WebsocketProvider>
