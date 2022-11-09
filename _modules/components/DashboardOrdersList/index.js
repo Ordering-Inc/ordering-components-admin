@@ -55,7 +55,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     isSearchByCustomerPhone = props.isSearchByCustomerPhone,
     isSearchByBusinessName = props.isSearchByBusinessName,
     orderIdForUnreadCountUpdate = props.orderIdForUnreadCountUpdate,
-    timeStatus = props.timeStatus;
+    timeStatus = props.timeStatus,
+    driversList = props.driversList;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -856,6 +857,14 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderList.loading) return;
     var handleUpdateOrder = function handleUpdateOrder(order) {
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
+      if (!(order !== null && order !== void 0 && order.driver) && order !== null && order !== void 0 && order.driver_id) {
+        var updatedDriver = driversList === null || driversList === void 0 ? void 0 : driversList.drivers.find(function (driver) {
+          return driver.id === order.driver_id;
+        });
+        if (updatedDriver) {
+          order.driver = _objectSpread({}, updatedDriver);
+        }
+      }
       var found = orderList.orders.find(function (_order) {
         return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
       });
@@ -966,7 +975,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('orders_register', handleRegisterOrder);
       socket.off('message', handleNewMessage);
     };
-  }, [orderList.orders, pagination, orderBy, socket]);
+  }, [orderList.orders, pagination, orderBy, socket, driversList]);
 
   // Listening for customer rating
   (0, _react.useEffect)(function () {
