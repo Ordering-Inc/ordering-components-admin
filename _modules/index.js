@@ -693,6 +693,12 @@ Object.defineProperty(exports, "GoogleMaps", {
     return _GoogleMaps.GoogleMaps;
   }
 });
+Object.defineProperty(exports, "GoogleMapsApiKeySetting", {
+  enumerable: true,
+  get: function get() {
+    return _GoogleMapsApiKeySetting.GoogleMapsApiKeySetting;
+  }
+});
 Object.defineProperty(exports, "GoogleMapsMap", {
   enumerable: true,
   get: function get() {
@@ -1712,6 +1718,7 @@ var _ForgotPasswordForm = require("./components/ForgotPasswordForm");
 var _GiftCardsList = require("./components/GiftCardsList");
 var _GoogleAutocompleteInput = require("./components/GoogleAutocompleteInput");
 var _GoogleMaps = require("./components/GoogleMaps");
+var _GoogleMapsApiKeySetting = require("./components/GoogleMapsApiKeySetting");
 var _GpsButton = require("./components/GpsButton");
 var _GoogleTagManager = require("./components/GoogleTagManager");
 var _Home = require("./components/Home");
