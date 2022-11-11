@@ -200,6 +200,17 @@ export const EnterprisePromotionDetails = (props) => {
     })
   }
 
+  const handleSelectAllUsers = () => {
+    setSelectedUserIds([])
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        users: []
+      }
+    })
+  }
+
   const handleSelectLoyaltyLevel = (checked, levelId) => {
     let loyaltyLevels = []
     if (formState.changes?.loyalty_levels) {
@@ -438,6 +449,7 @@ export const EnterprisePromotionDetails = (props) => {
             selectedLoyaltyLevelIds={selectedLoyaltyLevelIds}
             handleSelectLoyaltyLevel={handleSelectLoyaltyLevel}
             handleSelectAllLoyaltyLevels={handleSelectAllLoyaltyLevels}
+            handleSelectAllUsers={handleSelectAllUsers}
           />
         )
       }
