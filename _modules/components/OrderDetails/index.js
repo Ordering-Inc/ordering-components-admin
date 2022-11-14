@@ -60,6 +60,7 @@ var OrderDetails = function OrderDetails(props) {
       hashKey = props.hashKey,
       userCustomerId = props.userCustomerId,
       isDisableLoadMessages = props.isDisableLoadMessages,
+      drivers = props.drivers,
       UIComponent = props.UIComponent;
 
   var _useSession = (0, _SessionContext.useSession)(),
@@ -559,6 +560,17 @@ var OrderDetails = function OrderDetails(props) {
       if ((order === null || order === void 0 ? void 0 : order.id) !== (orderState === null || orderState === void 0 ? void 0 : (_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.id)) return;
       delete order.total;
       delete order.subtotal;
+
+      if (!(order !== null && order !== void 0 && order.driver) && order !== null && order !== void 0 && order.driver_id) {
+        var updatedDriver = drivers.find(function (driver) {
+          return driver.id === order.driver_id;
+        });
+
+        if (updatedDriver) {
+          order.driver = _objectSpread({}, updatedDriver);
+        }
+      }
+
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
         order: Object.assign(orderState.order, order)
       }));
@@ -576,7 +588,7 @@ var OrderDetails = function OrderDetails(props) {
 
       socket.off('update_order', handleUpdateOrder);
     };
-  }, [orderState.order, socket, loading]);
+  }, [orderState.order, socket, loading, drivers]);
   (0, _react.useEffect)(function () {
     var handleCustomerReviewed = function handleCustomerReviewed(review) {
       setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
