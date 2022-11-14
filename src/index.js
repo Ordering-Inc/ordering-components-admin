@@ -93,6 +93,7 @@ import { FacebookLoginButton } from './components/FacebookLoginButton'
 import { ForgotPasswordForm } from './components/ForgotPasswordForm'
 import { GoogleAutocompleteInput } from './components/GoogleAutocompleteInput'
 import { GoogleMaps, GoogleMapsMap } from './components/GoogleMaps'
+import { GoogleMapsApiKeySetting } from './components/GoogleMapsApiKeySetting'
 import { GpsButton, GoogleGpsButton } from './components/GpsButton'
 import { GoogleTagManager } from './components/GoogleTagManager'
 import { Home } from './components/Home'
@@ -326,6 +327,7 @@ export {
   GoogleAutocompleteInput,
   GoogleMaps,
   GoogleMapsMap,
+  GoogleMapsApiKeySetting,
   GpsButton,
   GoogleGpsButton,
   GoogleTagManager,
