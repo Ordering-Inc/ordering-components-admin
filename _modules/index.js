@@ -1287,6 +1287,12 @@ Object.defineProperty(exports, "SettingsList", {
     return _SettingsList.SettingsList;
   }
 });
+Object.defineProperty(exports, "SidebarMenu", {
+  enumerable: true,
+  get: function get() {
+    return _SidebarMenu.SidebarMenu;
+  }
+});
 Object.defineProperty(exports, "SignupForm", {
   enumerable: true,
   get: function get() {
@@ -1903,6 +1909,8 @@ var _RecoveryNotificationList = require("./components/RecoveryNotificationList")
 var _SearchOptions = require("./components/SearchOptions");
 
 var _Schedule = require("./components/Schedule");
+
+var _SidebarMenu = require("./components/SidebarMenu");
 
 var _SignupForm = require("./components/SignupForm");
 
