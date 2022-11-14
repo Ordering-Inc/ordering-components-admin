@@ -1371,22 +1371,10 @@ Object.defineProperty(exports, "SingleRecoveryNotification", {
     return _SingleRecoveryNotification.SingleRecoveryNotification;
   }
 });
-Object.defineProperty(exports, "SiteContext", {
-  enumerable: true,
-  get: function get() {
-    return _SiteContext.SiteContext;
-  }
-});
 Object.defineProperty(exports, "SiteDetails", {
   enumerable: true,
   get: function get() {
     return _SiteDetails.SiteDetails;
-  }
-});
-Object.defineProperty(exports, "SiteProvider", {
-  enumerable: true,
-  get: function get() {
-    return _SiteContext.SiteProvider;
   }
 });
 Object.defineProperty(exports, "SiteTheme", {
@@ -1585,12 +1573,6 @@ Object.defineProperty(exports, "useSession", {
   enumerable: true,
   get: function get() {
     return _SessionContext.useSession;
-  }
-});
-Object.defineProperty(exports, "useSite", {
-  enumerable: true,
-  get: function get() {
-    return _SiteContext.useSite;
   }
 });
 Object.defineProperty(exports, "useToast", {
@@ -1827,7 +1809,6 @@ var _OrderingContext = require("./contexts/OrderingContext");
 var _CustomerContext = require("./contexts/CustomerContext");
 var _ValidationsFieldsContext = require("./contexts/ValidationsFieldsContext");
 var _ToastContext = require("./contexts/ToastContext");
-var _SiteContext = require("./contexts/SiteContext");
 var _PaymentOptionCash = require("./components/PaymentOptionCash");
 var _PaymentOptionPaypal = require("./components/PaymentOptionPaypal");
 var _PaymentOptionStripe = require("./components/PaymentOptionStripe");
