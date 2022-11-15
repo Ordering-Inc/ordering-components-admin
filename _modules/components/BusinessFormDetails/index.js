@@ -288,15 +288,16 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
               changes = _objectSpread(_objectSpread({}, formState.changes), defaultAddBusinessParams);
-              _context2.next = 5;
+              _context2.next = 6;
               return ordering.businesses().save(changes, {
                 accessToken: session.token
               });
-            case 5:
+            case 6:
               response = _context2.sent;
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
@@ -307,14 +308,15 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
                 setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                   business: _objectSpread(_objectSpread({}, businessState.business), response.content.result)
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BUSINESS_ADDED', 'Business added'));
                 if (handleSucessAddBusiness) {
                   handleSucessAddBusiness(response.content.result);
                 }
               }
-              _context2.next = 13;
+              _context2.next = 14;
               break;
-            case 10:
-              _context2.prev = 10;
+            case 11:
+              _context2.prev = 11;
               _context2.t0 = _context2["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -323,12 +325,12 @@ var BusinessFormDetails = function BusinessFormDetails(props) {
                 },
                 loading: false
               }));
-            case 13:
+            case 14:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 10]]);
+      }, _callee2, null, [[0, 11]]);
     }));
     return function handleAddBusiness() {
       return _ref2.apply(this, arguments);
