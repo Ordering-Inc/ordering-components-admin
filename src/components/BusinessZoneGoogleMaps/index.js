@@ -17,7 +17,8 @@ export const BusinessZoneGoogleMaps = (props) => {
     greenFillStyle,
     businessZones,
     kmlData,
-    disabled
+    disabled,
+    distance
   } = props
 
   if (!apiKey) {
@@ -28,11 +29,17 @@ export const BusinessZoneGoogleMaps = (props) => {
   const [googleMap, setGoogleMap] = useState(null)
   const [googleMapMarker, setGoogleMapMarker] = useState(null)
   const [circleZone, setCircleZone] = useState(null)
+  const [distanceBased, setDistanceBased] = useState(null)
   const [polygonZone, setPolygonZone] = useState(null)
   const [infoWindow, setInfoWindow] = useState(null)
   const [drawingManager, setDrawingManager] = useState(null)
   const center = location ? { lat: location?.lat, lng: location?.lng } : mapControls?.defaultPosition
   const [googleReady, setGoogleReady] = useState(false)
+
+  const units = {
+    mi: 1609,
+    km: 1000
+  }
 
   /**
    * Method to control the data when center of circle is changed.
@@ -96,6 +103,9 @@ export const BusinessZoneGoogleMaps = (props) => {
       if (data?.center) {
         infoWindow.setPosition(data.center)
       }
+      if (data?.distance) {
+        infoWindow.setPosition(center)
+      }
     }
   }, [infoWindow, infoContentString, data, googleReady])
 
@@ -112,6 +122,18 @@ export const BusinessZoneGoogleMaps = (props) => {
       window.google.maps.event.addListener(circleZone, 'radius_changed', onCircleRadiusChanged)
     }
   }, [circleZone])
+
+  useEffect(() => {
+    if (distanceBased && !clearState) {
+      handleData({
+        ...data,
+        distance: distanceBased.getRadius() / units[data?.unit]
+      })
+    }
+    if (distanceBased && clearState) {
+      handleData(data)
+    }
+  }, [distanceBased])
 
   useEffect(() => {
     if (polygonZone) {
@@ -149,7 +171,10 @@ export const BusinessZoneGoogleMaps = (props) => {
         polygonZone.setMap(null)
         setPolygonZone(null)
       }
-
+      if (distanceBased) {
+        distanceBased.setMap(null)
+        setDistanceBased(null)
+      }
       if (drawingManager) {
         drawingManager.setMap(null)
       }
@@ -189,13 +214,17 @@ export const BusinessZoneGoogleMaps = (props) => {
       bounds.union(circleZone.getBounds())
       googleMap.fitBounds(bounds)
     }
+    if (distanceBased) {
+      bounds.union(distanceBased.getBounds())
+      googleMap.fitBounds(bounds)
+    }
     if (polygonZone && Array.isArray(data)) {
       for (const position of data) {
         bounds.extend(position)
       }
       googleMap.fitBounds(bounds)
     }
-  }, [googleReady, data, type, googleMap, circleZone, polygonZone])
+  }, [googleReady, data, type, googleMap, circleZone, polygonZone, distanceBased])
 
   useEffect(() => {
     if (googleReady) {
@@ -280,6 +309,17 @@ export const BusinessZoneGoogleMaps = (props) => {
           })
           setPolygonZone(polygon)
         }
+        if (type === 5 && data?.distance) {
+          const newCircleZone = new window.google.maps.Circle({
+            ...fillStyle,
+            editable: false,
+            center: center,
+            radius: data.distance * units[data?.unit]
+          })
+          newCircleZone.setMap(map)
+          setDistanceBased(newCircleZone)
+          _infoWindow.open(map)
+        }
       }
       if (window.google.maps?.drawing?.DrawingManager) {
         const _drawingManager = new window.google.maps.drawing.DrawingManager({
@@ -318,6 +358,17 @@ export const BusinessZoneGoogleMaps = (props) => {
             bounds.union(newCircleZone.getBounds())
             map.fitBounds(bounds)
           }
+          if (deliveryZone.type === 5 && deliveryZone?.data?.distance) {
+            const newCircleZone = new window.google.maps.Circle({
+              ...greenFillStyle,
+              editable: false,
+              center: center,
+              radius: deliveryZone?.data.distance * units[deliveryZone?.data?.unit]
+            })
+            newCircleZone.setMap(map)
+            bounds.union(newCircleZone.getBounds())
+            map.fitBounds(bounds)
+          }
           if (deliveryZone?.type === 2 && Array.isArray(deliveryZone?.data)) {
             const newPolygonZone = new window.google.maps.Polygon({
               ...greenFillStyle,
@@ -335,7 +386,7 @@ export const BusinessZoneGoogleMaps = (props) => {
         }
       }
     }
-  }, [googleReady])
+  }, [googleReady, distance])
 
   /**
    * append google map script
