@@ -177,7 +177,7 @@ var Settings = function Settings(props) {
                 attribute: 'parent_category_id',
                 value: parseInt(parentId)
               });
-              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=id&where=").concat(JSON.stringify(filterConditons));
+              functionFetch = "".concat(ordering.root, "/config_categories?orderBy=rank&where=").concat(JSON.stringify(filterConditons));
               _context2.next = 10;
               return fetch(functionFetch, requestOptions);
             case 10:
