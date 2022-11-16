@@ -50,9 +50,9 @@ export const OrderingWebsite = (props) => {
     }
   }
 
-  const handleUpdateTheme = async () => {
-    if (!themesList.result[0]?.id) return
-    const valuesDefault = {
+  const handleUpdateTheme = async (values = null) => {
+    if (!themesList.result[0]?.id && !values) return
+    const valuesDefault = values ?? {
       ...themesList.result[0].values_default,
       my_products: {
         ...themesList.result[0].values_default?.my_products,
@@ -91,6 +91,11 @@ export const OrderingWebsite = (props) => {
   useEffect(() => {
     const _themeValues = themesList.result[0]?.values_default?.my_products?.components
     if (!_themeValues) return
+    if (!_themeValues?.website_settings?.components?.values?.default_domain) {
+      const valuesDefault = JSON.parse(JSON.stringify(themesList.result[0]?.values_default))
+      valuesDefault.my_products.components.website_settings.components.values.default_domain = `https://${ordering.project}.tryordering.com`
+      handleUpdateTheme(valuesDefault)
+    }
     setThemeValues(JSON.parse(JSON.stringify(_themeValues)))
   }, [JSON.stringify(themesList.result)])
 
