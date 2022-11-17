@@ -113,23 +113,32 @@ var OrderingWebsite = function OrderingWebsite(props) {
   var handleUpdateTheme = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var _themesList$result$, _themesList$result$0$;
-      var valuesDefault, _themesList$result$2, requestOptions, response, _yield$response$json2, error, result;
+      var values,
+        valuesDefault,
+        _themesList$result$2,
+        requestOptions,
+        response,
+        _yield$response$json2,
+        error,
+        result,
+        _args2 = arguments;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              if ((_themesList$result$ = themesList.result[0]) !== null && _themesList$result$ !== void 0 && _themesList$result$.id) {
-                _context2.next = 2;
+              values = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : null;
+              if (!(!((_themesList$result$ = themesList.result[0]) !== null && _themesList$result$ !== void 0 && _themesList$result$.id) && !values)) {
+                _context2.next = 3;
                 break;
               }
               return _context2.abrupt("return");
-            case 2:
-              valuesDefault = _objectSpread(_objectSpread({}, themesList.result[0].values_default), {}, {
+            case 3:
+              valuesDefault = values !== null && values !== void 0 ? values : _objectSpread(_objectSpread({}, themesList.result[0].values_default), {}, {
                 my_products: _objectSpread(_objectSpread({}, (_themesList$result$0$ = themesList.result[0].values_default) === null || _themesList$result$0$ === void 0 ? void 0 : _themesList$result$0$.my_products), {}, {
                   components: _objectSpread({}, themeValues)
                 })
               });
-              _context2.prev = 3;
+              _context2.prev = 4;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
                 method: 'POST',
@@ -141,13 +150,13 @@ var OrderingWebsite = function OrderingWebsite(props) {
                   values_default: JSON.stringify(valuesDefault)
                 })
               };
-              _context2.next = 8;
+              _context2.next = 9;
               return fetch("".concat(ordering.root, "/themes/").concat((_themesList$result$2 = themesList.result[0]) === null || _themesList$result$2 === void 0 ? void 0 : _themesList$result$2.id), requestOptions);
-            case 8:
+            case 9:
               response = _context2.sent;
-              _context2.next = 11;
+              _context2.next = 12;
               return response.json();
-            case 11:
+            case 12:
               _yield$response$json2 = _context2.sent;
               error = _yield$response$json2.error;
               result = _yield$response$json2.result;
@@ -156,18 +165,18 @@ var OrderingWebsite = function OrderingWebsite(props) {
               } else {
                 showToast(_ToastContext.ToastType.Success, result);
               }
-              _context2.next = 20;
+              _context2.next = 21;
               break;
-            case 17:
-              _context2.prev = 17;
-              _context2.t0 = _context2["catch"](3);
+            case 18:
+              _context2.prev = 18;
+              _context2.t0 = _context2["catch"](4);
               showToast(_ToastContext.ToastType.Success, _context2.t0.message);
-            case 20:
+            case 21:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[3, 17]]);
+      }, _callee2, null, [[4, 18]]);
     }));
     return function handleUpdateTheme() {
       return _ref2.apply(this, arguments);
@@ -177,9 +186,15 @@ var OrderingWebsite = function OrderingWebsite(props) {
     getThemes();
   }, []);
   (0, _react.useEffect)(function () {
-    var _themesList$result$3, _themesList$result$3$, _themesList$result$3$2;
+    var _themesList$result$3, _themesList$result$3$, _themesList$result$3$2, _themeValues$website_, _themeValues$website_2, _themeValues$website_3;
     var _themeValues = (_themesList$result$3 = themesList.result[0]) === null || _themesList$result$3 === void 0 ? void 0 : (_themesList$result$3$ = _themesList$result$3.values_default) === null || _themesList$result$3$ === void 0 ? void 0 : (_themesList$result$3$2 = _themesList$result$3$.my_products) === null || _themesList$result$3$2 === void 0 ? void 0 : _themesList$result$3$2.components;
     if (!_themeValues) return;
+    if (!(_themeValues !== null && _themeValues !== void 0 && (_themeValues$website_ = _themeValues.website_settings) !== null && _themeValues$website_ !== void 0 && (_themeValues$website_2 = _themeValues$website_.components) !== null && _themeValues$website_2 !== void 0 && (_themeValues$website_3 = _themeValues$website_2.values) !== null && _themeValues$website_3 !== void 0 && _themeValues$website_3.default_domain)) {
+      var _themesList$result$4;
+      var valuesDefault = JSON.parse(JSON.stringify((_themesList$result$4 = themesList.result[0]) === null || _themesList$result$4 === void 0 ? void 0 : _themesList$result$4.values_default));
+      valuesDefault.my_products.components.website_settings.components.values.default_domain = "https://".concat(ordering.project, ".tryordering.com");
+      handleUpdateTheme(valuesDefault);
+    }
     setThemeValues(JSON.parse(JSON.stringify(_themeValues)));
   }, [JSON.stringify(themesList.result)]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
