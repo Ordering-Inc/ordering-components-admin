@@ -69,6 +69,7 @@ import { CheckPassword } from './components/CheckPassword'
 import { CityList } from './components/CityList'
 import { CountryList } from './components/CountryList'
 import { CouponControl } from './components/CouponControl'
+import { ContentForm } from './components/ContentForm'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -126,6 +127,7 @@ import { OpenCartsDetail } from './components/OpenCartsDetail'
 import { OpenCartFilter } from './components/OpenCartFilter'
 import { OrderList } from './components/OrderList'
 import { OrderNotification } from './components/OrderNotification'
+import { OrderingWebsite } from './components/OrderingWebsite'
 import { OrdersFilter } from './components/OrdersFilter'
 import { OrdersManage } from './components/OrdersManage'
 import { OrdersOverview } from './components/OrdersOverview'
@@ -303,6 +305,7 @@ export {
   CityList,
   CountryList,
   CouponControl,
+  ContentForm,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
@@ -356,6 +359,7 @@ export {
   MyOrdersList,
   MultiCountrySettings,
   OpenCartListing,
+  OrderingWebsite,
   OpenCartsDetail,
   OpenCartFilter,
   OrderList,
