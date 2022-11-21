@@ -272,9 +272,8 @@ export const BusinessZoneGoogleMaps = (props) => {
         }
       })
 
-      setGoogleMap(map)
-
       let marker = null
+      setGoogleMap(map)
       marker = isDriverGroup ? null : new window.google.maps.Marker({
         position: new window.google.maps.LatLng(center?.lat, center?.lng),
         map,
