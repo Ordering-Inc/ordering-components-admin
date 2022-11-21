@@ -18,7 +18,8 @@ export const BusinessZoneGoogleMaps = (props) => {
     businessZones,
     kmlData,
     disabled,
-    distance
+    distance,
+    isDriverGroup
   } = props
 
   if (!apiKey) {
@@ -271,9 +272,10 @@ export const BusinessZoneGoogleMaps = (props) => {
         }
       })
 
-      let marker = null
       setGoogleMap(map)
-      marker = new window.google.maps.Marker({
+
+      let marker = null
+      marker = isDriverGroup ? null : new window.google.maps.Marker({
         position: new window.google.maps.LatLng(center?.lat, center?.lng),
         map,
         draggable: !!mapControls?.isMarkerDraggable
