@@ -7,7 +7,8 @@ import { useLanguage } from '../../contexts/LanguageContext'
 
 export const OrderingWebsite = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    appId
   } = props
 
   const [ordering] = useApi()
@@ -16,7 +17,142 @@ export const OrderingWebsite = (props) => {
   const [, t] = useLanguage()
 
   const [themeValues, setThemeValues] = useState({})
-  const [themesList, setThemesList] = useState({ loading: true, result: [], error: null })
+  const [orderingTheme, setOrderingTheme] = useState({ loading: true, themes: [], error: null, siteId: null })
+  const [themesList, setThemesList] = useState({ loading: true, themes: [], error: null })
+
+  /**
+ * Method to get the themes from API
+ */
+  const getSites = async () => {
+    try {
+      setOrderingTheme({
+        ...orderingTheme,
+        loading: true
+      })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/sites`, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        const found = result.find(site => site.code === appId)
+        if (found) {
+          await getSiteTheme(found.id)
+        } else {
+          await handleAddSite()
+        }
+      }
+    } catch (err) {
+      setOrderingTheme({
+        ...orderingTheme,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
+  /**
+ * Function to add new site from API
+ */
+  const handleAddSite = async () => {
+    try {
+      const initialData = {
+        code: appId,
+        name: 'Ordering'
+      }
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(initialData)
+      }
+      const response = await fetch(`${ordering.root}/sites`, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        await getSiteTheme(result.id)
+      } else {
+        setOrderingTheme({
+          ...orderingTheme,
+          loading: false,
+          themes: [],
+          error: result
+        })
+      }
+    } catch (err) {
+      setOrderingTheme({
+        ...orderingTheme,
+        loading: false,
+        result: [err.message]
+      })
+    }
+  }
+
+  /**
+   * Method to get the site theme from API
+   */
+  const getSiteTheme = async (siteId) => {
+    try {
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/sites/${siteId}/themes`, requestOptions)
+      const { error, result } = await response.json()
+      setOrderingTheme({
+        loading: false,
+        themes: error ? [] : result,
+        error: error ? result : null,
+        siteId: siteId
+      })
+    } catch (err) {
+      setOrderingTheme({
+        ...orderingTheme,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
+
+  /**
+ * Method to assign the theme to site
+ */
+  const handleAssignTheme = async (value, themeId, siteId) => {
+    try {
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          theme_id: themeId,
+          values: JSON.stringify(value)
+        })
+      }
+      const response = await fetch(`${ordering.root}/sites/${siteId}/themes`, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        showToast(ToastType.Success, t('THEME_ADDED', 'Theme added'))
+        setOrderingTheme({
+          ...orderingTheme,
+          themes: [result]
+        })
+      } else {
+        showToast(ToastType.Error, result)
+      }
+    } catch (err) {
+      showToast(ToastType.Error, err.message)
+    }
+  }
 
   /**
  * Method to get the themes from API
@@ -38,7 +174,7 @@ export const OrderingWebsite = (props) => {
       const { error, result } = await response.json()
       setThemesList({
         loading: false,
-        result: error ? [] : result,
+        themes: error ? [] : result,
         error: error ? result : null
       })
     } catch (err) {
@@ -50,18 +186,21 @@ export const OrderingWebsite = (props) => {
     }
   }
 
-  const handleUpdateTheme = async () => {
-    if (!themesList.result[0]?.id) return
-    const valuesDefault = {
-      ...themesList.result[0].values_default,
-      my_products: {
-        ...themesList.result[0].values_default?.my_products,
-        components: { ...themeValues }
-      }
-    }
-
+  /**
+ * Method to update the site theme from API
+ */
+  const handleUpdateSiteTheme = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const themeId = orderingTheme.themes[0]?.theme_id
+      const siteId = orderingTheme.themes[0]?.site_id
+      const values = {
+        ...orderingTheme.themes[0].values,
+        my_products: {
+          ...orderingTheme.themes[0].values?.my_products,
+          components: { ...themeValues }
+        }
+      }
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -69,30 +208,42 @@ export const OrderingWebsite = (props) => {
           Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
-          values_default: JSON.stringify(valuesDefault)
+          values: JSON.stringify(values)
         })
       }
-      const response = await fetch(`${ordering.root}/themes/${themesList.result[0]?.id}`, requestOptions)
+      const response = await fetch(`${ordering.root}/sites/${siteId}/themes/${themeId}`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        showToast(ToastType.Success, t('THEME_SAVED', 'Theme saved'))
+        showToast(ToastType.Success, t('THEME_UPDATED', 'Theme updated'))
       } else {
-        showToast(ToastType.Success, result)
+        showToast(ToastType.Error, result)
       }
     } catch (err) {
-      showToast(ToastType.Success, err.message)
+      showToast(ToastType.Error, err.message)
     }
   }
 
   useEffect(() => {
+    if (!appId) return
     getThemes()
-  }, [])
+    getSites()
+  }, [appId])
 
   useEffect(() => {
-    const _themeValues = themesList.result[0]?.values_default?.my_products?.components
+    if (orderingTheme?.siteId && themesList.themes?.length && !orderingTheme?.themes?.length) {
+      const valuesDefault = JSON.parse(JSON.stringify(themesList.themes[0]?.values_default))
+      if (valuesDefault?.my_products?.components?.website_settings?.components?.values) {
+        valuesDefault.my_products.components.website_settings.components.values.default_domain = `https://${ordering.project}.tryordering.com`
+      }
+      handleAssignTheme(valuesDefault, themesList.themes[0]?.id, orderingTheme?.siteId)
+    }
+  }, [JSON.stringify(themesList.themes), orderingTheme?.siteId])
+
+  useEffect(() => {
+    const _themeValues = orderingTheme.themes[0]?.values?.my_products?.components
     if (!_themeValues) return
     setThemeValues(JSON.parse(JSON.stringify(_themeValues)))
-  }, [JSON.stringify(themesList.result)])
+  }, [orderingTheme?.themes])
 
   return (
     <>
@@ -100,9 +251,9 @@ export const OrderingWebsite = (props) => {
         <UIComponent
           {...props}
           themeValues={themeValues}
-          themesList={themesList}
+          orderingTheme={orderingTheme}
           setThemeValues={setThemeValues}
-          handleUpdateTheme={handleUpdateTheme}
+          handleUpdateSiteTheme={handleUpdateSiteTheme}
         />
       )}
     </>
