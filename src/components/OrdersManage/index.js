@@ -629,10 +629,8 @@ export const OrdersManage = (props) => {
   }, [user, loading])
 
   useEffect(() => {
-    if (!actionStatus?.error && !actionStatus?.loading) {
-      getOrderNumbersByStatus()
-    }
-  }, [actionStatus, filterValues, searchValue, driverId, customerId, businessId])
+    getOrderNumbersByStatus()
+  }, [filterValues, searchValue, driverId, customerId, businessId])
 
   useEffect(() => {
     if (!user.id || configState?.loading || allowColumns) return
