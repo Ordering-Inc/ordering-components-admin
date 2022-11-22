@@ -132,8 +132,9 @@ export const ContentForm = (props) => {
     })
   }
 
-  const handleSave = () => {
-    handleChangeContent(type, formState?.changes?.body)
+  const handleSave = (value) => {
+    const editValue = value ?? formState?.changes?.body
+    handleChangeContent(type, editValue)
     onClose()
   }
 
