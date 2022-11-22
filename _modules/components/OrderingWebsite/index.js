@@ -196,7 +196,7 @@ var OrderingWebsite = function OrderingWebsite(props) {
               _context2.prev = 0;
               initialData = {
                 code: appId,
-                name: 'Ordering'
+                name: 'Ordering.co'
               };
               requestOptions = {
                 method: 'POST',

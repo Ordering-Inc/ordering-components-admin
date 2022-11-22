@@ -366,10 +366,11 @@ var ContentForm = function ContentForm(props) {
     }));
   };
 
-  var handleSave = function handleSave() {
+  var handleSave = function handleSave(value) {
     var _formState$changes;
 
-    handleChangeContent(type, formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.body);
+    var editValue = value !== null && value !== void 0 ? value : formState === null || formState === void 0 ? void 0 : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? void 0 : _formState$changes.body;
+    handleChangeContent(type, editValue);
     onClose();
   };
 
