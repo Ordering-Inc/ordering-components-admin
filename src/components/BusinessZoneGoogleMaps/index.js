@@ -184,7 +184,7 @@ export const BusinessZoneGoogleMaps = (props) => {
           drawingControl: !disabled,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: type === 1
+            drawingModes: !disabled && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
@@ -327,7 +327,7 @@ export const BusinessZoneGoogleMaps = (props) => {
           drawingControl: !disabled,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: type === 1
+            drawingModes: !disabled && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
