@@ -239,7 +239,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           drawingControl: !disabled,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: !disabled && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,
@@ -386,7 +386,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
           drawingControl: !disabled,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: !disabled && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,
