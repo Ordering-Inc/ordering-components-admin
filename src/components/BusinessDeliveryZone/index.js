@@ -193,14 +193,27 @@ export const BusinessDeliveryZone = (props) => {
    * Method to change the business dleivey zone name, price, minimum
    * @param {EventTarget} e Related HTML event
    */
-  const handleChangeInput = (e) => {
-    setFormState({
-      ...formState,
-      changes: {
-        ...formState.changes,
-        [e.target.name]: e.target.value
-      }
-    })
+  const handleChangeInput = (e, unit) => {
+    if (e.target.name === 'distance') {
+      setFormState({
+        ...formState,
+        changes: {
+          ...formState.changes,
+          data: {
+            [e.target.name]: e.target.value ? parseInt(e.target.value) : '',
+            unit: unit
+          }
+        }
+      })
+    } else {
+      setFormState({
+        ...formState,
+        changes: {
+          ...formState.changes,
+          [e.target.name]: e.target.value
+        }
+      })
+    }
   }
 
   /**
