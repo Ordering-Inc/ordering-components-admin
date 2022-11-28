@@ -236,10 +236,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       }
       if ((_window$google$maps = window.google.maps) !== null && _window$google$maps !== void 0 && (_window$google$maps$d = _window$google$maps.drawing) !== null && _window$google$maps$d !== void 0 && _window$google$maps$d.DrawingManager) {
         var _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: !disabled,
+          drawingControl: disabled && type !== 5,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: !disabled && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: disabled && type !== 5 && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,
@@ -352,7 +352,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
         setInfoWindow(_infoWindow);
         if (type === 1 && data !== null && data !== void 0 && data.center) {
           var circle = new window.google.maps.Circle(_objectSpread(_objectSpread({}, fillStyle), {}, {
-            editable: !disabled,
+            editable: disabled,
             draggable: true,
             map: map,
             center: data.center,
@@ -363,7 +363,7 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
         }
         if (type === 2 && Array.isArray(data)) {
           var polygon = new window.google.maps.Polygon(_objectSpread(_objectSpread({}, fillStyle), {}, {
-            editable: !disabled,
+            editable: disabled,
             draggable: false,
             map: map,
             paths: data
@@ -383,10 +383,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       }
       if ((_window$google$maps2 = window.google.maps) !== null && _window$google$maps2 !== void 0 && (_window$google$maps2$ = _window$google$maps2.drawing) !== null && _window$google$maps2$ !== void 0 && _window$google$maps2$.DrawingManager) {
         var _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: !disabled,
+          drawingControl: disabled && type !== 5,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: !disabled && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: disabled && type !== 5 && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,

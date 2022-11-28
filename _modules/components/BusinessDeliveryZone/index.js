@@ -398,7 +398,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       var _data;
       setFormState(_objectSpread(_objectSpread({}, formState), {}, {
         changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          data: (_data = {}, _defineProperty(_data, e.target.name, e.target.value ? parseInt(e.target.value) : ''), _defineProperty(_data, "unit", unit), _data)
+          data: (_data = {}, _defineProperty(_data, e.target.name, e.target.value.match("^(([1-9][0-9])|[1-9])$") && parseInt(e.target.value)), _defineProperty(_data, "unit", unit), _data)
         })
       }));
     } else {
