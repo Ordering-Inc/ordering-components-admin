@@ -160,6 +160,15 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
       orderLocationList = _useState22[0],
       setOrderLocationList = _useState22[1];
 
+  var _useState23 = (0, _react.useState)(''),
+      _useState24 = _slicedToArray(_useState23, 2),
+      countryCode = _useState24[0],
+      setCountryCode = _useState24[1];
+
+  var handleChangeCode = function handleChangeCode(code) {
+    if (code === countryCode) setCountryCode('');else setCountryCode(code);
+  };
+
   var paramsForAPI = function paramsForAPI(type) {
     var _filterList$businessI;
 
@@ -1005,7 +1014,9 @@ var BusinessAnalytics = function BusinessAnalytics(props) {
     ordersAcceptSpendList: ordersAcceptSpendList,
     arrivedPickUpSpendList: arrivedPickUpSpendList,
     orderLocationList: orderLocationList,
-    handleChangeFilterList: setFilterList
+    handleChangeFilterList: setFilterList,
+    countryCode: countryCode,
+    handleChangeCode: handleChangeCode
   })));
 };
 
