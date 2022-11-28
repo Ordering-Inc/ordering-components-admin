@@ -181,10 +181,10 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       if (window.google.maps?.drawing?.DrawingManager) {
         const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: !disabled,
+          drawingControl: (disabled && type !== 5),
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: !disabled && type === 1
+            drawingModes: (disabled && type !== 5) && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
@@ -291,7 +291,7 @@ export const BusinessZoneGoogleMaps = (props) => {
         if (type === 1 && data?.center) {
           const circle = new window.google.maps.Circle({
             ...fillStyle,
-            editable: !disabled,
+            editable: disabled,
             draggable: true,
             map: map,
             center: data.center,
@@ -303,7 +303,7 @@ export const BusinessZoneGoogleMaps = (props) => {
         if (type === 2 && Array.isArray(data)) {
           const polygon = new window.google.maps.Polygon({
             ...fillStyle,
-            editable: !disabled,
+            editable: disabled,
             draggable: false,
             map: map,
             paths: data
@@ -324,10 +324,10 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       if (window.google.maps?.drawing?.DrawingManager) {
         const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: !disabled,
+          drawingControl: (disabled && type !== 5),
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: !disabled && type === 1
+            drawingModes: (disabled && type !== 5) && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
