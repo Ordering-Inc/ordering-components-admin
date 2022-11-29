@@ -5,6 +5,19 @@ import { useApi } from '../../contexts/ApiContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 
+const categoryHideList = ['cloudinary', 'tookan', 'order_messages', 'others']
+const configHideList = [
+  'search_by_address',
+  'distance_unit_km',
+  'pickup',
+  'orders_metafields_strategy',
+  'order_validate',
+  'time_format',
+  'driver_close_distance',
+  'lazy_load_products_when_necessary',
+  'advanced_business_search_enabled'
+]
+
 export const CampaignDetail = (props) => {
   const {
     campaign,
@@ -24,6 +37,7 @@ export const CampaignDetail = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
   const [audienceState, setAudienceState] = useState({ loading: false, audience: 0, error: null })
+  const [categoryList, setCategoryList] = useState({ loading: false, categories: [], error: null })
 
   /**
    * Clean formState
@@ -359,6 +373,104 @@ export const CampaignDetail = (props) => {
     }
   }
 
+  /**
+   * Method to get parent categoryid
+   */
+  const getParentCategory = async () => {
+    try {
+      setCategoryList({ ...categoryList, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+
+      const filterConditons = []
+      filterConditons.push({ attribute: 'key', value: 'key_operation' })
+
+      const functionFetch = `${ordering.root}/config_categories?where=${JSON.stringify(filterConditons)}`
+
+      const response = await fetch(functionFetch, requestOptions)
+      const { error, result } = await response.json()
+
+      if (!error && result.length > 0) {
+        getConfigList(result[0].id)
+      } else {
+        setCategoryList({
+          ...categoryList,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setCategoryList({
+        ...categoryList,
+        loading: false,
+        error: err
+      })
+    }
+  }
+
+  /**
+   * Method to get Configration List
+   */
+  const getConfigList = async (id) => {
+    try {
+      setCategoryList({ ...categoryList, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+
+      const filterConditons = []
+      filterConditons.push({ attribute: 'parent_category_id', value: parseInt(id) })
+
+      const functionFetch = `${ordering.root}/config_categories?orderBy=rank&where=${JSON.stringify(filterConditons)}`
+
+      const response = await fetch(functionFetch, requestOptions)
+      const { error, result } = await response.json()
+
+      if (!error) {
+        const _result = result.filter(setting => !categoryHideList.includes(setting.key)).map(setting => {
+          const configs = setting.configs?.filter(config => !configHideList.includes(config.key)).sort((a, b) => (a.rank * 1 > b.rank * 1) ? 1 : -1)
+          return {
+            ...setting,
+            configs: [...configs]
+          }
+        })
+        setCategoryList({
+          ...categoryList,
+          loading: false,
+          categories: _result
+        })
+      } else {
+        setCategoryList({
+          ...categoryList,
+          loading: true,
+          error: result
+        })
+      }
+    } catch (err) {
+      setCategoryList({
+        ...categoryList,
+        loading: false,
+        error: err
+      })
+    }
+  }
+
+  const handleUpdateCategoryList = (categories) => {
+    setCategoryList({
+      ...categoryList,
+      categories: categories
+    })
+  }
+
   useEffect(() => {
     if (Object.keys(campaign).length === 0) {
       setIsAddMode(true)
@@ -387,6 +499,10 @@ export const CampaignDetail = (props) => {
     if (formState?.changes?.conditions?.length > 0 && contactType) getAudience(formState?.changes?.conditions, contactType)
   }, [JSON.stringify(formState?.changes?.conditions)])
 
+  useEffect(() => {
+    getParentCategory()
+  }, [])
+
   return (
     <>
       {
@@ -407,6 +523,8 @@ export const CampaignDetail = (props) => {
             handleChangeParentContact={handleChangeParentContact}
             setCampaignState={setCampaignState}
             handleDeleteCondition={handleDeleteCondition}
+            categoryList={categoryList}
+            handleUpdateCategoryList={handleUpdateCategoryList}
           />
         )
       }
