@@ -103,7 +103,7 @@ export const CountryList = (props) => {
   }, [searchValue])
 
   useEffect(() => {
-    if (!searchValue && !countriesState?.loading && !countriesState?.countries?.length) {
+    if (!searchValue && !countriesState?.loading && countriesState?.countries?.length <= 1) {
       onClose && onClose()
     }
   }, [searchValue, countriesState])
