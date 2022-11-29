@@ -200,7 +200,7 @@ export const BusinessDeliveryZone = (props) => {
         changes: {
           ...formState.changes,
           data: {
-            [e.target.name]: e.target.value ? parseInt(e.target.value) : '',
+            [e.target.name]: e.target.value.match("^(([1-9][0-9])|[1-9])$") && parseInt(e.target.value),
             unit: unit
           }
         }
