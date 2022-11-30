@@ -244,11 +244,12 @@ var BannerDetails = function BannerDetails(props) {
   }();
 
   /**
-   * Medthod to update the banner item from API
+   * Method to delete the banner item from API
+   * @param {Object} params
    */
-  var handleUpdateBannerItem = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(payload, itemId) {
-      var requestOptions, response, content, _content$result3, _content$result4, items, images, videos, updatedBanner;
+  var handleDeleteBannerItem = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(itemId) {
+      var requestOptions, response, content, _content$result3, _content$result4, items, updatedBanner;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -261,12 +262,11 @@ var BannerDetails = function BannerDetails(props) {
               });
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               requestOptions = {
-                method: 'POST',
+                method: 'DELETE',
                 headers: {
                   'Content-Type': 'application/json',
                   Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(payload)
+                }
               };
               _context2.next = 6;
               return fetch("".concat(ordering.root, "/banners/").concat(banner.id, "/items/").concat(itemId), requestOptions);
@@ -281,41 +281,30 @@ var BannerDetails = function BannerDetails(props) {
                   loading: false,
                   changes: {}
                 }));
+                showToast(_ToastContext.ToastType.Success, t('BANNER_ITEM_DELETED', 'Banner item deleted'));
                 items = bannerItemsState.items.filter(function (item) {
-                  if (item.id === content.result.id) {
-                    Object.assign(item, content.result);
-                  }
-                  return true;
+                  return item.id !== itemId;
                 });
                 if (((_content$result3 = content.result) === null || _content$result3 === void 0 ? void 0 : _content$result3.type) === 'image') {
-                  images = bannerItemsState.images.filter(function (item) {
-                    if (item.id === content.result.id) {
-                      Object.assign(item, content.result);
-                    }
-                    return true;
-                  });
                   setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
                     items: items,
-                    images: images
+                    images: bannerItemsState.images.filter(function (item) {
+                      return item.id !== itemId;
+                    })
                   }));
                 }
                 if (((_content$result4 = content.result) === null || _content$result4 === void 0 ? void 0 : _content$result4.type) === 'video') {
-                  videos = bannerItemsState.videos.filter(function (item) {
-                    if (item.id === content.result.id) {
-                      Object.assign(item, content.result);
-                    }
-                    return true;
-                  });
                   setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
                     items: items,
-                    videos: videos
+                    videos: bannerItemsState.videos.filter(function (item) {
+                      return item.id !== itemId;
+                    })
                   }));
                 }
                 updatedBanner = _objectSpread(_objectSpread({}, banner), {}, {
                   items: items
                 });
                 handleSuccessUpdate && handleSuccessUpdate(updatedBanner);
-                showToast(_ToastContext.ToastType.Success, t('BANNER_ITEM_SAVED', 'Banner item saved'));
               } else {
                 setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
                   loading: false,
@@ -338,8 +327,108 @@ var BannerDetails = function BannerDetails(props) {
         }
       }, _callee2, null, [[0, 13]]);
     }));
-    return function handleUpdateBannerItem(_x2, _x3) {
+    return function handleDeleteBannerItem(_x2) {
       return _ref2.apply(this, arguments);
+    };
+  }();
+
+  /**
+   * Medthod to update the banner item from API
+   */
+  var handleUpdateBannerItem = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(payload, itemId) {
+      var requestOptions, response, content, _content$result5, _content$result6, items, images, videos, updatedBanner;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              setChangesState(function (prevState) {
+                return _objectSpread(_objectSpread({}, prevState), {}, {
+                  loading: true
+                });
+              });
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(payload)
+              };
+              _context3.next = 6;
+              return fetch("".concat(ordering.root, "/banners/").concat(banner.id, "/items/").concat(itemId), requestOptions);
+            case 6:
+              response = _context3.sent;
+              _context3.next = 9;
+              return response.json();
+            case 9:
+              content = _context3.sent;
+              if (!content.error) {
+                setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+                  loading: false,
+                  changes: {}
+                }));
+                items = bannerItemsState.items.filter(function (item) {
+                  if (item.id === content.result.id) {
+                    Object.assign(item, content.result);
+                  }
+                  return true;
+                });
+                if (((_content$result5 = content.result) === null || _content$result5 === void 0 ? void 0 : _content$result5.type) === 'image') {
+                  images = bannerItemsState.images.filter(function (item) {
+                    if (item.id === content.result.id) {
+                      Object.assign(item, content.result);
+                    }
+                    return true;
+                  });
+                  setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
+                    items: items,
+                    images: images
+                  }));
+                }
+                if (((_content$result6 = content.result) === null || _content$result6 === void 0 ? void 0 : _content$result6.type) === 'video') {
+                  videos = bannerItemsState.videos.filter(function (item) {
+                    if (item.id === content.result.id) {
+                      Object.assign(item, content.result);
+                    }
+                    return true;
+                  });
+                  setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
+                    items: items,
+                    videos: videos
+                  }));
+                }
+                updatedBanner = _objectSpread(_objectSpread({}, banner), {}, {
+                  items: items
+                });
+                handleSuccessUpdate && handleSuccessUpdate(updatedBanner);
+                showToast(_ToastContext.ToastType.Success, t('BANNER_ITEM_SAVED', 'Banner item saved'));
+              } else {
+                setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+              _context3.next = 16;
+              break;
+            case 13:
+              _context3.prev = 13;
+              _context3.t0 = _context3["catch"](0);
+              setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+                loading: false,
+                error: [_context3.t0.message]
+              }));
+            case 16:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 13]]);
+    }));
+    return function handleUpdateBannerItem(_x3, _x4) {
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -347,13 +436,13 @@ var BannerDetails = function BannerDetails(props) {
    * Method to update the banner from API
    */
   var handleUpdateClick = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(payload) {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(payload) {
       var _banner$id, _bannerState$banner, changes, requestOptions, response, content;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
-          switch (_context3.prev = _context3.next) {
+          switch (_context4.prev = _context4.next) {
             case 0:
-              _context3.prev = 0;
+              _context4.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState({
                 loading: true,
@@ -368,14 +457,14 @@ var BannerDetails = function BannerDetails(props) {
                 },
                 body: JSON.stringify(changes)
               };
-              _context3.next = 7;
+              _context4.next = 7;
               return fetch("".concat(ordering.root, "/banners/").concat((_banner$id = banner.id) !== null && _banner$id !== void 0 ? _banner$id : (_bannerState$banner = bannerState.banner) === null || _bannerState$banner === void 0 ? void 0 : _bannerState$banner.id), requestOptions);
             case 7:
-              response = _context3.sent;
-              _context3.next = 10;
+              response = _context4.sent;
+              _context4.next = 10;
               return response.json();
             case 10:
-              content = _context3.sent;
+              content = _context4.sent;
               if (!content.error) {
                 setBannerState(_objectSpread(_objectSpread({}, bannerState), {}, {
                   banner: content.result
@@ -391,76 +480,6 @@ var BannerDetails = function BannerDetails(props) {
                   changes: {}
                 }));
                 showToast(_ToastContext.ToastType.Success, t('BANNER_SAVED', 'Banner saved'));
-              } else {
-                setActionState({
-                  loading: false,
-                  error: content.result
-                });
-              }
-              _context3.next = 17;
-              break;
-            case 14:
-              _context3.prev = 14;
-              _context3.t0 = _context3["catch"](0);
-              setActionState({
-                loading: false,
-                error: _context3.t0.message
-              });
-            case 17:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 14]]);
-    }));
-    return function handleUpdateClick(_x4) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-
-  /**
-   * Method to update the banner from API
-   */
-  var handleAddBanner = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var changes, requestOptions, response, content;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              setActionState({
-                loading: true,
-                error: null
-              });
-              changes = _objectSpread({}, changesState === null || changesState === void 0 ? void 0 : changesState.changes);
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(changes)
-              };
-              _context4.next = 7;
-              return fetch("".concat(ordering.root, "/banners"), requestOptions);
-            case 7:
-              response = _context4.sent;
-              _context4.next = 10;
-              return response.json();
-            case 10:
-              content = _context4.sent;
-              if (!content.error) {
-                setActionState({
-                  loading: false,
-                  error: null
-                });
-                handleSuccessAdd && handleSuccessAdd(_objectSpread(_objectSpread({}, content.result), {}, {
-                  enabled: true
-                }));
-                props.onClose && props.onClose();
-                showToast(_ToastContext.ToastType.Success, t('BANNER_ADDED', 'Banner added'));
               } else {
                 setActionState({
                   loading: false,
@@ -483,8 +502,78 @@ var BannerDetails = function BannerDetails(props) {
         }
       }, _callee4, null, [[0, 14]]);
     }));
-    return function handleAddBanner() {
+    return function handleUpdateClick(_x5) {
       return _ref4.apply(this, arguments);
+    };
+  }();
+
+  /**
+   * Method to update the banner from API
+   */
+  var handleAddBanner = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var changes, requestOptions, response, content;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              _context5.prev = 0;
+              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+              setActionState({
+                loading: true,
+                error: null
+              });
+              changes = _objectSpread({}, changesState === null || changesState === void 0 ? void 0 : changesState.changes);
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(changes)
+              };
+              _context5.next = 7;
+              return fetch("".concat(ordering.root, "/banners"), requestOptions);
+            case 7:
+              response = _context5.sent;
+              _context5.next = 10;
+              return response.json();
+            case 10:
+              content = _context5.sent;
+              if (!content.error) {
+                setActionState({
+                  loading: false,
+                  error: null
+                });
+                handleSuccessAdd && handleSuccessAdd(_objectSpread(_objectSpread({}, content.result), {}, {
+                  enabled: true
+                }));
+                props.onClose && props.onClose();
+                showToast(_ToastContext.ToastType.Success, t('BANNER_ADDED', 'Banner added'));
+              } else {
+                setActionState({
+                  loading: false,
+                  error: content.result
+                });
+              }
+              _context5.next = 17;
+              break;
+            case 14:
+              _context5.prev = 14;
+              _context5.t0 = _context5["catch"](0);
+              setActionState({
+                loading: false,
+                error: _context5.t0.message
+              });
+            case 17:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5, null, [[0, 14]]);
+    }));
+    return function handleAddBanner() {
+      return _ref5.apply(this, arguments);
     };
   }();
 
@@ -492,13 +581,13 @@ var BannerDetails = function BannerDetails(props) {
    * Method to delete the banner from API
    */
   var handleDeleteBanner = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
       var requestOptions, response, content;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) {
-          switch (_context5.prev = _context5.next) {
+          switch (_context6.prev = _context6.next) {
             case 0:
-              _context5.prev = 0;
+              _context6.prev = 0;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionState({
                 loading: true,
@@ -511,14 +600,14 @@ var BannerDetails = function BannerDetails(props) {
                   Authorization: "Bearer ".concat(token)
                 }
               };
-              _context5.next = 6;
+              _context6.next = 6;
               return fetch("".concat(ordering.root, "/banners/").concat(banner.id), requestOptions);
             case 6:
-              response = _context5.sent;
-              _context5.next = 9;
+              response = _context6.sent;
+              _context6.next = 9;
               return response.json();
             case 9:
-              content = _context5.sent;
+              content = _context6.sent;
               if (!content.error) {
                 setActionState({
                   loading: false,
@@ -533,24 +622,24 @@ var BannerDetails = function BannerDetails(props) {
                   error: content.result
                 });
               }
-              _context5.next = 16;
+              _context6.next = 16;
               break;
             case 13:
-              _context5.prev = 13;
-              _context5.t0 = _context5["catch"](0);
+              _context6.prev = 13;
+              _context6.t0 = _context6["catch"](0);
               setActionState({
                 loading: false,
-                error: _context5.t0.message
+                error: _context6.t0.message
               });
             case 16:
             case "end":
-              return _context5.stop();
+              return _context6.stop();
           }
         }
-      }, _callee5, null, [[0, 13]]);
+      }, _callee6, null, [[0, 13]]);
     }));
     return function handleDeleteBanner() {
-      return _ref5.apply(this, arguments);
+      return _ref6.apply(this, arguments);
     };
   }();
   (0, _react.useEffect)(function () {
@@ -607,7 +696,8 @@ var BannerDetails = function BannerDetails(props) {
     handleSelectAllSites: handleSelectAllSites,
     handleUpdateClick: handleUpdateClick,
     handleAddBanner: handleAddBanner,
-    handleDeleteBanner: handleDeleteBanner
+    handleDeleteBanner: handleDeleteBanner,
+    handleDeleteBannerItem: handleDeleteBannerItem
   })));
 };
 exports.BannerDetails = BannerDetails;
