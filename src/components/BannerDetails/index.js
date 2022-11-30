@@ -137,6 +137,51 @@ export const BannerDetails = (props) => {
   }
 
   /**
+   * Method to delete the banner item from API
+   * @param {Object} params
+   */
+  const handleDeleteBannerItem = async (itemId) => {
+    try {
+      setChangesState(prevState => ({ ...prevState, loading: true }))
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      const requestOptions = {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/banners/${banner.id}/items/${itemId}`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        setChangesState({ ...changesState, loading: false, changes: {} })
+        showToast(ToastType.Success, t('BANNER_ITEM_DELETED', 'Banner item deleted'))
+        const items = bannerItemsState.items.filter(item => item.id !== itemId)
+        if (content.result?.type === 'image') {
+          setBannerItemsState({
+            ...bannerItemsState,
+            items: items,
+            images: bannerItemsState.images.filter(item => item.id !== itemId)
+          })
+        }
+        if (content.result?.type === 'video') {
+          setBannerItemsState({
+            ...bannerItemsState,
+            items: items,
+            videos: bannerItemsState.videos.filter(item => item.id !== itemId)
+          })
+        }
+        const updatedBanner = { ...banner, items: items }
+        handleSuccessUpdate && handleSuccessUpdate(updatedBanner)
+      } else {
+        setChangesState({ ...changesState, loading: false, error: content.result })
+      }
+    } catch (err) {
+      setChangesState({ ...changesState, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
    * Medthod to update the banner item from API
    */
   const handleUpdateBannerItem = async (payload, itemId) => {
@@ -377,6 +422,7 @@ export const BannerDetails = (props) => {
           handleUpdateClick={handleUpdateClick}
           handleAddBanner={handleAddBanner}
           handleDeleteBanner={handleDeleteBanner}
+          handleDeleteBannerItem={handleDeleteBannerItem}
         />
       )}
     </>
