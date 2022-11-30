@@ -743,9 +743,9 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
    */
 
 
-  var handleChangeSandbox = function handleChangeSandbox() {
+  var handleChangeSandbox = function handleChangeSandbox(checked) {
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      sandbox: !(changesState !== null && changesState !== void 0 && changesState.sandbox)
+      sandbox: checked !== null && checked !== void 0 ? checked : !(changesState !== null && changesState !== void 0 && changesState.sandbox)
     }));
   };
   /**
@@ -880,7 +880,6 @@ var BusinessPaymethods = function BusinessPaymethods(props) {
     }
 
     handleUpdateBusinessPaymethodOpton(paymethodId, changes);
-    handleUpdateBusiness();
   };
 
   var handleSuccessPaymethodUpdate = function handleSuccessPaymethodUpdate(updatedPaymethods) {
