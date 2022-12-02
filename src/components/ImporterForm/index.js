@@ -77,9 +77,7 @@ export const ImporterForm = (props) => {
       const _mappingState = mappingState
 
       delete _mappingState[removeKey]
-      setMappingState({
-        ..._mappingState
-      })
+      setMappingState(_mappingState)
       return
     }
     setMappingState({
