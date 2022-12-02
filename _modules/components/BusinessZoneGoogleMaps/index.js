@@ -236,10 +236,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       }
       if ((_window$google$maps = window.google.maps) !== null && _window$google$maps !== void 0 && (_window$google$maps$d = _window$google$maps.drawing) !== null && _window$google$maps$d !== void 0 && _window$google$maps$d.DrawingManager) {
         var _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: disabled && type !== 5,
+          drawingControl: isDriverGroup !== null && isDriverGroup !== void 0 ? isDriverGroup : disabled && type !== 5,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: disabled && type !== 5 && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: (isDriverGroup !== null && isDriverGroup !== void 0 ? isDriverGroup : disabled && type !== 5) && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,
@@ -383,10 +383,10 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
       }
       if ((_window$google$maps2 = window.google.maps) !== null && _window$google$maps2 !== void 0 && (_window$google$maps2$ = _window$google$maps2.drawing) !== null && _window$google$maps2$ !== void 0 && _window$google$maps2$.DrawingManager) {
         var _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: disabled && type !== 5,
+          drawingControl: isDriverGroup !== null && isDriverGroup !== void 0 ? isDriverGroup : disabled && type !== 5,
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: disabled && type !== 5 && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
+            drawingModes: (isDriverGroup !== null && isDriverGroup !== void 0 ? isDriverGroup : disabled && type !== 5) && type === 1 ? [window.google.maps.drawing.OverlayType.CIRCLE] : [window.google.maps.drawing.OverlayType.POLYGON]
           },
           circleOptions: _objectSpread(_objectSpread({}, fillStyle), {}, {
             clickable: false,
