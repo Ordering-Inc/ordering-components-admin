@@ -181,10 +181,10 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       if (window.google.maps?.drawing?.DrawingManager) {
         const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: (disabled && type !== 5),
+          drawingControl: isDriverGroup ?? (disabled && type !== 5),
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: (disabled && type !== 5) && type === 1
+            drawingModes: (isDriverGroup ?? (disabled && type !== 5)) && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
@@ -324,10 +324,10 @@ export const BusinessZoneGoogleMaps = (props) => {
       }
       if (window.google.maps?.drawing?.DrawingManager) {
         const _drawingManager = new window.google.maps.drawing.DrawingManager({
-          drawingControl: (disabled && type !== 5),
+          drawingControl: isDriverGroup ?? (disabled && type !== 5),
           drawingControlOptions: {
             position: window.google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: (disabled && type !== 5) && type === 1
+            drawingModes: (isDriverGroup ?? (disabled && type !== 5)) && type === 1
               ? [window.google.maps.drawing.OverlayType.CIRCLE]
               : [window.google.maps.drawing.OverlayType.POLYGON]
           },
