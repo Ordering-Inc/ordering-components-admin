@@ -131,27 +131,38 @@ var BusinessDetails = function BusinessDetails(props) {
   }();
 
   /**
-   * Method to change business enable/disable
+   * Method to change business enable/disable or featured/not featured
    * @param {Boolean} enabled business enable state
+   * @param {Boolean} isFeatured state to check enable or featured
    */
 
   var handleChangeActiveBusiness = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(enabled) {
-      var _yield$ordering$setAc, _yield$ordering$setAc2, error, result;
+      var isFeatured,
+        changes,
+        _yield$ordering$setAc,
+        _yield$ordering$setAc2,
+        error,
+        result,
+        _args2 = arguments;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.prev = 0;
+              isFeatured = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : false;
+              _context2.prev = 1;
               showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: true
               }));
-              _context2.next = 5;
-              return ordering.setAccessToken(session.token).businesses(businessId).save({
+              changes = isFeatured ? {
+                featured: enabled
+              } : {
                 enabled: enabled
-              });
-            case 5:
+              };
+              _context2.next = 7;
+              return ordering.setAccessToken(session.token).businesses(businessId).save(changes);
+            case 7:
               _yield$ordering$setAc = _context2.sent;
               _yield$ordering$setAc2 = _yield$ordering$setAc.content;
               error = _yield$ordering$setAc2.error;
@@ -166,21 +177,21 @@ var BusinessDetails = function BusinessDetails(props) {
                 }));
                 showToast(_ToastContext.ToastType.Success, t('BUSINESS_UPDATED', 'Business updated'));
               }
-              _context2.next = 16;
+              _context2.next = 18;
               break;
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](0);
+            case 15:
+              _context2.prev = 15;
+              _context2.t0 = _context2["catch"](1);
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false,
                 error: [_context2.t0.message]
               }));
-            case 16:
+            case 18:
             case "end":
               return _context2.stop();
           }
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee2, null, [[1, 15]]);
     }));
     return function handleChangeActiveBusiness(_x) {
       return _ref2.apply(this, arguments);
