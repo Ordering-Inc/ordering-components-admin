@@ -74,7 +74,7 @@ export const ImporterForm = (props) => {
     }
     if (integerKeys.includes(e.target.name) && e.target.value === '') {
       const removeKey = e.target.name
-      const _mappingState = mappingState
+      let _mappingState = mappingState
 
       delete _mappingState[removeKey]
       setMappingState(_mappingState)
