@@ -79,7 +79,7 @@ export const PlatformProductDetail = (props) => {
       if (!error) {
         showToast(ToastType.Success, t('GIFT_CARD_DELETED', 'Gift card deleted'))
         setFormState({ ...formState, loading: false, error: null, changes: {} })
-        handleSuccessDeleteProduct(result)
+        handleSuccessDeleteProduct(product?.id)
         onClose && onClose()
       } else {
         setFormState({ ...formState, loading: false, error: result })
