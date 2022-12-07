@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BusinessDeliveryZone = void 0;
+exports.DriverGroupDeliveryZone = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -61,11 +61,13 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
-  var business = props.business,
+var DriverGroupDeliveryZone = function DriverGroupDeliveryZone(props) {
+  var drivergroup = props.drivergroup,
       zone = props.zone,
+      driverGroupsZones = props.driverGroupsZones,
       UIComponent = props.UIComponent,
-      handleSuccessUpdate = props.handleSuccessUpdate;
+      handleSuccessUpdate = props.handleSuccessUpdate,
+      setZoneList = props.setZoneList;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -116,13 +118,13 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
     });
   };
   /**
-   * Method to update the business delivery zone from API
+   * Method to update the drivergroup delivery zone from API
    */
 
 
-  var handleUpdateBusinessDeliveryZone = /*#__PURE__*/function () {
+  var handleUpdateDriverGroupDeliveryZone = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var currentChanges, requestOptions, response, content, zones, _business;
+      var currentChanges, requestOptions, response, content, _driverGroupsZones$zo, zones;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -146,7 +148,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 body: JSON.stringify(currentChanges)
               };
               _context.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zone.id), requestOptions);
+              return fetch("".concat(ordering.root, "/drivergroups/").concat(drivergroup === null || drivergroup === void 0 ? void 0 : drivergroup.id, "/deliveryzones/").concat(zone.id), requestOptions);
 
             case 8:
               response = _context.sent;
@@ -161,18 +163,20 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                   loading: false,
                   changes: {}
                 }));
-                zones = business.zones.filter(function (_zone) {
+                zones = driverGroupsZones === null || driverGroupsZones === void 0 ? void 0 : (_driverGroupsZones$zo = driverGroupsZones.zones) === null || _driverGroupsZones$zo === void 0 ? void 0 : _driverGroupsZones$zo.filter(function (_zone) {
                   if ((_zone === null || _zone === void 0 ? void 0 : _zone.id) === zone.id) {
                     Object.assign(zone, content.result);
                   }
 
                   return true;
                 });
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  zones: zones
+                setZoneList({
+                  zones: zones,
+                  loading: false,
+                  error: null
                 });
-                handleSuccessUpdate && handleSuccessUpdate(_business);
                 showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_SAVED', 'Delivery zone saved'));
+                props.onClose && props.onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false,
@@ -199,18 +203,18 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       }, _callee, null, [[0, 15]]);
     }));
 
-    return function handleUpdateBusinessDeliveryZone() {
+    return function handleUpdateDriverGroupDeliveryZone() {
       return _ref.apply(this, arguments);
     };
   }();
   /**
-   * Method to add new business delivery zone from API
+   * Method to add new drivergroup delivery zone from API
    */
 
 
-  var handleAddBusinessDeliveryZone = /*#__PURE__*/function () {
+  var handleAddDriverGroupDeliveryZone = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var _formState$changes, currentChanges, requestOptions, response, content, zones, _business;
+      var _formState$changes, currentChanges, requestOptions, response, content, zones;
 
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
@@ -321,7 +325,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 body: JSON.stringify(currentChanges)
               };
               _context2.next = 8;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones"), requestOptions);
+              return fetch("".concat(ordering.root, "/drivergroups/").concat(drivergroup === null || drivergroup === void 0 ? void 0 : drivergroup.id, "/deliveryzones"), requestOptions);
 
             case 8:
               response = _context2.sent;
@@ -336,11 +340,12 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                   changes: {},
                   loading: false
                 }));
-                zones = [].concat(_toConsumableArray(business.zones), [content.result]);
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  zones: zones
+                zones = [].concat(_toConsumableArray(driverGroupsZones === null || driverGroupsZones === void 0 ? void 0 : driverGroupsZones.zones), [content.result]);
+                setZoneList({
+                  zones: zones,
+                  loading: false,
+                  error: null
                 });
-                handleSuccessUpdate && handleSuccessUpdate(_business);
                 showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_ADDED', 'Delivery zone added'));
                 props.onClose && props.onClose();
               } else {
@@ -350,18 +355,19 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 }));
               }
 
-              _context2.next = 18;
+              _context2.next = 19;
               break;
 
             case 15:
               _context2.prev = 15;
               _context2.t0 = _context2["catch"](0);
+              console.log('entro');
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 error: _context2.t0.message,
                 loading: false
               }));
 
-            case 18:
+            case 19:
             case "end":
               return _context2.stop();
           }
@@ -369,19 +375,19 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       }, _callee2, null, [[0, 15]]);
     }));
 
-    return function handleAddBusinessDeliveryZone() {
+    return function handleAddDriverGroupDeliveryZone() {
       return _ref2.apply(this, arguments);
     };
   }();
   /**
-   * Method to delete the business delivery zone
-   * @param {Number} zoneId id of business dleivery zone
+   * Method to delete the drivergroup delivery zone
+   * @param {Number} zoneId id of drivergroup dleivery zone
    */
 
 
-  var handleDeleteBusinessDeliveryZone = /*#__PURE__*/function () {
+  var handleDeleteDriverGroupDeliveryZone = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-      var requestOptions, response, content, zones, _business;
+      var requestOptions, response, content, _driverGroupsZones$zo2, zones;
 
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) {
@@ -400,7 +406,7 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
                 }
               };
               _context3.next = 6;
-              return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/deliveryzones/").concat(zone.id), requestOptions);
+              return fetch("".concat(ordering.root, "/drivergroups/").concat(drivergroup === null || drivergroup === void 0 ? void 0 : drivergroup.id, "/deliveryzones/").concat(zone.id), requestOptions);
 
             case 6:
               response = _context3.sent;
@@ -411,17 +417,19 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
               content = _context3.sent;
 
               if (!content.error) {
-                zones = business.zones.filter(function (_zone) {
+                zones = driverGroupsZones === null || driverGroupsZones === void 0 ? void 0 : (_driverGroupsZones$zo2 = driverGroupsZones.zones) === null || _driverGroupsZones$zo2 === void 0 ? void 0 : _driverGroupsZones$zo2.filter(function (_zone) {
                   return (_zone === null || _zone === void 0 ? void 0 : _zone.id) !== zone.id;
                 });
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                   loading: false
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  zones: zones
+                setZoneList({
+                  zones: zones,
+                  loading: false,
+                  error: null
                 });
-                handleSuccessUpdate && handleSuccessUpdate(_business);
-                showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_DELETED', 'Business delivery zone deleted'));
+                handleSuccessUpdate && handleSuccessUpdate(_driverGroupsZones);
+                showToast(_ToastContext.ToastType.Success, t('DELIVERYZONE_DELETED', 'Driver group delivery zone deleted'));
                 props.onClose && props.onClose();
               } else {
                 setFormState(_objectSpread(_objectSpread({}, formState), {}, {
@@ -449,30 +457,20 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
       }, _callee3, null, [[0, 13]]);
     }));
 
-    return function handleDeleteBusinessDeliveryZone() {
+    return function handleDeleteDriverGroupDeliveryZone() {
       return _ref3.apply(this, arguments);
     };
   }();
   /**
-   * Method to change the business dleivey zone name, price, minimum
+   * Method to change the drivergroup dleivey zone name, price, minimum
    * @param {EventTarget} e Related HTML event
    */
 
 
-  var handleChangeInput = function handleChangeInput(e, unit) {
-    if (e.target.name === 'distance') {
-      var _data;
-
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, {
-          data: (_data = {}, _defineProperty(_data, e.target.name, e.target.value), _defineProperty(_data, "unit", unit), _data)
-        })
-      }));
-    } else {
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
-      }));
-    }
+  var handleChangeInput = function handleChangeInput(e) {
+    setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+      changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+    }));
   };
   /**
    * Method to change the form state
@@ -593,24 +591,24 @@ var BusinessDeliveryZone = function BusinessDeliveryZone(props) {
     kmlData: kmlData,
     handleChangeInput: handleChangeInput,
     handleChangeFormState: handleChangeFormState,
-    handleDeleteBusinessDeliveryZone: handleDeleteBusinessDeliveryZone,
-    handleUpdateBusinessDeliveryZone: handleUpdateBusinessDeliveryZone,
-    handleAddBusinessDeliveryZone: handleAddBusinessDeliveryZone,
+    handleDeleteDriverGroupDeliveryZone: handleDeleteDriverGroupDeliveryZone,
+    handleUpdateDriverGroupDeliveryZone: handleUpdateDriverGroupDeliveryZone,
+    handleAddDriverGroupDeliveryZone: handleAddDriverGroupDeliveryZone,
     handleUploadKmlFiles: handleUploadKmlFiles
   })));
 };
 
-exports.BusinessDeliveryZone = BusinessDeliveryZone;
-BusinessDeliveryZone.propTypes = {
+exports.DriverGroupDeliveryZone = DriverGroupDeliveryZone;
+DriverGroupDeliveryZone.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-  * Business, this must be contains an object with all business info
+  * drivergroup, this must be contains an object with all drivergroup info
   */
-  business: _propTypes.default.object,
+  drivergroup: _propTypes.default.object,
 
   /**
    * Components types before order details
@@ -636,7 +634,7 @@ BusinessDeliveryZone.propTypes = {
   */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-BusinessDeliveryZone.defaultProps = {
+DriverGroupDeliveryZone.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
