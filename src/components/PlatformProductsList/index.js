@@ -48,6 +48,35 @@ export const PlatformProductsList = (props) => {
     }
   }
 
+  /**
+   * Add a product
+   */
+  const handleSuccessAddProduct = (result) => {
+    setPlatformProductsListState({
+      ...platformProductsListState,
+      products: [...platformProductsListState.products, result]
+    })
+  }
+
+  /**
+   * Update a product
+   */
+  const handleSuccessUpdateProduct = (result) => {
+    const updatedProducts = platformProductsListState.products.map(product => {
+      if (product.id === result.id) return result
+      else return product
+    })
+    setPlatformProductsListState({ ...platformProductsListState, products: updatedProducts })
+  }
+
+  /**
+   * Delete a product
+   */
+  const handleSuccessDeleteProduct = (productId) => {
+    const products = platformProductsListState.products?.filter(item => item.id !== productId)
+    setPlatformProductsListState({ ...platformProductsListState, products: products })
+  }
+
   useEffect(() => {
     getPlatformProductsList()
   }, [])
@@ -58,6 +87,9 @@ export const PlatformProductsList = (props) => {
         <UIComponent
           {...props}
           platformProductsListState={platformProductsListState}
+          handleSuccessDeleteProduct={handleSuccessDeleteProduct}
+          handleSuccessUpdateProduct={handleSuccessUpdateProduct}
+          handleSuccessAddProduct={handleSuccessAddProduct}
         />
       )}
     </>
