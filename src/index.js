@@ -12,6 +12,7 @@ import { Appointments } from './components/Appointments'
 import { BaseComponent } from './components/BaseComponent'
 import { CannyIdentification } from './components/CannyIdentification'
 import { CampaignEmail } from './components/CampaignEmail'
+import { CampaignUserList } from './components/CampaignUserList'
 import { Settings } from './components/Settings'
 import { BannerDetails } from './components/BannerDetails'
 import { BatchImageForm } from './components/BatchImageForm'
@@ -258,6 +259,7 @@ export {
   BaseComponent,
   CannyIdentification,
   CampaignEmail,
+  CampaignUserList,
   Settings,
   BannerDetails,
   BatchImageForm,
