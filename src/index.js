@@ -27,6 +27,7 @@ import { BusinessDeliveryDetails } from './components/BusinessDeliveryDetails'
 import { BusinessDeliveryZone } from './components/BusinessDeliveryZone'
 import { BusinessDeliveryZoneShare } from './components/BusinessDeliveryZoneShare'
 import { BusinessDetails } from './components/BusinessDetails'
+import { BusinessEta } from './components/BusinessEta'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
 import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessGprsPrinters } from './components/BusinessGprsPrinters'
@@ -274,6 +275,7 @@ export {
   BusinessDeliveryZone,
   BusinessDeliveryZoneShare,
   BusinessDetails,
+  BusinessEta,
   BusinessFormDetails,
   BusinessGallery,
   BusinessGprsPrinters,
