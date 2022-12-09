@@ -13,6 +13,7 @@ export const BannerDetails = (props) => {
     UIComponent,
     banner,
     sitesState,
+    defaultPosition,
     handleSuccessUpdate,
     handleSuccessAdd,
     handleSuccessDelete
@@ -298,7 +299,10 @@ export const BannerDetails = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
-      const changes = { ...changesState?.changes }
+      const changes = {
+        ...changesState?.changes,
+        position: defaultPosition
+      }
       const requestOptions = {
         method: 'POST',
         headers: {
