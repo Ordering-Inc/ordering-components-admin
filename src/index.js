@@ -16,6 +16,7 @@ import { CampaignUserList } from './components/CampaignUserList'
 import { Settings } from './components/Settings'
 import { BannerDetails } from './components/BannerDetails'
 import { BatchImageForm } from './components/BatchImageForm'
+import { BusinessAdd } from './components/BusinessAdd'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
 import { BusinessAnalytics } from './components/BusinessAnalytics'
 import { BusinessBasicInformation } from './components/BusinessBasicInformation'
@@ -177,6 +178,7 @@ import { ProductsListing } from './components/ProductsListing'
 import { ProfessionalBusinessService } from './components/ProfessionalBusinessService'
 import { ProfessionalSchedule } from './components/ProfessionalSchedule'
 import { ProfessionalServices } from './components/ProfessionalServices'
+import { ProductStep } from './components/ProductStep'
 import { QueryLogin } from './components/QueryLogin'
 import { ReCaptcha } from './components/ReCaptcha'
 import { RewardsPrograms } from './components/RewardsPrograms'
@@ -262,6 +264,7 @@ export {
   CampaignEmail,
   CampaignUserList,
   Settings,
+  BusinessAdd,
   BannerDetails,
   BatchImageForm,
   BusinessAndProductList,
@@ -427,6 +430,7 @@ export {
   ProfessionalBusinessService,
   ProfessionalSchedule,
   ProfessionalServices,
+  ProductStep,
   ReportsDriverFilter,
   QueryLogin,
   ReCaptcha,
