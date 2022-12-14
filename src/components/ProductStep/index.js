@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -9,7 +9,8 @@ import { getDistance } from '../../utils'
  */
 export const ProductStep = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    location
   } = props
 
   const [ordering] = useApi()
@@ -18,17 +19,20 @@ export const ProductStep = (props) => {
   const [businessList, setBusinessList] = useState([])
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [business, setBusiness] = useState()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const handleChangeAddress = async (address) => {
-    const lat = address?.location?.lat
-    const lng = address?.location?.lng
+  const handleChangeAddress = async (ad) => {
+    const lat = ad?.location?.lat
+    const lng = ad?.location?.lng
     const url = `https://integrations.ordering.co/network/search.php?latitude=${lat}&longitude=${lng}`
+    setIsLoading(true)
     const response = await fetch(url, {
       method: 'GET'
     })
     const res = await response.json()
     const sortedBusinessList = res?.result.sort((a, b) => getDistance(a?.address?.lat, a?.address.lon, lat, lng) - getDistance(b?.address?.lat, b?.address.lon, lat, lng))
     setBusinessList(sortedBusinessList)
+    setIsLoading(false)
   }
 
   /**
@@ -54,6 +58,10 @@ export const ProductStep = (props) => {
     }
   }
 
+  useEffect(() => {
+    if (location) handleChangeAddress({ location })
+  }, [location])
+
   return (
     <>
       {UIComponent && (
@@ -65,6 +73,7 @@ export const ProductStep = (props) => {
           actionState={actionState}
           business={business}
           handleChangeAddress={handleChangeAddress}
+          isLoading={isLoading}
         />
       )}
     </>
