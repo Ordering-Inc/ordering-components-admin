@@ -89,7 +89,7 @@ export const ProductStep = (props) => {
       const { content: { error, result } } = await ordering.countries().get()
       if (!error) {
         const codes = result.filter(country => country?.enabled).map(country => country?.code?.toLowerCase())
-        const enabled = allowCodes.every(code => codes.includes(code))
+        const enabled = allowCodes.some(code => codes.includes(code))
         setCountriesState({ ...countriesState, loading: false, countries: result, enabled })
       } else {
         setCountriesState({ ...countriesState, loading: false, error: result })
