@@ -10,17 +10,23 @@ import { getDistance } from '../../utils'
 export const ProductStep = (props) => {
   const {
     UIComponent,
-    location
+    orderingBusiness
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
 
-  const [businessList, setBusinessList] = useState([])
+  const [countriesState, setCountriesState] = useState({ countries: [], loading: true, error: null, enabled: false })
   const [actionState, setActionState] = useState({ loading: false, error: null })
-  const [business, setBusiness] = useState()
+  const [businessList, setBusinessList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  const [business, setBusiness] = useState()
 
+  const allowCodes = ['us', 'ca']
+
+  /**
+   * Method to get business from location
+   */
   const handleChangeAddress = async (ad) => {
     const lat = ad?.location?.lat
     const lng = ad?.location?.lng
@@ -41,6 +47,22 @@ export const ProductStep = (props) => {
   const handleImport = async () => {
     try {
       setActionState({ ...actionState, loading: true })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(orderingBusiness?.id).save({ external_id: business?._id })
+      if (!error) {
+        await importBusiness()
+      } else {
+        setActionState({ ...actionState, loading: false, error: result })
+      }
+    } catch (err) {
+      setActionState({ ...actionState, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to import business
+   */
+  const importBusiness = async () => {
+    try {
       const requestOptions = {
         method: 'POST',
         headers: {
@@ -58,9 +80,32 @@ export const ProductStep = (props) => {
     }
   }
 
+  /**
+   * Method to get the countries from API
+   */
+  const getCountries = async () => {
+    try {
+      setCountriesState({ ...countriesState, loading: true })
+      const { content: { error, result } } = await ordering.countries().get()
+      if (!error) {
+        const codes = result.filter(country => country?.enabled).map(country => country?.code?.toLowerCase())
+        const enabled = allowCodes.some(code => codes.includes(code))
+        setCountriesState({ ...countriesState, loading: false, countries: result, enabled })
+      } else {
+        setCountriesState({ ...countriesState, loading: false, error: result })
+      }
+    } catch (err) {
+      setCountriesState({ ...countriesState, loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
-    if (location) handleChangeAddress({ location })
-  }, [location])
+    if (orderingBusiness?.location) handleChangeAddress({ location: orderingBusiness?.location })
+  }, [orderingBusiness?.location])
+
+  useEffect(() => {
+    getCountries()
+  }, [])
 
   return (
     <>
@@ -74,6 +119,7 @@ export const ProductStep = (props) => {
           business={business}
           handleChangeAddress={handleChangeAddress}
           isLoading={isLoading}
+          countriesState={countriesState}
         />
       )}
     </>
