@@ -30,6 +30,7 @@ export const BusinessAdd = (props) => {
   const [addressChange, setAddressChange] = useState(null)
   const [schedule, setSchedule] = useState([])
   const [kmlData, setKmlData] = useState(null)
+  const [cityId, setCityId] = useState(null)
   let timeout = null
 
   const paymethodsNotAllowed = ['paypal_express', 'authorize']
@@ -107,7 +108,7 @@ export const BusinessAdd = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
-      const changes = { ...formState.changes, ...defaultAddBusinessParams, schedule }
+      const changes = { ...formState.changes, ...defaultAddBusinessParams, schedule, ...(cityId && { city_id: cityId }) }
       const response = await ordering.businesses().save(changes, {
         accessToken: session.token
       })
@@ -216,6 +217,24 @@ export const BusinessAdd = (props) => {
     const response = await fetch(`${ordering.root}/business/${businessId}/gallery`, requestOptions)
     const content = await response.json()
     return content
+  }
+
+  const getCities = async () => {
+    try {
+      const { content: { error, result } } = await ordering.countries().select().get()
+
+      let cities = []
+      if (!error) {
+        for (const country of result) {
+          if (country?.enabled) {
+            cities = [...cities, ...country?.cities]
+          }
+        }
+        if (cities?.length > 0) setCityId(cities[0]?.id)
+      }
+    } catch (err) {
+      console.log(err.message)
+    }
   }
 
   /**
@@ -401,6 +420,7 @@ export const BusinessAdd = (props) => {
 
   useEffect(() => {
     getAllPaymethods()
+    getCities()
   }, [])
 
   return (
