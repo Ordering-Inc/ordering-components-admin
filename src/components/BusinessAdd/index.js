@@ -441,10 +441,6 @@ export const BusinessAdd = (props) => {
     if (details) {
       const photos = details?.photos?.map(photo => ({ temp_id: getUniqueId(), file: photo.getUrl() }))
       photos?.length > 0 && setGallery(photos)
-      if (details?.opening_hours?.periods) {
-        const newSchedule = getSchedule(details?.opening_hours?.periods)
-        setSchedule(newSchedule)
-      }
       const changes = {
         name: details?.name,
         slug: stringToSlug(details?.name),
@@ -452,6 +448,7 @@ export const BusinessAdd = (props) => {
         price_level: details?.price_level?.toString(),
         logo: details?.icon,
         address: details?.formatted_address,
+        ...(details?.opening_hours?.periods && { schedule: getSchedule(details?.opening_hours?.periods) }),
         location: {
           lat: details?.geometry?.location?.lat(),
           lng: details?.geometry?.location?.lng(),
@@ -507,7 +504,6 @@ export const BusinessAdd = (props) => {
           handleChangePaymethodIds={setPaymethodIds}
           handleChangeSchedule={setSchedule}
           details={details}
-          schedule={schedule}
           setDetails={setDetails}
         />
       )}
