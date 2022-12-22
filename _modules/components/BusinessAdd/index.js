@@ -1066,7 +1066,7 @@ var BusinessAdd = function BusinessAdd(props) {
 
   (0, _react.useEffect)(function () {
     if (details) {
-      var _details$photos, _details$price_level, _details$opening_hour, _details$opening_hour2, _details$geometry, _details$geometry$loc, _details$geometry2, _details$geometry2$lo;
+      var _details$photos, _details$opening_hour, _details$price_level, _details$geometry, _details$geometry$loc, _details$geometry2, _details$geometry2$lo;
 
       var photos = details === null || details === void 0 ? void 0 : (_details$photos = details.photos) === null || _details$photos === void 0 ? void 0 : _details$photos.map(function (photo) {
         return {
@@ -1074,26 +1074,29 @@ var BusinessAdd = function BusinessAdd(props) {
           file: photo.getUrl()
         };
       });
-      (photos === null || photos === void 0 ? void 0 : photos.length) > 0 && handleChangeGallery(photos);
+      (photos === null || photos === void 0 ? void 0 : photos.length) > 0 && setGallery(photos);
 
-      var changes = _objectSpread(_objectSpread({
+      if (details !== null && details !== void 0 && (_details$opening_hour = details.opening_hours) !== null && _details$opening_hour !== void 0 && _details$opening_hour.periods) {
+        var _details$opening_hour2;
+
+        var newSchedule = getSchedule(details === null || details === void 0 ? void 0 : (_details$opening_hour2 = details.opening_hours) === null || _details$opening_hour2 === void 0 ? void 0 : _details$opening_hour2.periods);
+        setSchedule(newSchedule);
+      }
+
+      var changes = {
         name: details === null || details === void 0 ? void 0 : details.name,
         slug: (0, _utils.stringToSlug)(details === null || details === void 0 ? void 0 : details.name),
         cellphone: details === null || details === void 0 ? void 0 : details.international_phone_number,
         price_level: details === null || details === void 0 ? void 0 : (_details$price_level = details.price_level) === null || _details$price_level === void 0 ? void 0 : _details$price_level.toString(),
         logo: details === null || details === void 0 ? void 0 : details.icon,
-        address: details === null || details === void 0 ? void 0 : details.formatted_address
-      }, (details === null || details === void 0 ? void 0 : (_details$opening_hour = details.opening_hours) === null || _details$opening_hour === void 0 ? void 0 : _details$opening_hour.periods) && {
-        schedule: getSchedule(details === null || details === void 0 ? void 0 : (_details$opening_hour2 = details.opening_hours) === null || _details$opening_hour2 === void 0 ? void 0 : _details$opening_hour2.periods)
-      }), {}, {
+        address: details === null || details === void 0 ? void 0 : details.formatted_address,
         location: {
           lat: details === null || details === void 0 ? void 0 : (_details$geometry = details.geometry) === null || _details$geometry === void 0 ? void 0 : (_details$geometry$loc = _details$geometry.location) === null || _details$geometry$loc === void 0 ? void 0 : _details$geometry$loc.lat(),
           lng: details === null || details === void 0 ? void 0 : (_details$geometry2 = details.geometry) === null || _details$geometry2 === void 0 ? void 0 : (_details$geometry2$lo = _details$geometry2.location) === null || _details$geometry2$lo === void 0 ? void 0 : _details$geometry2$lo.lng(),
           zipcode: -1,
           zoom: 15
         }
-      });
-
+      };
       changeFormState(changes);
     }
   }, [details]);
@@ -1130,6 +1133,7 @@ var BusinessAdd = function BusinessAdd(props) {
     handleChangePaymethodIds: setPaymethodIds,
     handleChangeSchedule: setSchedule,
     details: details,
+    schedule: schedule,
     setDetails: setDetails
   })));
 };
