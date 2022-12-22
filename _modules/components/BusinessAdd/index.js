@@ -275,7 +275,8 @@ var BusinessAdd = function BusinessAdd(props) {
 
   var handleAddBusiness = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var changes, response;
+      var _formState$changes, changes, response;
+
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
@@ -285,30 +286,31 @@ var BusinessAdd = function BusinessAdd(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
+              formState === null || formState === void 0 ? true : (_formState$changes = formState.changes) === null || _formState$changes === void 0 ? true : delete _formState$changes.schedule;
               changes = _objectSpread(_objectSpread(_objectSpread({}, formState.changes), defaultAddBusinessParams), {}, {
                 schedule: schedule
               }, cityId && {
                 city_id: cityId
               });
-              _context4.next = 6;
+              _context4.next = 7;
               return ordering.businesses().save(changes, {
                 accessToken: session.token
               });
 
-            case 6:
+            case 7:
               response = _context4.sent;
 
               if (response.content.error) {
-                _context4.next = 19;
+                _context4.next = 20;
                 break;
               }
 
               if (!(paymethodIds.length > 0)) {
-                _context4.next = 11;
+                _context4.next = 12;
                 break;
               }
 
-              _context4.next = 11;
+              _context4.next = 12;
               return Promise.all(paymethodIds.map( /*#__PURE__*/function () {
                 var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(paymethodId) {
                   return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -334,13 +336,13 @@ var BusinessAdd = function BusinessAdd(props) {
                 };
               }()));
 
-            case 11:
+            case 12:
               if (!(gallery.length > 0)) {
-                _context4.next = 14;
+                _context4.next = 15;
                 break;
               }
 
-              _context4.next = 14;
+              _context4.next = 15;
               return Promise.all(gallery.map( /*#__PURE__*/function () {
                 var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(galleryItem) {
                   var _response$content, _response$content$res;
@@ -374,30 +376,30 @@ var BusinessAdd = function BusinessAdd(props) {
                 };
               }()));
 
-            case 14:
+            case 15:
               if (!(zoneState !== null && zoneState !== void 0 && zoneState.name && zoneState !== null && zoneState !== void 0 && zoneState.minimum && zoneState !== null && zoneState !== void 0 && zoneState.price)) {
-                _context4.next = 17;
+                _context4.next = 18;
                 break;
               }
 
-              _context4.next = 17;
+              _context4.next = 18;
               return handleAddDeliveryZone(response.content.result.id);
 
-            case 17:
+            case 18:
               showToast(_ToastContext.ToastType.Success, t('BUSINESS_ADDED', 'Business added'));
               handleOpenCategory && handleOpenCategory(response.content.result.slug);
 
-            case 19:
+            case 20:
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 changes: response.content.error ? formState.changes : {},
                 result: response.content,
                 loading: false
               }));
-              _context4.next = 25;
+              _context4.next = 26;
               break;
 
-            case 22:
-              _context4.prev = 22;
+            case 23:
+              _context4.prev = 23;
               _context4.t0 = _context4["catch"](0);
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 result: {
@@ -407,12 +409,12 @@ var BusinessAdd = function BusinessAdd(props) {
                 loading: false
               }));
 
-            case 25:
+            case 26:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 22]]);
+      }, _callee4, null, [[0, 23]]);
     }));
 
     return function handleAddBusiness() {
@@ -747,9 +749,9 @@ var BusinessAdd = function BusinessAdd(props) {
 
 
   var handleChangeRibbon = function handleChangeRibbon(changes) {
-    var _formState$changes, _formState$changes2;
+    var _formState$changes2, _formState$changes3;
 
-    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes = formState.changes) !== null && _formState$changes !== void 0 && _formState$changes.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.ribbon), changes) : _objectSpread({}, changes);
+    var ribbonChanges = formState !== null && formState !== void 0 && (_formState$changes2 = formState.changes) !== null && _formState$changes2 !== void 0 && _formState$changes2.ribbon ? _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : (_formState$changes3 = formState.changes) === null || _formState$changes3 === void 0 ? void 0 : _formState$changes3.ribbon), changes) : _objectSpread({}, changes);
 
     var currentChanges = _objectSpread(_objectSpread({}, formState === null || formState === void 0 ? void 0 : formState.changes), {}, {
       ribbon: ribbonChanges

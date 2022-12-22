@@ -110,6 +110,7 @@ export const BusinessAdd = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setFormState({ ...formState, loading: true })
+      delete formState?.changes?.schedule
       const changes = { ...formState.changes, ...defaultAddBusinessParams, schedule, ...(cityId && { city_id: cityId }) }
       const response = await ordering.businesses().save(changes, {
         accessToken: session.token
@@ -459,7 +460,6 @@ export const BusinessAdd = (props) => {
       changeFormState(changes)
     }
   }, [details])
-
 
   useEffect(() => {
     if (!addressChange) return
