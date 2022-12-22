@@ -413,7 +413,7 @@ export const BusinessAdd = (props) => {
   const getSchedule = (periods) => {
     let extraHours = null
     const schedule = []
-    for (let i = 0; i < 6; i++) {
+    for (let i = 0; i < 7; i++) {
       const period = periods.find(item => item?.open?.day === i)
       if (!period) {
         !extraHours ? schedule.push({ enabled: false }) : schedule.push({ enabled: true, lapses: extraHours })
