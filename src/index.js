@@ -15,6 +15,7 @@ import { CampaignEmail } from './components/CampaignEmail'
 import { CampaignUserList } from './components/CampaignUserList'
 import { Settings } from './components/Settings'
 import { BannerDetails } from './components/BannerDetails'
+import { BannerImageLink } from './components/BannerImageLink'
 import { BatchImageForm } from './components/BatchImageForm'
 import { BusinessAdd } from './components/BusinessAdd'
 import { BusinessAndProductList } from './components/BusinessAndProductList'
@@ -266,6 +267,7 @@ export {
   Settings,
   BusinessAdd,
   BannerDetails,
+  BannerImageLink,
   BatchImageForm,
   BusinessAndProductList,
   BusinessAnalytics,
