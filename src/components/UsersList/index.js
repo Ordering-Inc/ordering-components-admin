@@ -247,12 +247,33 @@ export const UsersList = (props) => {
         }
       }
 
-      const fetchEndpoint = where
-        ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where)
-        : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters)
-      const { content: { result, pagination } } = await fetchEndpoint.get()
-      usersList.users = result
+      let fetchEndpoint = null
+      let content = {}
 
+      if (session.user?.level !== 2) {
+        fetchEndpoint = where
+          ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where)
+          : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters)
+        const response = await fetchEndpoint.get()
+        content = response.content
+      } else {
+        const requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.token}`
+          }
+        }
+        const fetchEndpoint = where
+          ? `${ordering.root}/professionals?page=${page}&page_size=${pageSize}&&where=${JSON.stringify(where)}`
+          : `${ordering.root}/professionals?page=${page}&page_size=${pageSize}`
+
+        const response = await fetch(fetchEndpoint, requestOptions)
+        content = await response.json()
+      }
+
+      const { result, pagination } = content
+      usersList.users = result
       setUsersList({
         ...usersList,
         loading: false
