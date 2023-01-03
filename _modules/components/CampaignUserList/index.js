@@ -5,19 +5,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AddressList = void 0;
+exports.CampaignUserList = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
-var _SessionContext = require("../../contexts/SessionContext");
-
-var _OrderContext = require("../../contexts/OrderContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
 
-var _CustomerContext = require("../../contexts/CustomerContext");
+var _SessionContext = require("../../contexts/SessionContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51,17 +47,9 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-/**
- * Component to control a address list
- * @param {object} props Props of AddressList component
- */
-var AddressList = function AddressList(props) {
+var CampaignUserList = function CampaignUserList(props) {
   var UIComponent = props.UIComponent,
-      changeOrderAddressWithDefault = props.changeOrderAddressWithDefault,
-      handleClickSetDefault = props.handleClickSetDefault,
-      handleClickDelete = props.handleClickDelete,
-      handleSuccessUpdate = props.handleSuccessUpdate,
-      userState = props.userState;
+      campaignId = props.campaignId;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -69,349 +57,127 @@ var AddressList = function AddressList(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      _useSession2$ = _useSession2[0],
-      user = _useSession2$.user,
-      token = _useSession2$.token;
-
-  var _useCustomer = (0, _CustomerContext.useCustomer)(),
-      _useCustomer2 = _slicedToArray(_useCustomer, 2),
-      setUserCustomer = _useCustomer2[1].setUserCustomer;
-
-  var userId = props.userId || (user === null || user === void 0 ? void 0 : user.id);
-  var accessToken = props.accessToken || token;
-
-  if (!userId) {
-    throw new Error('`userId` must provide from props or use SessionProviver to wrappe the app.');
-  }
-
-  if (!accessToken) {
-    throw new Error('`accessToken` must provide from props or use SessionProviver to wrappe the app.');
-  }
+      token = _useSession2[0].token;
 
   var _useState = (0, _react.useState)({
-    loading: false,
-    error: null,
-    addresses: []
-  }),
-      _useState2 = _slicedToArray(_useState, 2),
-      addressList = _useState2[0],
-      setAddressList = _useState2[1];
-
-  var _useState3 = (0, _react.useState)({
-    loading: false,
+    users: [],
+    loading: true,
     error: null
   }),
-      _useState4 = _slicedToArray(_useState3, 2),
-      actionStatus = _useState4[0],
-      setActionStatus = _useState4[1];
-
-  var _useOrder = (0, _OrderContext.useOrder)(),
-      _useOrder2 = _slicedToArray(_useOrder, 2),
-      changeAddress = _useOrder2[1].changeAddress;
-
-  var requestsState = {};
+      _useState2 = _slicedToArray(_useState, 2),
+      userListState = _useState2[0],
+      setUserListState = _useState2[1];
   /**
-   * Function to load addresses from API
+   * Method to get the user list from API
    */
 
-  var loadAddresses = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var source, _yield$ordering$setAc, content;
 
+  var getUserList = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+      var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
+              setUserListState(_objectSpread(_objectSpread({}, userListState), {}, {
                 loading: true
               }));
-              source = {};
-              requestsState.list = source;
-              _context.next = 6;
-              return ordering.setAccessToken(accessToken).users(userId).addresses().get({
-                cancelToken: source
-              });
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              _context.next = 5;
+              return fetch("".concat(ordering.root, "/marketing_campaigns/").concat(campaignId, "/users"), requestOptions);
 
-            case 6:
-              _yield$ordering$setAc = _context.sent;
-              content = _yield$ordering$setAc.content;
-              setAddressList({
-                loading: false,
-                error: content.error ? content.result : null,
-                addresses: content.error ? [] : content.result
-              });
-              _context.next = 14;
-              break;
+            case 5:
+              response = _context.sent;
+              _context.next = 8;
+              return response.json();
 
-            case 11:
-              _context.prev = 11;
-              _context.t0 = _context["catch"](0);
+            case 8:
+              content = _context.sent;
 
-              if (_context.t0.constructor.name !== 'Cancel') {
-                setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
+              if (!content.error) {
+                setUserListState(_objectSpread(_objectSpread({}, userListState), {}, {
                   loading: false,
-                  error: [_context.t0.message]
+                  error: null,
+                  users: content.result
+                }));
+              } else {
+                setUserListState(_objectSpread(_objectSpread({}, userListState), {}, {
+                  loading: false,
+                  error: content.result
                 }));
               }
 
-            case 14:
+              _context.next = 15;
+              break;
+
+            case 12:
+              _context.prev = 12;
+              _context.t0 = _context["catch"](0);
+              setUserListState(_objectSpread(_objectSpread({}, userListState), {}, {
+                loading: false,
+                error: _context.t0.message
+              }));
+
+            case 15:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 12]]);
     }));
 
-    return function loadAddresses() {
+    return function getUserList() {
       return _ref.apply(this, arguments);
     };
   }();
 
   (0, _react.useEffect)(function () {
-    if (props !== null && props !== void 0 && props.addresses) {
-      setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
-        addresses: props.addresses
-      }));
-      return;
-    }
-
-    loadAddresses();
-    return function () {
-      if (requestsState.list) {
-        requestsState.list.cancel();
-      }
-    };
-  }, [props.addresses]);
-  /**
-   * Function to make an address as default address
-   * @param {object} address Address to make as default
-   */
-
-  var handleSetDefault = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(address, userCustomerSetup) {
-      var _yield$ordering$setAc2, content;
-
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              if (userCustomerSetup) {
-                setUserCustomer(userCustomerSetup, true);
-              }
-
-              if (!handleClickSetDefault) {
-                _context2.next = 3;
-                break;
-              }
-
-              return _context2.abrupt("return", handleClickSetDefault(address));
-
-            case 3:
-              _context2.prev = 3;
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: true
-              }));
-              _context2.next = 7;
-              return ordering.setAccessToken(accessToken).users(userId).addresses(address.id).save({
-                default: true
-              });
-
-            case 7:
-              _yield$ordering$setAc2 = _context2.sent;
-              content = _yield$ordering$setAc2.content;
-              setActionStatus({
-                loading: false,
-                error: content.error ? content.result : null
-              });
-
-              if (!content.error && content.result.default) {
-                addressList.addresses.map(function (_address) {
-                  _address.default = _address.id === address.id;
-                  return _address;
-                });
-
-                if (changeOrderAddressWithDefault) {
-                  changeAddress(content.result.id);
-                }
-
-                setAddressList(_objectSpread({}, addressList));
-              }
-
-              _context2.next = 16;
-              break;
-
-            case 13:
-              _context2.prev = 13;
-              _context2.t0 = _context2["catch"](3);
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: false,
-                error: [_context2.t0.message]
-              }));
-
-            case 16:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[3, 13]]);
-    }));
-
-    return function handleSetDefault(_x, _x2) {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-  /**
-   * Function to delete an address
-   * @param {object} address Address to delete
-   */
-
-
-  var handleDelete = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(address) {
-      var _yield$ordering$users, content, addresses, updatedUser;
-
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              if (!handleClickDelete) {
-                _context3.next = 2;
-                break;
-              }
-
-              return _context3.abrupt("return", handleClickDelete(address));
-
-            case 2:
-              _context3.prev = 2;
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: true
-              }));
-              _context3.next = 6;
-              return ordering.users(userId).addresses(address.id).delete({
-                accessToken: accessToken
-              });
-
-            case 6:
-              _yield$ordering$users = _context3.sent;
-              content = _yield$ordering$users.content;
-              setActionStatus({
-                loading: false,
-                error: content.error ? content.result : null
-              });
-
-              if (!content.error) {
-                addresses = addressList.addresses.filter(function (_address) {
-                  return _address.id !== address.id;
-                });
-                setAddressList(_objectSpread(_objectSpread({}, addressList), {}, {
-                  addresses: addresses
-                }));
-
-                if (handleSuccessUpdate) {
-                  updatedUser = _objectSpread(_objectSpread({}, userState.user), {}, {
-                    addresses: addresses
-                  });
-                  handleSuccessUpdate(updatedUser);
-                }
-              }
-
-              _context3.next = 15;
-              break;
-
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](2);
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: false,
-                error: [_context3.t0.message]
-              }));
-
-            case 15:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[2, 12]]);
-    }));
-
-    return function handleDelete(_x3) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-
+    getUserList();
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    addressList: addressList,
-    setAddressList: setAddressList,
-    actionStatus: actionStatus,
-    handleSetDefault: handleSetDefault,
-    handleDelete: handleDelete
+    userListState: userListState
   })));
 };
 
-exports.AddressList = AddressList;
-AddressList.propTypes = {
+exports.CampaignUserList = CampaignUserList;
+CampaignUserList.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
 
   /**
-   * Behavior when click on address
-   * @param {object} address Addres that was clicked
-   */
-  handleClickAddress: _propTypes.default.func,
-
-  /**
-   * Custom set default address
-   * @param {object} address Address to make to as default
-   */
-  handleClickSetDefault: _propTypes.default.func,
-
-  /**
-   * Custom delete address
-   * @param {object} address Address to make to as default
-   */
-  handleClickDelete: _propTypes.default.func,
-
-  /**
-   * User id to get address from this user
-   * If you don't provide one it is used by the current session by default
-   */
-  userId: _propTypes.default.number,
-
-  /**
-   * Access token to get addresses
-   * If you don't provide one it is used by the current session by default
-   */
-  accessToken: _propTypes.default.string,
-
-  /**
-   * Components types before addresses list
+   * Components types before place list
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Components types after addresses list
+   * Components types after place list
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
 
   /**
-   * Elements before addresses list
+   * Elements before place list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
 
   /**
-   * Elements after addresses list
+   * Elements after place list
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-AddressList.defaultProps = {
-  changeOrderAddressWithDefault: true,
+CampaignUserList.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
