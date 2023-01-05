@@ -183,7 +183,7 @@ var UsersList = function UsersList(props) {
 
   var getUsers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize) {
-      var parameters, paginationParams, where, conditions, verifiedConditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, result, pagination, nextPageItems, remainingItems;
+      var _session$user, parameters, paginationParams, where, conditions, verifiedConditions, searchConditions, _filterValues$changes, _filterValues$changes2, filterConditions, _filterValues$changes3, fetchEndpoint, content, response, requestOptions, _fetchEndpoint, _response, _content, result, pagination, nextPageItems, remainingItems;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -378,15 +378,46 @@ var UsersList = function UsersList(props) {
                 };
               }
 
+              fetchEndpoint = null;
+              content = {};
+
+              if (!(((_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.level) !== 2)) {
+                _context.next = 24;
+                break;
+              }
+
               fetchEndpoint = where ? ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters).where(where) : ordering.setAccessToken(session.token).users().select(propsToFetch).parameters(parameters);
-              _context.next = 17;
+              _context.next = 20;
               return fetchEndpoint.get();
 
-            case 17:
-              _yield$fetchEndpoint$ = _context.sent;
-              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
-              result = _yield$fetchEndpoint$2.result;
-              pagination = _yield$fetchEndpoint$2.pagination;
+            case 20:
+              response = _context.sent;
+              content = response.content;
+              _context.next = 32;
+              break;
+
+            case 24:
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              _fetchEndpoint = where ? "".concat(ordering.root, "/professionals?page=").concat(page, "&page_size=").concat(pageSize, "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/professionals?page=").concat(page, "&page_size=").concat(pageSize);
+              _context.next = 28;
+              return fetch(_fetchEndpoint, requestOptions);
+
+            case 28:
+              _response = _context.sent;
+              _context.next = 31;
+              return _response.json();
+
+            case 31:
+              content = _context.sent;
+
+            case 32:
+              _content = content, result = _content.result, pagination = _content.pagination;
               usersList.users = result;
               setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
                 loading: false
@@ -408,11 +439,11 @@ var UsersList = function UsersList(props) {
                 nextPageItems: nextPageItems
               }));
               setPaginationDetail(_objectSpread({}, pagination));
-              _context.next = 32;
+              _context.next = 44;
               break;
 
-            case 29:
-              _context.prev = 29;
+            case 41:
+              _context.prev = 41;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -422,12 +453,12 @@ var UsersList = function UsersList(props) {
                 }));
               }
 
-            case 32:
+            case 44:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 29]]);
+      }, _callee, null, [[0, 41]]);
     }));
 
     return function getUsers(_x, _x2) {
