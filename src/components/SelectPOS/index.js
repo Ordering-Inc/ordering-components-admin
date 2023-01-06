@@ -6,11 +6,12 @@ import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
- * Component to manage banner behavior without UI component
+ * Component to manage SelectPOS behavior without UI component
  */
 export const SelectPOS = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    handleSuccess
   } = props
 
   const [{ token, user }] = useSession()
@@ -37,6 +38,7 @@ export const SelectPOS = (props) => {
       const content = await response.json()
       if (!content.error) {
         showToast(ToastType.Success, content.result)
+        handleSuccess && handleSuccess()
       } else {
         setFormState({ ...formState, loading: false, error: content.result })
       }
