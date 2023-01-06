@@ -10,7 +10,8 @@ import { useLanguage } from '../../contexts/LanguageContext'
  */
 export const UploadMenu = (props) => {
   const {
-    UIComponent
+    UIComponent,
+    handleSuccess
   } = props
 
   const [{ token, user }] = useSession()
@@ -41,6 +42,7 @@ export const UploadMenu = (props) => {
       const content = await response.json()
       if (!content.error) {
         showToast(ToastType.Success, content.result)
+        handleSuccess && handleSuccess()
       } else {
         setFormState({ ...formState, loading: false, error: content.result })
       }
