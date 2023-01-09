@@ -97,7 +97,7 @@ var ProductStep = function ProductStep(props) {
       business = _useState10[0],
       setBusiness = _useState10[1];
 
-  var allowCodes = ['us', 'ca'];
+  var allowCodes = ['us', 'usa', 'united states', 'united states of american', 'ca', 'canada'];
   /**
    * Method to get business from location
    */
@@ -283,7 +283,7 @@ var ProductStep = function ProductStep(props) {
 
   var getCountries = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _yield$ordering$count, _yield$ordering$count2, error, result, codes, enabled;
+      var _yield$ordering$count, _yield$ordering$count2, error, result, enabled;
 
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
@@ -303,15 +303,12 @@ var ProductStep = function ProductStep(props) {
               result = _yield$ordering$count2.result;
 
               if (!error) {
-                codes = result.filter(function (country) {
+                enabled = result.filter(function (country) {
                   return country === null || country === void 0 ? void 0 : country.enabled;
-                }).map(function (country) {
-                  var _country$code;
+                }).some(function (country) {
+                  var _country$code, _country$name;
 
-                  return country === null || country === void 0 ? void 0 : (_country$code = country.code) === null || _country$code === void 0 ? void 0 : _country$code.toLowerCase();
-                });
-                enabled = allowCodes.some(function (code) {
-                  return codes.includes(code);
+                  return allowCodes.includes(country === null || country === void 0 ? void 0 : (_country$code = country.code) === null || _country$code === void 0 ? void 0 : _country$code.toLowerCase()) || allowCodes.includes(country === null || country === void 0 ? void 0 : (_country$name = country.name) === null || _country$name === void 0 ? void 0 : _country$name.toLowerCase());
                 });
                 setCountriesState(_objectSpread(_objectSpread({}, countriesState), {}, {
                   loading: false,

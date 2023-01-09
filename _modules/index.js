@@ -1299,6 +1299,12 @@ Object.defineProperty(exports, "SearchOptions", {
     return _SearchOptions.SearchOptions;
   }
 });
+Object.defineProperty(exports, "SelectPOS", {
+  enumerable: true,
+  get: function get() {
+    return _SelectPOS.SelectPOS;
+  }
+});
 Object.defineProperty(exports, "SessionContext", {
   enumerable: true,
   get: function get() {
@@ -1429,6 +1435,12 @@ Object.defineProperty(exports, "ToastType", {
   enumerable: true,
   get: function get() {
     return _ToastContext.ToastType;
+  }
+});
+Object.defineProperty(exports, "UploadMenu", {
+  enumerable: true,
+  get: function get() {
+    return _UploadMenu.UploadMenu;
   }
 });
 Object.defineProperty(exports, "UpsellingPage", {
@@ -1964,6 +1976,8 @@ var _RecoveryNotificationList = require("./components/RecoveryNotificationList")
 
 var _SearchOptions = require("./components/SearchOptions");
 
+var _SelectPOS = require("./components/SelectPOS");
+
 var _Schedule = require("./components/Schedule");
 
 var _SidebarMenu = require("./components/SidebarMenu");
@@ -1983,6 +1997,8 @@ var _SingleRecoveryNotification = require("./components/SingleRecoveryNotificati
 var _SitesAuthSettings = require("./components/SitesAuthSettings");
 
 var _SiteTheme = require("./components/SiteTheme");
+
+var _UploadMenu = require("./components/UploadMenu");
 
 var _UserFormDetails = require("./components/UserFormDetails");
 
