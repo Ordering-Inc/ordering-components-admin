@@ -177,6 +177,7 @@ import { RecoveryActionListing } from './components/RecoveryActionListing'
 import { RecoveryActionDetail } from './components/RecoveryActionDetail'
 import { RecoveryNotificationList } from './components/RecoveryNotificationList'
 import { SearchOptions } from './components/SearchOptions'
+import { SelectPOS } from './components/SelectPOS'
 import { Schedule } from './components/Schedule'
 import { SidebarMenu } from './components/SidebarMenu'
 import { SignupForm } from './components/SignupForm'
@@ -187,6 +188,7 @@ import { SingleProductCard } from './components/SingleProductCard'
 import { SingleRecoveryNotification } from './components/SingleRecoveryNotification'
 import { SitesAuthSettings } from './components/SitesAuthSettings'
 import { SiteTheme } from './components/SiteTheme'
+import { UploadMenu } from './components/UploadMenu'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UsersExportCSV } from './components/UsersExportCSV'
 import { UpsellingPage } from './components/UpsellingPage'
@@ -423,6 +425,7 @@ export {
   SingleRecoveryNotification,
   SitesAuthSettings,
   SearchOptions,
+  SelectPOS,
   Schedule,
   SidebarMenu,
   SignupForm,
@@ -432,6 +435,7 @@ export {
   SingleProductCard,
   SingleBusinessProduct,
   SingleBusinessCategory,
+  UploadMenu,
   UserFormDetails,
   UsersExportCSV,
   UpsellingPage,
