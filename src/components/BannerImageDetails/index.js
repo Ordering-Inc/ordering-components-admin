@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes, { string } from 'prop-types'
 import { useApi } from '../../contexts/ApiContext'
+import { useLanguage } from '../../contexts/LanguageContext'
 
 /**
  * Component to manage Banner Image link behavior without UI component
  */
-export const BannerImageLink = (props) => {
+export const BannerImageDetails = (props) => {
   const {
     UIComponent,
     propsToFetch,
     isSearchByName,
-    handleUpdateBannerItem
+    handleUpdateBannerItem,
+    handleAddBannerItem
   } = props
+
+  const [, t] = useLanguage()
   const [ordering] = useApi()
   const [searchValue, setSearchValue] = useState(null)
   const [imageState, setImageState] = useState({ image: props.image, loading: false, error: null })
+  const [changesState, setChangesState] = useState({ changes: {}, loading: false, error: null })
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], result: { error: null } })
   const [selectedLinkType, setSelectedLinkType] = useState(props.image?.action?.type || null)
   const [selectedBusinessId, setSelectedBusinessId] = useState(null)
@@ -22,6 +27,19 @@ export const BannerImageLink = (props) => {
   const [selectedProductId, setSelectedProductId] = useState(null)
 
   const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
+
+  /**
+   * Method to change the option state
+   */
+  const handleChangeItem = (changes) => {
+    setChangesState(prevState => ({
+      ...prevState,
+      changes: {
+        ...prevState?.changes,
+        ...changes
+      }
+    }))
+  }
 
   /**
    * Method to get business list from API
@@ -87,11 +105,12 @@ export const BannerImageLink = (props) => {
     }
   }
 
-  const handleSaveLink = async () => {
+  const handleSaveImage = async () => {
     try {
       setImageState({
         ...imageState,
-        loading: true
+        loading: true,
+        error: null
       })
       let action = null
       if (selectedLinkType === 'business') {
@@ -108,7 +127,52 @@ export const BannerImageLink = (props) => {
           product_id: selectedProductId
         }
       }
-      const content = await handleUpdateBannerItem({ action: JSON.stringify(action) }, imageState.image?.id, true)
+      let payload = {}
+      payload.action = JSON.stringify(action)
+      if (changesState.changes) {
+        payload = { ...payload, ...changesState.changes }
+      }
+
+      if (!selectedLinkType) {
+        setImageState({
+          ...imageState,
+          loading: false,
+          error: [t('VALIDATION_ERROR_REQUIRED', 'The link type is required').replace('_attribute_', t('LINK_TYPE', 'Link type'))]
+        })
+        return
+      }
+
+      if (selectedLinkType === 'business' && !selectedBusinessId) {
+        setImageState({
+          ...imageState,
+          loading: false,
+          error: [t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('BUSINESS', 'Business'))]
+        })
+        return
+      }
+      if (selectedLinkType === 'product' && !selectedProductId) {
+        setImageState({
+          ...imageState,
+          loading: false,
+          error: [t('VALIDATION_ERROR_REQUIRED', 'The business is required').replace('_attribute_', t('PRODUCT', 'Product'))]
+        })
+        return
+      }
+
+      let content
+      if (props.image) {
+        content = await handleUpdateBannerItem(payload, imageState.image?.id, true)
+      } else {
+        if (!changesState.changes?.image) {
+          setImageState({
+            ...imageState,
+            loading: false,
+            error: [t('VALIDATION_ERROR_REQUIRED', 'The image is required').replace('_attribute_', t('IMAGE', ''))]
+          })
+          return
+        }
+        content = await handleAddBannerItem(payload, true)
+      }
       if (content.error) {
         setImageState({
           ...imageState,
@@ -153,6 +217,9 @@ export const BannerImageLink = (props) => {
       {UIComponent && (
         <UIComponent
           {...props}
+          imageState={imageState}
+          changesState={changesState}
+          handleChangeItem={handleChangeItem}
           searchValue={searchValue}
           onSearch={setSearchValue}
           businessList={businessList}
@@ -164,14 +231,14 @@ export const BannerImageLink = (props) => {
           setSelectedCategoryId={setSelectedCategoryId}
           selectedProductId={selectedProductId}
           setSelectedProductId={setSelectedProductId}
-          handleSaveLink={handleSaveLink}
+          handleSaveImage={handleSaveImage}
         />
       )}
     </>
   )
 }
 
-BannerImageLink.propTypes = {
+BannerImageDetails.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -182,6 +249,6 @@ BannerImageLink.propTypes = {
   propsToFetch: PropTypes.arrayOf(string)
 }
 
-BannerImageLink.defaultProps = {
+BannerImageDetails.defaultProps = {
   propsToFetch: ['id', 'name', 'logo', 'slug']
 }
