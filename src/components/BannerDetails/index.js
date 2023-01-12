@@ -95,7 +95,7 @@ export const BannerDetails = (props) => {
    * Method to add new banner item from API
    * @param {Object} params
    */
-  const handleAddBannerItem = async (params) => {
+  const handleAddBannerItem = async (params, isReturn = false) => {
     try {
       setChangesState(prevState => ({ ...prevState, loading: true }))
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -132,8 +132,12 @@ export const BannerDetails = (props) => {
       } else {
         setChangesState({ ...changesState, loading: false, error: content.result })
       }
+      if (isReturn) return content
     } catch (err) {
       setChangesState({ ...changesState, loading: false, error: [err.message] })
+      if (isReturn) {
+        return { error: true, result: err }
+      }
     }
   }
 
