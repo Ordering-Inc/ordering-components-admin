@@ -134,6 +134,7 @@ import { MomentOption } from './components/MomentOption'
 import { MultiCountrySettings } from './components/MultiCountrySettings'
 import { MyOrders } from './components/MyOrders'
 import { MyOrdersList } from './components/MyOrdersList'
+import { OccupationSelector } from './components/OccupationSelector'
 import { OpenCartListing } from './components/OpenCartListing'
 import { OpenCartsDetail } from './components/OpenCartsDetail'
 import { OpenCartFilter } from './components/OpenCartFilter'
@@ -387,6 +388,7 @@ export {
   MyOrders,
   MyOrdersList,
   MultiCountrySettings,
+  OccupationSelector,
   OpenCartListing,
   OrderingWebsite,
   OpenCartsDetail,
