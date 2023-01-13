@@ -4,6 +4,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const UsersList = (props) => {
   const {
@@ -25,6 +26,7 @@ export const UsersList = (props) => {
   const [session] = useSession()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
+  const [events] = useEvent()
 
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
@@ -587,6 +589,18 @@ export const UsersList = (props) => {
       getOccupations()
     }
   }, [isProfessional])
+
+  useEffect(() => {
+    events.on('occupations_update', (data) => {
+      setOccupationsState({
+        ...occupationsState,
+        occupations: data
+      })
+    })
+    return () => {
+      events.off('occupations_update')
+    }
+  }, [events])
 
   return (
     <>
