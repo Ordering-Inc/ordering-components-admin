@@ -915,6 +915,12 @@ Object.defineProperty(exports, "MyOrdersList", {
     return _MyOrdersList.MyOrdersList;
   }
 });
+Object.defineProperty(exports, "OccupationSelector", {
+  enumerable: true,
+  get: function get() {
+    return _OccupationSelector.OccupationSelector;
+  }
+});
 Object.defineProperty(exports, "OpenCartFilter", {
   enumerable: true,
   get: function get() {
@@ -1949,6 +1955,8 @@ var _MultiCountrySettings = require("./components/MultiCountrySettings");
 var _MyOrders = require("./components/MyOrders");
 
 var _MyOrdersList = require("./components/MyOrdersList");
+
+var _OccupationSelector = require("./components/OccupationSelector");
 
 var _OpenCartListing = require("./components/OpenCartListing");
 
