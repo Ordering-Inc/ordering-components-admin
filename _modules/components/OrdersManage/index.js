@@ -150,11 +150,6 @@ var OrdersManage = function OrdersManage(props) {
       numberOfOrdersByStatus = _useState18[0],
       setNumberOfOrdersByStatus = _useState18[1];
 
-  var _useState19 = (0, _react.useState)(null),
-      _useState20 = _slicedToArray(_useState19, 2),
-      allowColumns = _useState20[0],
-      setAllowColumns = _useState20[1];
-
   var allowColumnsModel = {
     slaBar: {
       visable: false,
@@ -228,6 +223,14 @@ var OrdersManage = function OrdersManage(props) {
       colSpan: 1,
       order: 6
     },
+    eta: {
+      visable: true,
+      title: t('ETA', 'ETA'),
+      className: 'eta',
+      draggable: true,
+      colSpan: 1,
+      order: 7
+    },
     total: {
       visable: true,
       title: '',
@@ -237,9 +240,15 @@ var OrdersManage = function OrdersManage(props) {
       order: 10
     }
   };
+
+  var _useState19 = (0, _react.useState)(allowColumnsModel),
+      _useState20 = _slicedToArray(_useState19, 2),
+      allowColumns = _useState20[0],
+      setAllowColumns = _useState20[1];
   /**
    * Object to save driver group list
    */
+
 
   var _useState21 = (0, _react.useState)({
     groups: [],

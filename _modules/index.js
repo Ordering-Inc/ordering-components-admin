@@ -171,6 +171,12 @@ Object.defineProperty(exports, "BusinessDetails", {
     return _BusinessDetails.BusinessDetails;
   }
 });
+Object.defineProperty(exports, "BusinessEta", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessEta.BusinessEta;
+  }
+});
 Object.defineProperty(exports, "BusinessFormDetails", {
   enumerable: true,
   get: function get() {
@@ -1673,6 +1679,8 @@ var _BusinessDeliveryZone = require("./components/BusinessDeliveryZone");
 var _BusinessDeliveryZoneShare = require("./components/BusinessDeliveryZoneShare");
 
 var _BusinessDetails = require("./components/BusinessDetails");
+
+var _BusinessEta = require("./components/BusinessEta");
 
 var _BusinessFormDetails = require("./components/BusinessFormDetails");
 
