@@ -32,8 +32,27 @@ export const UserDetails = (props) => {
         ...userState,
         loading: true
       })
-      const fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch)
-      const { content: { result } } = await fetchEndpoint.get()
+      let fetchEndpoint = null
+      let content = {}
+
+      if (session.user?.level !== 2) {
+        fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch)
+        const response = await fetchEndpoint.get()
+        content = response.content
+      } else {
+        const requestOptions = {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.token}`
+          }
+        }
+        fetchEndpoint = `${ordering.root}/professionals/${userId}`
+        const response = await fetch(fetchEndpoint, requestOptions)
+        content = await response.json()
+      }
+      const { result } = content
+
       const user = Array.isArray(result) ? null : result
       setUserState({
         ...userState,
@@ -85,9 +104,26 @@ export const UserDetails = (props) => {
         setScheduleState({ ...scheduleState, loading: true })
 
         const _change = { schedule: JSON.stringify(scheduleState?.change) }
-        const { content: { error, result } } = await ordering.users(userState?.user?.id).save(_change, {
-          accessToken: accessToken
-        })
+        let content = {}
+        if (session.user?.level !== 2) {
+          const response = await ordering.users(userState?.user?.id).save(_change, {
+            accessToken: accessToken
+          })
+          content = response.content
+        } else {
+          const requestOptions = {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.token}`
+            },
+            body: JSON.stringify(_change)
+          }
+          const response = await fetch(`${ordering.root}/professionals/${userState?.user?.id}`, requestOptions)
+          content = await response.json()
+        }
+
+        const { result, error } = content
 
         if (!error) {
           setScheduleState({ ...scheduleState, change: [], loading: false, error: false })
