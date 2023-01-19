@@ -106,7 +106,7 @@ var UserDetails = function UserDetails(props) {
 
   var getUser = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var fetchEndpoint, _yield$fetchEndpoint$, result, user;
+      var _session$user, fetchEndpoint, content, response, requestOptions, _response, _content, result, user;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -116,35 +116,68 @@ var UserDetails = function UserDetails(props) {
               setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: true
               }));
+              fetchEndpoint = null;
+              content = {};
+
+              if (!(((_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.level) !== 2)) {
+                _context.next = 12;
+                break;
+              }
+
               fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch);
-              _context.next = 5;
+              _context.next = 8;
               return fetchEndpoint.get();
 
-            case 5:
-              _yield$fetchEndpoint$ = _context.sent;
-              result = _yield$fetchEndpoint$.content.result;
+            case 8:
+              response = _context.sent;
+              content = response.content;
+              _context.next = 20;
+              break;
+
+            case 12:
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                }
+              };
+              fetchEndpoint = "".concat(ordering.root, "/professionals/").concat(userId);
+              _context.next = 16;
+              return fetch(fetchEndpoint, requestOptions);
+
+            case 16:
+              _response = _context.sent;
+              _context.next = 19;
+              return _response.json();
+
+            case 19:
+              content = _context.sent;
+
+            case 20:
+              _content = content, result = _content.result;
               user = Array.isArray(result) ? null : result;
               setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: false,
                 user: user
               }));
-              _context.next = 14;
+              _context.next = 28;
               break;
 
-            case 11:
-              _context.prev = 11;
+            case 25:
+              _context.prev = 25;
               _context.t0 = _context["catch"](0);
               setUserState(_objectSpread(_objectSpread({}, userState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 14:
+            case 28:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 25]]);
     }));
 
     return function getUser() {
@@ -219,7 +252,7 @@ var UserDetails = function UserDetails(props) {
 
   var handleScheduleUpdateUser = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-      var _scheduleState$change, _userState$user, _userState$user2, _change, _yield$ordering$users, _yield$ordering$users2, error, result;
+      var _scheduleState$change, _userState$user, _session$user2, _change, content, _userState$user2, response, _userState$user3, requestOptions, _response2, _content2, result, error;
 
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) {
@@ -228,7 +261,7 @@ var UserDetails = function UserDetails(props) {
               _context3.prev = 0;
 
               if (!((scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$change = scheduleState.change) === null || _scheduleState$change === void 0 ? void 0 : _scheduleState$change.length) > 0 && userState !== null && userState !== void 0 && (_userState$user = userState.user) !== null && _userState$user !== void 0 && _userState$user.id)) {
-                _context3.next = 14;
+                _context3.next = 24;
                 break;
               }
 
@@ -239,16 +272,46 @@ var UserDetails = function UserDetails(props) {
               _change = {
                 schedule: JSON.stringify(scheduleState === null || scheduleState === void 0 ? void 0 : scheduleState.change)
               };
-              _context3.next = 7;
+              content = {};
+
+              if (!(((_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.level) !== 2)) {
+                _context3.next = 13;
+                break;
+              }
+
+              _context3.next = 9;
               return ordering.users(userState === null || userState === void 0 ? void 0 : (_userState$user2 = userState.user) === null || _userState$user2 === void 0 ? void 0 : _userState$user2.id).save(_change, {
                 accessToken: accessToken
               });
 
-            case 7:
-              _yield$ordering$users = _context3.sent;
-              _yield$ordering$users2 = _yield$ordering$users.content;
-              error = _yield$ordering$users2.error;
-              result = _yield$ordering$users2.result;
+            case 9:
+              response = _context3.sent;
+              content = response.content;
+              _context3.next = 20;
+              break;
+
+            case 13:
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(session.token)
+                },
+                body: JSON.stringify(_change)
+              };
+              _context3.next = 16;
+              return fetch("".concat(ordering.root, "/professionals/").concat(userState === null || userState === void 0 ? void 0 : (_userState$user3 = userState.user) === null || _userState$user3 === void 0 ? void 0 : _userState$user3.id), requestOptions);
+
+            case 16:
+              _response2 = _context3.sent;
+              _context3.next = 19;
+              return _response2.json();
+
+            case 19:
+              content = _context3.sent;
+
+            case 20:
+              _content2 = content, result = _content2.result, error = _content2.error;
 
               if (!error) {
                 setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
@@ -273,18 +336,18 @@ var UserDetails = function UserDetails(props) {
                 showToast(_ToastContext.ToastType.Error, t('SCHEDULE_UPDATED_FAILED', 'Schedule Update Failed'));
               }
 
-              _context3.next = 15;
+              _context3.next = 25;
               break;
 
-            case 14:
+            case 24:
               showToast(_ToastContext.ToastType.Info, t('NOT_CHANGED', 'Not Changed'));
 
-            case 15:
-              _context3.next = 22;
+            case 25:
+              _context3.next = 32;
               break;
 
-            case 17:
-              _context3.prev = 17;
+            case 27:
+              _context3.prev = 27;
               _context3.t0 = _context3["catch"](0);
               setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
                 change: [],
@@ -297,12 +360,12 @@ var UserDetails = function UserDetails(props) {
               }));
               showToast(_ToastContext.ToastType.Error, _context3.t0 === null || _context3.t0 === void 0 ? void 0 : _context3.t0.message);
 
-            case 22:
+            case 32:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[0, 17]]);
+      }, _callee3, null, [[0, 27]]);
     }));
 
     return function handleScheduleUpdateUser() {
@@ -316,7 +379,7 @@ var UserDetails = function UserDetails(props) {
 
   var handleGoogleCalendarSync = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _userState$user3, requestOptions, response, content;
+      var _userState$user4, requestOptions, response, content;
 
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
@@ -336,7 +399,7 @@ var UserDetails = function UserDetails(props) {
                 }
               };
               _context4.next = 6;
-              return fetch("".concat(ordering.root, "/users/").concat((_userState$user3 = userState.user) === null || _userState$user3 === void 0 ? void 0 : _userState$user3.id, "/google/calendar/sync"), requestOptions);
+              return fetch("".concat(ordering.root, "/users/").concat((_userState$user4 = userState.user) === null || _userState$user4 === void 0 ? void 0 : _userState$user4.id, "/google/calendar/sync"), requestOptions);
 
             case 6:
               response = _context4.sent;
@@ -385,14 +448,14 @@ var UserDetails = function UserDetails(props) {
 
   var handleGoogleAccountLink = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var _userState$user4;
+      var _userState$user5;
 
       var connect, interval, timeout;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              connect = window.open("".concat(ordering.root, "/users/").concat((_userState$user4 = userState.user) === null || _userState$user4 === void 0 ? void 0 : _userState$user4.id, "/google/permissions/request?name=calendar&token=").concat(session.token), '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
+              connect = window.open("".concat(ordering.root, "/users/").concat((_userState$user5 = userState.user) === null || _userState$user5 === void 0 ? void 0 : _userState$user5.id, "/google/permissions/request?name=calendar&token=").concat(session.token), '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
               interval = setInterval(function () {
                 if (!connect.closed) {
                   connect.postMessage('data', ordering.url);
