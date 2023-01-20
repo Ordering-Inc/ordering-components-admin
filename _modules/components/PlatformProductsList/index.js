@@ -102,7 +102,7 @@ var PlatformProductsList = function PlatformProductsList(props) {
                 }
               };
               _context.next = 5;
-              return fetch("".concat(ordering.root, "/platform_products"), requestOptions);
+              return fetch("".concat(ordering.root, "/platform_products?mode=dashboard"), requestOptions);
 
             case 5:
               response = _context.sent;

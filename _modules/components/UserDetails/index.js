@@ -379,7 +379,7 @@ var UserDetails = function UserDetails(props) {
 
   var handleGoogleCalendarSync = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _userState$user4, requestOptions, response, content;
+      var _session$user3, requestOptions, response, _userState$user4, _userState$user5, content;
 
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) {
@@ -398,15 +398,33 @@ var UserDetails = function UserDetails(props) {
                   Authorization: "Bearer ".concat(session.token)
                 }
               };
-              _context4.next = 6;
+              response = null;
+
+              if (!(((_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.level) !== 2)) {
+                _context4.next = 11;
+                break;
+              }
+
+              _context4.next = 8;
               return fetch("".concat(ordering.root, "/users/").concat((_userState$user4 = userState.user) === null || _userState$user4 === void 0 ? void 0 : _userState$user4.id, "/google/calendar/sync"), requestOptions);
 
-            case 6:
+            case 8:
               response = _context4.sent;
-              _context4.next = 9;
+              _context4.next = 14;
+              break;
+
+            case 11:
+              _context4.next = 13;
+              return fetch("".concat(ordering.root, "/professionals/").concat((_userState$user5 = userState.user) === null || _userState$user5 === void 0 ? void 0 : _userState$user5.id, "/google/calendar/sync"), requestOptions);
+
+            case 13:
+              response = _context4.sent;
+
+            case 14:
+              _context4.next = 16;
               return response.json();
 
-            case 9:
+            case 16:
               content = _context4.sent;
 
               if (!content.error) {
@@ -418,23 +436,23 @@ var UserDetails = function UserDetails(props) {
                 });
               }
 
-              _context4.next = 16;
+              _context4.next = 23;
               break;
 
-            case 13:
-              _context4.prev = 13;
+            case 20:
+              _context4.prev = 20;
               _context4.t0 = _context4["catch"](0);
               setActionStatus({
                 loading: false,
                 error: [_context4.t0.message]
               });
 
-            case 16:
+            case 23:
             case "end":
               return _context4.stop();
           }
         }
-      }, _callee4, null, [[0, 13]]);
+      }, _callee4, null, [[0, 20]]);
     }));
 
     return function handleGoogleCalendarSync() {
@@ -448,14 +466,14 @@ var UserDetails = function UserDetails(props) {
 
   var handleGoogleAccountLink = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var _userState$user5;
+      var _userState$user6;
 
       var connect, interval, timeout;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
           switch (_context5.prev = _context5.next) {
             case 0:
-              connect = window.open("".concat(ordering.root, "/users/").concat((_userState$user5 = userState.user) === null || _userState$user5 === void 0 ? void 0 : _userState$user5.id, "/google/permissions/request?name=calendar&token=").concat(session.token), '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
+              connect = window.open("".concat(ordering.root, "/users/").concat((_userState$user6 = userState.user) === null || _userState$user6 === void 0 ? void 0 : _userState$user6.id, "/google/permissions/request?name=calendar&token=").concat(session.token), '_blank', 'directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,clearcache=yes');
               interval = setInterval(function () {
                 if (!connect.closed) {
                   connect.postMessage('data', ordering.url);
