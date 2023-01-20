@@ -168,7 +168,12 @@ export const UserDetails = (props) => {
           Authorization: `Bearer ${session.token}`
         }
       }
-      const response = await fetch(`${ordering.root}/users/${userState.user?.id}/google/calendar/sync`, requestOptions)
+      let response = null
+      if (session.user?.level !== 2) {
+        response = await fetch(`${ordering.root}/users/${userState.user?.id}/google/calendar/sync`, requestOptions)
+      } else {
+        response = await fetch(`${ordering.root}/professionals/${userState.user?.id}/google/calendar/sync`, requestOptions)
+      }
       const content = await response.json()
       if (!content.error) {
         showToast(ToastType.Success, t('YOUR_CALENDAR_WILL_BE_SYNCHRONIZED', 'Your calendar will be synchronized'))

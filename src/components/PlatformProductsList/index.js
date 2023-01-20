@@ -32,7 +32,7 @@ export const PlatformProductsList = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/platform_products`, requestOptions)
+      const response = await fetch(`${ordering.root}/platform_products?mode=dashboard`, requestOptions)
       const { error, result } = await response.json()
       setPlatformProductsListState({
         loading: false,
