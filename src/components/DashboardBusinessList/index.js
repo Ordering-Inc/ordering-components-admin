@@ -38,6 +38,15 @@ export const DashboardBusinessList = (props) => {
   const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
   const [businessIds, setBusinessIds] = useState([])
+  const [filterValues, setFilterValues] = useState({})
+
+  /**
+   * Save filter type values
+   * @param {object} types
+   */
+  const handleChangeFilterValues = (types) => {
+    setFilterValues(types)
+  }
 
   /**
    * Method to get businesses from API
@@ -120,6 +129,75 @@ export const DashboardBusinessList = (props) => {
         conector: 'OR',
         conditions: searchConditions
       })
+    }
+
+    if (Object.keys(filterValues).length > 0) {
+      const filterConditons = []
+
+      if (filterValues?.name && filterValues?.name !== null) {
+        filterConditons.push(
+          {
+            attribute: 'name',
+            value: {
+              condition: 'ilike',
+              value: encodeURI(`%${filterValues?.name}%`)
+            }
+          }
+        )
+      }
+      if (filterValues?.availableMenus?.value !== '') {
+        filterConditons.push(
+          {
+            attribute: 'available_menus_count',
+            value: {
+              condition: filterValues?.availableMenus?.condition,
+              value: filterValues?.availableMenus?.value
+            }
+          }
+        )
+      }
+      if (filterValues?.menus?.value !== '') {
+        filterConditons.push(
+          {
+            attribute: 'menus_count',
+            value: {
+              condition: filterValues?.menus?.condition,
+              value: filterValues?.menus?.value
+            }
+          }
+        )
+      }
+      if (filterValues?.cityIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'city_id',
+            value: filterValues?.cityIds
+          }
+        )
+      }
+      if (filterValues?.enabled !== null) {
+        filterConditons.push(
+          {
+            attribute: 'enabled',
+            value: filterValues?.enabled
+          }
+        )
+      }
+      if (filterValues?.featured !== null) {
+        filterConditons.push(
+          {
+            attribute: 'featured',
+            value: filterValues?.featured
+          }
+        )
+      }
+
+      if (filterConditons.length) {
+        conditions.push({
+          conector: 'AND',
+          conditions: filterConditons
+        })
+      }
     }
 
     if (conditions.length) {
@@ -427,7 +505,7 @@ export const DashboardBusinessList = (props) => {
     } else {
       loadBusinesses()
     }
-  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected])
+  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected, filterValues])
 
   useEffect(() => {
     getCountries()
@@ -458,6 +536,8 @@ export const DashboardBusinessList = (props) => {
             handleDeleteMultiBusinesses={handleDeleteMultiBusinesses}
             handleChangeBusinessActiveState={handleChangeBusinessActiveState}
             countriesState={countriesState}
+            filterValues={filterValues}
+            handleChangeFilterValues={handleChangeFilterValues}
           />
         )
       }
