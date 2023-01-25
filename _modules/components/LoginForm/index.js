@@ -65,7 +65,8 @@ var LoginForm = function LoginForm(props) {
       useDefualtSessionManager = props.useDefualtSessionManager,
       urlToRedirect = props.urlToRedirect,
       allowedLevels = props.allowedLevels,
-      billingUrl = props.billingUrl;
+      billingUrl = props.billingUrl,
+      handleRedirect = props.handleRedirect;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -142,7 +143,7 @@ var LoginForm = function LoginForm(props) {
   var useLoginOtp = useLoginOtpEmail;
   defaultLoginTab = useLoginByEmail ? 'email' : 'otp';
 
-  var _useState13 = (0, _react.useState)(defaultLoginTab),
+  var _useState13 = (0, _react.useState)(),
       _useState14 = _slicedToArray(_useState13, 2),
       loginTab = _useState14[0],
       setLoginTab = _useState14[1];
@@ -306,7 +307,7 @@ var LoginForm = function LoginForm(props) {
               }
 
               if (urlToRedirect) {
-                window.location.href = "".concat(window.location.origin).concat(urlToRedirect);
+                handleRedirect ? handleRedirect(urlToRedirect) : window.location.href = "".concat(window.location.origin).concat(urlToRedirect);
               }
 
             case 42:
@@ -613,6 +614,9 @@ var LoginForm = function LoginForm(props) {
 
     setIsReCaptchaEnable((ordering === null || ordering === void 0 ? void 0 : ordering.project) && configs && Object.keys(configs).length > 0 && (configs === null || configs === void 0 ? void 0 : (_configs$security_rec = configs.security_recaptcha_auth) === null || _configs$security_rec === void 0 ? void 0 : _configs$security_rec.value) === '1');
   }, [configs, ordering === null || ordering === void 0 ? void 0 : ordering.project]);
+  (0, _react.useEffect)(function () {
+    setLoginTab(defaultLoginTab);
+  }, [defaultLoginTab]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     formState: formState,
     loginTab: loginTab,

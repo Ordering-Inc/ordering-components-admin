@@ -136,6 +136,20 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
       _useState14 = _slicedToArray(_useState13, 2),
       businessIds = _useState14[0],
       setBusinessIds = _useState14[1];
+
+  var _useState15 = (0, _react.useState)({}),
+      _useState16 = _slicedToArray(_useState15, 2),
+      filterValues = _useState16[0],
+      setFilterValues = _useState16[1];
+  /**
+   * Save filter type values
+   * @param {object} types
+   */
+
+
+  var handleChangeFilterValues = function handleChangeFilterValues(types) {
+    setFilterValues(types);
+  };
   /**
    * Method to get businesses from API
    * @param {number, number} pageSize page
@@ -144,7 +158,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
 
   var getBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(pageSize, page) {
-      var where, conditions, options, searchConditions, functionFetch;
+      var where, conditions, options, searchConditions, _filterValues$availab, _filterValues$menus, filterConditons, _filterValues$availab2, _filterValues$availab3, _filterValues$menus2, _filterValues$menus3, functionFetch;
+
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
@@ -224,6 +239,68 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                 });
               }
 
+              if (Object.keys(filterValues).length > 0) {
+                filterConditons = [];
+
+                if (filterValues !== null && filterValues !== void 0 && filterValues.name && (filterValues === null || filterValues === void 0 ? void 0 : filterValues.name) !== null) {
+                  filterConditons.push({
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.name, "%"))
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$availab = filterValues.availableMenus) === null || _filterValues$availab === void 0 ? void 0 : _filterValues$availab.value) !== '') {
+                  filterConditons.push({
+                    attribute: 'available_menus_count',
+                    value: {
+                      condition: filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$availab2 = filterValues.availableMenus) === null || _filterValues$availab2 === void 0 ? void 0 : _filterValues$availab2.condition,
+                      value: filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$availab3 = filterValues.availableMenus) === null || _filterValues$availab3 === void 0 ? void 0 : _filterValues$availab3.value
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$menus = filterValues.menus) === null || _filterValues$menus === void 0 ? void 0 : _filterValues$menus.value) !== '') {
+                  filterConditons.push({
+                    attribute: 'menus_count',
+                    value: {
+                      condition: filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$menus2 = filterValues.menus) === null || _filterValues$menus2 === void 0 ? void 0 : _filterValues$menus2.condition,
+                      value: filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$menus3 = filterValues.menus) === null || _filterValues$menus3 === void 0 ? void 0 : _filterValues$menus3.value
+                    }
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'city_id',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.enabled) !== null) {
+                  filterConditons.push({
+                    attribute: 'enabled',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.enabled
+                  });
+                }
+
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.featured) !== null) {
+                  filterConditons.push({
+                    attribute: 'featured',
+                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.featured
+                  });
+                }
+
+                if (filterConditons.length) {
+                  conditions.push({
+                    conector: 'AND',
+                    conditions: filterConditons
+                  });
+                }
+              }
+
               if (conditions.length) {
                 where = {
                   conditions: conditions,
@@ -232,13 +309,13 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
               }
 
               functionFetch = asDashboard ? ordering.setAccessToken(session.token).businesses().select(propsToFetch).asDashboard().where(where) : ordering.setAccessToken(session.token).businesses().select(propsToFetch).where(where);
-              _context.next = 10;
+              _context.next = 11;
               return functionFetch.get(options);
 
-            case 10:
+            case 11:
               return _context.abrupt("return", _context.sent);
 
-            case 11:
+            case 12:
             case "end":
               return _context.stop();
           }
@@ -801,7 +878,7 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     } else {
       loadBusinesses();
     }
-  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected]);
+  }, [session, searchValue, selectedBusinessActiveState, businessTypeSelected, filterValues]);
   (0, _react.useEffect)(function () {
     getCountries();
   }, []);
@@ -824,7 +901,9 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     handleSucessUpdateBusiness: handleSucessUpdateBusiness,
     handleDeleteMultiBusinesses: handleDeleteMultiBusinesses,
     handleChangeBusinessActiveState: handleChangeBusinessActiveState,
-    countriesState: countriesState
+    countriesState: countriesState,
+    filterValues: filterValues,
+    handleChangeFilterValues: handleChangeFilterValues
   })));
 };
 
