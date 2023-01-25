@@ -31,6 +31,7 @@ import { BusinessDeliveryZoneShare } from './components/BusinessDeliveryZoneShar
 import { BusinessDetails } from './components/BusinessDetails'
 import { BusinessEta } from './components/BusinessEta'
 import { BusinessFormDetails } from './components/BusinessFormDetails'
+import { BusinessFilter } from './components/BusinessFilter'
 import { BusinessGallery } from './components/BusinessGallery'
 import { BusinessGprsPrinters } from './components/BusinessGprsPrinters'
 import { BusinessInformation } from './components/BusinessInformation'
@@ -202,6 +203,7 @@ import { SiteTheme } from './components/SiteTheme'
 import { UploadMenu } from './components/UploadMenu'
 import { UserFormDetails } from './components/UserFormDetails'
 import { UsersExportCSV } from './components/UsersExportCSV'
+import { UsersFilter } from './components/UsersFilter'
 import { UpsellingPage } from './components/UpsellingPage'
 import { WrapperGoogleMaps } from './components/WrapperGoogleMaps'
 import { OrderDetails } from './components/OrderDetails'
@@ -285,6 +287,7 @@ export {
   BusinessDetails,
   BusinessEta,
   BusinessFormDetails,
+  BusinessFilter,
   BusinessGallery,
   BusinessGprsPrinters,
   BusinessInformation,
@@ -489,6 +492,7 @@ export {
   Analytics,
   UsersList,
   UserTypeFilter,
+  UsersFilter,
   UserDetails,
   UserMetaFields,
   UserWallet,
