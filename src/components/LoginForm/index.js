@@ -17,7 +17,8 @@ export const LoginForm = (props) => {
     useDefualtSessionManager,
     urlToRedirect,
     allowedLevels,
-    billingUrl
+    billingUrl,
+    handleRedirect
   } = props
 
   const [ordering] = useApi()
@@ -39,7 +40,7 @@ export const LoginForm = (props) => {
   const useLoginOtp = useLoginOtpEmail
   defaultLoginTab = useLoginByEmail ? 'email' : 'otp'
 
-  const [loginTab, setLoginTab] = useState(defaultLoginTab)
+  const [loginTab, setLoginTab] = useState()
   const [otpType, setOtpType] = useState('email')
   const [otpState, setOtpState] = useState('')
 
@@ -133,7 +134,9 @@ export const LoginForm = (props) => {
         }
 
         if (urlToRedirect) {
-          window.location.href = `${window.location.origin}${urlToRedirect}`
+          handleRedirect
+            ? handleRedirect(urlToRedirect)
+            : window.location.href = `${window.location.origin}${urlToRedirect}`
         }
       }
       setFormState({
@@ -294,6 +297,10 @@ export const LoginForm = (props) => {
       Object.keys(configs).length > 0 &&
       configs?.security_recaptcha_auth?.value === '1')
   }, [configs, ordering?.project])
+
+  useEffect(() => {
+    setLoginTab(defaultLoginTab)
+  }, [defaultLoginTab])
 
   return (
     <>
