@@ -115,12 +115,7 @@ ReviewProductList.propTypes = {
   /**
    * true, flag to decide search parmeter
    */
-  isSearchByDescription: PropTypes.bool,
-  /**
-   * True, flag to make initial API call
-   */
-  isInitialRender: PropTypes.bool
-
+  isSearchByDescription: PropTypes.bool
 }
 
 ReviewProductList.defaultProps = {
