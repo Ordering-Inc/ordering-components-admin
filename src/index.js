@@ -188,6 +188,7 @@ import { RewardsPrograms } from './components/RewardsPrograms'
 import { RecoveryActionListing } from './components/RecoveryActionListing'
 import { RecoveryActionDetail } from './components/RecoveryActionDetail'
 import { RecoveryNotificationList } from './components/RecoveryNotificationList'
+import { ReviewProductList } from './components/ReviewProductList'
 import { SearchOptions } from './components/SearchOptions'
 import { SelectPOS } from './components/SelectPOS'
 import { Schedule } from './components/Schedule'
@@ -447,6 +448,7 @@ export {
   RecoveryActionListing,
   RecoveryActionDetail,
   RecoveryNotificationList,
+  ReviewProductList,
   SingleRecoveryNotification,
   SitesAuthSettings,
   SearchOptions,
