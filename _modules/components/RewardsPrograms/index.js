@@ -15,6 +15,8 @@ var _ApiContext = require("../../contexts/ApiContext");
 
 var _SessionContext = require("../../contexts/SessionContext");
 
+var _LanguageContext = require("../../contexts/LanguageContext");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
@@ -56,7 +58,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var RewardsPrograms = function RewardsPrograms(props) {
-  var UIComponent = props.UIComponent;
+  var UIComponent = props.UIComponent,
+      type = props.type;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -67,6 +70,10 @@ var RewardsPrograms = function RewardsPrograms(props) {
       _useSession2$ = _useSession2[0],
       token = _useSession2$.token,
       loading = _useSession2$.loading;
+
+  var _useLanguage = (0, _LanguageContext.useLanguage)(),
+      _useLanguage2 = _slicedToArray(_useLanguage, 2),
+      t = _useLanguage2[1];
 
   var _useState = (0, _react.useState)({
     loading: true,
@@ -140,7 +147,7 @@ var RewardsPrograms = function RewardsPrograms(props) {
 
   var getLoyaltyPlans = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result, pagination, loyalty;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -180,36 +187,62 @@ var RewardsPrograms = function RewardsPrograms(props) {
               result = _yield$response$json.result;
               pagination = _yield$response$json.pagination;
 
-              if (!error) {
-                setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
-                  loading: false,
-                  loyaltyPlans: result,
-                  pagination: pagination
-                }));
-              } else {
-                setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
-                  loading: false,
-                  error: result
-                }));
+              if (error) {
+                _context.next = 26;
+                break;
               }
 
-              _context.next = 21;
+              loyalty = result.find(function (plan) {
+                return plan.type === type;
+              });
+              setLoyaltyPlanList(_objectSpread(_objectSpread(_objectSpread({}, loyaltyPlanList), loyalty && {
+                loading: false
+              }), {}, {
+                loyaltyPlans: result,
+                pagination: pagination
+              }));
+
+              if (!loyalty) {
+                _context.next = 22;
+                break;
+              }
+
+              setPointWallet(JSON.parse(JSON.stringify(loyalty)));
+              _context.next = 24;
               break;
 
-            case 18:
-              _context.prev = 18;
+            case 22:
+              _context.next = 24;
+              return getBusinessTypes();
+
+            case 24:
+              _context.next = 27;
+              break;
+
+            case 26:
+              setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                loading: false,
+                error: result
+              }));
+
+            case 27:
+              _context.next = 32;
+              break;
+
+            case 29:
+              _context.prev = 29;
               _context.t0 = _context["catch"](2);
               setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
                 loading: false,
                 error: _context.t0
               }));
 
-            case 21:
+            case 32:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[2, 18]]);
+      }, _callee, null, [[2, 29]]);
     }));
 
     return function getLoyaltyPlans() {
@@ -217,18 +250,167 @@ var RewardsPrograms = function RewardsPrograms(props) {
     };
   }();
 
+  var createWallet = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(businessId) {
+      var payload, requestOptions, response, content, loyaltyPlans;
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              payload = {
+                name: "Loyalty ".concat(type === 'cashback' ? 'Cash' : 'Point', " Plan"),
+                type: type,
+                redemption_rate: 1,
+                accumulation_rate: 1,
+                businesses: JSON.stringify([{
+                  id: businessId,
+                  accumulates: true,
+                  redeems: true
+                }])
+              };
+              requestOptions = {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                },
+                body: JSON.stringify(payload)
+              };
+              _context2.next = 5;
+              return fetch("".concat(ordering.root, "/loyalty_plans"), requestOptions);
+
+            case 5:
+              response = _context2.sent;
+              _context2.next = 8;
+              return response.json();
+
+            case 8:
+              content = _context2.sent;
+
+              if (!content.error) {
+                setPointWallet(content.result);
+                loyaltyPlans = JSON.parse(JSON.stringify(loyaltyPlanList.loyaltyPlans));
+                loyaltyPlans.push(content.result);
+                setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                  loading: false,
+                  loyaltyPlans: loyaltyPlans
+                }));
+              } else {
+                setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                  loading: false,
+                  error: content.result
+                }));
+              }
+
+              _context2.next = 15;
+              break;
+
+            case 12:
+              _context2.prev = 12;
+              _context2.t0 = _context2["catch"](0);
+              setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                loading: false,
+                error: _context2.t0
+              }));
+
+            case 15:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 12]]);
+    }));
+
+    return function createWallet(_x) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /**
+   * Method to get business types from API
+   */
+
+
+  var getBusinessTypes = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, _result$;
+
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              fetchEndpoint = ordering.businesses().asDashboard().select(['id']);
+              _context3.next = 4;
+              return fetchEndpoint.get();
+
+            case 4:
+              _yield$fetchEndpoint$ = _context3.sent;
+              _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
+              error = _yield$fetchEndpoint$2.error;
+              result = _yield$fetchEndpoint$2.result;
+
+              if (error) {
+                _context3.next = 17;
+                break;
+              }
+
+              if (!((result === null || result === void 0 ? void 0 : result.length) > 0)) {
+                _context3.next = 14;
+                break;
+              }
+
+              _context3.next = 12;
+              return createWallet((_result$ = result[0]) === null || _result$ === void 0 ? void 0 : _result$.id);
+
+            case 12:
+              _context3.next = 15;
+              break;
+
+            case 14:
+              setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                loading: false,
+                error: t('MOBILE_HAVE_NO_BUSINESS', 'You have no businesses available.')
+              }));
+
+            case 15:
+              _context3.next = 18;
+              break;
+
+            case 17:
+              setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                loading: false,
+                error: result
+              }));
+
+            case 18:
+              _context3.next = 23;
+              break;
+
+            case 20:
+              _context3.prev = 20;
+              _context3.t0 = _context3["catch"](0);
+              setLoyaltyPlanList(_objectSpread(_objectSpread({}, loyaltyPlanList), {}, {
+                loading: false,
+                error: _context3.t0
+              }));
+
+            case 23:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3, null, [[0, 20]]);
+    }));
+
+    return function getBusinessTypes() {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     getLoyaltyPlans();
-  }, []);
-  (0, _react.useEffect)(function () {
-    var _loyaltyPlanList$loya;
-
-    if ((loyaltyPlanList === null || loyaltyPlanList === void 0 ? void 0 : (_loyaltyPlanList$loya = loyaltyPlanList.loyaltyPlans) === null || _loyaltyPlanList$loya === void 0 ? void 0 : _loyaltyPlanList$loya.length) === 0) return;
-    var loyalty = loyaltyPlanList === null || loyaltyPlanList === void 0 ? void 0 : loyaltyPlanList.loyaltyPlans.find(function (plan) {
-      return plan.type === 'credit_point';
-    });
-    if (loyalty) setPointWallet(_objectSpread({}, loyalty));
-  }, [loyaltyPlanList === null || loyaltyPlanList === void 0 ? void 0 : loyaltyPlanList.loyaltyPlans]);
+  }, [type]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     loyaltyPlanList: loyaltyPlanList,
     pointWallet: pointWallet,
