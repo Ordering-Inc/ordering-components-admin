@@ -995,7 +995,17 @@ var BusinessAdd = function BusinessAdd(props) {
 
       if (!period) {
         !extraHours ? schedule.push({
-          enabled: false
+          enabled: true,
+          lapses: [{
+            open: {
+              hour: 0,
+              minute: 0
+            },
+            close: {
+              hour: 23,
+              minute: 59
+            }
+          }]
         }) : schedule.push({
           enabled: true,
           lapses: extraHours
@@ -1037,16 +1047,22 @@ var BusinessAdd = function BusinessAdd(props) {
           }
         }];
         extraHours && _lapses.unshift(extraHours);
-        extraHours = {
-          open: {
-            hour: 0,
-            minute: 0
-          },
-          close: {
-            hour: period === null || period === void 0 ? void 0 : (_period$close5 = period.close) === null || _period$close5 === void 0 ? void 0 : _period$close5.hours,
-            minute: period === null || period === void 0 ? void 0 : (_period$close6 = period.close) === null || _period$close6 === void 0 ? void 0 : _period$close6.minutes
-          }
-        };
+
+        if ((period === null || period === void 0 ? void 0 : (_period$close5 = period.close) === null || _period$close5 === void 0 ? void 0 : _period$close5.hours) !== 0 && (period === null || period === void 0 ? void 0 : (_period$close6 = period.close) === null || _period$close6 === void 0 ? void 0 : _period$close6.minutes) !== 0) {
+          var _period$close7, _period$close8;
+
+          extraHours = {
+            open: {
+              hour: 0,
+              minute: 0
+            },
+            close: {
+              hour: period === null || period === void 0 ? void 0 : (_period$close7 = period.close) === null || _period$close7 === void 0 ? void 0 : _period$close7.hours,
+              minute: period === null || period === void 0 ? void 0 : (_period$close8 = period.close) === null || _period$close8 === void 0 ? void 0 : _period$close8.minutes
+            }
+          };
+        }
+
         schedule.push({
           enabled: true,
           lapses: _lapses
