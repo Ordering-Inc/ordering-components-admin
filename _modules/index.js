@@ -1311,6 +1311,12 @@ Object.defineProperty(exports, "ReviewCustomer", {
     return _ReviewCustomer.ReviewCustomer;
   }
 });
+Object.defineProperty(exports, "ReviewProductList", {
+  enumerable: true,
+  get: function get() {
+    return _ReviewProductList.ReviewProductList;
+  }
+});
 Object.defineProperty(exports, "RewardsPrograms", {
   enumerable: true,
   get: function get() {
@@ -2013,6 +2019,8 @@ var _RecoveryActionListing = require("./components/RecoveryActionListing");
 var _RecoveryActionDetail = require("./components/RecoveryActionDetail");
 
 var _RecoveryNotificationList = require("./components/RecoveryNotificationList");
+
+var _ReviewProductList = require("./components/ReviewProductList");
 
 var _SearchOptions = require("./components/SearchOptions");
 
