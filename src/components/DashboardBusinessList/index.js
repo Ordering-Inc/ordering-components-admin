@@ -538,6 +538,7 @@ export const DashboardBusinessList = (props) => {
             countriesState={countriesState}
             filterValues={filterValues}
             handleChangeFilterValues={handleChangeFilterValues}
+            businessTypeSelected={businessTypeSelected}
           />
         )
       }
