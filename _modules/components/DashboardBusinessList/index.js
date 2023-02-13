@@ -903,7 +903,8 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
     handleChangeBusinessActiveState: handleChangeBusinessActiveState,
     countriesState: countriesState,
     filterValues: filterValues,
-    handleChangeFilterValues: handleChangeFilterValues
+    handleChangeFilterValues: handleChangeFilterValues,
+    businessTypeSelected: businessTypeSelected
   })));
 };
 
