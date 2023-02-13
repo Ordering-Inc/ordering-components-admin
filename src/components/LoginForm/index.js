@@ -35,10 +35,18 @@ export const LoginForm = (props) => {
   const [isReCaptchaEnable, setIsReCaptchaEnable] = useState(false)
 
   const useLoginOtpEmail = configs?.opt_email_enabled?.value === '1'
-  const useLoginByEmail = useLoginOtpEmail ? configs?.email_password_login_enabled?.value === '1' : true
+  const useLoginOptCellphone = configs?.otp_cellphone_enabled?.value === '1'
+  const useLoginByEmail = configs?.email_password_login_enabled?.value === '1'
+  const useLoginByCellphone = configs?.phone_password_login_enabled?.value === '1'
 
   const useLoginOtp = useLoginOtpEmail
-  defaultLoginTab = useLoginByEmail ? 'email' : 'otp'
+  defaultLoginTab = useLoginByEmail
+    ? 'email'
+    : (useLoginByCellphone
+      ? 'cellphone'
+      : ((useLoginOtpEmail || useLoginOptCellphone)
+        ? 'otp'
+        : 'email'))
 
   const [loginTab, setLoginTab] = useState()
   const [otpType, setOtpType] = useState('email')
@@ -56,7 +64,8 @@ export const LoginForm = (props) => {
       if (loginTab === 'otp') {
         _credentials = {
           [otpType]: (values && values[otpType]) || credentials[otpType],
-          one_time_password: (values && values?.code) || otpState
+          one_time_password: (values && values?.code) || otpState,
+          ...(otpType === 'cellphone' && { country_phone_code: (values?.country_phone_code || credentials?.country_phone_code) })
         }
       } else {
         _credentials = {
@@ -165,6 +174,16 @@ export const LoginForm = (props) => {
     setCredentials({
       ...credentials,
       [e.target.name]: e.target.value
+    })
+  }
+
+  /**
+   * Update credential data
+   */
+  const handleChangeCredentials = (changes) => {
+    setCredentials({
+      ...credentials,
+      ...changes
     })
   }
 
@@ -302,6 +321,10 @@ export const LoginForm = (props) => {
     setLoginTab(defaultLoginTab)
   }, [defaultLoginTab])
 
+  useEffect(() => {
+    setOtpType(useLoginOtpEmail ? 'email' : 'cellphone')
+  }, [useLoginOtpEmail, useLoginOptCellphone])
+
   return (
     <>
       {UIComponent && (
@@ -329,6 +352,9 @@ export const LoginForm = (props) => {
           useLoginByEmail={useLoginByEmail}
           useLoginOtpEmail={useLoginOtpEmail}
           generateOtpCode={generateOtpCode}
+          useLoginByCellphone={useLoginByCellphone}
+          useLoginOptCellphone={useLoginOptCellphone}
+          handleChangeCredentials={handleChangeCredentials}
         />
       )}
     </>
