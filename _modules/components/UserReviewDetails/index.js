@@ -49,7 +49,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 var UserReviewDetails = function UserReviewDetails(props) {
   var userId = props.userId,
-      UIComponent = props.UIComponent;
+      UIComponent = props.UIComponent,
+      propsToFetch = props.propsToFetch;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -57,16 +58,25 @@ var UserReviewDetails = function UserReviewDetails(props) {
 
   var _useSession = (0, _SessionContext.useSession)(),
       _useSession2 = _slicedToArray(_useSession, 1),
-      token = _useSession2[0].token;
+      session = _useSession2[0];
 
   var _useState = (0, _react.useState)({
+    user: props.user,
+    loading: !props.user,
+    error: null
+  }),
+      _useState2 = _slicedToArray(_useState, 2),
+      userState = _useState2[0],
+      setUserState = _useState2[1];
+
+  var _useState3 = (0, _react.useState)({
     reviews: [],
     loading: false,
     error: null
   }),
-      _useState2 = _slicedToArray(_useState, 2),
-      userReviewState = _useState2[0],
-      setUserReviewState = _useState2[1];
+      _useState4 = _slicedToArray(_useState3, 2),
+      userReviewState = _useState4[0],
+      setUserReviewState = _useState4[1];
   /**
    * Method to get the driver reviews from API
    */
@@ -87,7 +97,7 @@ var UserReviewDetails = function UserReviewDetails(props) {
                 method: 'GET',
                 headers: {
                   'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
+                  Authorization: "Bearer ".concat(session.token)
                 }
               };
               _context.next = 5;
@@ -132,12 +142,75 @@ var UserReviewDetails = function UserReviewDetails(props) {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Method to get user from API
+   */
 
+
+  var getUser = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
+      var fetchEndpoint, _yield$fetchEndpoint$, result, user;
+
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+                loading: true
+              }));
+              fetchEndpoint = ordering.setAccessToken(session.token).users(userId).select(propsToFetch);
+              _context2.next = 5;
+              return fetchEndpoint.get();
+
+            case 5:
+              _yield$fetchEndpoint$ = _context2.sent;
+              result = _yield$fetchEndpoint$.content.result;
+              user = Array.isArray(result) ? null : result;
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+                loading: false,
+                user: user
+              }));
+              _context2.next = 14;
+              break;
+
+            case 11:
+              _context2.prev = 11;
+              _context2.t0 = _context2["catch"](0);
+              setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+                loading: false,
+                error: [_context2.t0.message]
+              }));
+
+            case 14:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2, null, [[0, 11]]);
+    }));
+
+    return function getUser() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  (0, _react.useEffect)(function () {
+    if (!props.user) {
+      getUser();
+    } else {
+      setUserState(_objectSpread(_objectSpread({}, userState), {}, {
+        loading: false,
+        user: props.user
+      }));
+    }
+  }, [props.user]);
   (0, _react.useEffect)(function () {
     if (!userId) return;
     getUserReviews();
   }, [userId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
+    userState: userState,
     userReviewState: userReviewState
   })));
 };
@@ -177,5 +250,6 @@ UserReviewDetails.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  propsToFetch: ['name', 'lastname', 'photo']
 };

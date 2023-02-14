@@ -66,6 +66,7 @@ var CampaignDetail = function CampaignDetail(props) {
   var _campaignState$campai4, _formState$changes9;
 
   var campaign = props.campaign,
+      campaignId = props.campaignId,
       campaignList = props.campaignList,
       UIComponent = props.UIComponent,
       handleSuccessUpdateCampaign = props.handleSuccessUpdateCampaign,
@@ -90,7 +91,7 @@ var CampaignDetail = function CampaignDetail(props) {
 
   var _useState = (0, _react.useState)({
     campaign: campaign,
-    loading: false,
+    loading: !campaign,
     error: null
   }),
       _useState2 = _slicedToArray(_useState, 2),
@@ -839,25 +840,105 @@ var CampaignDetail = function CampaignDetail(props) {
     }));
   };
 
+  var getCampaign = /*#__PURE__*/function () {
+    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
+      var requestOptions, functionFetch, response, _yield$response$json3, result, error;
+
+      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) {
+          switch (_context8.prev = _context8.next) {
+            case 0:
+              _context8.prev = 0;
+              setCampaignState(_objectSpread(_objectSpread({}, campaignState), {}, {
+                loading: true
+              }));
+              requestOptions = {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: "Bearer ".concat(token)
+                }
+              };
+              functionFetch = "".concat(ordering.root, "/marketing_campaigns/").concat(campaignId);
+              _context8.next = 6;
+              return fetch(functionFetch, requestOptions);
+
+            case 6:
+              response = _context8.sent;
+              _context8.next = 9;
+              return response.json();
+
+            case 9:
+              _yield$response$json3 = _context8.sent;
+              result = _yield$response$json3.result;
+              error = _yield$response$json3.error;
+
+              if (!error) {
+                setCampaignState({
+                  loading: false,
+                  campaign: result,
+                  error: null
+                });
+              } else {
+                setCampaignState(_objectSpread(_objectSpread({}, campaignState), {}, {
+                  loading: false,
+                  error: result
+                }));
+              }
+
+              _context8.next = 18;
+              break;
+
+            case 15:
+              _context8.prev = 15;
+              _context8.t0 = _context8["catch"](0);
+              setCampaignState(_objectSpread(_objectSpread({}, campaignState), {}, {
+                loading: false,
+                error: [_context8.t0.message]
+              }));
+
+            case 18:
+            case "end":
+              return _context8.stop();
+          }
+        }
+      }, _callee8, null, [[0, 15]]);
+    }));
+
+    return function getCampaign() {
+      return _ref10.apply(this, arguments);
+    };
+  }();
+
   (0, _react.useEffect)(function () {
     if (Object.keys(campaign).length === 0) {
-      setIsAddMode(true);
-      setFormState(_objectSpread(_objectSpread({}, formState), {}, {
-        changes: {
-          enabled: true,
-          conditions: [],
-          status: 'pending'
-        }
-      }));
+      if (campaignId) {
+        setIsAddMode(false);
+        cleanFormState();
+        getCampaign();
+      } else {
+        setIsAddMode(true);
+        setFormState(_objectSpread(_objectSpread({}, formState), {}, {
+          changes: {
+            enabled: true,
+            conditions: [],
+            status: 'pending'
+          }
+        }));
+        setCampaignState({
+          loading: false,
+          campaign: {},
+          error: null
+        });
+      }
     } else {
       setIsAddMode(false);
       cleanFormState();
+      setCampaignState(_objectSpread(_objectSpread({}, campaignState), {}, {
+        campaign: campaign
+      }));
     }
-
-    setCampaignState(_objectSpread(_objectSpread({}, campaignState), {}, {
-      campaign: campaign
-    }));
-  }, [campaign]);
+  }, [campaign, campaignId]);
   (0, _react.useEffect)(function () {
     var _campaignState$campai2, _campaignState$campai3;
 
