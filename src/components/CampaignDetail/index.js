@@ -21,6 +21,7 @@ const configHideList = [
 export const CampaignDetail = (props) => {
   const {
     campaign,
+    campaignId,
     campaignList,
     UIComponent,
     handleSuccessUpdateCampaign,
@@ -33,7 +34,7 @@ export const CampaignDetail = (props) => {
   const [{ token }] = useSession()
   const [, { showToast }] = useToast()
 
-  const [campaignState, setCampaignState] = useState({ campaign: campaign, loading: false, error: null })
+  const [campaignState, setCampaignState] = useState({ campaign: campaign, loading: !campaign, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [isAddMode, setIsAddMode] = useState(false)
   const [audienceState, setAudienceState] = useState({ loading: false, audience: 0, error: null })
@@ -471,23 +472,75 @@ export const CampaignDetail = (props) => {
     })
   }
 
+  const getCampaign = async () => {
+    try {
+      setCampaignState({
+        ...campaignState,
+        loading: true
+      })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const functionFetch = `${ordering.root}/marketing_campaigns/${campaignId}`
+      const response = await fetch(functionFetch, requestOptions)
+      const { result, error } = await response.json()
+      if (!error) {
+        setCampaignState({
+          loading: false,
+          campaign: result,
+          error: null
+        })
+      } else {
+        setCampaignState({
+          ...campaignState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (error) {
+      setCampaignState({
+        ...campaignState,
+        loading: false,
+        error: [error.message]
+      })
+    }
+  }
+
   useEffect(() => {
     if (Object.keys(campaign).length === 0) {
-      setIsAddMode(true)
-      setFormState({
-        ...formState,
-        changes: {
-          enabled: true,
-          conditions: [],
-          status: 'pending'
-        }
-      })
+      if (campaignId) {
+        setIsAddMode(false)
+        cleanFormState()
+        getCampaign()
+      } else {
+        setIsAddMode(true)
+        setFormState({
+          ...formState,
+          changes: {
+            enabled: true,
+            conditions: [],
+            status: 'pending'
+          }
+        })
+        setCampaignState({
+          loading: false,
+          campaign: {},
+          error: null
+        })
+      }
     } else {
       setIsAddMode(false)
       cleanFormState()
+      setCampaignState({
+        ...campaignState,
+        campaign: campaign
+      })
     }
-    setCampaignState({ ...campaignState, campaign: campaign })
-  }, [campaign])
+  }, [campaign, campaignId])
 
   useEffect(() => {
     getAudience(campaignState?.campaign?.conditions, campaignState?.campaign?.contact_type)
