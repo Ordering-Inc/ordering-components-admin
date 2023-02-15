@@ -844,6 +844,16 @@ var OrdersManage = function OrdersManage(props) {
                   });
                 }
 
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'business',
+                    conditions: [{
+                      attribute: "city_id",
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
+                    }]
+                  });
+                }
+
                 if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverGroupIds.length) !== 0) {
                   filterConditons.push({
                     attribute: 'driver_id',

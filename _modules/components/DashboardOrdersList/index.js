@@ -460,6 +460,16 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   });
                 }
 
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds.length) !== 0) {
+                  filterConditons.push({
+                    attribute: 'business',
+                    conditions: [{
+                      attribute: "city_id",
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
+                    }]
+                  });
+                }
+
                 if (filterConditons.length) {
                   conditions.push({
                     conector: 'AND',
