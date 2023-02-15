@@ -409,6 +409,19 @@ export const OrdersManage = (props) => {
           }
         )
       }
+      if (filterValues?.cityIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'business',
+            conditions: [
+              {
+                attribute: "city_id",
+                value: filterValues?.cityIds
+              }
+            ],
+          }
+        )
+      }
       if (filterValues?.driverGroupIds.length !== 0) {
         filterConditons.push(
           {
@@ -577,7 +590,7 @@ export const OrdersManage = (props) => {
   }
 
   const handleChangeOrder = (order) => {
-    const statusChange = order?.changes?.find(({attribute}) => (attribute === 'status'))
+    const statusChange = order?.changes?.find(({ attribute }) => (attribute === 'status'))
     if (statusChange && !numberOfOrdersByStatus.loading) {
       const from = statusChange.old
       const to = statusChange.new
@@ -586,11 +599,11 @@ export const OrdersManage = (props) => {
       let toTab = null
 
       Object.values(orderStatuesList).map((statusTabs, key) => {
-        if(statusTabs.includes(from)) {
-            fromTab = Object.keys(orderStatuesList)[key]
-            _orderStatusNumbers[fromTab] -= 1
+        if (statusTabs.includes(from)) {
+          fromTab = Object.keys(orderStatuesList)[key]
+          _orderStatusNumbers[fromTab] -= 1
         }
-        if(statusTabs.includes(to)) {
+        if (statusTabs.includes(to)) {
           toTab = Object.keys(orderStatuesList)[key]
           _orderStatusNumbers[toTab] += 1
         }
