@@ -818,6 +818,30 @@ var BannerDetails = function BannerDetails(props) {
     };
   }();
 
+  var handleSuccessBannerItemAdd = function handleSuccessBannerItemAdd(newItem) {
+    var items = [].concat(_toConsumableArray(bannerItemsState.items), [newItem]);
+
+    if ((newItem === null || newItem === void 0 ? void 0 : newItem.type) === 'image') {
+      setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
+        items: items,
+        images: [].concat(_toConsumableArray(bannerItemsState.images), [newItem])
+      }));
+    }
+
+    if ((newItem === null || newItem === void 0 ? void 0 : newItem.type) === 'video') {
+      setBannerItemsState(_objectSpread(_objectSpread({}, bannerItemsState), {}, {
+        items: items,
+        videos: [].concat(_toConsumableArray(bannerItemsState.videos), [newItem])
+      }));
+    }
+
+    var updatedBanner = _objectSpread(_objectSpread({}, banner), {}, {
+      items: items
+    });
+
+    handleSuccessUpdate && handleSuccessUpdate(updatedBanner);
+  };
+
   (0, _react.useEffect)(function () {
     if (Object.keys(banner).length === 0) {
       setIsAddMode(true);
@@ -874,7 +898,8 @@ var BannerDetails = function BannerDetails(props) {
     handleUpdateClick: handleUpdateClick,
     handleAddBanner: handleAddBanner,
     handleDeleteBanner: handleDeleteBanner,
-    handleDeleteBannerItem: handleDeleteBannerItem
+    handleDeleteBannerItem: handleDeleteBannerItem,
+    handleSuccessBannerItemAdd: handleSuccessBannerItemAdd
   })));
 };
 
