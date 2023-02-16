@@ -39,6 +39,7 @@ export const DashboardBusinessList = (props) => {
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
   const [businessIds, setBusinessIds] = useState([])
   const [filterValues, setFilterValues] = useState({})
+  const [inActiveBusinesses, setInActiveBusinesses] = useState([])
 
   /**
    * Save filter type values
@@ -52,7 +53,7 @@ export const DashboardBusinessList = (props) => {
    * Method to get businesses from API
    * @param {number, number} pageSize page
    */
-  const getBusinesses = async (pageSize, page) => {
+  const getBusinesses = async (pageSize, page, isInactive) => {
     let where = []
     const conditions = []
     const options = {
@@ -62,8 +63,11 @@ export const DashboardBusinessList = (props) => {
       }
     }
 
-    if (!noActiveStatusCondition) {
-      conditions.push({ attribute: 'enabled', value: selectedBusinessActiveState })
+    if (!noActiveStatusCondition || isInactive) {
+      conditions.push({
+        attribute: 'enabled',
+        value: isInactive ? false : selectedBusinessActiveState
+      })
     }
 
     if (businessTypeSelected) {
@@ -261,6 +265,22 @@ export const DashboardBusinessList = (props) => {
       if (err?.constructor?.name !== 'Cancel') {
         setBusinessList({ ...businessList, loading: false, error: [err.message] })
       }
+    }
+  }
+
+  /**
+   * Method to get businesses
+   */
+  const getInActiveBusinesses = async () => {
+    if (!session.token) return
+    try {
+      const response = await getBusinesses(10, 1, true)
+
+      if (!response.content.error) {
+        setInActiveBusinesses(response?.content?.result)
+      }
+    } catch (err) {
+      console.log(err)
     }
   }
 
@@ -511,6 +531,10 @@ export const DashboardBusinessList = (props) => {
     getCountries()
   }, [])
 
+  useEffect(() => {
+    getInActiveBusinesses()
+  }, [businessList?.businesses?.length])
+
   return (
     <>
       {
@@ -539,6 +563,7 @@ export const DashboardBusinessList = (props) => {
             filterValues={filterValues}
             handleChangeFilterValues={handleChangeFilterValues}
             businessTypeSelected={businessTypeSelected}
+            inActiveBusinesses={inActiveBusinesses}
           />
         )
       }
