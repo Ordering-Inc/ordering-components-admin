@@ -590,7 +590,7 @@ export const OrdersManage = (props) => {
   }
 
   const handleUpdateOrder = (order) => {
-    etOrderNumbersByStatus()
+    getOrderNumbersByStatus()
   }
   useEffect(() => {
     socket.on('update_order', handleUpdateOrder)
