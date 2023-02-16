@@ -887,7 +887,7 @@ var OrdersManage = function OrdersManage(props) {
     };
   }();
   var handleUpdateOrder = function handleUpdateOrder(order) {
-    etOrderNumbersByStatus();
+    getOrderNumbersByStatus();
   };
   (0, _react.useEffect)(function () {
     socket.on('update_order', handleUpdateOrder);
