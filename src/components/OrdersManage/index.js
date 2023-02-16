@@ -551,7 +551,7 @@ export const OrdersManage = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/orders/dashboard?v=2&where=${JSON.stringify(where)}`, requestOptions)
+      const response = await fetch(`${ordering.root}/orders/dashboard?where=${JSON.stringify(where)}`, requestOptions)
       const content = await response.json()
       if (!content?.error) {
         const _orderStatusNumbers = Object.keys(orderStatuesList).reduce((sum, curr, index) => {
@@ -589,37 +589,15 @@ export const OrdersManage = (props) => {
     }
   }
 
-  const handleChangeOrder = (order) => {
-    const statusChange = order?.changes?.find(({ attribute }) => (attribute === 'status'))
-    if (statusChange && !numberOfOrdersByStatus.loading) {
-      const from = statusChange.old
-      const to = statusChange.new
-      let _orderStatusNumbers = numberOfOrdersByStatus.result
-      let fromTab = null
-      let toTab = null
-
-      Object.values(orderStatuesList).map((statusTabs, key) => {
-        if (statusTabs.includes(from)) {
-          fromTab = Object.keys(orderStatuesList)[key]
-          _orderStatusNumbers[fromTab] -= 1
-        }
-        if (statusTabs.includes(to)) {
-          toTab = Object.keys(orderStatuesList)[key]
-          _orderStatusNumbers[toTab] += 1
-        }
-      })
-      setNumberOfOrdersByStatus({
-        ...numberOfOrdersByStatus,
-        loading: false,
-        error: false,
-        result: _orderStatusNumbers
-      })
-    }
+  const handleUpdateOrder = (order) => {
+    etOrderNumbersByStatus()
   }
   useEffect(() => {
-    socket.on('order_change', handleChangeOrder)
+    socket.on('update_order', handleUpdateOrder)
+    socket.on('orders_register', handleUpdateOrder)
     return () => {
-      socket.off('order_change', handleChangeOrder)
+      socket.off('update_order', handleUpdateOrder)
+      socket.off('orders_register', handleUpdateOrder)
     }
   }, [socket, filterValues, searchValue, numberOfOrdersByStatus])
 
@@ -627,29 +605,23 @@ export const OrdersManage = (props) => {
     if (!user) return
     socket.join('drivers')
     if (user.level === 0) {
+      socket.join('orders')
       socket.join('messages_orders')
     } else {
+      socket.join(`orders_${user?.id}`)
       socket.join(`messages_orders_${user?.id}`)
     }
-    socket.join({
-      room: 'orders',
-      user_id: user?.id,
-      role: 'manager'
-    })
 
     return () => {
       if (!user) return
       socket.leave('drivers')
       if (user.level === 0) {
+        socket.leave('orders')
         socket.leave('messages_orders')
       } else {
+        socket.leave(`orders_${user?.id}`)
         socket.leave(`messages_orders_${user?.id}`)
       }
-      socket.leave({
-        room: 'orders',
-        user_id: user?.id,
-        role: 'manager'
-      })
     }
   }, [socket, loading, user])
 

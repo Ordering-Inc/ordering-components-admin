@@ -1,14 +1,14 @@
 import io from 'socket.io-client'
 
 export class Socket {
-  constructor ({ url, project, accessToken }) {
+  constructor({ url, project, accessToken }) {
     this.url = url
     this.project = project
     this.accessToken = accessToken
     this.queue = []
   }
 
-  connect () {
+  connect() {
     this.socket = io(this.url, {
       extraHeaders: {
         Authorization: `Bearer ${this.accessToken}`
@@ -32,49 +32,35 @@ export class Socket {
     })
   }
 
-  getId () {
+  getId() {
     return this.socket?.id
   }
 
-  close () {
+  close() {
     if (this.socket?.connected) {
       this.socket.close()
     }
   }
 
-  join (room) {
+  join(room) {
     if (this.socket?.connected) {
-      let paramRoom = null
-      if (typeof room === 'object') {
-        room.project = this.project
-        paramRoom = room
-      } else {
-        paramRoom = `${this.project}_${room}`
-      }
-      this.socket.emit('join', paramRoom)
+      this.socket.emit('join', `${this.project}_${room}`)
     } else {
       this.queue.push({ action: 'join', room })
     }
     return this
   }
 
-  leave (room) {
+  leave(room) {
     if (this.socket?.connected) {
-      let paramRoom = null
-      if (typeof room === 'object') {
-        room.project = this.project
-        paramRoom = room
-      } else {
-        paramRoom = `${this.project}_${room}`
-      }
-      this.socket.emit('leave', paramRoom)
+      this.socket.emit('leave', `${this.project}_${room}`)
     } else {
       this.queue.push({ action: 'leave', room })
     }
     return this
   }
 
-  on (event, func = () => {}) {
+  on(event, func = () => { }) {
     if (this.socket?.connected) {
       this.socket.on(event, func)
     } else {
@@ -83,7 +69,7 @@ export class Socket {
     return this
   }
 
-  off (event, func = () => {}) {
+  off(event, func = () => { }) {
     if (this.socket?.connected) {
       this.socket.off(event, func)
     } else {
