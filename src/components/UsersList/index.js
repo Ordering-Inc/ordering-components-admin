@@ -379,7 +379,7 @@ export const UsersList = (props) => {
               attribute: 'created_at',
               value: {
                 condition: '>=',
-                value: filterValues?.deliveryFromDatetime
+                value: multiFilterValues?.deliveryFromDatetime
               }
             }
           )
@@ -390,7 +390,7 @@ export const UsersList = (props) => {
               attribute: 'created_at',
               value: {
                 condition: '<=',
-                value: filterValues?.deliveryEndDatetime
+                value: multiFilterValues?.deliveryEndDatetime
               }
             }
           )
