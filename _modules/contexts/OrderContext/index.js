@@ -1539,7 +1539,7 @@ var OrderProvider = function OrderProvider(_ref) {
    */
 
   (0, _react.useEffect)(function () {
-    var _session$user3, _session$user4, _session$user5;
+    var _session$user3, _session$user4, _session$user5, _session$user6;
 
     if (!session.auth || session.loading) return;
     socket.join("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id));
@@ -1551,36 +1551,36 @@ var OrderProvider = function OrderProvider(_ref) {
       role: 'manager'
     });
 
-    if (user.level === 0) {
+    if ((session === null || session === void 0 ? void 0 : (_session$user6 = session.user) === null || _session$user6 === void 0 ? void 0 : _session$user6.level) === 0) {
       socket.join('orders');
       socket.join('messages_orders');
     } else {
-      var _session$user6, _session$user7;
+      var _session$user7, _session$user8;
 
-      socket.join("orders_".concat(session === null || session === void 0 ? void 0 : (_session$user6 = session.user) === null || _session$user6 === void 0 ? void 0 : _session$user6.id));
-      socket.join("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user7 = session.user) === null || _session$user7 === void 0 ? void 0 : _session$user7.id));
+      socket.join("orders_".concat(session === null || session === void 0 ? void 0 : (_session$user7 = session.user) === null || _session$user7 === void 0 ? void 0 : _session$user7.id));
+      socket.join("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user8 = session.user) === null || _session$user8 === void 0 ? void 0 : _session$user8.id));
     }
 
     return function () {
-      var _session$user8, _session$user9, _session$user10;
+      var _session$user9, _session$user10, _session$user11, _session$user12;
 
-      socket.leave("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user8 = session.user) === null || _session$user8 === void 0 ? void 0 : _session$user8.id));
-      socket.leave("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user9 = session.user) === null || _session$user9 === void 0 ? void 0 : _session$user9.id));
+      socket.leave("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user9 = session.user) === null || _session$user9 === void 0 ? void 0 : _session$user9.id));
+      socket.leave("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user10 = session.user) === null || _session$user10 === void 0 ? void 0 : _session$user10.id));
       socket.leave('drivers');
       socket.leave({
         room: 'orders',
-        user_id: session === null || session === void 0 ? void 0 : (_session$user10 = session.user) === null || _session$user10 === void 0 ? void 0 : _session$user10.id,
+        user_id: session === null || session === void 0 ? void 0 : (_session$user11 = session.user) === null || _session$user11 === void 0 ? void 0 : _session$user11.id,
         role: 'manager'
       });
 
-      if (user.level === 0) {
+      if ((session === null || session === void 0 ? void 0 : (_session$user12 = session.user) === null || _session$user12 === void 0 ? void 0 : _session$user12.level) === 0) {
         socket.leave('orders');
         socket.leave('messages_orders');
       } else {
-        var _session$user11, _session$user12;
+        var _session$user13, _session$user14;
 
-        socket.leave("orders_".concat(session === null || session === void 0 ? void 0 : (_session$user11 = session.user) === null || _session$user11 === void 0 ? void 0 : _session$user11.id));
-        socket.leave("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user12 = session.user) === null || _session$user12 === void 0 ? void 0 : _session$user12.id));
+        socket.leave("orders_".concat(session === null || session === void 0 ? void 0 : (_session$user13 = session.user) === null || _session$user13 === void 0 ? void 0 : _session$user13.id));
+        socket.leave("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user14 = session.user) === null || _session$user14 === void 0 ? void 0 : _session$user14.id));
       }
     };
   }, [socket, session]);
