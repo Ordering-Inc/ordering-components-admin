@@ -510,7 +510,7 @@ var UsersList = function UsersList(props) {
                     attribute: 'created_at',
                     value: {
                       condition: '>=',
-                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryFromDatetime
+                      value: multiFilterValues === null || multiFilterValues === void 0 ? void 0 : multiFilterValues.deliveryFromDatetime
                     }
                   });
                 }
@@ -520,7 +520,7 @@ var UsersList = function UsersList(props) {
                     attribute: 'created_at',
                     value: {
                       condition: '<=',
-                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.deliveryEndDatetime
+                      value: multiFilterValues === null || multiFilterValues === void 0 ? void 0 : multiFilterValues.deliveryEndDatetime
                     }
                   });
                 }
