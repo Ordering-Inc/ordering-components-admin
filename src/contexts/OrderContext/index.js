@@ -677,7 +677,7 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
       user_id: session?.user?.id,
       role: 'manager'
     })
-    if (user.level === 0) {
+    if (session?.user?.level === 0) {
       socket.join('orders')
       socket.join('messages_orders')
     } else {
@@ -694,7 +694,7 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
         user_id: session?.user?.id,
         role: 'manager'
       })
-      if (user.level === 0) {
+      if (session?.user?.level === 0) {
         socket.leave('orders')
         socket.leave('messages_orders')
       } else {
