@@ -589,9 +589,21 @@ export const OrdersManage = (props) => {
     }
   }
 
+  const handleNewOrder = () => {
+    if (!numberOfOrdersByStatus.result) return
+    let _orderStatusNumbers = numberOfOrdersByStatus.result
+    _orderStatusNumbers['pending'] += 1
+    setNumberOfOrdersByStatus({
+      ...numberOfOrdersByStatus,
+      loading: false,
+      error: false,
+      result: _orderStatusNumbers
+    })
+  }
+
   const handleChangeOrder = (order) => {
     const statusChange = order?.changes?.find(({ attribute }) => (attribute === 'status'))
-    if (statusChange && !numberOfOrdersByStatus.loading) {
+    if (statusChange && numberOfOrdersByStatus.result) {
       const from = statusChange.old
       const to = statusChange.new
       const _orderStatusNumbers = numberOfOrdersByStatus.result
@@ -601,7 +613,9 @@ export const OrdersManage = (props) => {
       Object.values(orderStatuesList).map((statusTabs, key) => {
         if (statusTabs.includes(from)) {
           fromTab = Object.keys(orderStatuesList)[key]
-          _orderStatusNumbers[fromTab] -= 1
+          if (_orderStatusNumbers[fromTab] > 0) {
+            _orderStatusNumbers[fromTab] -= 1
+          }
         }
         if (statusTabs.includes(to)) {
           toTab = Object.keys(orderStatuesList)[key]
@@ -616,24 +630,21 @@ export const OrdersManage = (props) => {
       })
     }
   }
-
-  const handleOrderRegister = () => {
-    if (!numberOfOrdersByStatus.loading && numberOfOrdersByStatus.result) {
-      const _orderStatusNumbers = JSON.parse(JSON.stringify(numberOfOrdersByStatus.result))
-      _orderStatusNumbers.pending = _orderStatusNumbers.pending + 1
-      setNumberOfOrdersByStatus({
-        ...numberOfOrdersByStatus,
-        result: _orderStatusNumbers
-      })
+  useEffect(() => {
+    socket.on('orders_register', handleNewOrder)
+    socket.on('order_change', handleChangeOrder)
+    return () => {
+      socket.off('orders_register', handleNewOrder)
+      socket.off('order_change', handleChangeOrder)
     }
-  }
+  }, [socket, filterValues, searchValue, numberOfOrdersByStatus])
 
   useEffect(() => {
     socket.on('order_change', handleChangeOrder)
-    socket.on('orders_register', handleOrderRegister)
+    socket.on('orders_register', handleNewOrder)
     return () => {
       socket.off('order_change', handleChangeOrder)
-      socket.off('orders_register', handleOrderRegister)
+      socket.off('orders_register', handleNewOrder)
     }
   }, [socket, filterValues, searchValue, JSON.stringify(numberOfOrdersByStatus)])
 
