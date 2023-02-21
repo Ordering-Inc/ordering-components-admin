@@ -594,7 +594,7 @@ export const OrdersManage = (props) => {
     if (statusChange && !numberOfOrdersByStatus.loading) {
       const from = statusChange.old
       const to = statusChange.new
-      let _orderStatusNumbers = numberOfOrdersByStatus.result
+      const _orderStatusNumbers = numberOfOrdersByStatus.result
       let fromTab = null
       let toTab = null
 
@@ -616,42 +616,26 @@ export const OrdersManage = (props) => {
       })
     }
   }
-  useEffect(() => {
-    socket.on('order_change', handleChangeOrder)
-    return () => {
-      socket.off('order_change', handleChangeOrder)
-    }
-  }, [socket, filterValues, searchValue, numberOfOrdersByStatus])
 
-  useEffect(() => {
-    if (!user) return
-    socket.join('drivers')
-    if (user.level === 0) {
-      socket.join('messages_orders')
-    } else {
-      socket.join(`messages_orders_${user?.id}`)
-    }
-    socket.join({
-      room: 'orders',
-      user_id: user?.id,
-      role: 'manager'
-    })
-
-    return () => {
-      if (!user) return
-      socket.leave('drivers')
-      if (user.level === 0) {
-        socket.leave('messages_orders')
-      } else {
-        socket.leave(`messages_orders_${user?.id}`)
-      }
-      socket.leave({
-        room: 'orders',
-        user_id: user?.id,
-        role: 'manager'
+  const handleOrderRegister = () => {
+    if (!numberOfOrdersByStatus.loading && numberOfOrdersByStatus.result) {
+      const _orderStatusNumbers = JSON.parse(JSON.stringify(numberOfOrdersByStatus.result))
+      _orderStatusNumbers.pending = _orderStatusNumbers.pending + 1
+      setNumberOfOrdersByStatus({
+        ...numberOfOrdersByStatus,
+        result: _orderStatusNumbers
       })
     }
-  }, [socket, loading, user])
+  }
+
+  useEffect(() => {
+    socket.on('order_change', handleChangeOrder)
+    socket.on('orders_register', handleOrderRegister)
+    return () => {
+      socket.off('order_change', handleChangeOrder)
+      socket.off('orders_register', handleOrderRegister)
+    }
+  }, [socket, filterValues, searchValue, JSON.stringify(numberOfOrdersByStatus)])
 
   /**
    * Listening multi orders action start to change status
