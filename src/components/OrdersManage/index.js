@@ -630,14 +630,6 @@ export const OrdersManage = (props) => {
       })
     }
   }
-  useEffect(() => {
-    socket.on('orders_register', handleNewOrder)
-    socket.on('order_change', handleChangeOrder)
-    return () => {
-      socket.off('orders_register', handleNewOrder)
-      socket.off('order_change', handleChangeOrder)
-    }
-  }, [socket, filterValues, searchValue, numberOfOrdersByStatus])
 
   useEffect(() => {
     socket.on('order_change', handleChangeOrder)
