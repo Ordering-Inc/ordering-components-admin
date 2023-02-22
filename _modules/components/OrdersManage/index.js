@@ -1077,42 +1077,12 @@ var OrdersManage = function OrdersManage(props) {
 
   (0, _react.useEffect)(function () {
     socket.on('order_change', handleChangeOrder);
+    socket.on('orders_register', handleNewOrder);
     return function () {
       socket.off('order_change', handleChangeOrder);
+      socket.off('orders_register', handleNewOrder);
     };
-  }, [socket, filterValues, searchValue, numberOfOrdersByStatus]);
-  (0, _react.useEffect)(function () {
-    if (!user) return;
-    socket.join('drivers');
-
-    if (user.level === 0) {
-      socket.join('messages_orders');
-    } else {
-      socket.join("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
-    }
-
-    socket.join({
-      room: 'orders',
-      user_id: user === null || user === void 0 ? void 0 : user.id,
-      role: 'manager'
-    });
-    return function () {
-      if (!user) return;
-      socket.leave('drivers');
-
-      if (user.level === 0) {
-        socket.leave('messages_orders');
-      } else {
-        socket.leave("messages_orders_".concat(user === null || user === void 0 ? void 0 : user.id));
-      }
-
-      socket.leave({
-        room: 'orders',
-        user_id: user === null || user === void 0 ? void 0 : user.id,
-        role: 'manager'
-      });
-    };
-  }, [socket, loading, user]);
+  }, [socket, filterValues, searchValue, JSON.stringify(numberOfOrdersByStatus)]);
   /**
    * Listening multi orders action start to change status
    */
