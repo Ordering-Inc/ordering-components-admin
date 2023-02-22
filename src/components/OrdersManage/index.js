@@ -589,9 +589,21 @@ export const OrdersManage = (props) => {
     }
   }
 
+  const handleNewOrder = () => {
+    if (!numberOfOrdersByStatus.result) return
+    let _orderStatusNumbers = numberOfOrdersByStatus.result
+    _orderStatusNumbers['pending'] += 1
+    setNumberOfOrdersByStatus({
+      ...numberOfOrdersByStatus,
+      loading: false,
+      error: false,
+      result: _orderStatusNumbers
+    })
+  }
+
   const handleChangeOrder = (order) => {
     const statusChange = order?.changes?.find(({ attribute }) => (attribute === 'status'))
-    if (statusChange && !numberOfOrdersByStatus.loading) {
+    if (statusChange && numberOfOrdersByStatus.result) {
       const from = statusChange.old
       const to = statusChange.new
       const _orderStatusNumbers = numberOfOrdersByStatus.result
@@ -601,7 +613,9 @@ export const OrdersManage = (props) => {
       Object.values(orderStatuesList).map((statusTabs, key) => {
         if (statusTabs.includes(from)) {
           fromTab = Object.keys(orderStatuesList)[key]
-          _orderStatusNumbers[fromTab] -= 1
+          if (_orderStatusNumbers[fromTab] > 0) {
+            _orderStatusNumbers[fromTab] -= 1
+          }
         }
         if (statusTabs.includes(to)) {
           toTab = Object.keys(orderStatuesList)[key]
