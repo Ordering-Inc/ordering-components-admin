@@ -24,7 +24,9 @@ export const OrdersFilter = (props) => {
     deliveryTypes: [],
     paymethodIds: [],
     countryCode: [],
-    currency: []
+    currency: [],
+    metafieldName: null,
+    metafieldValue: ''
   })
 
   /**
@@ -35,6 +37,14 @@ export const OrdersFilter = (props) => {
     const orderId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
     setFilterValues({ ...filterValues, orderId })
   }
+
+    /**
+   * Changer filter value
+   * @param {EventTarget} e Related HTML event
+   */
+    const handleChangeInput = (e) => {
+      setFilterValues({ ...filterValues, [e.target.name]: e.target.value })
+    }
 
   /**
    * Change group type
@@ -237,7 +247,9 @@ export const OrdersFilter = (props) => {
       deliveryTypes: [],
       paymethodIds: [],
       countryCode: [],
-      currency: []
+      currency: [],
+      metafieldName: null,
+      metafieldValue: ''
     })
   }
 
@@ -276,6 +288,7 @@ export const OrdersFilter = (props) => {
           handleResetFilterValues={handleResetFilterValues}
           handleChangeCountryCode={handleChangeCountryCode}
           handleChangeCurrency={handleChangeCurrency}
+          handleChangeInput={handleChangeInput}
         />
       )}
     </>
