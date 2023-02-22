@@ -70,7 +70,9 @@ var OrdersFilter = function OrdersFilter(props) {
     deliveryTypes: [],
     paymethodIds: [],
     countryCode: [],
-    currency: []
+    currency: [],
+    metafieldName: null,
+    metafieldValue: ''
   }),
       _useState2 = _slicedToArray(_useState, 2),
       filterValues = _useState2[0],
@@ -86,6 +88,15 @@ var OrdersFilter = function OrdersFilter(props) {
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       orderId: orderId
     }));
+  };
+  /**
+  * Changer filter value
+  * @param {EventTarget} e Related HTML event
+  */
+
+
+  var handleChangeInput = function handleChangeInput(e) {
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, _defineProperty({}, e.target.name, e.target.value)));
   };
   /**
    * Change group type
@@ -403,7 +414,9 @@ var OrdersFilter = function OrdersFilter(props) {
       deliveryTypes: [],
       paymethodIds: [],
       countryCode: [],
-      currency: []
+      currency: [],
+      metafieldName: null,
+      metafieldValue: ''
     });
   };
 
@@ -458,7 +471,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangePaymethodType: handleChangePaymethodType,
     handleResetFilterValues: handleResetFilterValues,
     handleChangeCountryCode: handleChangeCountryCode,
-    handleChangeCurrency: handleChangeCurrency
+    handleChangeCurrency: handleChangeCurrency,
+    handleChangeInput: handleChangeInput
   })));
 };
 

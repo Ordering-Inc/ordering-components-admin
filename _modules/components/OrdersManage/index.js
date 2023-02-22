@@ -760,7 +760,7 @@ var OrdersManage = function OrdersManage(props) {
 
   var getOrderNumbersByStatus = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var where, conditions, filterConditons, additionalConditions, searchConditions, requestOptions, response, content, _orderStatusNumbers;
+      var where, conditions, filterConditons, metafieldConditions, additionalConditions, searchConditions, requestOptions, response, content, _orderStatusNumbers;
 
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) {
@@ -786,6 +786,27 @@ var OrdersManage = function OrdersManage(props) {
                       condition: 'ilike',
                       value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId, "%"))
                     }
+                  });
+                }
+
+                if (filterValues !== null && filterValues !== void 0 && filterValues.metafieldName) {
+                  metafieldConditions = [];
+                  metafieldConditions.push({
+                    attribute: "metafields",
+                    conditions: [{
+                      attribute: "key",
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldName
+                    }, {
+                      attribute: "value",
+                      value: {
+                        condition: "ilike",
+                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldValue, "%"))
+                      }
+                    }]
+                  });
+                  filterConditons.push({
+                    conector: 'AND',
+                    conditions: metafieldConditions
                   });
                 }
 

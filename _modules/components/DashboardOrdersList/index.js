@@ -225,7 +225,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
 
   var getOrders = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(pageSize, page) {
-      var where, conditions, options, getFilterStatusInOrderStatus, searchConditions, filterConditons, source, functionFetch;
+      var where, conditions, options, getFilterStatusInOrderStatus, searchConditions, filterConditons, metafieldConditions, source, functionFetch;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -388,6 +388,27 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                       condition: 'ilike',
                       value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId, "%"))
                     }
+                  });
+                }
+
+                if (filterValues !== null && filterValues !== void 0 && filterValues.metafieldName) {
+                  metafieldConditions = [];
+                  metafieldConditions.push({
+                    attribute: "metafields",
+                    conditions: [{
+                      attribute: "key",
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldName
+                    }, {
+                      attribute: "value",
+                      value: {
+                        condition: "ilike",
+                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldValue, "%"))
+                      }
+                    }]
+                  });
+                  filterConditons.push({
+                    conector: 'AND',
+                    conditions: metafieldConditions
                   });
                 }
 
