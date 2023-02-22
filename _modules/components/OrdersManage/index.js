@@ -1042,6 +1042,17 @@ var OrdersManage = function OrdersManage(props) {
     };
   }();
 
+  var handleNewOrder = function handleNewOrder() {
+    if (!numberOfOrdersByStatus.result) return;
+    var _orderStatusNumbers = numberOfOrdersByStatus.result;
+    _orderStatusNumbers['pending'] += 1;
+    setNumberOfOrdersByStatus(_objectSpread(_objectSpread({}, numberOfOrdersByStatus), {}, {
+      loading: false,
+      error: false,
+      result: _orderStatusNumbers
+    }));
+  };
+
   var handleChangeOrder = function handleChangeOrder(order) {
     var _order$changes;
 
@@ -1050,7 +1061,7 @@ var OrdersManage = function OrdersManage(props) {
       return attribute === 'status';
     });
 
-    if (statusChange && !numberOfOrdersByStatus.loading) {
+    if (statusChange && numberOfOrdersByStatus.result) {
       var from = statusChange.old;
       var to = statusChange.new;
       var _orderStatusNumbers = numberOfOrdersByStatus.result;
@@ -1059,7 +1070,10 @@ var OrdersManage = function OrdersManage(props) {
       Object.values(orderStatuesList).map(function (statusTabs, key) {
         if (statusTabs.includes(from)) {
           fromTab = Object.keys(orderStatuesList)[key];
-          _orderStatusNumbers[fromTab] -= 1;
+
+          if (_orderStatusNumbers[fromTab] > 0) {
+            _orderStatusNumbers[fromTab] -= 1;
+          }
         }
 
         if (statusTabs.includes(to)) {
