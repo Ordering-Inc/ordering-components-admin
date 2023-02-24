@@ -263,28 +263,28 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
-      if (filterValues?.metafieldName) {
-        const metafieldConditions = []
-        metafieldConditions.push(
+      if (filterValues?.metafield?.length > 0) {
+        const metafieldConditions = filterValues?.metafield.map(item => (
           {
-            attribute:"metafields",
-            conditions:[
+            attribute: 'metafields',
+            conditions: [
               {
-                attribute:"key",
-                value: filterValues?.metafieldName
+                attribute: 'key',
+                value: item?.key
               },
               {
-                attribute:"value",
-                value:{
-                  condition:"ilike",
-                  value: encodeURI(`%${filterValues?.metafieldValue}%`)
+                attribute: 'value',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${item?.value}%`)
                 }
               }
-            ]
+            ],
+            conector: 'AND'
           }
-        )
+        ))
         filterConditons.push({
-          conector: 'AND',
+          conector: 'OR',
           conditions: metafieldConditions
         })
       }
@@ -372,10 +372,10 @@ export const DashboardOrdersList = (props) => {
             attribute: 'business',
             conditions: [
               {
-                attribute: "city_id",
+                attribute: 'city_id',
                 value: filterValues?.cityIds
               }
-            ],
+            ]
           }
         )
       }
