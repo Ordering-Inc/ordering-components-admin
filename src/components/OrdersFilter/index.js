@@ -25,8 +25,7 @@ export const OrdersFilter = (props) => {
     paymethodIds: [],
     countryCode: [],
     currency: [],
-    metafieldName: null,
-    metafieldValue: ''
+    metafield: []
   })
 
   /**
@@ -38,13 +37,35 @@ export const OrdersFilter = (props) => {
     setFilterValues({ ...filterValues, orderId })
   }
 
-    /**
+  /**
    * Changer filter value
    * @param {EventTarget} e Related HTML event
    */
-    const handleChangeInput = (e) => {
-      setFilterValues({ ...filterValues, [e.target.name]: e.target.value })
-    }
+  const handleChangeMetaFieldValue = (e, id) => {
+    const metafield = filterValues?.metafield.map(item => {
+      if (id === item.id) {
+        return {
+          ...item,
+          [e.target.name]: e.target.value
+        }
+      }
+      return item
+    })
+
+    setFilterValues({ ...filterValues, metafield })
+  }
+
+  const handleAddMetaField = (item) => {
+    setFilterValues({
+      ...filterValues,
+      metafield: [...filterValues?.metafield, item]
+    })
+  }
+
+  const handleDeleteMetafield = (id) => {
+    const metafield = filterValues?.metafield.filter(item => item.id !== id)
+    setFilterValues({ ...filterValues, metafield })
+  }
 
   /**
    * Change group type
@@ -248,8 +269,7 @@ export const OrdersFilter = (props) => {
       paymethodIds: [],
       countryCode: [],
       currency: [],
-      metafieldName: null,
-      metafieldValue: ''
+      metafield: []
     })
   }
 
@@ -288,7 +308,9 @@ export const OrdersFilter = (props) => {
           handleResetFilterValues={handleResetFilterValues}
           handleChangeCountryCode={handleChangeCountryCode}
           handleChangeCurrency={handleChangeCurrency}
-          handleChangeInput={handleChangeInput}
+          handleChangeMetaFieldValue={handleChangeMetaFieldValue}
+          handleAddMetaField={handleAddMetaField}
+          handleDeleteMetafield={handleDeleteMetafield}
         />
       )}
     </>
