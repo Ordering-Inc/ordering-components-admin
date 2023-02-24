@@ -225,7 +225,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
 
   var getOrders = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(pageSize, page) {
-      var where, conditions, options, getFilterStatusInOrderStatus, searchConditions, filterConditons, metafieldConditions, source, functionFetch;
+      var where, conditions, options, getFilterStatusInOrderStatus, searchConditions, _filterValues$metafie, filterConditons, metafieldConditions, source, functionFetch;
+
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
@@ -391,23 +392,25 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   });
                 }
 
-                if (filterValues !== null && filterValues !== void 0 && filterValues.metafieldName) {
-                  metafieldConditions = [];
-                  metafieldConditions.push({
-                    attribute: "metafields",
-                    conditions: [{
-                      attribute: "key",
-                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldName
-                    }, {
-                      attribute: "value",
-                      value: {
-                        condition: "ilike",
-                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafieldValue, "%"))
-                      }
-                    }]
+                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$metafie = filterValues.metafield) === null || _filterValues$metafie === void 0 ? void 0 : _filterValues$metafie.length) > 0) {
+                  metafieldConditions = filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafield.map(function (item) {
+                    return {
+                      attribute: 'metafields',
+                      conditions: [{
+                        attribute: 'key',
+                        value: item === null || item === void 0 ? void 0 : item.key
+                      }, {
+                        attribute: 'value',
+                        value: {
+                          condition: 'ilike',
+                          value: encodeURI("%".concat(item === null || item === void 0 ? void 0 : item.value, "%"))
+                        }
+                      }],
+                      conector: 'AND'
+                    };
                   });
                   filterConditons.push({
-                    conector: 'AND',
+                    conector: 'OR',
                     conditions: metafieldConditions
                   });
                 }
@@ -485,7 +488,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   filterConditons.push({
                     attribute: 'business',
                     conditions: [{
-                      attribute: "city_id",
+                      attribute: 'city_id',
                       value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
                     }]
                   });
