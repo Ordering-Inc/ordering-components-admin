@@ -70,7 +70,8 @@ var OrdersFilter = function OrdersFilter(props) {
     deliveryTypes: [],
     paymethodIds: [],
     countryCode: [],
-    currency: []
+    currency: [],
+    metafield: []
   }),
       _useState2 = _slicedToArray(_useState, 2),
       filterValues = _useState2[0],
@@ -85,6 +86,39 @@ var OrdersFilter = function OrdersFilter(props) {
     var orderId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       orderId: orderId
+    }));
+  };
+  /**
+   * Changer filter value
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeMetaFieldValue = function handleChangeMetaFieldValue(e, id) {
+    var metafield = filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafield.map(function (item) {
+      if (id === item.id) {
+        return _objectSpread(_objectSpread({}, item), {}, _defineProperty({}, e.target.name, e.target.value));
+      }
+
+      return item;
+    });
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      metafield: metafield
+    }));
+  };
+
+  var handleAddMetaField = function handleAddMetaField(item) {
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      metafield: [].concat(_toConsumableArray(filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafield), [item])
+    }));
+  };
+
+  var handleDeleteMetafield = function handleDeleteMetafield(id) {
+    var metafield = filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafield.filter(function (item) {
+      return item.id !== id;
+    });
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      metafield: metafield
     }));
   };
   /**
@@ -403,7 +437,8 @@ var OrdersFilter = function OrdersFilter(props) {
       deliveryTypes: [],
       paymethodIds: [],
       countryCode: [],
-      currency: []
+      currency: [],
+      metafield: []
     });
   };
 
@@ -458,7 +493,10 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangePaymethodType: handleChangePaymethodType,
     handleResetFilterValues: handleResetFilterValues,
     handleChangeCountryCode: handleChangeCountryCode,
-    handleChangeCurrency: handleChangeCurrency
+    handleChangeCurrency: handleChangeCurrency,
+    handleChangeMetaFieldValue: handleChangeMetaFieldValue,
+    handleAddMetaField: handleAddMetaField,
+    handleDeleteMetafield: handleDeleteMetafield
   })));
 };
 
