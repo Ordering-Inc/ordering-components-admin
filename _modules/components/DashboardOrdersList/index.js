@@ -934,6 +934,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderList.loading) return;
 
     var handleUpdateOrder = function handleUpdateOrder(order) {
+      if (customerId && (order === null || order === void 0 ? void 0 : order.customer_id) !== customerId) return;
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
 
       if (!(order !== null && order !== void 0 && order.driver) && order !== null && order !== void 0 && order.driver_id) {
@@ -995,6 +996,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     };
 
     var handleRegisterOrder = function handleRegisterOrder(order) {
+      if (customerId && (order === null || order === void 0 ? void 0 : order.customer_id) !== customerId) return;
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
         return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
@@ -1082,7 +1084,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('orders_register', handleRegisterOrder);
       socket.off('message', handleNewMessage);
     };
-  }, [orderList.orders, pagination, orderBy, socket, driversList]); // Listening for customer rating
+  }, [orderList.orders, pagination, orderBy, socket, driversList, customerId]); // Listening for customer rating
 
   (0, _react.useEffect)(function () {
     var handleCustomerReviewed = function handleCustomerReviewed(review) {
