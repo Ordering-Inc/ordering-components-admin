@@ -28,7 +28,6 @@ export const UserFormDetails = (props) => {
   const [isEdit, setIsEdit] = useState(false)
   const [userState, setUserState] = useState({ loading: false, result: { error: false } })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
-  const [driversGroupsState, setDriversGroupsState] = useState({ groups: [], loading: false, error: null })
   const [selectedDriverGroupIds, setSelectedDriverGroupIds] = useState([])
   const requestsState = {}
 
@@ -330,30 +329,6 @@ export const UserFormDetails = (props) => {
       validationFields.fields?.checkout[fieldName].required
   }
 
-  /**
-   * Method to get the drivers groups from API
-   */
-  const getDriversGroups = async () => {
-    try {
-      setDriversGroupsState({ ...driversGroupsState, loading: true })
-      const requestOptions = {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.token}`
-        }
-      }
-      const response = await fetch(`${ordering.root}/drivergroups`, requestOptions)
-      const content = await response.json()
-      if (!content.error) {
-        const driverManagerGroups = content.result?.filter(group => group.administrator_id === session?.user?.id)
-        setDriversGroupsState({ ...driversGroupsState, groups: driverManagerGroups, loading: false })
-      }
-    } catch (err) {
-      setDriversGroupsState({ ...driversGroupsState, loading: false, error: [err.message] })
-    }
-  }
-
   const handleDriverGroupClick = (groupId) => {
     let updatedDriverGroupIds = []
     if (selectedDriverGroupIds.includes(groupId)) {
@@ -370,12 +345,6 @@ export const UserFormDetails = (props) => {
       }
     })
   }
-
-  useEffect(() => {
-    if (session?.user?.level === 5 && !user?.id) {
-      getDriversGroups()
-    }
-  }, [session, user])
 
   return (
     <>
@@ -398,7 +367,6 @@ export const UserFormDetails = (props) => {
           toggleIsEdit={() => setIsEdit(!isEdit)}
           handleChangeUserType={handleChangeUserType}
           handleChangeOccupation={handleChangeOccupation}
-          driversGroupsState={driversGroupsState}
           selectedDriverGroupIds={selectedDriverGroupIds}
           handleDriverGroupClick={handleDriverGroupClick}
         />
