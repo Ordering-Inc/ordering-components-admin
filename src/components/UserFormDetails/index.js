@@ -28,6 +28,8 @@ export const UserFormDetails = (props) => {
   const [isEdit, setIsEdit] = useState(false)
   const [userState, setUserState] = useState({ loading: false, result: { error: false } })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
+  const [driversGroupsState, setDriversGroupsState] = useState({ groups: [], loading: false, error: null })
+  const [selectedDriverGroupIds, setSelectedDriverGroupIds] = useState([])
   const requestsState = {}
 
   const accessToken = useDefualtSessionManager ? session.token : props.accessToken
@@ -328,6 +330,53 @@ export const UserFormDetails = (props) => {
       validationFields.fields?.checkout[fieldName].required
   }
 
+  /**
+   * Method to get the drivers groups from API
+   */
+  const getDriversGroups = async () => {
+    try {
+      setDriversGroupsState({ ...driversGroupsState, loading: true })
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
+        }
+      }
+      const response = await fetch(`${ordering.root}/drivergroups`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        const driverManagerGroups = content.result?.filter(group => group.administrator_id === session?.user?.id)
+        setDriversGroupsState({ ...driversGroupsState, groups: driverManagerGroups, loading: false })
+      }
+    } catch (err) {
+      setDriversGroupsState({ ...driversGroupsState, loading: false, error: [err.message] })
+    }
+  }
+
+  const handleDriverGroupClick = (groupId) => {
+    let updatedDriverGroupIds = []
+    if (selectedDriverGroupIds.includes(groupId)) {
+      updatedDriverGroupIds = selectedDriverGroupIds.filter(id => id !== groupId)
+    } else {
+      updatedDriverGroupIds = [...selectedDriverGroupIds, groupId]
+    }
+    setSelectedDriverGroupIds(updatedDriverGroupIds)
+    setFormState({
+      ...formState,
+      changes: {
+        ...formState.changes,
+        driver_groups_ids: updatedDriverGroupIds
+      }
+    })
+  }
+
+  useEffect(() => {
+    if (session?.user?.level === 5 && !user?.id) {
+      getDriversGroups()
+    }
+  }, [session, user])
+
   return (
     <>
       {UIComponent && (
@@ -349,6 +398,9 @@ export const UserFormDetails = (props) => {
           toggleIsEdit={() => setIsEdit(!isEdit)}
           handleChangeUserType={handleChangeUserType}
           handleChangeOccupation={handleChangeOccupation}
+          driversGroupsState={driversGroupsState}
+          selectedDriverGroupIds={selectedDriverGroupIds}
+          handleDriverGroupClick={handleDriverGroupClick}
         />
       )}
     </>
