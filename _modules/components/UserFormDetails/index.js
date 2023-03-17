@@ -118,19 +118,10 @@ var UserFormDetails = function UserFormDetails(props) {
       formState = _useState6[0],
       setFormState = _useState6[1];
 
-  var _useState7 = (0, _react.useState)({
-    groups: [],
-    loading: false,
-    error: null
-  }),
+  var _useState7 = (0, _react.useState)([]),
       _useState8 = _slicedToArray(_useState7, 2),
-      driversGroupsState = _useState8[0],
-      setDriversGroupsState = _useState8[1];
-
-  var _useState9 = (0, _react.useState)([]),
-      _useState10 = _slicedToArray(_useState9, 2),
-      selectedDriverGroupIds = _useState10[0],
-      setSelectedDriverGroupIds = _useState10[1];
+      selectedDriverGroupIds = _useState8[0],
+      setSelectedDriverGroupIds = _useState8[1];
 
   var requestsState = {};
   var accessToken = useDefualtSessionManager ? session.token : props.accessToken;
@@ -533,76 +524,6 @@ var UserFormDetails = function UserFormDetails(props) {
 
     return useValidationFields && !validationFields.loading && ((_validationFields$fie4 = validationFields.fields) === null || _validationFields$fie4 === void 0 ? void 0 : _validationFields$fie4.checkout[fieldName]) && ((_validationFields$fie5 = validationFields.fields) === null || _validationFields$fie5 === void 0 ? void 0 : _validationFields$fie5.checkout[fieldName].enabled) && ((_validationFields$fie6 = validationFields.fields) === null || _validationFields$fie6 === void 0 ? void 0 : _validationFields$fie6.checkout[fieldName].required);
   };
-  /**
-   * Method to get the drivers groups from API
-   */
-
-
-  var getDriversGroups = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-      var requestOptions, response, content, _content$result, driverManagerGroups;
-
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(session.token)
-                }
-              };
-              _context3.next = 5;
-              return fetch("".concat(ordering.root, "/drivergroups"), requestOptions);
-
-            case 5:
-              response = _context3.sent;
-              _context3.next = 8;
-              return response.json();
-
-            case 8:
-              content = _context3.sent;
-
-              if (!content.error) {
-                driverManagerGroups = (_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.filter(function (group) {
-                  var _session$user3;
-
-                  return group.administrator_id === (session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id);
-                });
-                setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                  groups: driverManagerGroups,
-                  loading: false
-                }));
-              }
-
-              _context3.next = 15;
-              break;
-
-            case 12:
-              _context3.prev = 12;
-              _context3.t0 = _context3["catch"](0);
-              setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
-                loading: false,
-                error: [_context3.t0.message]
-              }));
-
-            case 15:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 12]]);
-    }));
-
-    return function getDriversGroups() {
-      return _ref3.apply(this, arguments);
-    };
-  }();
 
   var handleDriverGroupClick = function handleDriverGroupClick(groupId) {
     var updatedDriverGroupIds = [];
@@ -623,13 +544,6 @@ var UserFormDetails = function UserFormDetails(props) {
     }));
   };
 
-  (0, _react.useEffect)(function () {
-    var _session$user4;
-
-    if ((session === null || session === void 0 ? void 0 : (_session$user4 = session.user) === null || _session$user4 === void 0 ? void 0 : _session$user4.level) === 5 && !(user !== null && user !== void 0 && user.id)) {
-      getDriversGroups();
-    }
-  }, [session, user]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isEdit: isEdit,
     cleanFormState: cleanFormState,
@@ -649,7 +563,6 @@ var UserFormDetails = function UserFormDetails(props) {
     },
     handleChangeUserType: handleChangeUserType,
     handleChangeOccupation: handleChangeOccupation,
-    driversGroupsState: driversGroupsState,
     selectedDriverGroupIds: selectedDriverGroupIds,
     handleDriverGroupClick: handleDriverGroupClick
   })));
