@@ -76,7 +76,7 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
       _useValidationFields2 = _slicedToArray(_useValidationFields, 2),
       loadValidationFields = _useValidationFields2[1].loadValidationFields;
 
-  var hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes'];
+  var hideSettingList = ['city_dropdown_option', 'address', 'address_notes'];
 
   var _useState = (0, _react.useState)({
     fields: [],
