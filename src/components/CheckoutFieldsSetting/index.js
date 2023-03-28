@@ -17,7 +17,7 @@ export const CheckoutFieldsSetting = (props) => {
   const [, t] = useLanguage()
   const [, { loadValidationFields }] = useValidationFields()
 
-  const hideSettingList = ['city_dropdown_option', 'address', 'zipcode', 'address_notes']
+  const hideSettingList = ['city_dropdown_option', 'address', 'address_notes']
 
   const [checkoutFieldsState, setCheckoutFieldsState] = useState({ fields: [], loading: false, error: null })
   const [actionState, setActionState] = useState({ loading: false, error: null })
