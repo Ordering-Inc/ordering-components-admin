@@ -466,7 +466,7 @@ var OrderingWebsite = function OrderingWebsite(props) {
 
 
   var handleUpdateSiteTheme = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(isAdvanced) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(advancedTheme) {
       var _orderingTheme$themes, _orderingTheme$themes2, _orderingTheme$themes3, themeId, siteId, myProductvalues, values, requestOptions, response, _yield$response$json6, error, result;
 
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
@@ -482,7 +482,7 @@ var OrderingWebsite = function OrderingWebsite(props) {
                   components: _objectSpread({}, themeValues)
                 })
               });
-              values = isAdvanced ? JSON.parse(JSON.stringify(advancedValues)) : JSON.parse(JSON.stringify(myProductvalues));
+              values = advancedTheme ? JSON.parse(JSON.stringify(advancedTheme)) : JSON.parse(JSON.stringify(myProductvalues));
               requestOptions = {
                 method: 'POST',
                 headers: {
