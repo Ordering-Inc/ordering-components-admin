@@ -407,6 +407,7 @@ var InvoiceDriverManager = function InvoiceDriverManager(props) {
 
         return [].concat(_toConsumableArray(ids), [event === null || event === void 0 ? void 0 : (_event$paymethod = event.paymethod) === null || _event$paymethod === void 0 ? void 0 : _event$paymethod.id]);
       }, []);
+      orderPaymethodIds.push(order.paymethod_id);
 
       if (!orderPaymethodIds.some(function (id) {
         return paymethods.includes(id);

@@ -76,7 +76,8 @@ var ProductStep = function ProductStep(props) {
 
   var _useState3 = (0, _react.useState)({
     loading: false,
-    error: null
+    error: null,
+    content: null
   }),
       _useState4 = _slicedToArray(_useState3, 2),
       actionState = _useState4[0],
@@ -251,6 +252,7 @@ var ProductStep = function ProductStep(props) {
               content = _context3.sent;
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
                 loading: false,
+                content: content === null || content === void 0 ? void 0 : content.result,
                 error: content !== null && content !== void 0 && content.error ? content === null || content === void 0 ? void 0 : content.result : null
               }));
               _context3.next = 15;
