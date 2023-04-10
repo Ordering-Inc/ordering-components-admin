@@ -279,6 +279,24 @@ Object.defineProperty(exports, "BusinessPickupDetails", {
     return _BusinessPickupDetails.BusinessPickupDetails;
   }
 });
+Object.defineProperty(exports, "BusinessPlace", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlace.BusinessPlace;
+  }
+});
+Object.defineProperty(exports, "BusinessPlaceGroup", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlaceGroup.BusinessPlaceGroup;
+  }
+});
+Object.defineProperty(exports, "BusinessPlaceGroupList", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessPlaceGroupList.BusinessPlaceGroupList;
+  }
+});
 Object.defineProperty(exports, "BusinessProductCreator", {
   enumerable: true,
   get: function get() {
@@ -1781,6 +1799,12 @@ var _BusinessMenuShare = require("./components/BusinessMenuShare");
 var _BusinessMetaFields = require("./components/BusinessMetaFields");
 
 var _BusinessPaymethods = require("./components/BusinessPaymethods");
+
+var _BusinessPlace = require("./components/BusinessPlace");
+
+var _BusinessPlaceGroupList = require("./components/BusinessPlaceGroupList");
+
+var _BusinessPlaceGroup = require("./components/BusinessPlaceGroup");
 
 var _BusinessPickupDetails = require("./components/BusinessPickupDetails");
 
