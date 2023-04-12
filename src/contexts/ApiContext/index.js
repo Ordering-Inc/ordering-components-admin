@@ -16,8 +16,8 @@ export const ApiProvider = ({ settings, children }) => {
   const [ordering, setOrdering] = useState(new Ordering(apiSettings))
   const [language, setLanguage] = useState(settings.api.language)
 
-  const _setLanguage = (languageCode) => {
-    if (languageCode === language) return
+  const _setLanguage = (languageCode, forceSetLanguage) => {
+    if (languageCode === language && !forceSetLanguage) return
     setLanguage(languageCode)
   }
 
