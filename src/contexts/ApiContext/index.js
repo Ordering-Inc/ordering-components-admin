@@ -27,6 +27,7 @@ export const ApiProvider = ({ settings, children }) => {
   }, [settings])
 
   useEffect(() => {
+    console.log('useEffect', ordering.language, language)
     if (ordering.language === language) return
     const _ordering = new Ordering({
       ...apiSettings,
