@@ -97,10 +97,7 @@ export const LanguageManager = (props) => {
     if (loading) return
     try {
       setTranslationList({ ...translationList, loading: true })
-      const language = JSON.parse(window.localStorage.getItem('language'))?.code || 'en'
-      if (ordering?.language !== language) {
-        apiHelper.setLanguage(language, true)
-      }
+
       const { content: { error, result } } = await ordering.translations().get()
       if (!error) {
         setTranslationList({
