@@ -13,7 +13,7 @@ export const LanguageManager = (props) => {
     UIComponent
   } = props
 
-  const [ordering, apiHelper] = useApi()
+  const [ordering] = useApi()
   const [, t] = useLanguage()
   const [{ loading }] = useSession()
   const [, { showToast }] = useToast()
