@@ -1051,6 +1051,10 @@ var UsersList = function UsersList(props) {
                   total: (paginationDetail === null || paginationDetail === void 0 ? void 0 : paginationDetail.total) - selectedUsers.length
                 }));
                 setSelectedUsers([]);
+                setDeleteUsersActionState({
+                  loading: false,
+                  error: null
+                });
                 showToast(_ToastContext.ToastType.Success, t('USER_DELETED', 'User deleted'));
               } else {
                 setDeleteUsersActionState({

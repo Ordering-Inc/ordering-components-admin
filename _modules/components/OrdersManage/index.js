@@ -418,7 +418,7 @@ var OrdersManage = function OrdersManage(props) {
 
   var handleChangeMultiOrderStatus = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(orderId) {
-      var requestOptions, response, _yield$response$json, result, _ordersIds;
+      var requestOptions, response, _yield$response$json, result, error, _ordersIds;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -449,6 +449,7 @@ var OrdersManage = function OrdersManage(props) {
             case 8:
               _yield$response$json = _context.sent;
               result = _yield$response$json.result;
+              error = _yield$response$json.error;
 
               if (parseInt(result.status) === updateStatus) {
                 _ordersIds = _toConsumableArray(selectedOrderIds);
@@ -462,14 +463,15 @@ var OrdersManage = function OrdersManage(props) {
                 setSelectedOrderIds(_ordersIds);
               }
 
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
-                loading: false
-              }));
-              _context.next = 18;
+              setActionStatus({
+                loading: false,
+                error: error ? result : null
+              });
+              _context.next = 19;
               break;
 
-            case 14:
-              _context.prev = 14;
+            case 15:
+              _context.prev = 15;
               _context.t0 = _context["catch"](0);
               setActionStatus({
                 loading: false,
@@ -477,12 +479,12 @@ var OrdersManage = function OrdersManage(props) {
               });
               setStartMulitOrderStatusChange(false);
 
-            case 18:
+            case 19:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 14]]);
+      }, _callee, null, [[0, 15]]);
     }));
 
     return function handleChangeMultiOrderStatus(_x) {
