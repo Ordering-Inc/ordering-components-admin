@@ -18,7 +18,9 @@ export const LoginForm = (props) => {
     urlToRedirect,
     allowedLevels,
     billingUrl,
-    handleRedirect
+    handleRedirect,
+    configFile,
+    setConfigFile
   } = props
 
   const [ordering] = useApi()
@@ -91,6 +93,17 @@ export const LoginForm = (props) => {
       }
 
       setFormState({ ...formState, loading: true })
+      const language = JSON.parse(window.localStorage.getItem('language'))?.code || 'en'
+      if (ordering.language !== language) {
+        setConfigFile({
+          ...configFile,
+          api: {
+            ...configFile.api,
+            language: language
+          }
+        })
+        return
+      }
       const { content: { error, result, action } } = await ordering.users().auth(_credentials)
 
       if (action && action?.type === 'billing_autologin') {
