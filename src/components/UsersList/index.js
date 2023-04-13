@@ -685,6 +685,10 @@ export const UsersList = (props) => {
           total: paginationDetail?.total - selectedUsers.length
         })
         setSelectedUsers([])
+        setDeleteUsersActionState({
+          loading: false,
+          error: null
+        })
         showToast(ToastType.Success, t('USER_DELETED', 'User deleted'))
       } else {
         setDeleteUsersActionState({

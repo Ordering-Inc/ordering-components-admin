@@ -162,7 +162,7 @@ export const OrdersManage = (props) => {
         body: JSON.stringify({ status: updateStatus })
       }
       const response = await fetch(`${ordering.root}/orders/${orderId}`, requestOptions)
-      const { result } = await response.json()
+      const { result, error } = await response.json()
 
       if (parseInt(result.status) === updateStatus) {
         const _ordersIds = [...selectedOrderIds]
@@ -172,7 +172,10 @@ export const OrdersManage = (props) => {
         }
         setSelectedOrderIds(_ordersIds)
       }
-      setActionStatus({ ...actionStatus, loading: false })
+      setActionStatus({
+        loading: false,
+        error: error ? result : null
+      })
     } catch (err) {
       setActionStatus({ loading: false, error: [err.message] })
       setStartMulitOrderStatusChange(false)
