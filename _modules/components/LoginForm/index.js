@@ -66,7 +66,9 @@ var LoginForm = function LoginForm(props) {
       urlToRedirect = props.urlToRedirect,
       allowedLevels = props.allowedLevels,
       billingUrl = props.billingUrl,
-      handleRedirect = props.handleRedirect;
+      handleRedirect = props.handleRedirect,
+      configFile = props.configFile,
+      setConfigFile = props.setConfigFile;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -173,7 +175,7 @@ var LoginForm = function LoginForm(props) {
 
   var handleLoginClick = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(values) {
-      var _credentials, _objectSpread2, _credentials2, _yield$ordering$users, _yield$ordering$users2, error, result, action, _action$data, _action$data2, _action$data3, level, access_token, _yield$ordering$setAc, logoutResp;
+      var _JSON$parse, _credentials, _objectSpread2, _credentials2, language, _yield$ordering$users, _yield$ordering$users2, error, result, action, _action$data, _action$data2, _action$data3, level, access_token, _yield$ordering$setAc, logoutResp;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -216,10 +218,25 @@ var LoginForm = function LoginForm(props) {
               setFormState(_objectSpread(_objectSpread({}, formState), {}, {
                 loading: true
               }));
-              _context.next = 13;
+              language = ((_JSON$parse = JSON.parse(window.localStorage.getItem('language'))) === null || _JSON$parse === void 0 ? void 0 : _JSON$parse.code) || 'en';
+
+              if (!(ordering.language !== language)) {
+                _context.next = 15;
+                break;
+              }
+
+              setConfigFile(_objectSpread(_objectSpread({}, configFile), {}, {
+                api: _objectSpread(_objectSpread({}, configFile.api), {}, {
+                  language: language
+                })
+              }));
+              return _context.abrupt("return");
+
+            case 15:
+              _context.next = 17;
               return ordering.users().auth(_credentials);
 
-            case 13:
+            case 17:
               _yield$ordering$users = _context.sent;
               _yield$ordering$users2 = _yield$ordering$users.content;
               error = _yield$ordering$users2.error;
@@ -239,32 +256,32 @@ var LoginForm = function LoginForm(props) {
               }
 
               if (error) {
-                _context.next = 42;
+                _context.next = 46;
                 break;
               }
 
               if (!useDefualtSessionManager) {
-                _context.next = 39;
+                _context.next = 43;
                 break;
               }
 
               if (!(allowedLevels && (allowedLevels === null || allowedLevels === void 0 ? void 0 : allowedLevels.length) > 0)) {
-                _context.next = 38;
+                _context.next = 42;
                 break;
               }
 
               level = result.level, access_token = result.session.access_token;
 
               if (allowedLevels.includes(level)) {
-                _context.next = 38;
+                _context.next = 42;
                 break;
               }
 
-              _context.prev = 25;
-              _context.next = 28;
+              _context.prev = 29;
+              _context.next = 32;
               return ordering.setAccessToken(access_token).users().logout();
 
-            case 28:
+            case 32:
               _yield$ordering$setAc = _context.sent;
               logoutResp = _yield$ordering$setAc.content;
 
@@ -279,12 +296,12 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 37;
+              _context.next = 41;
               break;
 
-            case 34:
-              _context.prev = 34;
-              _context.t0 = _context["catch"](25);
+            case 38:
+              _context.prev = 38;
+              _context.t0 = _context["catch"](29);
               setFormState({
                 result: {
                   error: true,
@@ -293,17 +310,17 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 37:
+            case 41:
               return _context.abrupt("return");
 
-            case 38:
+            case 42:
               login({
                 user: result,
                 token: result.session.access_token,
                 project: ordering === null || ordering === void 0 ? void 0 : ordering.project
               });
 
-            case 39:
+            case 43:
               events.emit('userLogin', result);
 
               if (handleSuccessLogin) {
@@ -314,7 +331,7 @@ var LoginForm = function LoginForm(props) {
                 handleRedirect ? handleRedirect(urlToRedirect) : window.location.href = "".concat(window.location.origin).concat(urlToRedirect);
               }
 
-            case 42:
+            case 46:
               setFormState({
                 result: {
                   error: error,
@@ -322,11 +339,11 @@ var LoginForm = function LoginForm(props) {
                 },
                 loading: false
               });
-              _context.next = 48;
+              _context.next = 52;
               break;
 
-            case 45:
-              _context.prev = 45;
+            case 49:
+              _context.prev = 49;
               _context.t1 = _context["catch"](0);
               setFormState({
                 result: {
@@ -336,12 +353,12 @@ var LoginForm = function LoginForm(props) {
                 loading: false
               });
 
-            case 48:
+            case 52:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 45], [25, 34]]);
+      }, _callee, null, [[0, 49], [29, 38]]);
     }));
 
     return function handleLoginClick(_x) {
