@@ -58,6 +58,7 @@ var OrdersFilter = function OrdersFilter(props) {
 
   var _useState = (0, _react.useState)({
     orderId: null,
+    externalId: null,
     groupTypes: [],
     dateType: null,
     deliveryFromDatetime: null,
@@ -86,6 +87,17 @@ var OrdersFilter = function OrdersFilter(props) {
     var orderId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       orderId: orderId
+    }));
+  };
+  /**
+   * Changer external Id
+   * @param {EventTarget} e Related HTML event
+   */
+
+
+  var handleChangeExternalId = function handleChangeExternalId(e) {
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      externalId: e.target.value
     }));
   };
   /**
@@ -427,6 +439,7 @@ var OrdersFilter = function OrdersFilter(props) {
   var handleResetFilterValues = function handleResetFilterValues() {
     setFilterValues({
       orderId: null,
+      externalId: null,
       groupTypes: [],
       deliveryFromDatetime: null,
       deliveryEndDatetime: null,
@@ -496,7 +509,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangeCurrency: handleChangeCurrency,
     handleChangeMetaFieldValue: handleChangeMetaFieldValue,
     handleAddMetaField: handleAddMetaField,
-    handleDeleteMetafield: handleDeleteMetafield
+    handleDeleteMetafield: handleDeleteMetafield,
+    handleChangeExternalId: handleChangeExternalId
   })));
 };
 
