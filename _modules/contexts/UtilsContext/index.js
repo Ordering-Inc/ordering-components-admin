@@ -240,19 +240,10 @@ var UtilsProviders = function UtilsProviders(_ref) {
     }
 
     if (unit.toUpperCase() === 'MI') {
-      var dist = distance * 1.621371;
-
-      if (dist >= 1000) {
-        return "".concat(parseShortenDistance(dist), " ").concat(t('MI', 'mi'));
-      }
-
+      var dist = distance * 0.621371 / 1000;
       return "".concat(parseNumber(dist, options), " ").concat(t('MI', 'mi'));
     } else {
-      if (distance >= 1000) {
-        return "".concat(parseShortenDistance(distance), " ").concat(t('KM', 'km'));
-      }
-
-      return "".concat(parseNumber(distance, options), " ").concat(t('KM', 'km'));
+      return "".concat(parseNumber(distance / 1000, options), " ").concat(t('KM', 'km'));
     }
   };
 
