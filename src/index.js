@@ -81,6 +81,7 @@ import { CityList } from './components/CityList'
 import { CountryList } from './components/CountryList'
 import { CouponControl } from './components/CouponControl'
 import { ContentForm } from './components/ContentForm'
+import { CustomDomain } from './components/CustomDomain'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -339,6 +340,7 @@ export {
   CountryList,
   CouponControl,
   ContentForm,
+  CustomDomain,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
