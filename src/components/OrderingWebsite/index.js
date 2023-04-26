@@ -20,6 +20,7 @@ export const OrderingWebsite = (props) => {
   const [advancedValues, setAdvancedValues] = useState({})
   const [orderingTheme, setOrderingTheme] = useState({ loading: true, themes: [], error: null, siteId: null })
   const [themesList, setThemesList] = useState({ loading: true, themes: [], error: null })
+  const [site, setSite] = useState(null)
 
   /**
  * Method to get the themes from API
@@ -43,6 +44,7 @@ export const OrderingWebsite = (props) => {
         const found = result.find(site => site.code === appId)
         if (found) {
           await getSiteTheme(found.id)
+          setSite(found)
         } else {
           await handleAddSite()
         }
@@ -77,6 +79,7 @@ export const OrderingWebsite = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         await getSiteTheme(result.id)
+        setSite(result)
       } else {
         setOrderingTheme({
           ...orderingTheme,
@@ -261,6 +264,8 @@ export const OrderingWebsite = (props) => {
           setThemeValues={setThemeValues}
           handleUpdateSiteTheme={handleUpdateSiteTheme}
           themesList={themesList}
+          site={site}
+          setSite={setSite}
         />
       )}
     </>
