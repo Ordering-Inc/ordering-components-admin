@@ -67,6 +67,7 @@ import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { BusinessWalletsList } from './components/BusinessWalletsList'
+import { BusinessQRCodeOptions } from './components/BusinessQRCodeOptions'
 import { CampaignListing } from './components/CampaignListing'
 import { CampaignDetail } from './components/CampaignDetail'
 import { CampaignDetailContent } from './components/CampaignDetailContent'
@@ -81,6 +82,7 @@ import { CityList } from './components/CityList'
 import { CountryList } from './components/CountryList'
 import { CouponControl } from './components/CouponControl'
 import { ContentForm } from './components/ContentForm'
+import { CustomDomain } from './components/CustomDomain'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -325,6 +327,7 @@ export {
   BusinessZoneGoogleMaps,
   BusinessProductCreator,
   BusinessWalletsList,
+  BusinessQRCodeOptions,
   CampaignListing,
   CampaignDetail,
   CampaignDetailContent,
@@ -339,6 +342,7 @@ export {
   CountryList,
   CouponControl,
   ContentForm,
+  CustomDomain,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
