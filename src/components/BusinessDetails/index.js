@@ -392,10 +392,10 @@ export const BusinessDetails = (props) => {
         const site = result.find(site => site.code === 'website')
         setSiteState({ ...siteState, loading: false, site: site })
       } else {
-        setActionStatus({ ...siteState, loading: false, error: result })
+        setSiteState({ ...siteState, loading: false, error: result })
       }
     } catch (err) {
-      setActionStatus({ ...siteState, loading: false, error: [err.message] })
+      setSiteState({ ...siteState, loading: false, error: [err.message] })
     }
   }
 
