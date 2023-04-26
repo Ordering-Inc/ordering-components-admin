@@ -5,7 +5,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.OrderingWebsite = void 0;
+exports.BusinessQRCodeOptions = void 0;
 
 var _react = _interopRequireWildcard(require("react"));
 
@@ -13,11 +13,7 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _SessionContext = require("../../contexts/SessionContext");
 
-var _ToastContext = require("../../contexts/ToastContext");
-
 var _ApiContext = require("../../contexts/ApiContext");
-
-var _LanguageContext = require("../../contexts/LanguageContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -51,9 +47,8 @@ function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Sy
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-var OrderingWebsite = function OrderingWebsite(props) {
-  var UIComponent = props.UIComponent,
-      appId = props.appId;
+var BusinessQRCodeOptions = function BusinessQRCodeOptions(props) {
+  var UIComponent = props.UIComponent;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -63,62 +58,29 @@ var OrderingWebsite = function OrderingWebsite(props) {
       _useSession2 = _slicedToArray(_useSession, 1),
       token = _useSession2[0].token;
 
-  var _useToast = (0, _ToastContext.useToast)(),
-      _useToast2 = _slicedToArray(_useToast, 2),
-      showToast = _useToast2[1].showToast;
-
-  var _useLanguage = (0, _LanguageContext.useLanguage)(),
-      _useLanguage2 = _slicedToArray(_useLanguage, 2),
-      t = _useLanguage2[1];
-
-  var _useState = (0, _react.useState)({}),
-      _useState2 = _slicedToArray(_useState, 2),
-      themeValues = _useState2[0],
-      setThemeValues = _useState2[1];
-
-  var _useState3 = (0, _react.useState)({}),
-      _useState4 = _slicedToArray(_useState3, 2),
-      advancedValues = _useState4[0],
-      setAdvancedValues = _useState4[1];
-
-  var _useState5 = (0, _react.useState)({
-    loading: true,
-    themes: [],
-    error: null,
-    siteId: null
-  }),
-      _useState6 = _slicedToArray(_useState5, 2),
-      orderingTheme = _useState6[0],
-      setOrderingTheme = _useState6[1];
-
-  var _useState7 = (0, _react.useState)({
-    loading: true,
-    themes: [],
+  var _useState = (0, _react.useState)({
+    site: null,
+    loading: false,
     error: null
   }),
-      _useState8 = _slicedToArray(_useState7, 2),
-      themesList = _useState8[0],
-      setThemesList = _useState8[1];
-
-  var _useState9 = (0, _react.useState)(null),
-      _useState10 = _slicedToArray(_useState9, 2),
-      site = _useState10[0],
-      setSite = _useState10[1];
+      _useState2 = _slicedToArray(_useState, 2),
+      siteState = _useState2[0],
+      setSiteState = _useState2[1];
   /**
-  * Method to get the themes from API
-  */
+   * Method to get the themes from API
+   */
 
 
   var getSites = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, response, _yield$response$json, error, result, found;
+      var requestOptions, response, _yield$response$json, error, result, site;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               _context.prev = 0;
-              setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
+              setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
                 loading: true
               }));
               requestOptions = {
@@ -141,451 +103,55 @@ var OrderingWebsite = function OrderingWebsite(props) {
               error = _yield$response$json.error;
               result = _yield$response$json.result;
 
-              if (error) {
-                _context.next = 21;
-                break;
+              if (!error) {
+                site = result.find(function (site) {
+                  return site.code === 'website';
+                });
+                setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
+                  loading: false,
+                  site: site
+                }));
+              } else {
+                setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
+                  loading: false,
+                  error: result
+                }));
               }
 
-              found = result.find(function (site) {
-                return site.code === appId;
-              });
-
-              if (!found) {
-                _context.next = 19;
-                break;
-              }
-
-              _context.next = 16;
-              return getSiteTheme(found.id);
-
-            case 16:
-              setSite(found);
-              _context.next = 21;
+              _context.next = 17;
               break;
 
-            case 19:
-              _context.next = 21;
-              return handleAddSite();
-
-            case 21:
-              _context.next = 26;
-              break;
-
-            case 23:
-              _context.prev = 23;
+            case 14:
+              _context.prev = 14;
               _context.t0 = _context["catch"](0);
-              setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
+              setSiteState(_objectSpread(_objectSpread({}, siteState), {}, {
                 loading: false,
                 error: [_context.t0.message]
               }));
 
-            case 26:
+            case 17:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 23]]);
+      }, _callee, null, [[0, 14]]);
     }));
 
     return function getSites() {
       return _ref.apply(this, arguments);
     };
   }();
-  /**
-  * Function to add new site from API
-  */
-
-
-  var handleAddSite = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var initialData, requestOptions, response, _yield$response$json2, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              initialData = {
-                code: appId,
-                name: 'Ordering.co'
-              };
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify(initialData)
-              };
-              _context2.next = 5;
-              return fetch("".concat(ordering.root, "/sites"), requestOptions);
-
-            case 5:
-              response = _context2.sent;
-              _context2.next = 8;
-              return response.json();
-
-            case 8:
-              _yield$response$json2 = _context2.sent;
-              error = _yield$response$json2.error;
-              result = _yield$response$json2.result;
-
-              if (error) {
-                _context2.next = 17;
-                break;
-              }
-
-              _context2.next = 14;
-              return getSiteTheme(result.id);
-
-            case 14:
-              setSite(result);
-              _context2.next = 18;
-              break;
-
-            case 17:
-              setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
-                loading: false,
-                themes: [],
-                error: result
-              }));
-
-            case 18:
-              _context2.next = 23;
-              break;
-
-            case 20:
-              _context2.prev = 20;
-              _context2.t0 = _context2["catch"](0);
-              setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
-                loading: false,
-                result: [_context2.t0.message]
-              }));
-
-            case 23:
-            case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2, null, [[0, 20]]);
-    }));
-
-    return function handleAddSite() {
-      return _ref2.apply(this, arguments);
-    };
-  }();
-  /**
-   * Method to get the site theme from API
-   */
-
-
-  var getSiteTheme = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(siteId) {
-      var requestOptions, response, _yield$response$json3, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context3.next = 4;
-              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes"), requestOptions);
-
-            case 4:
-              response = _context3.sent;
-              _context3.next = 7;
-              return response.json();
-
-            case 7:
-              _yield$response$json3 = _context3.sent;
-              error = _yield$response$json3.error;
-              result = _yield$response$json3.result;
-              setOrderingTheme({
-                loading: false,
-                themes: error ? [] : result,
-                error: error ? result : null,
-                siteId: siteId
-              });
-              _context3.next = 16;
-              break;
-
-            case 13:
-              _context3.prev = 13;
-              _context3.t0 = _context3["catch"](0);
-              setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
-                loading: false,
-                error: [_context3.t0.message]
-              }));
-
-            case 16:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3, null, [[0, 13]]);
-    }));
-
-    return function getSiteTheme(_x) {
-      return _ref3.apply(this, arguments);
-    };
-  }();
-  /**
-  * Method to assign the theme to site
-  */
-
-
-  var handleAssignTheme = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(value, themeId, siteId) {
-      var requestOptions, response, _yield$response$json4, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              _context4.prev = 0;
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify({
-                  theme_id: themeId,
-                  values: JSON.stringify(value)
-                })
-              };
-              _context4.next = 4;
-              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes"), requestOptions);
-
-            case 4:
-              response = _context4.sent;
-              _context4.next = 7;
-              return response.json();
-
-            case 7:
-              _yield$response$json4 = _context4.sent;
-              error = _yield$response$json4.error;
-              result = _yield$response$json4.result;
-
-              if (!error) {
-                showToast(_ToastContext.ToastType.Success, t('THEME_ADDED', 'Theme added'));
-                setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
-                  themes: [result]
-                }));
-              } else {
-                showToast(_ToastContext.ToastType.Error, result);
-              }
-
-              _context4.next = 16;
-              break;
-
-            case 13:
-              _context4.prev = 13;
-              _context4.t0 = _context4["catch"](0);
-              showToast(_ToastContext.ToastType.Error, _context4.t0.message);
-
-            case 16:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4, null, [[0, 13]]);
-    }));
-
-    return function handleAssignTheme(_x2, _x3, _x4) {
-      return _ref4.apply(this, arguments);
-    };
-  }();
-  /**
-  * Method to get the themes from API
-  */
-
-
-  var getThemes = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      var requestOptions, response, _yield$response$json5, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.prev = 0;
-              setThemesList(_objectSpread(_objectSpread({}, themesList), {}, {
-                loading: true
-              }));
-              requestOptions = {
-                method: 'GET',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                }
-              };
-              _context5.next = 5;
-              return fetch("".concat(ordering.root, "/themes"), requestOptions);
-
-            case 5:
-              response = _context5.sent;
-              _context5.next = 8;
-              return response.json();
-
-            case 8:
-              _yield$response$json5 = _context5.sent;
-              error = _yield$response$json5.error;
-              result = _yield$response$json5.result;
-              setThemesList({
-                loading: false,
-                themes: error ? [] : result,
-                error: error ? result : null
-              });
-              _context5.next = 17;
-              break;
-
-            case 14:
-              _context5.prev = 14;
-              _context5.t0 = _context5["catch"](0);
-              setThemesList(_objectSpread(_objectSpread({}, themesList), {}, {
-                loading: false,
-                error: [_context5.t0.message]
-              }));
-
-            case 17:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5, null, [[0, 14]]);
-    }));
-
-    return function getThemes() {
-      return _ref5.apply(this, arguments);
-    };
-  }();
-  /**
-  * Method to update the site theme from API
-  */
-
-
-  var handleUpdateSiteTheme = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(advancedTheme) {
-      var _orderingTheme$themes, _orderingTheme$themes2, _orderingTheme$themes3, themeId, siteId, myProductvalues, values, requestOptions, response, _yield$response$json6, error, result;
-
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-              themeId = (_orderingTheme$themes = orderingTheme.themes[0]) === null || _orderingTheme$themes === void 0 ? void 0 : _orderingTheme$themes.theme_id;
-              siteId = (_orderingTheme$themes2 = orderingTheme.themes[0]) === null || _orderingTheme$themes2 === void 0 ? void 0 : _orderingTheme$themes2.site_id;
-              myProductvalues = _objectSpread(_objectSpread({}, orderingTheme.themes[0].values), {}, {
-                my_products: _objectSpread(_objectSpread({}, (_orderingTheme$themes3 = orderingTheme.themes[0].values) === null || _orderingTheme$themes3 === void 0 ? void 0 : _orderingTheme$themes3.my_products), {}, {
-                  components: _objectSpread({}, themeValues)
-                })
-              });
-              values = advancedTheme ? JSON.parse(JSON.stringify(advancedTheme)) : JSON.parse(JSON.stringify(myProductvalues));
-              requestOptions = {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: "Bearer ".concat(token)
-                },
-                body: JSON.stringify({
-                  values: JSON.stringify(values)
-                })
-              };
-              _context6.next = 9;
-              return fetch("".concat(ordering.root, "/sites/").concat(siteId, "/themes/").concat(themeId), requestOptions);
-
-            case 9:
-              response = _context6.sent;
-              _context6.next = 12;
-              return response.json();
-
-            case 12:
-              _yield$response$json6 = _context6.sent;
-              error = _yield$response$json6.error;
-              result = _yield$response$json6.result;
-
-              if (!error) {
-                showToast(_ToastContext.ToastType.Success, t('THEME_UPDATED', 'Theme updated'));
-              } else {
-                showToast(_ToastContext.ToastType.Error, result);
-              }
-
-              _context6.next = 21;
-              break;
-
-            case 18:
-              _context6.prev = 18;
-              _context6.t0 = _context6["catch"](0);
-              showToast(_ToastContext.ToastType.Error, _context6.t0.message);
-
-            case 21:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6, null, [[0, 18]]);
-    }));
-
-    return function handleUpdateSiteTheme(_x5) {
-      return _ref6.apply(this, arguments);
-    };
-  }();
 
   (0, _react.useEffect)(function () {
-    if (!appId) return;
-    getThemes();
     getSites();
-  }, [appId]);
-  (0, _react.useEffect)(function () {
-    var _themesList$themes, _orderingTheme$themes4;
-
-    if (orderingTheme !== null && orderingTheme !== void 0 && orderingTheme.siteId && (_themesList$themes = themesList.themes) !== null && _themesList$themes !== void 0 && _themesList$themes.length && !(orderingTheme !== null && orderingTheme !== void 0 && (_orderingTheme$themes4 = orderingTheme.themes) !== null && _orderingTheme$themes4 !== void 0 && _orderingTheme$themes4.length)) {
-      var _themesList$themes$, _valuesDefault$my_pro, _valuesDefault$my_pro2, _valuesDefault$my_pro3, _valuesDefault$my_pro4, _themesList$themes$2;
-
-      var valuesDefault = JSON.parse(JSON.stringify((_themesList$themes$ = themesList.themes[0]) === null || _themesList$themes$ === void 0 ? void 0 : _themesList$themes$.values_default));
-
-      if (valuesDefault !== null && valuesDefault !== void 0 && (_valuesDefault$my_pro = valuesDefault.my_products) !== null && _valuesDefault$my_pro !== void 0 && (_valuesDefault$my_pro2 = _valuesDefault$my_pro.components) !== null && _valuesDefault$my_pro2 !== void 0 && (_valuesDefault$my_pro3 = _valuesDefault$my_pro2.website_settings) !== null && _valuesDefault$my_pro3 !== void 0 && (_valuesDefault$my_pro4 = _valuesDefault$my_pro3.components) !== null && _valuesDefault$my_pro4 !== void 0 && _valuesDefault$my_pro4.values) {
-        valuesDefault.my_products.components.website_settings.components.values.default_domain = "https://".concat(ordering.project, ".tryordering.com");
-      }
-
-      handleAssignTheme(valuesDefault, (_themesList$themes$2 = themesList.themes[0]) === null || _themesList$themes$2 === void 0 ? void 0 : _themesList$themes$2.id, orderingTheme === null || orderingTheme === void 0 ? void 0 : orderingTheme.siteId);
-    }
-  }, [JSON.stringify(themesList.themes), orderingTheme === null || orderingTheme === void 0 ? void 0 : orderingTheme.siteId]);
-  (0, _react.useEffect)(function () {
-    var _orderingTheme$themes5, _orderingTheme$themes6, _orderingTheme$themes7, _orderingTheme$themes8, _orderingTheme$themes9;
-
-    if (!((_orderingTheme$themes5 = orderingTheme.themes[0]) !== null && _orderingTheme$themes5 !== void 0 && _orderingTheme$themes5.values)) return;
-    setAdvancedValues(JSON.parse(JSON.stringify((_orderingTheme$themes6 = orderingTheme.themes[0]) === null || _orderingTheme$themes6 === void 0 ? void 0 : _orderingTheme$themes6.values)));
-
-    var _themeValues = (_orderingTheme$themes7 = orderingTheme.themes[0]) === null || _orderingTheme$themes7 === void 0 ? void 0 : (_orderingTheme$themes8 = _orderingTheme$themes7.values) === null || _orderingTheme$themes8 === void 0 ? void 0 : (_orderingTheme$themes9 = _orderingTheme$themes8.my_products) === null || _orderingTheme$themes9 === void 0 ? void 0 : _orderingTheme$themes9.components;
-
-    if (!_themeValues) return;
-    setThemeValues(JSON.parse(JSON.stringify(_themeValues)));
-  }, [orderingTheme === null || orderingTheme === void 0 ? void 0 : orderingTheme.themes]);
+  }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    themeValues: themeValues,
-    advancedValues: advancedValues,
-    setAdvancedValues: setAdvancedValues,
-    orderingTheme: orderingTheme,
-    setThemeValues: setThemeValues,
-    handleUpdateSiteTheme: handleUpdateSiteTheme,
-    themesList: themesList,
-    site: site,
-    setSite: setSite
+    siteState: siteState
   })));
 };
 
-exports.OrderingWebsite = OrderingWebsite;
-OrderingWebsite.propTypes = {
+exports.BusinessQRCodeOptions = BusinessQRCodeOptions;
+BusinessQRCodeOptions.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
@@ -615,7 +181,7 @@ OrderingWebsite.propTypes = {
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-OrderingWebsite.defaultProps = {
+BusinessQRCodeOptions.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

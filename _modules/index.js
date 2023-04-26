@@ -351,6 +351,12 @@ Object.defineProperty(exports, "BusinessProvider", {
     return _BusinessContext.BusinessProvider;
   }
 });
+Object.defineProperty(exports, "BusinessQRCodeOptions", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessQRCodeOptions.BusinessQRCodeOptions;
+  }
+});
 Object.defineProperty(exports, "BusinessReviews", {
   enumerable: true,
   get: function get() {
@@ -553,6 +559,12 @@ Object.defineProperty(exports, "CouponControl", {
   enumerable: true,
   get: function get() {
     return _CouponControl.CouponControl;
+  }
+});
+Object.defineProperty(exports, "CustomDomain", {
+  enumerable: true,
+  get: function get() {
+    return _CustomDomain.CustomDomain;
   }
 });
 Object.defineProperty(exports, "CustomerContext", {
@@ -1846,6 +1858,8 @@ var _BusinessProductCreator = require("./components/BusinessProductCreator");
 
 var _BusinessWalletsList = require("./components/BusinessWalletsList");
 
+var _BusinessQRCodeOptions = require("./components/BusinessQRCodeOptions");
+
 var _CampaignListing = require("./components/CampaignListing");
 
 var _CampaignDetail = require("./components/CampaignDetail");
@@ -1873,6 +1887,8 @@ var _CountryList = require("./components/CountryList");
 var _CouponControl = require("./components/CouponControl");
 
 var _ContentForm = require("./components/ContentForm");
+
+var _CustomDomain = require("./components/CustomDomain");
 
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
