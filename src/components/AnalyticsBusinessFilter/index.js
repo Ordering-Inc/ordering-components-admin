@@ -22,6 +22,7 @@ export const AnalyticsBusinessFilter = (props) => {
   const [businessIds, setBusinessIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
   const [searchValue, setSearchValue] = useState(null)
+  const [filterValues, setFilterValues] = useState({ cityIds: [] })
   const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
@@ -97,6 +98,19 @@ export const AnalyticsBusinessFilter = (props) => {
           conditions: searchConditions
         })
       }
+      if (filterValues?.cityIds?.length > 0) {
+        const filterConditons = []
+        filterConditons.push(
+          {
+            attribute: 'city_id',
+            value: filterValues?.cityIds
+          }
+        )
+        conditions.push({
+          conector: 'AND',
+          conditions: filterConditons
+        })
+      }
       if (conditions.length) {
         where = {
           conditions,
@@ -136,11 +150,25 @@ export const AnalyticsBusinessFilter = (props) => {
     }
   }
 
+  /**
+   * Change city
+   * * @param {number} cityId city id of business
+  */
+  const handleChangeCity = (cityId) => {
+    let _cityIds = [...filterValues.cityIds]
+    if (!_cityIds.includes(cityId)) {
+      _cityIds.push(cityId)
+    } else {
+      _cityIds = _cityIds.filter((_cityId) => _cityId !== cityId)
+    }
+    setFilterValues({ ...filterValues, cityIds: _cityIds })
+  }
+
   useEffect(() => {
     const controller = new AbortController()
     getBusinessTypes()
     return controller.abort()
-  }, [searchValue])
+  }, [searchValue, filterValues?.cityIds])
 
   useEffect(() => {
     if (businessList?.businesses?.length === 0) return
@@ -165,6 +193,8 @@ export const AnalyticsBusinessFilter = (props) => {
           handleChangeAllCheck={handleChangeAllCheck}
           searchValue={searchValue}
           onSearch={setSearchValue}
+          filterValues={filterValues}
+          handleChangeCity={handleChangeCity}
         />
       )}
     </>
