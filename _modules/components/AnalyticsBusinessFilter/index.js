@@ -95,6 +95,13 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       searchValue = _useState8[0],
       setSearchValue = _useState8[1];
 
+  var _useState9 = (0, _react.useState)({
+    cityIds: []
+  }),
+      _useState10 = _slicedToArray(_useState9, 2),
+      filterValues = _useState10[0],
+      setFilterValues = _useState10[1];
+
   var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
    * Method to change business id
@@ -173,7 +180,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
+      var _filterValues$cityIds, where, conditions, searchConditions, isSpecialCharacter, filterConditons, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -206,6 +213,18 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
                 });
               }
 
+              if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$cityIds = filterValues.cityIds) === null || _filterValues$cityIds === void 0 ? void 0 : _filterValues$cityIds.length) > 0) {
+                filterConditons = [];
+                filterConditons.push({
+                  attribute: 'city_id',
+                  value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
+                });
+                conditions.push({
+                  conector: 'AND',
+                  conditions: filterConditons
+                });
+              }
+
               if (conditions.length) {
                 where = {
                   conditions: conditions,
@@ -214,10 +233,10 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
               }
 
               fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
-              _context.next = 9;
+              _context.next = 10;
               return fetchEndpoint.get();
 
-            case 9:
+            case 10:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               error = _yield$fetchEndpoint$2.error;
@@ -247,35 +266,56 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 21;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context["catch"](0);
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
                 error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 20:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 18]]);
     }));
 
     return function getBusinessTypes() {
       return _ref.apply(this, arguments);
     };
   }();
+  /**
+   * Change city
+   * * @param {number} cityId city id of business
+  */
+
+
+  var handleChangeCity = function handleChangeCity(cityId) {
+    var _cityIds = _toConsumableArray(filterValues.cityIds);
+
+    if (!_cityIds.includes(cityId)) {
+      _cityIds.push(cityId);
+    } else {
+      _cityIds = _cityIds.filter(function (_cityId) {
+        return _cityId !== cityId;
+      });
+    }
+
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      cityIds: _cityIds
+    }));
+  };
 
   (0, _react.useEffect)(function () {
     var controller = new AbortController();
     getBusinessTypes();
     return controller.abort();
-  }, [searchValue]);
+  }, [searchValue, filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds]);
   (0, _react.useEffect)(function () {
     var _businessList$busines, _businessList$busines2, _filterList$businessI;
 
@@ -299,7 +339,9 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     isAllCheck: isAllCheck,
     handleChangeAllCheck: handleChangeAllCheck,
     searchValue: searchValue,
-    onSearch: setSearchValue
+    onSearch: setSearchValue,
+    filterValues: filterValues,
+    handleChangeCity: handleChangeCity
   })));
 };
 
