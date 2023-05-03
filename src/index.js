@@ -96,6 +96,7 @@ import { DriverGroupDeliveryDetails } from './components/DriverGroupDeliveryDeta
 import { DriversGroupOrders } from './components/DriversGroupOrders'
 import { DriversGroupsList } from './components/DriversGroupsList'
 import { DriversGroupLogs } from './components/DriversGroupLogs'
+import { DriversLogs } from './components/DriversLogs'
 import { DriverTips } from './components/DriverTips'
 import { DriversList } from './components/DriversList'
 import { DriverAnalytics } from './components/DriverAnalytics'
@@ -357,6 +358,7 @@ export {
   DriverGroupDeliveryZone,
   DriversGroupsList,
   DriversGroupLogs,
+  DriversLogs,
   EnterprisePromotionList,
   EnterprisePromotionDetails,
   ExamineClick,
