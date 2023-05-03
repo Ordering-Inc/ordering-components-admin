@@ -669,6 +669,12 @@ Object.defineProperty(exports, "DriversList", {
     return _DriversList.DriversList;
   }
 });
+Object.defineProperty(exports, "DriversLogs", {
+  enumerable: true,
+  get: function get() {
+    return _DriversLogs.DriversLogs;
+  }
+});
 Object.defineProperty(exports, "EnterprisePromotionDetails", {
   enumerable: true,
   get: function get() {
@@ -1903,6 +1909,8 @@ var _DriversGroupOrders = require("./components/DriversGroupOrders");
 var _DriversGroupsList = require("./components/DriversGroupsList");
 
 var _DriversGroupLogs = require("./components/DriversGroupLogs");
+
+var _DriversLogs = require("./components/DriversLogs");
 
 var _DriverTips = require("./components/DriverTips");
 

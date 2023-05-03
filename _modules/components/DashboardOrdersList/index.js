@@ -1134,7 +1134,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     handleUpdateOrderStatus: handleUpdateOrderStatus,
     allowColumns: allowColumns,
     setAllowColumns: setAllowColumns,
-    handleDrop: handleDrop
+    handleDrop: handleDrop,
+    saveUserSettings: saveUserSettings
   })));
 };
 
