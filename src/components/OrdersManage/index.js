@@ -14,7 +14,8 @@ export const OrdersManage = (props) => {
     driversPropsToFetch,
     driverId,
     customerId,
-    businessId
+    businessId,
+    isOnlyDelivery
   } = props
 
   const [ordering] = useApi()
@@ -53,7 +54,7 @@ export const OrdersManage = (props) => {
     advanced: { visable: true, title: t('ADVANCED_LOGISTICS', 'Advanced logistics'), className: 'advanced', draggable: true, colSpan: 3, order: 7 },
     timer: { visable: false, title: t('SLA_TIMER', 'SLA’s timer'), className: 'timer', draggable: true, colSpan: 1, order: 8 },
     eta: { visable: true, title: t('ETA', 'ETA'), className: 'eta', draggable: true, colSpan: 1, order: 9 },
-    total: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: 10 },
+    total: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: 10 }
   }
   const [allowColumns, setAllowColumns] = useState(allowColumnsModel)
 
@@ -494,6 +495,14 @@ export const OrdersManage = (props) => {
     }
 
     const additionalConditions = []
+
+    if (isOnlyDelivery) {
+      additionalConditions.push({
+        attribute: 'delivery_type',
+        value: 1
+      })
+    }
+
     if (driverId) {
       additionalConditions.push({
         attribute: 'driver_id',
