@@ -60,7 +60,8 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       propsToFetch = props.propsToFetch,
       onClose = props.onClose,
       isFranchise = props.isFranchise,
-      isSearchByName = props.isSearchByName;
+      isSearchByName = props.isSearchByName,
+      countryCode = props.countryCode;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -94,13 +95,6 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       _useState8 = _slicedToArray(_useState7, 2),
       searchValue = _useState8[0],
       setSearchValue = _useState8[1];
-
-  var _useState9 = (0, _react.useState)({
-    cityIds: []
-  }),
-      _useState10 = _slicedToArray(_useState9, 2),
-      filterValues = _useState10[0],
-      setFilterValues = _useState10[1];
 
   var rex = new RegExp(/^[A-Za-z0-9\s]+$/g);
   /**
@@ -180,7 +174,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var _filterValues$cityIds, where, conditions, searchConditions, isSpecialCharacter, filterConditons, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, headerOptions, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -213,18 +207,6 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
                 });
               }
 
-              if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$cityIds = filterValues.cityIds) === null || _filterValues$cityIds === void 0 ? void 0 : _filterValues$cityIds.length) > 0) {
-                filterConditons = [];
-                filterConditons.push({
-                  attribute: 'city_id',
-                  value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
-                });
-                conditions.push({
-                  conector: 'AND',
-                  conditions: filterConditons
-                });
-              }
-
               if (conditions.length) {
                 where = {
                   conditions: conditions,
@@ -233,8 +215,13 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
               }
 
               fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
+              headerOptions = countryCode ? {
+                headers: {
+                  'X-Country-Code-X': countryCode
+                }
+              } : {};
               _context.next = 10;
-              return fetchEndpoint.get();
+              return fetchEndpoint.get(headerOptions);
 
             case 10:
               _yield$fetchEndpoint$ = _context.sent;
@@ -289,33 +276,12 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       return _ref.apply(this, arguments);
     };
   }();
-  /**
-   * Change city
-   * * @param {number} cityId city id of business
-  */
-
-
-  var handleChangeCity = function handleChangeCity(cityId) {
-    var _cityIds = _toConsumableArray(filterValues.cityIds);
-
-    if (!_cityIds.includes(cityId)) {
-      _cityIds.push(cityId);
-    } else {
-      _cityIds = _cityIds.filter(function (_cityId) {
-        return _cityId !== cityId;
-      });
-    }
-
-    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
-      cityIds: _cityIds
-    }));
-  };
 
   (0, _react.useEffect)(function () {
     var controller = new AbortController();
     getBusinessTypes();
     return controller.abort();
-  }, [searchValue, filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds]);
+  }, [searchValue]);
   (0, _react.useEffect)(function () {
     var _businessList$busines, _businessList$busines2, _filterList$businessI;
 
@@ -339,9 +305,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
     isAllCheck: isAllCheck,
     handleChangeAllCheck: handleChangeAllCheck,
     searchValue: searchValue,
-    onSearch: setSearchValue,
-    filterValues: filterValues,
-    handleChangeCity: handleChangeCity
+    onSearch: setSearchValue
   })));
 };
 

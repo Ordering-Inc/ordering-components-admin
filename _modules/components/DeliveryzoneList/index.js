@@ -100,8 +100,11 @@ var DeliveryzoneList = function DeliveryzoneList(props) {
 
               if (businessIds) {
                 conditions.push({
-                  attribute: 'business_id',
-                  value: businessIds
+                  attribute: 'businesses',
+                  conditions: [{
+                    attribute: 'business_id',
+                    value: businessIds
+                  }]
                 });
               }
 
