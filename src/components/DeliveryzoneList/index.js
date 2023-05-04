@@ -32,7 +32,15 @@ export const DeliveryzoneList = (props) => {
       const conditions = []
 
       if (businessIds) {
-        conditions.push({ attribute: 'business_id', value: businessIds })
+        conditions.push({
+          attribute: 'businesses',
+          conditions: [
+            {
+              attribute: 'business_id',
+              value: businessIds
+            }
+          ]
+        })
       }
 
       if (conditions.length) {
