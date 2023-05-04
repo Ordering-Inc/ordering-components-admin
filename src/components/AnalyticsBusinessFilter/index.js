@@ -10,7 +10,8 @@ export const AnalyticsBusinessFilter = (props) => {
     propsToFetch,
     onClose,
     isFranchise,
-    isSearchByName
+    isSearchByName,
+    countryCode
   } = props
 
   const [ordering] = useApi()
@@ -22,7 +23,6 @@ export const AnalyticsBusinessFilter = (props) => {
   const [businessIds, setBusinessIds] = useState(null)
   const [isAllCheck, setIsAllCheck] = useState(false)
   const [searchValue, setSearchValue] = useState(null)
-  const [filterValues, setFilterValues] = useState({ cityIds: [] })
   const rex = new RegExp(/^[A-Za-z0-9\s]+$/g)
 
   /**
@@ -98,19 +98,6 @@ export const AnalyticsBusinessFilter = (props) => {
           conditions: searchConditions
         })
       }
-      if (filterValues?.cityIds?.length > 0) {
-        const filterConditons = []
-        filterConditons.push(
-          {
-            attribute: 'city_id',
-            value: filterValues?.cityIds
-          }
-        )
-        conditions.push({
-          conector: 'AND',
-          conditions: filterConditons
-        })
-      }
       if (conditions.length) {
         where = {
           conditions,
@@ -120,7 +107,8 @@ export const AnalyticsBusinessFilter = (props) => {
       const fetchEndpoint = where
         ? ordering.businesses().asDashboard().select(propsToFetch).where(where)
         : ordering.businesses().asDashboard().select(propsToFetch)
-      const { content: { error, result, pagination } } = await fetchEndpoint.get()
+      const headerOptions = countryCode ? { headers: { 'X-Country-Code-X': countryCode } } : {}
+      const { content: { error, result, pagination } } = await fetchEndpoint.get(headerOptions)
       if (!error) {
         let _businessList = []
         if (isFranchise && filterList?.franchises_id?.length > 0) {
@@ -150,25 +138,11 @@ export const AnalyticsBusinessFilter = (props) => {
     }
   }
 
-  /**
-   * Change city
-   * * @param {number} cityId city id of business
-  */
-  const handleChangeCity = (cityId) => {
-    let _cityIds = [...filterValues.cityIds]
-    if (!_cityIds.includes(cityId)) {
-      _cityIds.push(cityId)
-    } else {
-      _cityIds = _cityIds.filter((_cityId) => _cityId !== cityId)
-    }
-    setFilterValues({ ...filterValues, cityIds: _cityIds })
-  }
-
   useEffect(() => {
     const controller = new AbortController()
     getBusinessTypes()
     return controller.abort()
-  }, [searchValue, filterValues?.cityIds])
+  }, [searchValue])
 
   useEffect(() => {
     if (businessList?.businesses?.length === 0) return
@@ -193,8 +167,6 @@ export const AnalyticsBusinessFilter = (props) => {
           handleChangeAllCheck={handleChangeAllCheck}
           searchValue={searchValue}
           onSearch={setSearchValue}
-          filterValues={filterValues}
-          handleChangeCity={handleChangeCity}
         />
       )}
     </>
