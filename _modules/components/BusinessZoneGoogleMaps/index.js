@@ -211,13 +211,15 @@ var BusinessZoneGoogleMaps = function BusinessZoneGoogleMaps(props) {
     }
   }, [circleZone]);
   (0, _react.useEffect)(function () {
-    if (distanceBased && !clearState) {
+    var _data$distance, _data$distance2;
+
+    if (distanceBased && !clearState && data !== null && data !== void 0 && data.distance && (data === null || data === void 0 ? void 0 : (_data$distance = data.distance) === null || _data$distance === void 0 ? void 0 : _data$distance.toString().slice(-1)) !== '.') {
       handleData(_objectSpread(_objectSpread({}, data), {}, {
         distance: distanceBased.getRadius() / units[data === null || data === void 0 ? void 0 : data.unit]
       }));
     }
 
-    if (distanceBased && clearState) {
+    if (distanceBased && clearState || distanceBased && !clearState && data !== null && data !== void 0 && data.distance && (data === null || data === void 0 ? void 0 : (_data$distance2 = data.distance) === null || _data$distance2 === void 0 ? void 0 : _data$distance2.toString().slice(-1)) === '.') {
       handleData(data);
     }
   }, [distanceBased]);

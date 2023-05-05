@@ -351,6 +351,12 @@ Object.defineProperty(exports, "BusinessProvider", {
     return _BusinessContext.BusinessProvider;
   }
 });
+Object.defineProperty(exports, "BusinessQRCodeOptions", {
+  enumerable: true,
+  get: function get() {
+    return _BusinessQRCodeOptions.BusinessQRCodeOptions;
+  }
+});
 Object.defineProperty(exports, "BusinessReviews", {
   enumerable: true,
   get: function get() {
@@ -1851,6 +1857,8 @@ var _BusinessZoneGoogleMaps = require("./components/BusinessZoneGoogleMaps");
 var _BusinessProductCreator = require("./components/BusinessProductCreator");
 
 var _BusinessWalletsList = require("./components/BusinessWalletsList");
+
+var _BusinessQRCodeOptions = require("./components/BusinessQRCodeOptions");
 
 var _CampaignListing = require("./components/CampaignListing");
 
