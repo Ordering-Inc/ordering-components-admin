@@ -67,6 +67,7 @@ import { BusinessWebhooks } from './components/BusinessWebhooks'
 import { BusinessZoneGoogleMaps } from './components/BusinessZoneGoogleMaps'
 import { BusinessProductCreator } from './components/BusinessProductCreator'
 import { BusinessWalletsList } from './components/BusinessWalletsList'
+import { BusinessQRCodeOptions } from './components/BusinessQRCodeOptions'
 import { CampaignListing } from './components/CampaignListing'
 import { CampaignDetail } from './components/CampaignDetail'
 import { CampaignDetailContent } from './components/CampaignDetailContent'
@@ -326,6 +327,7 @@ export {
   BusinessZoneGoogleMaps,
   BusinessProductCreator,
   BusinessWalletsList,
+  BusinessQRCodeOptions,
   CampaignListing,
   CampaignDetail,
   CampaignDetailContent,
