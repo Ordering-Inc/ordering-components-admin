@@ -60,7 +60,8 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
       propsToFetch = props.propsToFetch,
       onClose = props.onClose,
       isFranchise = props.isFranchise,
-      isSearchByName = props.isSearchByName;
+      isSearchByName = props.isSearchByName,
+      countryCode = props.countryCode;
 
   var _useApi = (0, _ApiContext.useApi)(),
       _useApi2 = _slicedToArray(_useApi, 1),
@@ -173,7 +174,7 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
 
   var getBusinessTypes = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
+      var where, conditions, searchConditions, isSpecialCharacter, fetchEndpoint, headerOptions, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, pagination, _filterList$franchise, _businessList;
 
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) {
@@ -214,10 +215,15 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
               }
 
               fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
-              _context.next = 9;
-              return fetchEndpoint.get();
+              headerOptions = countryCode ? {
+                headers: {
+                  'X-Country-Code-X': countryCode
+                }
+              } : {};
+              _context.next = 10;
+              return fetchEndpoint.get(headerOptions);
 
-            case 9:
+            case 10:
               _yield$fetchEndpoint$ = _context.sent;
               _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
               error = _yield$fetchEndpoint$2.error;
@@ -247,23 +253,23 @@ var AnalyticsBusinessFilter = function AnalyticsBusinessFilter(props) {
                 }));
               }
 
-              _context.next = 20;
+              _context.next = 21;
               break;
 
-            case 17:
-              _context.prev = 17;
+            case 18:
+              _context.prev = 18;
               _context.t0 = _context["catch"](0);
               setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
                 loading: false,
                 error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
               }));
 
-            case 20:
+            case 21:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 18]]);
     }));
 
     return function getBusinessTypes() {
