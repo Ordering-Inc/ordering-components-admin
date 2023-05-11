@@ -71,6 +71,13 @@ var DeliveryzoneList = function DeliveryzoneList(props) {
             }));
             where = null;
             conditions = [];
+            conditions.push({
+              attribute: 'type',
+              value: {
+                condition: '!=',
+                value: 3
+              }
+            });
             if (businessIds) {
               conditions.push({
                 attribute: 'businesses',
@@ -93,14 +100,14 @@ var DeliveryzoneList = function DeliveryzoneList(props) {
                 Authorization: "Bearer ".concat(token)
               }
             };
-            fetchEndpoint = where ? "".concat(ordering.root, "/delivery_zones?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString(), "&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/delivery_zones?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString());
-            _context.next = 10;
+            fetchEndpoint = where ? "".concat(ordering.root, "/delivery_zones?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString(), "&filtered_by_business=[").concat(businessIds, "]&&where=").concat(JSON.stringify(where)) : "".concat(ordering.root, "/delivery_zones?page=").concat(page, "&page_size=").concat(pageSize, "8&params=").concat(propsToFetch.toString(), "&filtered_by_business=[").concat(businessIds, "]");
+            _context.next = 11;
             return fetch(fetchEndpoint, requestOptions);
-          case 10:
+          case 11:
             response = _context.sent;
-            _context.next = 13;
+            _context.next = 14;
             return response.json();
-          case 13:
+          case 14:
             content = _context.sent;
             if (!content.error) {
               setDeliveryzoneList({
@@ -116,20 +123,20 @@ var DeliveryzoneList = function DeliveryzoneList(props) {
                 to: content.pagination.to
               }));
             }
-            _context.next = 20;
+            _context.next = 21;
             break;
-          case 17:
-            _context.prev = 17;
+          case 18:
+            _context.prev = 18;
             _context.t0 = _context["catch"](0);
             setDeliveryzoneList(_objectSpread(_objectSpread({}, deliveryzoneList), {}, {
               loading: false,
               error: [_context.t0.message]
             }));
-          case 20:
+          case 21:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 18]]);
     }));
     return function getDeliveryzones(_x2, _x3) {
       return _ref.apply(this, arguments);
