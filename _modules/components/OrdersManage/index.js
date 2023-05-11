@@ -157,13 +157,21 @@ var OrdersManage = function OrdersManage(props) {
       colSpan: 1,
       order: 3
     },
+    driverGroupId: {
+      visable: true,
+      title: t('EXPORT_DRIVER_GROUP_ID', 'Driver Group Id'),
+      className: 'driverGroupId',
+      draggable: true,
+      colSpan: 1,
+      order: 4
+    },
     business: {
       visable: true,
       title: t('BUSINESS', 'Business'),
       className: 'businessInfo',
       draggable: true,
       colSpan: 1,
-      order: 4
+      order: 5
     },
     customer: {
       visable: true,
@@ -171,7 +179,7 @@ var OrdersManage = function OrdersManage(props) {
       className: 'customerInfo',
       draggable: true,
       colSpan: 1,
-      order: 5
+      order: 6
     },
     driver: {
       visable: true,
@@ -179,7 +187,7 @@ var OrdersManage = function OrdersManage(props) {
       className: 'driverInfo',
       draggable: true,
       colSpan: 1,
-      order: 6
+      order: 7
     },
     advanced: {
       visable: true,
@@ -187,7 +195,7 @@ var OrdersManage = function OrdersManage(props) {
       className: 'advanced',
       draggable: true,
       colSpan: 3,
-      order: 7
+      order: 8
     },
     timer: {
       visable: false,
@@ -195,7 +203,7 @@ var OrdersManage = function OrdersManage(props) {
       className: 'timer',
       draggable: true,
       colSpan: 1,
-      order: 8
+      order: 9
     },
     eta: {
       visable: true,
@@ -203,7 +211,7 @@ var OrdersManage = function OrdersManage(props) {
       className: 'eta',
       draggable: true,
       colSpan: 1,
-      order: 9
+      order: 10
     },
     total: {
       visable: true,
@@ -211,7 +219,7 @@ var OrdersManage = function OrdersManage(props) {
       className: '',
       draggable: false,
       colSpan: 1,
-      order: 10
+      order: 11
     }
   };
   var _useState17 = (0, _react.useState)(allowColumnsModel),
