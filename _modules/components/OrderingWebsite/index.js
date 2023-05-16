@@ -69,6 +69,10 @@ var OrderingWebsite = function OrderingWebsite(props) {
     _useState8 = _slicedToArray(_useState7, 2),
     themesList = _useState8[0],
     setThemesList = _useState8[1];
+  var _useState9 = (0, _react.useState)(null),
+    _useState10 = _slicedToArray(_useState9, 2),
+    site = _useState10[0],
+    setSite = _useState10[1];
 
   /**
   * Method to get the themes from API
@@ -101,39 +105,40 @@ var OrderingWebsite = function OrderingWebsite(props) {
             error = _yield$response$json.error;
             result = _yield$response$json.result;
             if (error) {
-              _context.next = 20;
+              _context.next = 21;
               break;
             }
             found = result.find(function (site) {
               return site.code === appId;
             });
             if (!found) {
-              _context.next = 18;
+              _context.next = 19;
               break;
             }
             _context.next = 16;
             return getSiteTheme(found.id);
           case 16:
-            _context.next = 20;
+            setSite(found);
+            _context.next = 21;
             break;
-          case 18:
-            _context.next = 20;
+          case 19:
+            _context.next = 21;
             return handleAddSite();
-          case 20:
-            _context.next = 25;
+          case 21:
+            _context.next = 26;
             break;
-          case 22:
-            _context.prev = 22;
+          case 23:
+            _context.prev = 23;
             _context.t0 = _context["catch"](0);
             setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
               loading: false,
               error: [_context.t0.message]
             }));
-          case 25:
+          case 26:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 22]]);
+      }, _callee, null, [[0, 23]]);
     }));
     return function getSites() {
       return _ref.apply(this, arguments);
@@ -173,35 +178,36 @@ var OrderingWebsite = function OrderingWebsite(props) {
             error = _yield$response$json2.error;
             result = _yield$response$json2.result;
             if (error) {
-              _context2.next = 16;
+              _context2.next = 17;
               break;
             }
             _context2.next = 14;
             return getSiteTheme(result.id);
           case 14:
-            _context2.next = 17;
+            setSite(result);
+            _context2.next = 18;
             break;
-          case 16:
+          case 17:
             setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
               loading: false,
               themes: [],
               error: result
             }));
-          case 17:
-            _context2.next = 22;
+          case 18:
+            _context2.next = 23;
             break;
-          case 19:
-            _context2.prev = 19;
+          case 20:
+            _context2.prev = 20;
             _context2.t0 = _context2["catch"](0);
             setOrderingTheme(_objectSpread(_objectSpread({}, orderingTheme), {}, {
               loading: false,
               result: [_context2.t0.message]
             }));
-          case 22:
+          case 23:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[0, 19]]);
+      }, _callee2, null, [[0, 20]]);
     }));
     return function handleAddSite() {
       return _ref2.apply(this, arguments);
@@ -463,7 +469,9 @@ var OrderingWebsite = function OrderingWebsite(props) {
     orderingTheme: orderingTheme,
     setThemeValues: setThemeValues,
     handleUpdateSiteTheme: handleUpdateSiteTheme,
-    themesList: themesList
+    themesList: themesList,
+    site: site,
+    setSite: setSite
   })));
 };
 exports.OrderingWebsite = OrderingWebsite;
