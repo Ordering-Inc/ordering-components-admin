@@ -21,6 +21,8 @@ export const OrderingWebsite = (props) => {
   const [orderingTheme, setOrderingTheme] = useState({ loading: true, themes: [], error: null, siteId: null })
   const [themesList, setThemesList] = useState({ loading: true, themes: [], error: null })
   const [site, setSite] = useState(null)
+  const [businessesList, setBusinessesList] = useState({ businesses: [], loading: false, error: null })
+  const [franchisesList, setFranchisesList] = useState({ loading: false, franchises: [], error: null })
 
   /**
  * Method to get the themes from API
@@ -54,6 +56,89 @@ export const OrderingWebsite = (props) => {
         ...orderingTheme,
         loading: false,
         error: [err.message]
+      })
+    }
+  }
+
+  /**
+   * Method to get businesses from API
+   */
+  const getBusinesses = async () => {
+    try {
+      setBusinessesList({ ...businessesList, loading: false })
+      let where = null
+      const conditions = []
+      conditions.push({
+        attribute: 'enabled',
+        value: true
+      })
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const { content: { error, result } } = await ordering
+        .setAccessToken(token)
+        .businesses()
+        .select(['name', 'logo', 'slug'])
+        .where(where)
+        .asDashboard()
+        .get()
+      if (!error) {
+        setBusinessesList({ ...businessesList, loading: false, businesses: result })
+      }
+    } catch (err) {
+      setBusinessesList({ ...businessesList, loading: false, error: [err.message] })
+    }
+  }
+
+  /**
+   * Method to get brand list
+   */
+  const getFranchises = async () => {
+    try {
+      setFranchisesList({ ...franchisesList, loading: true })
+      let where = null
+      const conditions = []
+      conditions.push({
+        attribute: 'enabled',
+        value: true
+      })
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      }
+      const functionFetch = `${ordering.root}/franchises?where=${JSON.stringify(where)}`
+      const response = await fetch(functionFetch, requestOptions)
+      const { error, result } = await response.json()
+      if (!error) {
+        setFranchisesList({
+          ...franchisesList,
+          loading: false,
+          franchises: result
+        })
+      } else {
+        setFranchisesList({
+          ...franchisesList,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setFranchisesList({
+        ...franchisesList,
+        loading: false,
+        error: err
       })
     }
   }
@@ -232,6 +317,8 @@ export const OrderingWebsite = (props) => {
     if (!appId) return
     getThemes()
     getSites()
+    getBusinesses()
+    getFranchises()
   }, [appId])
 
   useEffect(() => {
@@ -266,6 +353,8 @@ export const OrderingWebsite = (props) => {
           themesList={themesList}
           site={site}
           setSite={setSite}
+          businessesList={businessesList}
+          franchisesList={franchisesList}
         />
       )}
     </>
