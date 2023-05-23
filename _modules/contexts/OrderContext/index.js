@@ -80,7 +80,7 @@ var OrderContext = /*#__PURE__*/(0, _react.createContext)();
 exports.OrderContext = OrderContext;
 
 var OrderProvider = function OrderProvider(_ref) {
-  var _configState$configs, _configState$configs$;
+  var _configState$configs, _configState$configs$, _socket$socket2;
 
   var Alert = _ref.Alert,
       children = _ref.children,
@@ -1539,9 +1539,9 @@ var OrderProvider = function OrderProvider(_ref) {
    */
 
   (0, _react.useEffect)(function () {
-    var _session$user3, _session$user4, _session$user5, _session$user6;
+    var _socket$socket, _session$user3, _session$user4, _session$user5, _session$user6;
 
-    if (!session.auth || session.loading) return;
+    if (!session.auth || session.loading || !(socket !== null && socket !== void 0 && (_socket$socket = socket.socket) !== null && _socket$socket !== void 0 && _socket$socket.connected)) return;
     console.log('SOCKET ROOM JOIN AGAIN');
     socket.join("carts_".concat(session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id));
     socket.join("orderoptions_".concat(session === null || session === void 0 ? void 0 : (_session$user4 = session.user) === null || _session$user4 === void 0 ? void 0 : _session$user4.id));
@@ -1584,7 +1584,7 @@ var OrderProvider = function OrderProvider(_ref) {
         socket.leave("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user14 = session.user) === null || _session$user14 === void 0 ? void 0 : _session$user14.id));
       }
     };
-  }, [socket, session]);
+  }, [socket === null || socket === void 0 ? void 0 : (_socket$socket2 = socket.socket) === null || _socket$socket2 === void 0 ? void 0 : _socket$socket2.connected, session]);
   var functions = {
     refreshOrderOptions: refreshOrderOptions,
     changeAddress: changeAddress,
