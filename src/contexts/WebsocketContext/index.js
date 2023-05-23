@@ -45,23 +45,23 @@ export const WebsocketProvider = ({ settings, children }) => {
         console.log('SOCKET CONECCTED', socket)
       })
 
-      socket.socket.on('disconnect', function (reason) {
+      socket.socket.on('disconnect', (reason) => {
         console.log('SOCKET DISCONECCTED: ', reason)
         if (socket === 'io server disconnect') {
           window.setTimeout(socket.connect(), 5000)
         }
       })
 
-      socket.socket.on('connect_error', function () {
+      socket.socket.on('connect_error', () => {
         console.log('SOCKET CONNECT ERROR')
         window.setTimeout(socket.connect(), 5000)
       })
 
-      socket.socket.on('reconnect_attempt', function () {
+      socket.socket.on('reconnect_attempt', () => {
         console.log('SOCKET RECONNECT ATTEMPT')
       })
 
-      socket.socket.on('connecting', function () {
+      socket.socket.on('connecting', () => {
         console.log('SOCKET CONNECTING')
       })
     }

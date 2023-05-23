@@ -668,7 +668,7 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
    * Join to carts room
    */
   useEffect(() => {
-    if (!session.auth || session.loading) return
+    if (!session.auth || session.loading || !socket?.socket?.connected) return
     console.log('SOCKET ROOM JOIN AGAIN')
     socket.join(`carts_${session?.user?.id}`)
     socket.join(`orderoptions_${session?.user?.id}`)
@@ -703,7 +703,7 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
         socket.leave(`messages_orders_${session?.user?.id}`)
       }
     }
-  }, [socket, session])
+  }, [socket?.socket?.connected, session])
 
   const functions = {
     refreshOrderOptions,
