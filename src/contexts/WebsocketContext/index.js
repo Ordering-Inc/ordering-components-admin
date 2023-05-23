@@ -33,10 +33,23 @@ export const WebsocketProvider = ({ settings, children }) => {
   useEffect(() => {
     if (socket) {
       socket.connect()
-      // Get client socket ID
-      // socket.socket.on('connect', () => {
-      //   // console.log('SOCKET CONECCTED', socket.socket.id)
-      // })
+      socket.on('connect', () => {
+        console.log('SOCKET CONECCTED', socket)
+      })
+
+      socket.on('disconnect', function () {
+        console.log('SOCKET DISCONECCTED')
+        window.setTimeout(socket.connect(), 5000)
+      })
+
+      socket.on('connect_error', function () {
+        console.log('SOCKET CONNECT ERROR')
+        window.setTimeout(socket.connect(), 5000)
+      })
+
+      socket.on('reconnect_attempt', function () {
+        console.log('SOCKET RECONNECT ATTEMPT')
+      })
     }
     return () => {
       socket && socket.close()
