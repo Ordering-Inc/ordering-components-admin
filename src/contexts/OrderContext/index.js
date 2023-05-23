@@ -669,6 +669,7 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
    */
   useEffect(() => {
     if (!session.auth || session.loading) return
+    console.log('SOCKET ROOM JOIN AGAIN')
     socket.join(`carts_${session?.user?.id}`)
     socket.join(`orderoptions_${session?.user?.id}`)
     socket.join('drivers')

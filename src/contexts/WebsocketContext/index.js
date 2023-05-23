@@ -33,28 +33,40 @@ export const WebsocketProvider = ({ settings, children }) => {
   useEffect(() => {
     if (socket) {
       socket.connect()
-      socket.on('connect', () => {
-        console.log('SOCKET CONECCTED', socket)
-      })
-
-      socket.on('disconnect', function () {
-        console.log('SOCKET DISCONECCTED')
-        window.setTimeout(socket.connect(), 5000)
-      })
-
-      socket.on('connect_error', function () {
-        console.log('SOCKET CONNECT ERROR')
-        window.setTimeout(socket.connect(), 5000)
-      })
-
-      socket.on('reconnect_attempt', function () {
-        console.log('SOCKET RECONNECT ATTEMPT')
-      })
     }
     return () => {
       socket && socket.close()
     }
   }, [socket])
+
+  useEffect(() => {
+    if (socket?.socket) {
+      socket.socket.on('connect', () => {
+        console.log('SOCKET CONECCTED', socket)
+      })
+
+      socket.socket.on('disconnect', function (reason) {
+        console.log('SOCKET DISCONECCTED: ', reason)
+        if (socket === 'io server disconnect') {
+          window.setTimeout(socket.connect(), 5000)
+        }
+      })
+
+      socket.socket.on('connect_error', function () {
+        console.log('SOCKET CONNECT ERROR')
+        window.setTimeout(socket.connect(), 5000)
+      })
+
+      socket.socket.on('reconnect_attempt', function () {
+        console.log('SOCKET RECONNECT ATTEMPT')
+      })
+
+      socket.socket.on('connecting', function () {
+        console.log('SOCKET CONNECTING')
+      })
+    }
+  }, [socket?.socket])
+
   return (
     <WebsocketContext.Provider value={socket}>
       {children}
