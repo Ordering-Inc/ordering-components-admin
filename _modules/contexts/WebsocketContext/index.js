@@ -80,26 +80,36 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
   (0, _react.useEffect)(function () {
     if (socket) {
       socket.connect();
-      socket.on('connect', function () {
-        console.log('SOCKET CONECCTED', socket);
-      });
-      socket.on('disconnect', function () {
-        console.log('SOCKET DISCONECCTED');
-        window.setTimeout(socket.connect(), 5000);
-      });
-      socket.on('connect_error', function () {
-        console.log('SOCKET CONNECT ERROR');
-        window.setTimeout(socket.connect(), 5000);
-      });
-      socket.on('reconnect_attempt', function () {
-        console.log('SOCKET RECONNECT ATTEMPT');
-      });
     }
 
     return function () {
       socket && socket.close();
     };
   }, [socket]);
+  (0, _react.useEffect)(function () {
+    if (socket !== null && socket !== void 0 && socket.socket) {
+      socket.socket.on('connect', function () {
+        console.log('SOCKET CONECCTED', socket);
+      });
+      socket.socket.on('disconnect', function (reason) {
+        console.log('SOCKET DISCONECCTED: ', reason);
+
+        if (socket === 'io server disconnect') {
+          window.setTimeout(socket.connect(), 5000);
+        }
+      });
+      socket.socket.on('connect_error', function () {
+        console.log('SOCKET CONNECT ERROR');
+        window.setTimeout(socket.connect(), 5000);
+      });
+      socket.socket.on('reconnect_attempt', function () {
+        console.log('SOCKET RECONNECT ATTEMPT');
+      });
+      socket.socket.on('connecting', function () {
+        console.log('SOCKET CONNECTING');
+      });
+    }
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket]);
   return /*#__PURE__*/_react.default.createElement(WebsocketContext.Provider, {
     value: socket
   }, children);
