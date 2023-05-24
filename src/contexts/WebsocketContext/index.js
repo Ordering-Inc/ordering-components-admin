@@ -42,30 +42,19 @@ export const WebsocketProvider = ({ settings, children }) => {
   useEffect(() => {
     if (socket?.socket) {
       socket.socket.on('connect', () => {
-        console.log('SOCKET CONECCTED', socket)
+        window.localStorage.setItem('websocket-connected-date', new Date())
       })
 
       socket.socket.on('disconnect', (reason) => {
-        console.log('SOCKET DISCONECCTED: ', reason)
-        if (socket === 'io server disconnect' && session.auth) {
-          console.log('_______ server call __________', session.auth)
-          window.setTimeout(socket.socket.connect(), 5000)
+        if (reason === 'io server disconnect' && session.auth) {
+          window.setTimeout(socket.socket.connect(), 1000)
         }
       })
 
       socket.socket.on('connect_error', () => {
-        console.log('SOCKET CONNECT ERROR')
         if (session.auth) {
-          window.setTimeout(socket.socket.connect(), 5000)
+          window.setTimeout(socket.socket.connect(), 1000)
         }
-      })
-
-      socket.socket.on('reconnect_attempt', () => {
-        console.log('SOCKET RECONNECT ATTEMPT')
-      })
-
-      socket.socket.on('connecting', () => {
-        console.log('SOCKET CONNECTING')
       })
     }
   }, [socket?.socket, session])

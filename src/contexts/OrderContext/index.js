@@ -665,7 +665,6 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
   }, [state, socket])
 
   const handleJoinRooms = () => {
-    console.log('SOCKET ROOM JOIN AGAIN')
     socket.join(`carts_${session?.user?.id}`)
     socket.join(`orderoptions_${session?.user?.id}`)
     socket.join('drivers')
