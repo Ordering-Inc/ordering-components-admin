@@ -47,14 +47,16 @@ export const WebsocketProvider = ({ settings, children }) => {
 
       socket.socket.on('disconnect', (reason) => {
         console.log('SOCKET DISCONECCTED: ', reason)
-        if (socket === 'io server disconnect') {
+        if (socket === 'io server disconnect' && session.auth) {
           window.setTimeout(socket.socket.connect(), 5000)
         }
       })
 
       socket.socket.on('connect_error', () => {
         console.log('SOCKET CONNECT ERROR')
-        window.setTimeout(socket.socket.connect(), 5000)
+        if (session.auth) {
+          window.setTimeout(socket.socket.connect(), 5000)
+        }
       })
 
       socket.socket.on('reconnect_attempt', () => {
@@ -65,7 +67,7 @@ export const WebsocketProvider = ({ settings, children }) => {
         console.log('SOCKET CONNECTING')
       })
     }
-  }, [socket?.socket])
+  }, [socket?.socket, session])
 
   return (
     <WebsocketContext.Provider value={socket}>
