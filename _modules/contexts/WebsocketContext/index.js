@@ -89,28 +89,17 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
   (0, _react.useEffect)(function () {
     if (socket !== null && socket !== void 0 && socket.socket) {
       socket.socket.on('connect', function () {
-        console.log('SOCKET CONECCTED', socket);
+        window.localStorage.setItem('websocket-connected-date', new Date());
       });
       socket.socket.on('disconnect', function (reason) {
-        console.log('SOCKET DISCONECCTED: ', reason);
-
-        if (socket === 'io server disconnect' && session.auth) {
-          console.log('_______ server call __________', session.auth);
-          window.setTimeout(socket.socket.connect(), 5000);
+        if (reason === 'io server disconnect' && session.auth) {
+          window.setTimeout(socket.socket.connect(), 1000);
         }
       });
       socket.socket.on('connect_error', function () {
-        console.log('SOCKET CONNECT ERROR');
-
         if (session.auth) {
-          window.setTimeout(socket.socket.connect(), 5000);
+          window.setTimeout(socket.socket.connect(), 1000);
         }
-      });
-      socket.socket.on('reconnect_attempt', function () {
-        console.log('SOCKET RECONNECT ATTEMPT');
-      });
-      socket.socket.on('connecting', function () {
-        console.log('SOCKET CONNECTING');
       });
     }
   }, [socket === null || socket === void 0 ? void 0 : socket.socket, session]);
