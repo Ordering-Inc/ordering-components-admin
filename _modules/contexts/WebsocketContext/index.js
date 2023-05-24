@@ -95,6 +95,7 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
         console.log('SOCKET DISCONECCTED: ', reason);
 
         if (socket === 'io server disconnect' && session.auth) {
+          console.log('_______ server call __________', session.auth);
           window.setTimeout(socket.socket.connect(), 5000);
         }
       });
