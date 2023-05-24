@@ -94,13 +94,16 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
       socket.socket.on('disconnect', function (reason) {
         console.log('SOCKET DISCONECCTED: ', reason);
 
-        if (socket === 'io server disconnect') {
+        if (socket === 'io server disconnect' && session.auth) {
           window.setTimeout(socket.socket.connect(), 5000);
         }
       });
       socket.socket.on('connect_error', function () {
         console.log('SOCKET CONNECT ERROR');
-        window.setTimeout(socket.socket.connect(), 5000);
+
+        if (session.auth) {
+          window.setTimeout(socket.socket.connect(), 5000);
+        }
       });
       socket.socket.on('reconnect_attempt', function () {
         console.log('SOCKET RECONNECT ATTEMPT');
@@ -109,7 +112,7 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
         console.log('SOCKET CONNECTING');
       });
     }
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket]);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session]);
   return /*#__PURE__*/_react.default.createElement(WebsocketContext.Provider, {
     value: socket
   }, children);
