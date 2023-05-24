@@ -48,6 +48,7 @@ export const WebsocketProvider = ({ settings, children }) => {
       socket.socket.on('disconnect', (reason) => {
         console.log('SOCKET DISCONECCTED: ', reason)
         if (socket === 'io server disconnect' && session.auth) {
+          console.log('_______ server call __________', session.auth)
           window.setTimeout(socket.socket.connect(), 5000)
         }
       })
