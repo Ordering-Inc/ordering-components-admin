@@ -36,26 +36,16 @@ export const WebsocketStatus = (props) => {
   useEffect(() => {
     if (socket?.socket) {
       socket.socket.on('connect', () => {
-        console.log('_____________ test connect ___________', socket)
         setReconnectAttemptCount(0)
         setSocketStatus(1)
         setConnectedDate(new Date())
       })
 
       socket.socket.on('disconnect', (reason) => {
-        console.log('_____________ test disconnect ___________', socket)
         setSocketStatus(2)
-        // if (reason === 'io client disconnect') {
-        //   window.setTimeout(socket.socket.connect(), 1000)
-        // }
-      })
-
-      socket.socket.on('connect_error', () => {
-        console.log('_____________ test connect_error ___________')
       })
 
       socket.socket.on('reconnect_attempt', () => {
-        console.log('_____________ test reconnect_attempt ___________')
         setReconnectAttemptCount(prev => prev + 1)
         setSocketStatus(0)
       })
