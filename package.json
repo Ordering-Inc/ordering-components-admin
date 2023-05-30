@@ -1,6 +1,6 @@
 {
   "name": "ordering-components-admin",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Ordering Internal Admin Dashboard",
   "main": "./_modules/index.js",
   "scripts": {
