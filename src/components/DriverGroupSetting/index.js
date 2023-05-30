@@ -33,7 +33,22 @@ export const DriverGroupSetting = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/drivergroups?params=name,drivers`, requestOptions)
+      let where = []
+      const conditions = []
+      conditions.push({
+        attribute: 'type',
+        value: {
+          condition: '!=',
+          value: 1
+        }
+      })
+      if (conditions.length) {
+        where = {
+          conditions,
+          conector: 'AND'
+        }
+      }
+      const response = await fetch(`${ordering.root}/drivergroups?params=name,drivers,type&where=${JSON.stringify(where)}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setDriversGroupsState({ ...driversGroupsState, groups: content.result, loading: false })
