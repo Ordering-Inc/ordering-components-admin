@@ -100,14 +100,11 @@ export const DriverGroupSetting = (props) => {
     const driverIds = selectedGroup.drivers?.reduce((ids, driver) => [...ids, driver.id], [])
     let changedDriverIds = []
     if (driverIds.includes(userId)) {
-      console.log(userId, driverIds)
       changedDriverIds = driverIds.filter(id => id !== userId)
     } else {
-      console.log('else')
       changedDriverIds = [...driverIds, userId]
     }
 
-    console.log(changedDriverIds)
     const changes = { drivers: JSON.stringify(changedDriverIds) }
     handleUpdateDriversGroup(groupId, changes)
   }
