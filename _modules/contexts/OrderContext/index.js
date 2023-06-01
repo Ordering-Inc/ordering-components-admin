@@ -653,8 +653,8 @@ var OrderProvider = function OrderProvider(_ref) {
 
 
   var addProduct = /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(product) {
-      var customerFromLocalStorage, userCustomerId, body, _yield$ordering$setAc5, _yield$ordering$setAc6, error, result;
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(product, userId, businessId) {
+      var body, _yield$ordering$setAc5, _yield$ordering$setAc6, error, result;
 
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) {
@@ -664,24 +664,19 @@ var OrderProvider = function OrderProvider(_ref) {
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: true
               }));
-              _context6.next = 4;
-              return strategy.getItem('user-customer', true);
-
-            case 4:
-              customerFromLocalStorage = _context6.sent;
-              userCustomerId = customerFromLocalStorage === null || customerFromLocalStorage === void 0 ? void 0 : customerFromLocalStorage.id;
               body = {
                 product: product,
-                user_id: userCustomerId || session.user.id
+                user_id: userId,
+                business_id: businessId
               };
-              _context6.next = 9;
+              _context6.next = 5;
               return ordering.setAccessToken(session.token).carts().addProduct(body, {
                 headers: {
                   'X-Socket-Id-X': socket === null || socket === void 0 ? void 0 : socket.getId()
                 }
               });
 
-            case 9:
+            case 5:
               _yield$ordering$setAc5 = _context6.sent;
               _yield$ordering$setAc6 = _yield$ordering$setAc5.content;
               error = _yield$ordering$setAc6.error;
@@ -704,23 +699,23 @@ var OrderProvider = function OrderProvider(_ref) {
               }));
               return _context6.abrupt("return", !error);
 
-            case 18:
-              _context6.prev = 18;
+            case 14:
+              _context6.prev = 14;
               _context6.t0 = _context6["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
               return _context6.abrupt("return", false);
 
-            case 22:
+            case 18:
             case "end":
               return _context6.stop();
           }
         }
-      }, _callee6, null, [[0, 18]]);
+      }, _callee6, null, [[0, 14]]);
     }));
 
-    return function addProduct(_x6) {
+    return function addProduct(_x6, _x7, _x8) {
       return _ref7.apply(this, arguments);
     };
   }();
@@ -800,7 +795,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee7, null, [[0, 18]]);
     }));
 
-    return function removeProduct(_x7) {
+    return function removeProduct(_x9) {
       return _ref8.apply(this, arguments);
     };
   }();
@@ -882,7 +877,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee8, null, [[0, 20]]);
     }));
 
-    return function clearCart(_x8) {
+    return function clearCart(_x10) {
       return _ref9.apply(this, arguments);
     };
   }();
@@ -892,8 +887,8 @@ var OrderProvider = function OrderProvider(_ref) {
 
 
   var updateProduct = /*#__PURE__*/function () {
-    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(product) {
-      var customerFromLocalStorage, userCustomerId, body, _yield$ordering$setAc9, _yield$ordering$setAc10, error, result;
+    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(product, userId, businessId) {
+      var body, _yield$ordering$setAc9, _yield$ordering$setAc10, error, result;
 
       return _regeneratorRuntime().wrap(function _callee9$(_context9) {
         while (1) {
@@ -903,24 +898,19 @@ var OrderProvider = function OrderProvider(_ref) {
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: true
               }));
-              _context9.next = 4;
-              return strategy.getItem('user-customer', true);
-
-            case 4:
-              customerFromLocalStorage = _context9.sent;
-              userCustomerId = customerFromLocalStorage === null || customerFromLocalStorage === void 0 ? void 0 : customerFromLocalStorage.id;
               body = {
                 product: product,
-                user_id: userCustomerId || session.user.id
+                user_id: userId,
+                business_id: businessId
               };
-              _context9.next = 9;
+              _context9.next = 5;
               return ordering.setAccessToken(session.token).carts().updateProduct(body, {
                 headers: {
                   'X-Socket-Id-X': socket === null || socket === void 0 ? void 0 : socket.getId()
                 }
               });
 
-            case 9:
+            case 5:
               _yield$ordering$setAc9 = _context9.sent;
               _yield$ordering$setAc10 = _yield$ordering$setAc9.content;
               error = _yield$ordering$setAc10.error;
@@ -942,23 +932,23 @@ var OrderProvider = function OrderProvider(_ref) {
               }));
               return _context9.abrupt("return", !error);
 
-            case 18:
-              _context9.prev = 18;
+            case 14:
+              _context9.prev = 14;
               _context9.t0 = _context9["catch"](0);
               setState(_objectSpread(_objectSpread({}, state), {}, {
                 loading: false
               }));
               return _context9.abrupt("return", false);
 
-            case 22:
+            case 18:
             case "end":
               return _context9.stop();
           }
         }
-      }, _callee9, null, [[0, 18]]);
+      }, _callee9, null, [[0, 14]]);
     }));
 
-    return function updateProduct(_x9) {
+    return function updateProduct(_x11, _x12, _x13) {
       return _ref10.apply(this, arguments);
     };
   }();
@@ -1060,7 +1050,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee10, null, [[6, 24]]);
     }));
 
-    return function applyCoupon(_x10) {
+    return function applyCoupon(_x14) {
       return _ref11.apply(this, arguments);
     };
   }();
@@ -1162,7 +1152,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee11, null, [[6, 24]]);
     }));
 
-    return function changeDriverTip(_x11, _x12) {
+    return function changeDriverTip(_x15, _x16) {
       return _ref12.apply(this, arguments);
     };
   }();
@@ -1268,7 +1258,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee12, null, [[0, 24]]);
     }));
 
-    return function placeCart(_x13, _x14) {
+    return function placeCart(_x17, _x18) {
       return _ref13.apply(this, arguments);
     };
   }();
@@ -1351,7 +1341,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee13, null, [[0, 19]]);
     }));
 
-    return function confirmCart(_x15, _x16) {
+    return function confirmCart(_x19, _x20) {
       return _ref14.apply(this, arguments);
     };
   }();
@@ -1432,7 +1422,7 @@ var OrderProvider = function OrderProvider(_ref) {
       }, _callee14, null, [[0, 18]]);
     }));
 
-    return function reorder(_x17) {
+    return function reorder(_x21) {
       return _ref15.apply(this, arguments);
     };
   }();
