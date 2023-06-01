@@ -298,14 +298,13 @@ export const OrderProvider = ({ Alert, children, strategy }) => {
   /**
    * Add product to cart
    */
-  const addProduct = async (product) => {
+  const addProduct = async (product, userId, businessId) => {
     try {
       setState({ ...state, loading: true })
-      const customerFromLocalStorage = await strategy.getItem('user-customer', true)
-      const userCustomerId = customerFromLocalStorage?.id
       const body = {
         product,
-        user_id: userCustomerId || session.user.id
+        user_id: userId,
+        business_id: businessId
       }
       const { content: { error, result } } = await ordering.setAccessToken(session.token).carts().addProduct(body, { headers: { 'X-Socket-Id-X': socket?.getId() } })
       if (!error) {
