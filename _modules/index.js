@@ -585,6 +585,12 @@ Object.defineProperty(exports, "CustomDomain", {
     return _CustomDomain.CustomDomain;
   }
 });
+Object.defineProperty(exports, "CustomOrderDetails", {
+  enumerable: true,
+  get: function get() {
+    return _CustomOrderDetails.CustomOrderDetails;
+  }
+});
 Object.defineProperty(exports, "CustomerContext", {
   enumerable: true,
   get: function get() {
@@ -1941,6 +1947,8 @@ var _CouponControl = require("./components/CouponControl");
 var _ContentForm = require("./components/ContentForm");
 
 var _CustomDomain = require("./components/CustomDomain");
+
+var _CustomOrderDetails = require("./components/CustomOrderDetails");
 
 var _DashboardBusinessList = require("./components/DashboardBusinessList");
 
