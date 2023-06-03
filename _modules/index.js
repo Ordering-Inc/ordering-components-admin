@@ -1119,6 +1119,12 @@ Object.defineProperty(exports, "PaymentOptionStripeRedirect", {
     return _PaymentOptionStripeRedirect.PaymentOptionStripeRedirect;
   }
 });
+Object.defineProperty(exports, "PaymentOptionWallet", {
+  enumerable: true,
+  get: function get() {
+    return _PaymentOptionWallet.PaymentOptionWallet;
+  }
+});
 Object.defineProperty(exports, "PaymentOptions", {
   enumerable: true,
   get: function get() {
@@ -2075,6 +2081,8 @@ var _OrderTypeControl = require("./components/OrderTypeControl");
 var _PaymentOptions = require("./components/PaymentOptions");
 
 var _PaymentOptionSquare = require("./components/PaymentOptionSquare");
+
+var _PaymentOptionWallet = require("./components/PaymentOptionWallet");
 
 var _PagesList = require("./components/PagesList");
 
