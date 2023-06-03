@@ -11,7 +11,11 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _propTypes = _interopRequireDefault(require("prop-types"));
 
+var _decimal = _interopRequireDefault(require("decimal.js"));
+
 var _OrderContext = require("../../contexts/OrderContext");
+
+var _ConfigContext = require("../../contexts/ConfigContext");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -39,9 +43,10 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var DriverTips = function DriverTips(props) {
   var UIComponent = props.UIComponent,
       businessId = props.businessId,
+      businessIds = props.businessIds,
       useOrderContext = props.useOrderContext;
 
-  if (useOrderContext && !businessId) {
+  if (useOrderContext && !businessId && !businessIds) {
     throw new Error('`businessId` is required when `useOrderContext` is true.');
   }
   /**
@@ -53,6 +58,14 @@ var DriverTips = function DriverTips(props) {
       _useOrder2 = _slicedToArray(_useOrder, 2),
       orderState = _useOrder2[0],
       changeDriverTip = _useOrder2[1].changeDriverTip;
+  /**
+   * Config context
+   */
+
+
+  var _useConfig = (0, _ConfigContext.useConfig)(),
+      _useConfig2 = _slicedToArray(_useConfig, 1),
+      configs = _useConfig2[0].configs;
   /**
    * Save percentage selected by user
    */
@@ -78,10 +91,26 @@ var DriverTips = function DriverTips(props) {
 
 
   var handlerChangeOption = function handlerChangeOption(driverTip) {
-    driverTip = parseInt(driverTip);
+    var isFixedPrice = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : props.isFixedPrice;
+    driverTip = typeof driverTip === 'string' ? parseFloat(driverTip) : driverTip;
 
     if (useOrderContext) {
-      changeDriverTip(businessId, driverTip);
+      if (businessIds) {
+        var tip = new _decimal.default(driverTip);
+        var tipPerCart = !isFixedPrice ? driverTip : parseFloat((Math.trunc(tip.dividedBy(businessIds === null || businessIds === void 0 ? void 0 : businessIds.length) * 100) / 100).toFixed(2));
+        var correctionValue = !isFixedPrice ? 0 : parseFloat(tip.minus(new _decimal.default(tipPerCart).times(businessIds === null || businessIds === void 0 ? void 0 : businessIds.length)).toFixed(2));
+        var tipsPerCart = businessIds.map(function (bid, idx) {
+          return {
+            bid: bid,
+            value: parseFloat(new _decimal.default(tipPerCart).plus(idx === 0 ? correctionValue : 0).toFixed(2))
+          };
+        });
+        Promise.all(tipsPerCart.map(function (tip) {
+          return changeDriverTip(tip.bid, tip.value, isFixedPrice);
+        }));
+      } else {
+        changeDriverTip(businessId, driverTip, isFixedPrice);
+      }
     } else {
       setOptionSelected(driverTip);
     }
@@ -90,11 +119,13 @@ var DriverTips = function DriverTips(props) {
   };
 
   (0, _react.useEffect)(function () {
-    var _orderState$carts, _orderState$carts2;
+    var _orderState$carts, _orderState$carts2, _orderState$carts3, _orderState$carts4, _configs$driver_tip_t, _configs$driver_tip_u;
 
-    var orderDriverTipRate = ((_orderState$carts = orderState.carts["businessId:".concat(businessId)]) === null || _orderState$carts === void 0 ? void 0 : _orderState$carts.driver_tip_rate) || 0;
-    var orderDriverTip = ((_orderState$carts2 = orderState.carts["businessId:".concat(businessId)]) === null || _orderState$carts2 === void 0 ? void 0 : _orderState$carts2.driver_tip) || 0;
-    setOptionSelected(orderDriverTipRate);
+    var orderDriverTipRate = ((_orderState$carts = orderState.carts) === null || _orderState$carts === void 0 ? void 0 : (_orderState$carts2 = _orderState$carts["businessId:".concat(businessId !== null && businessId !== void 0 ? businessId : businessIds === null || businessIds === void 0 ? void 0 : businessIds[0])]) === null || _orderState$carts2 === void 0 ? void 0 : _orderState$carts2.driver_tip_rate) || 0;
+    var orderDriverTip = ((_orderState$carts3 = orderState.carts) === null || _orderState$carts3 === void 0 ? void 0 : (_orderState$carts4 = _orderState$carts3["businessId:".concat(businessId !== null && businessId !== void 0 ? businessId : businessIds === null || businessIds === void 0 ? void 0 : businessIds[0])]) === null || _orderState$carts4 === void 0 ? void 0 : _orderState$carts4.driver_tip) || 0;
+    var isFixedPrice = parseInt(configs === null || configs === void 0 ? void 0 : (_configs$driver_tip_t = configs.driver_tip_type) === null || _configs$driver_tip_t === void 0 ? void 0 : _configs$driver_tip_t.value, 10) === 1 || !!parseInt(configs === null || configs === void 0 ? void 0 : (_configs$driver_tip_u = configs.driver_tip_use_custom) === null || _configs$driver_tip_u === void 0 ? void 0 : _configs$driver_tip_u.value, 10); // 1 - fixed, 2 - percentage
+
+    setOptionSelected(isFixedPrice ? orderDriverTip : orderDriverTipRate);
     setDriverTipAmount(orderDriverTip);
   }, [orderState]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
