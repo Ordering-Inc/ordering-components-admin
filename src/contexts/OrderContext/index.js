@@ -1254,18 +1254,53 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, isDisableToa
     }
   }, [state, socket])
 
+  const handleJoinRooms = () => {
+    socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
+    socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+    socket.join('drivers')
+    socket.join({
+      room: 'orders',
+      user_id: session?.user?.id,
+      role: 'manager'
+    })
+    if (session?.user?.level === 0) {
+      socket.join('orders')
+      socket.join('messages_orders')
+    } else {
+      socket.join(`orders_${session?.user?.id}`)
+      socket.join(`messages_orders_${session?.user?.id}`)
+    }
+  }
+
   /**
    * Join to carts room
    */
   useEffect(() => {
-    if (!session.auth || session.loading) return
-    socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
-    socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+    if (!session.auth || session.loading || !socket?.socket) return
+
+    handleJoinRooms()
+    socket.socket.on('connect', () => {
+      handleJoinRooms()
+    })
+
     return () => {
       socket.leave(`carts_${customerState?.user?.id || session?.user?.id}`)
       socket.leave(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+      socket.leave('drivers')
+      socket.leave({
+        room: 'orders',
+        user_id: session?.user?.id,
+        role: 'manager'
+      })
+      if (session?.user?.level === 0) {
+        socket.leave('orders')
+        socket.leave('messages_orders')
+      } else {
+        socket.leave(`orders_${session?.user?.id}`)
+        socket.leave(`messages_orders_${session?.user?.id}`)
+      }
     }
-  }, [socket, session, customerState?.user?.id])
+  }, [socket?.socket, session, customerState?.user?.id])
 
   const functions = {
     refreshOrderOptions,
