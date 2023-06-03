@@ -85,6 +85,7 @@ import { CountryList } from './components/CountryList'
 import { CouponControl } from './components/CouponControl'
 import { ContentForm } from './components/ContentForm'
 import { CustomDomain } from './components/CustomDomain'
+import { CustomOrderDetails } from './components/CustomOrderDetails'
 import { DashboardBusinessList } from './components/DashboardBusinessList'
 import { DashboardOrdersList } from './components/DashboardOrdersList'
 import { DeliveryzoneList } from './components/DeliveryzoneList'
@@ -354,6 +355,7 @@ export {
   CouponControl,
   ContentForm,
   CustomDomain,
+  CustomOrderDetails,
   DashboardBusinessList,
   DashboardOrdersList,
   DeliveryzoneList,
