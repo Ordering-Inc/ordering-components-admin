@@ -155,6 +155,7 @@ import { OrdersOverview } from './components/OrdersOverview'
 import { OrderTypeControl } from './components/OrderTypeControl'
 import { PaymentOptions } from './components/PaymentOptions'
 import { PaymentOptionSquare } from './components/PaymentOptionSquare'
+import { PaymentOptionWallet } from './components/PaymentOptionWallet'
 import { PagesList } from './components/PagesList'
 import { PageForm } from './components/PageForm'
 import { PlaceList } from './components/PlaceList'
@@ -424,6 +425,7 @@ export {
   Messages,
   PaymentOptions,
   PaymentOptionSquare,
+  PaymentOptionWallet,
   PagesList,
   PageForm,
   PlaceList,
