@@ -399,6 +399,10 @@ export const BannerDetails = (props) => {
 
       let where = null
       const conditions = []
+      conditions.push({
+        attribute: 'enabled',
+        value: true
+      })
       if (conditions.length) {
         where = {
           conditions,
