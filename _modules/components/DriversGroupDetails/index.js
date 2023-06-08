@@ -519,6 +519,15 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
       driver_companies: JSON.stringify(filteredIds)
     }));
   };
+  var handleChangeType = function handleChangeType(type) {
+    var changes = _objectSpread({}, changesState);
+    delete changes.drivers;
+    delete changes.driver_companies;
+    changes.type = type;
+    setSelectedDriverIds([]);
+    setSelectedDriversCompanyIds([]);
+    setChangesState(_objectSpread({}, changes));
+  };
   (0, _react.useEffect)(function () {
     setChangesState({});
     if (curDriversGroup) {
@@ -595,7 +604,8 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
     handleSelectAllDriversCompany: handleSelectAllDriversCompany,
     handleUpdateDriversGroup: handleUpdateDriversGroup,
     handleDeleteDriversGroup: handleDeleteDriversGroup,
-    handleAddDriversGroup: handleAddDriversGroup
+    handleAddDriversGroup: handleAddDriversGroup,
+    handleChangeType: handleChangeType
   })));
 };
 exports.DriversGroupDetails = DriversGroupDetails;
