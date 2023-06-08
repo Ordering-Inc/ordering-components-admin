@@ -319,6 +319,16 @@ export const DriversGroupDetails = (props) => {
     })
   }
 
+  const handleChangeType = (type) => {
+    const changes = { ...changesState }
+    delete changes.drivers
+    delete changes.driver_companies
+    changes.type = type
+    setSelectedDriverIds([])
+    setSelectedDriversCompanyIds([])
+    setChangesState({ ...changes })
+  }
+
   useEffect(() => {
     setChangesState({})
     if (curDriversGroup) {
@@ -399,6 +409,7 @@ export const DriversGroupDetails = (props) => {
             handleUpdateDriversGroup={handleUpdateDriversGroup}
             handleDeleteDriversGroup={handleDeleteDriversGroup}
             handleAddDriversGroup={handleAddDriversGroup}
+            handleChangeType={handleChangeType}
           />
         )
       }
