@@ -3,6 +3,7 @@ import { useApi } from '../../contexts/ApiContext'
 import { useSession } from '../../contexts/SessionContext'
 import { useOrder } from '../../contexts/OrderContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
+import { useCustomer } from '../../contexts/CustomerContext'
 
 export const PaymentOptionWallet = (props) => {
   const {
@@ -14,7 +15,8 @@ export const PaymentOptionWallet = (props) => {
   const [ordering] = useApi()
   const socket = useWebsocket()
   const [orderState, { setStateValues }] = useOrder()
-  const [{ token, user }] = useSession()
+  const [{ token }] = useSession()
+  const [{ user }] = useCustomer()
 
   const [walletsState, setWalletsState] = useState({ result: [], loyaltyPlans: [], loading: true, error: null })
   const [errorState, setErrorState] = useState(null)
