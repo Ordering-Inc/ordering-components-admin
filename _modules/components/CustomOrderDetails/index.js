@@ -326,6 +326,15 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
       }));
     }
   }, [phone]);
+  (0, _react.useEffect)(function () {
+    if (selectedBusiness) {
+      setProductList({
+        loading: false,
+        products: [],
+        error: null
+      });
+    }
+  }, [selectedBusiness]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     selectedUser: selectedUser,
     setSelectedUser: setSelectedUser,

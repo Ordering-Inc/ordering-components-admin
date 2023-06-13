@@ -10,6 +10,7 @@ var _ApiContext = require("../../contexts/ApiContext");
 var _SessionContext = require("../../contexts/SessionContext");
 var _OrderContext = require("../../contexts/OrderContext");
 var _WebsocketContext = require("../../contexts/WebsocketContext");
+var _CustomerContext = require("../../contexts/CustomerContext");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -41,9 +42,10 @@ var PaymentOptionWallet = function PaymentOptionWallet(props) {
     setStateValues = _useOrder2[1].setStateValues;
   var _useSession = (0, _SessionContext.useSession)(),
     _useSession2 = _slicedToArray(_useSession, 1),
-    _useSession2$ = _useSession2[0],
-    token = _useSession2$.token,
-    user = _useSession2$.user;
+    token = _useSession2[0].token;
+  var _useCustomer = (0, _CustomerContext.useCustomer)(),
+    _useCustomer2 = _slicedToArray(_useCustomer, 1),
+    user = _useCustomer2[0].user;
   var _useState = (0, _react.useState)({
       result: [],
       loyaltyPlans: [],
