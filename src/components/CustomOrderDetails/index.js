@@ -195,6 +195,12 @@ export const CustomOrderDetails = (props) => {
     }
   }, [phone])
 
+  useEffect(() => {
+    if (selectedBusiness) {
+      setProductList({ loading: false, products: [], error: null })
+    }
+  }, [selectedBusiness])
+
   return (
     <>
       {UIComponent && (
