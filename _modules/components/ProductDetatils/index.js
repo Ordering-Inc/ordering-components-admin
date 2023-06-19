@@ -475,6 +475,67 @@ var ProductDetatils = function ProductDetatils(props) {
       handleUpdateBusinessState(updatedBusiness);
     }
   };
+
+  /**
+   * Method to duplicate product from API
+   */
+  var handleDuplicateProduct = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+      var requestOptions, response, content, _categories;
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.prev = 0;
+            showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+            requestOptions = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: "Bearer ".concat(session.token)
+              },
+              body: JSON.stringify({
+                copy_options: 'ingredients,gallery,tags,extras,metafields'
+              })
+            };
+            _context4.next = 5;
+            return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/categories/").concat(categoryId, "/products/").concat(productId, "/duplicate"), requestOptions);
+          case 5:
+            response = _context4.sent;
+            _context4.next = 8;
+            return response.json();
+          case 8:
+            content = _context4.sent;
+            if (!content.error) {
+              if (handleUpdateBusinessState) {
+                _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
+                _categories.forEach(function iterate(category) {
+                  if ((category === null || category === void 0 ? void 0 : category.id) === categoryId) {
+                    category.products.push(content.result);
+                  }
+                  Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
+                });
+                handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
+                  categories: _categories
+                }));
+              }
+              showToast(_ToastContext.ToastType.Success, t('PRODUCT_DUPLICATED', 'Product duplicated'));
+            }
+            _context4.next = 15;
+            break;
+          case 12:
+            _context4.prev = 12;
+            _context4.t0 = _context4["catch"](0);
+            showToast(_ToastContext.ToastType.Error, _context4.t0.message);
+          case 15:
+          case "end":
+            return _context4.stop();
+        }
+      }, _callee4, null, [[0, 12]]);
+    }));
+    return function handleDuplicateProduct() {
+      return _ref4.apply(this, arguments);
+    };
+  }();
   (0, _react.useEffect)(function () {
     if (props.product) {
       setProductState(_objectSpread(_objectSpread({}, productState), {}, {
@@ -500,7 +561,8 @@ var ProductDetatils = function ProductDetatils(props) {
     handleDeleteProduct: handleDeleteProduct,
     showProductOption: showProductOption,
     handleChangeFormState: handleChangeFormState,
-    handleSuccessUpdate: handleSuccessUpdate
+    handleSuccessUpdate: handleSuccessUpdate,
+    handleDuplicateProduct: handleDuplicateProduct
   })));
 };
 exports.ProductDetatils = ProductDetatils;
