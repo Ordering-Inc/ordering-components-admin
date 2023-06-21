@@ -143,8 +143,10 @@ var SiteProvider = function SiteProvider(_ref) {
     setSiteState: setSiteState
   };
   (0, _react.useEffect)(function () {
-    getSites();
-  }, []);
+    if (session.auth) {
+      getSites();
+    }
+  }, [session.auth]);
   return /*#__PURE__*/_react.default.createElement(SiteContext.Provider, {
     value: [siteState, functions]
   }, children);

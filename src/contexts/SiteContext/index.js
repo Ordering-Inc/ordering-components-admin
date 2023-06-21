@@ -41,8 +41,10 @@ export const SiteProvider = ({ children }) => {
   }
 
   useEffect(() => {
-    getSites()
-  }, [])
+    if (session.auth) {
+      getSites()
+    }
+  }, [session.auth])
 
   return (
     <SiteContext.Provider value={[siteState, functions]}>
