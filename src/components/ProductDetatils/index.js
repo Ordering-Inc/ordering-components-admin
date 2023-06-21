@@ -14,7 +14,9 @@ export const ProductDetatils = (props) => {
     UIComponent,
     productId,
     categoryId,
-    handleUpdateBusinessState
+    handleUpdateBusinessState,
+    categoryState,
+    handleUpdateCategoryState
   } = props
 
   const [ordering] = useApi()
@@ -366,15 +368,8 @@ export const ProductDetatils = (props) => {
       const content = await response.json()
 
       if (!content.error) {
-        if (handleUpdateBusinessState) {
-          const _categories = [...business?.categories]
-          _categories.forEach(function iterate (category) {
-            if (category?.id === categoryId) {
-              category.products.push(content.result)
-            }
-            Array.isArray(category?.subcategories) && category.subcategories.forEach(iterate)
-          })
-          handleUpdateBusinessState({ ...business, categories: _categories })
+        if (handleUpdateCategoryState) {
+          handleUpdateCategoryState({ ...categoryState, products: [...categoryState?.products, content.result] })
         }
         showToast(ToastType.Success, t('PRODUCT_DUPLICATED', 'Product duplicated'))
       }
