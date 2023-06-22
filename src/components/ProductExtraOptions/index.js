@@ -462,7 +462,8 @@ export const ProductExtraOptions = (props) => {
       const content = await response.json()
 
       if (!content.error) {
-        const extras = [...extrasState.extras, content.result]
+        const clonedExtra = JSON.parse(JSON.stringify(extra))
+        const extras = [...extrasState.extras, { ...clonedExtra, ...content.result }]
         setExtrasState({ ...extrasState, extras: extras })
         if (handleUpdateBusinessState) {
           const updatedBusiness = { ...business, extras: extras }
