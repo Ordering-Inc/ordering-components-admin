@@ -701,7 +701,7 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
    */
   var handleDuplicateExtra = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-      var requestOptions, response, content, extras, updatedBusiness;
+      var requestOptions, response, content, clonedExtra, extras, updatedBusiness;
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
@@ -726,7 +726,8 @@ var ProductExtraOptions = function ProductExtraOptions(props) {
           case 8:
             content = _context6.sent;
             if (!content.error) {
-              extras = [].concat(_toConsumableArray(extrasState.extras), [content.result]);
+              clonedExtra = JSON.parse(JSON.stringify(extra));
+              extras = [].concat(_toConsumableArray(extrasState.extras), [_objectSpread(_objectSpread({}, clonedExtra), content.result)]);
               setExtrasState(_objectSpread(_objectSpread({}, extrasState), {}, {
                 extras: extras
               }));

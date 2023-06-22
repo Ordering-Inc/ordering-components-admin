@@ -41,7 +41,9 @@ var ProductDetatils = function ProductDetatils(props) {
     UIComponent = props.UIComponent,
     productId = props.productId,
     categoryId = props.categoryId,
-    handleUpdateBusinessState = props.handleUpdateBusinessState;
+    handleUpdateBusinessState = props.handleUpdateBusinessState,
+    categoryState = props.categoryState,
+    handleUpdateCategoryState = props.handleUpdateCategoryState;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -481,7 +483,7 @@ var ProductDetatils = function ProductDetatils(props) {
    */
   var handleDuplicateProduct = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var requestOptions, response, content, _categories;
+      var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
@@ -506,16 +508,9 @@ var ProductDetatils = function ProductDetatils(props) {
           case 8:
             content = _context4.sent;
             if (!content.error) {
-              if (handleUpdateBusinessState) {
-                _categories = _toConsumableArray(business === null || business === void 0 ? void 0 : business.categories);
-                _categories.forEach(function iterate(category) {
-                  if ((category === null || category === void 0 ? void 0 : category.id) === categoryId) {
-                    category.products.push(content.result);
-                  }
-                  Array.isArray(category === null || category === void 0 ? void 0 : category.subcategories) && category.subcategories.forEach(iterate);
-                });
-                handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
-                  categories: _categories
+              if (handleUpdateCategoryState) {
+                handleUpdateCategoryState(_objectSpread(_objectSpread({}, categoryState), {}, {
+                  products: [].concat(_toConsumableArray(categoryState === null || categoryState === void 0 ? void 0 : categoryState.products), [content.result])
                 }));
               }
               showToast(_ToastContext.ToastType.Success, t('PRODUCT_DUPLICATED', 'Product duplicated'));
