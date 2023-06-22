@@ -464,8 +464,8 @@ export const ProductExtraOptionDetails = (props) => {
 
       if (!content.error) {
         let options
-        if (parentExtraState.extra.options) options = [...parentExtraState.extra.options, { ...content.result, suboptions: [] }]
-        else options = [{ ...content.result, suboptions: [] }]
+        if (parentExtraState.extra.options) options = [...parentExtraState.extra.options, { ...content.result, suboptions: [...option?.suboptions] }]
+        else options = [{ ...content.result, suboptions: [...option?.suboptions] }]
         const updatedExtra = { ...parentExtraState.extra, options: options }
         setParentExtraState({ ...parentExtraState, extra: updatedExtra })
         handleSuccessUpdateBusiness(updatedExtra)
