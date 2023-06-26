@@ -125,6 +125,10 @@ var BannerImageDetails = function BannerImageDetails(props) {
             }));
             where = null;
             conditions = [];
+            conditions.push({
+              attribute: 'enabled',
+              value: true
+            });
             if (searchValue) {
               searchConditions = [];
               isSpecialCharacter = rex.test(searchValue);
@@ -149,9 +153,9 @@ var BannerImageDetails = function BannerImageDetails(props) {
               };
             }
             fetchEndpoint = where ? ordering.businesses().asDashboard().select(propsToFetch).where(where) : ordering.businesses().asDashboard().select(propsToFetch);
-            _context.next = 9;
+            _context.next = 10;
             return fetchEndpoint.get();
-          case 9:
+          case 10:
             _yield$fetchEndpoint$ = _context.sent;
             _yield$fetchEndpoint$2 = _yield$fetchEndpoint$.content;
             error = _yield$fetchEndpoint$2.error;
@@ -169,20 +173,20 @@ var BannerImageDetails = function BannerImageDetails(props) {
                 error: result
               }));
             }
-            _context.next = 20;
+            _context.next = 21;
             break;
-          case 17:
-            _context.prev = 17;
+          case 18:
+            _context.prev = 18;
             _context.t0 = _context["catch"](0);
             setBusinessList(_objectSpread(_objectSpread({}, businessList), {}, {
               loading: false,
               error: [_context.t0 || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.toString()) || (_context.t0 === null || _context.t0 === void 0 ? void 0 : _context.t0.message)]
             }));
-          case 20:
+          case 21:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee, null, [[0, 18]]);
     }));
     return function getBusinessList() {
       return _ref.apply(this, arguments);
