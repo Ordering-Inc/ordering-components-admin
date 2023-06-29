@@ -109,8 +109,9 @@ export const OrdersFilter = (props) => {
       }
       case 'yesterday': {
         const yesterday = now.subtract('1', 'day').format('YYYY-MM-DD')
-        const yesterdayDatetime = dayjs(yesterday).format('YYYY-MM-DD HH:mm:ss')
-        setFilterValues({ ...filterValues, dateType: 'yesterday', deliveryFromDatetime: yesterdayDatetime })
+        const yesterFrom = dayjs(yesterday).format('YYYY-MM-DD 00:00:00')
+        const yesterEnd = dayjs(yesterday).format('YYYY-MM-DD 23:59:59')
+        setFilterValues({ ...filterValues, dateType: 'yesterday', deliveryFromDatetime: yesterFrom, deliveryEndDatetime: yesterEnd })
         break
       }
       case 'last7': {
