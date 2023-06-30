@@ -394,6 +394,7 @@ export const DriversList = (props) => {
           onlineDrivers={onlineDrivers}
           offlineDrivers={offlineDrivers}
           driverActionStatus={driverActionStatus}
+          companyActionStatus={companyActionStatus}
           driversIsOnline={driversIsOnline}
           driversSubfilter={driversSubfilter}
           searchValue={searchValue}
