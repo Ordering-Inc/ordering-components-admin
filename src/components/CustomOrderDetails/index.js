@@ -96,7 +96,7 @@ export const CustomOrderDetails = (props) => {
         }]
       }
 
-      const fetchEndpoint = ordering.businesses().where(conditions).select(businessPropsToFetch).parameters(parameters)
+      const fetchEndpoint = ordering.businesses().where(conditions).asDashboard().select(businessPropsToFetch).parameters(parameters)
       const { content: { error, result } } = await fetchEndpoint.get()
       if (!error) {
         setBusinessList({
@@ -236,5 +236,5 @@ CustomOrderDetails.propTypes = {
 }
 
 CustomOrderDetails.defaultProps = {
-  businessPropsToFetch: ['id', 'name', 'location', 'logo', 'slug']
+  businessPropsToFetch: ['id', 'name', 'location', 'logo', 'slug', 'zones']
 }
