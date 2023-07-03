@@ -1257,7 +1257,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
       socket.off('carts_update', handleCartUpdate)
       socket.off('order_options_update', handleOrderOptionUpdate)
     }
-  }, [state, socket])
+  }, [state, socket, isDisableToast])
 
   const handleJoinRooms = () => {
     socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)

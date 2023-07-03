@@ -273,6 +273,7 @@ export const CustomOrderDetails = (props) => {
 
   useEffect(() => {
     handleGetPhoneCode()
+    return () => handleDisableToast(true)
   }, [])
 
   return (
