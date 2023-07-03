@@ -18,7 +18,7 @@ export const CustomOrderDetails = (props) => {
 
   const [ordering] = useApi()
   const [{ token }] = useSession()
-  const [{ carts }, { updateProduct, handleDisableToast }] = useOrder()
+  const [orderState, { updateProduct, handleDisableToast }] = useOrder()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
   const [{ configs }] = useConfig()
@@ -33,9 +33,9 @@ export const CustomOrderDetails = (props) => {
 
   const googleMapsApiKey = useMemo(() => configs?.google_maps_api_key?.value, [configs])
   const cart = useMemo(() => {
-    if (!carts || !selectedBusiness?.id) return null
-    return carts[`businessId:${selectedBusiness?.id}`]
-  }, [carts, selectedBusiness?.id])
+    if (!orderState?.carts || !selectedBusiness?.id) return null
+    return orderState?.carts[`businessId:${selectedBusiness?.id}`]
+  }, [orderState?.carts, selectedBusiness?.id])
 
   /**
    * Get users from API
@@ -89,7 +89,8 @@ export const CustomOrderDetails = (props) => {
       })
 
       const parameters = {
-        location
+        location: location,
+        type: orderState.options?.type || 1
       }
 
       const conditions = {
