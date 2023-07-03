@@ -2679,7 +2679,7 @@ var OrderProvider = function OrderProvider(_ref) {
       socket.off('carts_update', handleCartUpdate);
       socket.off('order_options_update', handleOrderOptionUpdate);
     };
-  }, [state, socket]);
+  }, [state, socket, isDisableToast]);
 
   var handleJoinRooms = function handleJoinRooms() {
     var _customerState$user, _session$user, _customerState$user2, _session$user2, _session$user3, _session$user4;

@@ -72,7 +72,7 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
 
   var _useOrder = (0, _OrderContext.useOrder)(),
       _useOrder2 = _slicedToArray(_useOrder, 2),
-      carts = _useOrder2[0].carts,
+      orderState = _useOrder2[0],
       _useOrder2$ = _useOrder2[1],
       updateProduct = _useOrder2$.updateProduct,
       handleDisableToast = _useOrder2$.handleDisableToast;
@@ -146,9 +146,9 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     return configs === null || configs === void 0 ? void 0 : (_configs$google_maps_ = configs.google_maps_api_key) === null || _configs$google_maps_ === void 0 ? void 0 : _configs$google_maps_.value;
   }, [configs]);
   var cart = (0, _react.useMemo)(function () {
-    if (!carts || !(selectedBusiness !== null && selectedBusiness !== void 0 && selectedBusiness.id)) return null;
-    return carts["businessId:".concat(selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id)];
-  }, [carts, selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id]);
+    if (!(orderState !== null && orderState !== void 0 && orderState.carts) || !(selectedBusiness !== null && selectedBusiness !== void 0 && selectedBusiness.id)) return null;
+    return orderState === null || orderState === void 0 ? void 0 : orderState.carts["businessId:".concat(selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id)];
+  }, [orderState === null || orderState === void 0 ? void 0 : orderState.carts, selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id]);
   /**
    * Get users from API
    */
@@ -227,7 +227,7 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
 
   var getBusinessList = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(location) {
-      var parameters, conditions, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result;
+      var _orderState$options, parameters, conditions, fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result;
 
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) {
@@ -238,7 +238,8 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
                 loading: true
               }));
               parameters = {
-                location: location
+                location: location,
+                type: ((_orderState$options = orderState.options) === null || _orderState$options === void 0 ? void 0 : _orderState$options.type) || 1
               };
               conditions = {
                 conector: 'AND',
@@ -520,6 +521,9 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
   }, [selectedUser]);
   (0, _react.useEffect)(function () {
     handleGetPhoneCode();
+    return function () {
+      return handleDisableToast(true);
+    };
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     selectedUser: selectedUser,
