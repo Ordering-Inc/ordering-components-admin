@@ -701,7 +701,7 @@ export const DashboardOrdersList = (props) => {
             delete order.total
             delete order.subtotal
             Object.assign(_order, order)
-            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(order.status))) && isFilteredOrder(order)
+            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(_order.status))) && isFilteredOrder(order)
             if (!valid) {
               pagination.total--
               setPagination({
@@ -722,10 +722,20 @@ export const DashboardOrdersList = (props) => {
           if (isOrderStatus) {
             orders = [...orderList.orders, order]
             const _orders = sortOrdersArray(orderBy, orders)
-            pagination.total++
-            setPagination({
-              ...pagination
-            })
+            if (order?.history) {
+              const length = order?.history?.length
+              const lastHistoryData = order?.history[length - 1]?.data
+              const statusChange = lastHistoryData?.find(({ attribute }) => (attribute === 'status'))
+              if (statusChange) {
+                const from = parseInt(statusChange.old)
+                if (!orderStatus.includes(from)) {
+                  pagination.total++
+                  setPagination({
+                    ...pagination
+                  })
+                }
+              }
+            }
             setOrderList({
               ...orderList,
               orders: _orders.slice(0, pagination.pageSize)
