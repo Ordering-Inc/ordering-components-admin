@@ -54,7 +54,7 @@ var WebsocketStatus = function WebsocketStatus(props) {
       socketStatus = _useState2[0],
       setSocketStatus = _useState2[1];
 
-  var _useState3 = (0, _react.useState)(window.localStorage.getItem('websocket-connected-date') ? new Date(window.localStorage.getItem('websocket-connected-date')) : new Date()),
+  var _useState3 = (0, _react.useState)(new Date()),
       _useState4 = _slicedToArray(_useState3, 2),
       connectedDate = _useState4[0],
       setConnectedDate = _useState4[1];
