@@ -60,9 +60,11 @@ export const WebsocketProvider = ({ settings, children }) => {
         }
       })
     }
-
-    return () => window.localStorage.removeItem('websocket-connected-date')
   }, [socket?.socket, session])
+
+  useEffect(() => {
+    return () => window.localStorage.removeItem('websocket-connected-date')
+  }, [])
 
   return (
     <WebsocketContext.Provider value={socket}>
