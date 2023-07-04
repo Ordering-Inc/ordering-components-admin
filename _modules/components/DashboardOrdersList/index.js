@@ -1009,7 +1009,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
             delete order.total;
             delete order.subtotal;
             Object.assign(_order, order);
-            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(order.status))) && isFilteredOrder(order);
+            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(_order.status))) && isFilteredOrder(order);
 
             if (!valid) {
               pagination.total--;
@@ -1034,8 +1034,26 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
 
             var _orders3 = sortOrdersArray(orderBy, orders);
 
-            pagination.total++;
-            setPagination(_objectSpread({}, pagination));
+            if (order !== null && order !== void 0 && order.history) {
+              var _order$history, _order$history2;
+
+              var length = order === null || order === void 0 ? void 0 : (_order$history = order.history) === null || _order$history === void 0 ? void 0 : _order$history.length;
+              var lastHistoryData = order === null || order === void 0 ? void 0 : (_order$history2 = order.history[length - 1]) === null || _order$history2 === void 0 ? void 0 : _order$history2.data;
+              var statusChange = lastHistoryData === null || lastHistoryData === void 0 ? void 0 : lastHistoryData.find(function (_ref9) {
+                var attribute = _ref9.attribute;
+                return attribute === 'status';
+              });
+
+              if (statusChange) {
+                var from = parseInt(statusChange.old);
+
+                if (!orderStatus.includes(from)) {
+                  pagination.total++;
+                  setPagination(_objectSpread({}, pagination));
+                }
+              }
+            }
+
             setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
               orders: _orders3.slice(0, pagination.pageSize)
             }));
