@@ -21,8 +21,8 @@ export const AdvancedReports = (props) => {
   const [countryCode, setCountryCode] = useState('')
   const [filterList, setFilterList] = useState(
     {
-      from: '',
-      to: '',
+      from: dayjs(last7day),
+      to: now,
       businessIds: null,
       drivers_ids: null,
       franchises_id: null,
