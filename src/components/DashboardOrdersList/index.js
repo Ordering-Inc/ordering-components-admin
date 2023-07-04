@@ -701,7 +701,7 @@ export const DashboardOrdersList = (props) => {
             delete order.total
             delete order.subtotal
             Object.assign(_order, order)
-            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(_order.status))) && isFilteredOrder(order)
+            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(order.status))) && isFilteredOrder(order)
             if (!valid) {
               pagination.total--
               setPagination({
