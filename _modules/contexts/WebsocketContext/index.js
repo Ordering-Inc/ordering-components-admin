@@ -109,11 +109,12 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
         }
       });
     }
-
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session]);
+  (0, _react.useEffect)(function () {
     return function () {
       return window.localStorage.removeItem('websocket-connected-date');
     };
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session]);
+  }, []);
   return /*#__PURE__*/_react.default.createElement(WebsocketContext.Provider, {
     value: socket
   }, children);
