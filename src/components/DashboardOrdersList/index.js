@@ -828,6 +828,17 @@ export const DashboardOrdersList = (props) => {
     }
   }, [orderList, orderBy])
 
+  const reloadPageOrders = () => {
+    getPageOrders(pagination.pageSize, pagination.currentPage)
+  }
+
+  useEffect(() => {
+    events.on('websocket_connected', reloadPageOrders)
+    return () => {
+      events.off('websocket_connected', reloadPageOrders)
+    }
+  }, [pagination])
+
   return (
     <>
       {UIComponent && (

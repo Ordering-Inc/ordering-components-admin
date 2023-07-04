@@ -6,6 +6,7 @@ import { useWebsocket } from '../../contexts/WebsocketContext'
 import { useConfig } from '../../contexts/ConfigContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const OrdersManage = (props) => {
   const {
@@ -24,6 +25,7 @@ export const OrdersManage = (props) => {
   const [configState] = useConfig()
   const [, t] = useLanguage()
   const [, { showToast }] = useToast()
+  const [events] = useEvent()
 
   const requestsState = {}
   const orderStatuesList = {
@@ -767,6 +769,10 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     getOrderNumbersByStatus()
+    events.on('websocket_connected', getOrderNumbersByStatus)
+    return () => {
+      events.off('websocket_connected', getOrderNumbersByStatus)
+    }
   }, [filterValues, searchValue, driverId, customerId, businessId, timeStatus])
 
   useEffect(() => {
