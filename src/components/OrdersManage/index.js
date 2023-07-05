@@ -767,11 +767,15 @@ export const OrdersManage = (props) => {
     }
   }, [user, loading])
 
+  const reloadOrderNumbersByStatus = () => {
+    getOrderNumbersByStatus()
+  }
+
   useEffect(() => {
     getOrderNumbersByStatus()
-    events.on('websocket_connected', getOrderNumbersByStatus)
+    events.on('websocket_connected', reloadOrderNumbersByStatus)
     return () => {
-      events.off('websocket_connected', getOrderNumbersByStatus)
+      events.off('websocket_connected', reloadOrderNumbersByStatus)
     }
   }, [filterValues, searchValue, driverId, customerId, businessId, timeStatus])
 
