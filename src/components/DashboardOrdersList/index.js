@@ -717,29 +717,38 @@ export const DashboardOrdersList = (props) => {
           orders: _orders
         })
       } else {
-        if (isFilteredOrder(order)) {
-          const isOrderStatus = orderStatus.includes(parseInt(order.status))
-          if (isOrderStatus) {
-            orders = [...orderList.orders, order]
-            const _orders = sortOrdersArray(orderBy, orders)
-            if (order?.history) {
-              const length = order?.history?.length
-              const lastHistoryData = order?.history[length - 1]?.data
-              const statusChange = lastHistoryData?.find(({ attribute }) => (attribute === 'status'))
-              if (statusChange) {
-                const from = parseInt(statusChange.old)
-                if (!orderStatus.includes(from)) {
-                  pagination.total++
-                  setPagination({
-                    ...pagination
-                  })
-                }
-              }
+        let statusChange = null
+        if (order?.history) {
+          const length = order?.history?.length
+          const lastHistoryData = order?.history[length - 1]?.data
+          statusChange = lastHistoryData?.find(({ attribute }) => (attribute === 'status'))
+        }
+        const isOrderStatus = orderStatus.includes(parseInt(order.status))
+        if (isOrderStatus) {
+          orders = [...orderList.orders, order]
+          const _orders = sortOrdersArray(orderBy, orders)
+          if (statusChange && isFilteredOrder(order)) {
+            const from = parseInt(statusChange.old)
+            if (!orderStatus.includes(from)) {
+              pagination.total++
+              setPagination({
+                ...pagination
+              })
             }
-            setOrderList({
-              ...orderList,
-              orders: _orders.slice(0, pagination.pageSize)
-            })
+          }
+          setOrderList({
+            ...orderList,
+            orders: _orders.slice(0, pagination.pageSize)
+          })
+        } else {
+          if (statusChange) {
+            const from = parseInt(statusChange.old)
+            if (orderStatus.includes(from)) {
+              pagination.total--
+              setPagination({
+                ...pagination
+              })
+            }
           }
         }
       }
@@ -798,10 +807,12 @@ export const DashboardOrdersList = (props) => {
       }
     }
 
-    if (!orderList.loading && orderList.orders.length === 0) {
+    if (!orderList.loading) {
       if (pagination?.currentPage !== 0 && pagination?.total !== 0) {
         if (Math.ceil(pagination?.total / pagination.pageSize) >= pagination?.currentPage) {
-          getPageOrders(pagination.pageSize, pagination.currentPage)
+          if (orderList.orders.length === 0) {
+            getPageOrders(pagination.pageSize, pagination.currentPage)
+          }
         } else {
           getPageOrders(pagination.pageSize, pagination.currentPage - 1)
         }
