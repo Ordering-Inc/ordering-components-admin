@@ -19,17 +19,22 @@ export const AdvancedReports = (props) => {
   const [businessDistanceList, setBusinessDistanceList] = useState({ content: [], loading: false, error: null })
   const [businessDistanceList1, setBusinessDistanceList1] = useState({ content: [], loading: false, error: null })
   const [countryCode, setCountryCode] = useState('')
+
+  const now = dayjs()
+  const last7day = now.subtract('7', 'day').format('YYYY-MM-DD')
+
   const [filterList, setFilterList] = useState(
     {
-      from: '',
-      to: '',
+      from: dayjs(last7day),
+      to: now,
       businessIds: null,
       drivers_ids: null,
       franchises_id: null,
       driver_companies_ids: null,
       driver_groups_ids: null,
       delivery_types_ids: null,
-      app_ids: null
+      app_ids: null,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
     }
   )
 
@@ -52,8 +57,8 @@ export const AdvancedReports = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      let params = ''
-      if (filterList?.from !== '' && filterList?.to !== '') params = `from=${dayjs(filterList?.from).format('YYYY-MM-DD')} 00:00:00&to=${dayjs(filterList?.to).format('YYYY-MM-DD')} 23:59:59`
+      let params = `timezone=${filterList?.timeZone}`
+      if (filterList?.from !== '' && filterList?.to !== '') params = `${params}&from=${dayjs(filterList?.from).format('YYYY-MM-DD')} 00:00:00&to=${dayjs(filterList?.to).format('YYYY-MM-DD')} 23:59:59`
       if (filterList?.businessIds && filterList?.businessIds.length > 0) params = `${params}&businesses_ids=${JSON.stringify(filterList?.businessIds)}`
       if (filterList?.drivers_ids && filterList?.drivers_ids.length > 0) params = `${params}&drivers_ids=${JSON.stringify(filterList?.drivers_ids)}`
       if (filterList?.franchises_id && filterList?.franchises_id.length > 0) params = `${params}&franchises_id=${JSON.stringify(filterList?.franchises_id)}`
