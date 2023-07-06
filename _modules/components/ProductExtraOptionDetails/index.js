@@ -797,11 +797,7 @@ var ProductExtraOptionDetails = function ProductExtraOptionDetails(props) {
           case 8:
             content = _context7.sent;
             if (!content.error) {
-              if (parentExtraState.extra.options) options = [].concat(_toConsumableArray(parentExtraState.extra.options), [_objectSpread(_objectSpread({}, content.result), {}, {
-                suboptions: _toConsumableArray(option === null || option === void 0 ? void 0 : option.suboptions)
-              })]);else options = [_objectSpread(_objectSpread({}, content.result), {}, {
-                suboptions: _toConsumableArray(option === null || option === void 0 ? void 0 : option.suboptions)
-              })];
+              if (parentExtraState.extra.options) options = [].concat(_toConsumableArray(parentExtraState.extra.options), [content.result]);else options = [_objectSpread({}, content.result)];
               updatedExtra = _objectSpread(_objectSpread({}, parentExtraState.extra), {}, {
                 options: options
               });
