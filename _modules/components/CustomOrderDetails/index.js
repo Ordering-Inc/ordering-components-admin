@@ -102,6 +102,17 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     _useState14 = _slicedToArray(_useState13, 2),
     defaultCountryCodeState = _useState14[0],
     setDefaultCountryCodeState = _useState14[1];
+  var _useState15 = (0, _react.useState)({}),
+    _useState16 = _slicedToArray(_useState15, 2),
+    extraFields = _useState16[0],
+    setExtraFields = _useState16[1];
+  var _useState17 = (0, _react.useState)({
+      loading: false,
+      error: null
+    }),
+    _useState18 = _slicedToArray(_useState17, 2),
+    actionState = _useState18[0],
+    setActionState = _useState18[1];
   var googleMapsApiKey = (0, _react.useMemo)(function () {
     var _configs$google_maps_;
     return configs === null || configs === void 0 ? void 0 : (_configs$google_maps_ = configs.google_maps_api_key) === null || _configs$google_maps_ === void 0 ? void 0 : _configs$google_maps_.value;
@@ -335,20 +346,93 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
       return _ref4.apply(this, arguments);
     };
   }();
+  var handlePlaceOrderByTotal = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+      var _orderState$options2;
+      var customer, changes, requestOptions, response, content;
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            customer = {
+              name: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.name,
+              cellphone: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.cellphone,
+              phone: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.phone,
+              address: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.address,
+              address_notes: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.address_notes,
+              location: JSON.stringify(selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.location)
+            };
+            changes = _objectSpread({
+              paymethod: 'cash',
+              business_id: selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id,
+              delivery_type: ((_orderState$options2 = orderState.options) === null || _orderState$options2 === void 0 ? void 0 : _orderState$options2.type) || 1,
+              customer: JSON.stringify(customer)
+            }, extraFields);
+            _context5.prev = 2;
+            showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+            setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+              loading: true
+            }));
+            requestOptions = {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: "Bearer ".concat(token)
+              },
+              body: JSON.stringify(changes)
+            };
+            _context5.next = 8;
+            return fetch("".concat(ordering.root, "/orders/custom"), requestOptions);
+          case 8:
+            response = _context5.sent;
+            _context5.next = 11;
+            return response.json();
+          case 11:
+            content = _context5.sent;
+            if (!content.error) {
+              showToast(_ToastContext.ToastType.Success, t('CUSTOM_ORDER_CREATED', 'Custom order created'));
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: false,
+                error: null
+              }));
+            } else {
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: false,
+                error: content.result
+              }));
+            }
+            _context5.next = 18;
+            break;
+          case 15:
+            _context5.prev = 15;
+            _context5.t0 = _context5["catch"](2);
+            setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+              loading: false,
+              error: [_context5.t0.message]
+            }));
+          case 18:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5, null, [[2, 15]]);
+    }));
+    return function handlePlaceOrderByTotal() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
 
   /**
    * Method to get the phone code from the location
    */
   var handleGetPhoneCode = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
             if (googleMapsApiKey) {
-              _context5.next = 2;
+              _context6.next = 2;
               break;
             }
-            return _context5.abrupt("return");
+            return _context6.abrupt("return");
           case 2:
             setDefaultCountryCodeState(_objectSpread(_objectSpread({}, defaultCountryCodeState), {}, {
               loading: true
@@ -397,12 +481,12 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
             });
           case 4:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
-      }, _callee5);
+      }, _callee6);
     }));
     return function handleGetPhoneCode() {
-      return _ref5.apply(this, arguments);
+      return _ref6.apply(this, arguments);
     };
   }();
   (0, _react.useEffect)(function () {
@@ -456,7 +540,11 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     getProducts: getProducts,
     handeUpdateProductCart: handeUpdateProductCart,
     cart: cart,
-    defaultCountryCodeState: defaultCountryCodeState
+    defaultCountryCodeState: defaultCountryCodeState,
+    handlePlaceOrderByTotal: handlePlaceOrderByTotal,
+    setExtraFields: setExtraFields,
+    extraFields: extraFields,
+    actionState: actionState
   })));
 };
 exports.CustomOrderDetails = CustomOrderDetails;

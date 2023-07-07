@@ -712,6 +712,23 @@ var OrdersManage = function OrdersManage(props) {
                   value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.logisticStatus
                 });
               }
+              if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) !== null) {
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) === 0) {
+                  filterConditons.push({
+                    attribute: 'driver_id',
+                    value: {
+                      condition: '>=',
+                      value: 0
+                    }
+                  });
+                }
+                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) === 1) {
+                  filterConditons.push({
+                    attribute: 'driver_id',
+                    value: null
+                  });
+                }
+              }
               if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$metafie = filterValues.metafield) === null || _filterValues$metafie === void 0 ? void 0 : _filterValues$metafie.length) > 0) {
                 metafieldConditions = filterValues === null || filterValues === void 0 ? void 0 : filterValues.metafield.map(function (item) {
                   return {
