@@ -4,6 +4,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useWebsocket } from '../../contexts/WebsocketContext'
 import { useEvent } from '../../contexts/EventContext'
+import moment from 'moment'
 
 export const DashboardOrdersList = (props) => {
   const {
@@ -459,15 +460,68 @@ export const DashboardOrdersList = (props) => {
    * Method to detect if incoming order and update order belong to filter.
    * @param {Object} order incoming order and update order
    */
-  const isFilteredOrder = (order) => {
+  const isFilteredOrder = (order, lastHistoryData) => {
     let filterCheck = true
+    if (searchValue) {
+      let searchCheck = false
+      if (isSearchByOrderId) {
+        if ((order?.id?.toString() || '').toLowerCase().includes(searchValue.toLowerCase())) searchCheck = true
+      }
+      if (isSearchByCustomerEmail) {
+        if ((order?.customer?.email || '').toLowerCase().includes(searchValue.toLowerCase())) searchCheck = true
+      }
+
+      if (isSearchByCustomerPhone) {
+        if ((order?.customer?.cellphone || '').toLowerCase().includes(searchValue.toLowerCase())) searchCheck = true
+      }
+
+      if (isSearchByBusinessName) {
+        if ((order?.business?.name || '').toLowerCase().includes(searchValue.toLowerCase())) searchCheck = true
+      }
+
+      if (isSearchByDriverName) {
+        if ((order?.driver?.name || '').toLowerCase().includes(searchValue.toLowerCase())) searchCheck = true
+      }
+      if (!searchCheck) filterCheck = false
+    }
+
+    if (orderStatus !== undefined && orderStatus.length > 0) {
+      const lastStatus = lastHistoryData?.find(item => item.attribute === 'status')?.old
+      if (!orderStatus.includes(parseInt(order.status)) && !orderStatus.includes(parseInt(lastStatus))) {
+        filterCheck = false
+      }
+    }
+
+    if (filterValues?.orderId) {
+      if (!order?.id?.toString().includes(filterValues?.orderId)) filterCheck = false
+    }
+    if (filterValues?.externalId) {
+      if (!order?.external_id?.toString().includes(filterValues?.externalId)) filterCheck = false
+    }
+    if (filterValues?.deliveryFromDatetime) {
+      const isBefore = moment(order?.delivery_datetime).isBefore(filterValues?.deliveryFromDatetime, 'second')
+      if (isBefore) filterCheck = false
+    }
+    if (filterValues.deliveryEndDatetime) {
+      const isAfter = moment(order?.delivery_datetime).isAfter(filterValues?.deliveryEndDatetime, 'second')
+      if (isAfter) filterCheck = false
+    }
     if (filterValues.businessIds !== undefined && filterValues.businessIds.length > 0) {
       if (!filterValues.businessIds.includes(order.business_id)) {
         filterCheck = false
       }
     }
+    if (filterValues?.countryCode?.length > 0) {
+      if (!filterValues.countryCode.includes(order?.country_code)) filterCheck = false
+    }
+    if (filterValues?.cityIds?.length > 0) {
+      if (!filterValues.cityIds.includes(order.city_id)) {
+        filterCheck = false
+      }
+    }
     if (filterValues.driverIds !== undefined && filterValues.driverIds.length > 0) {
-      if (!filterValues.driverIds.includes(order.driver_id)) {
+      const lastDriverId = lastHistoryData?.find(item => item.attribute === 'driver_id')?.old
+      if (!filterValues.driverIds.includes(order.driver_id) && !filterValues.driverIds.includes(lastDriverId)) {
         filterCheck = false
       }
     }
@@ -481,10 +535,26 @@ export const DashboardOrdersList = (props) => {
         filterCheck = false
       }
     }
-    if (filterValues.statuses !== undefined && filterValues.statuses.length > 0) {
-      if (!filterValues.statuses.includes(parseInt(order.status))) {
+    if (filterValues?.driverGroupIds?.length > 0) {
+      const lastDriverId = lastHistoryData?.find(item => item.attribute === 'driver_id')?.old
+      if (!filterValues.driverGroupIds.includes(order.driver_id) && !filterValues.driverGroupIds.includes(lastDriverId)) {
         filterCheck = false
       }
+    }
+    if (filterValues?.currency?.length > 0) {
+      if (!filterValues.currency.includes(order?.currency)) filterCheck = false
+    }
+    if (filterValues?.logisticStatus) {
+      const lastLogisticStatus = lastHistoryData?.find(item => item.attribute === 'logistic_status')?.old
+      if (order?.logistic_status !== parseInt(filterValues?.logisticStatus) && lastLogisticStatus !== parseInt(filterValues?.logisticStatus)) filterCheck = false
+    }
+    if (filterValues?.metafield?.length > 0) {
+      filterValues.metafield.forEach(item => {
+        const found = order?.metafields?.find(meta => meta.key === item.key && meta.value.includes(item.value))
+        if (!found) {
+          filterCheck = false
+        }
+      })
     }
     return filterCheck
   }
@@ -686,6 +756,23 @@ export const DashboardOrdersList = (props) => {
     const handleUpdateOrder = (order) => {
       if (customerId && order?.customer_id !== customerId) return
       if (isOnlyDelivery && order?.delivery_type !== 1) return
+      if (typeof order.status === 'undefined') return
+      if (!isFilteredOrder(order)) {
+        const length = order.history.length
+        const lastHistoryData = order?.history[length - 1]?.data
+        if (isFilteredOrder(order, lastHistoryData)) {
+          pagination.total--
+          setPagination({ ...pagination })
+        }
+        const found = orderList.orders.find(_order => _order?.id === order?.id)
+        if (found) {
+          setOrderList(prevState => {
+            const updatedOrders = prevState.orders.filter(_order => _order?.id !== order?.id)
+            return { ...prevState, orders: updatedOrders }
+          })
+        }
+        return
+      }
       if (!order?.driver && order?.driver_id) {
         const updatedDriver = driversList?.drivers.find(driver => driver.id === order.driver_id)
         if (updatedDriver) {
@@ -701,12 +788,10 @@ export const DashboardOrdersList = (props) => {
             delete order.total
             delete order.subtotal
             Object.assign(_order, order)
-            valid = (orderStatus.length === 0 || orderStatus.includes(parseInt(_order.status))) && isFilteredOrder(order)
+            valid = orderStatus.length === 0 || orderStatus.includes(parseInt(_order.status))
             if (!valid) {
               pagination.total--
-              setPagination({
-                ...pagination
-              })
+              setPagination({ ...pagination })
             }
           }
           return valid
@@ -723,32 +808,17 @@ export const DashboardOrdersList = (props) => {
           const lastHistoryData = order?.history[length - 1]?.data
           statusChange = lastHistoryData?.find(({ attribute }) => (attribute === 'status'))
         }
-        const isOrderStatus = orderStatus.includes(parseInt(order.status))
-        if (isOrderStatus) {
-          orders = [...orderList.orders, order]
-          const _orders = sortOrdersArray(orderBy, orders)
-          if (statusChange && isFilteredOrder(order)) {
-            const from = parseInt(statusChange.old)
-            if (!orderStatus.includes(from)) {
-              pagination.total++
-              setPagination({
-                ...pagination
-              })
-            }
-          }
-          setOrderList({
-            ...orderList,
-            orders: _orders.slice(0, pagination.pageSize)
-          })
-        } else {
-          if (statusChange) {
-            const from = parseInt(statusChange.old)
-            if (orderStatus.includes(from)) {
-              pagination.total--
-              setPagination({
-                ...pagination
-              })
-            }
+        orders = [...orderList.orders, order]
+        const _orders = sortOrdersArray(orderBy, orders)
+        setOrderList({
+          ...orderList,
+          orders: _orders.slice(0, pagination.pageSize)
+        })
+        if (statusChange) {
+          const from = parseInt(statusChange.old)
+          if (!orderStatus.includes(from)) {
+            pagination.total++
+            setPagination({ ...pagination })
           }
         }
       }
@@ -765,9 +835,7 @@ export const DashboardOrdersList = (props) => {
           orders = [order, ...orderList.orders]
           const _orders = sortOrdersArray(orderBy, orders)
           pagination.total++
-          setPagination({
-            ...pagination
-          })
+          setPagination({ ...pagination })
           setOrderList({
             ...orderList,
             orders: _orders.slice(0, pagination.pageSize)
