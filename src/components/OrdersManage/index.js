@@ -391,6 +391,27 @@ export const OrdersManage = (props) => {
           }
         )
       }
+      if (filterValues?.assigned !== null) {
+        if (filterValues?.assigned === 0) {
+          filterConditons.push(
+            {
+              attribute: 'driver_id',
+              value: {
+                condition: '>=',
+                value: 0
+              }
+            }
+          )
+        }
+        if (filterValues?.assigned === 1) {
+          filterConditons.push(
+            {
+              attribute: 'driver_id',
+              value: null
+            }
+          )
+        }
+      }
       if (filterValues?.metafield?.length > 0) {
         const metafieldConditions = filterValues?.metafield.map(item => (
           {
