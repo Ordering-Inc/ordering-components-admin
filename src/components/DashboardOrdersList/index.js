@@ -755,6 +755,7 @@ export const DashboardOrdersList = (props) => {
     if (orderList.loading) return
     const handleUpdateOrder = (order) => {
       if (customerId && order?.customer_id !== customerId) return
+      if (driverId && order?.driver_id !== driverId) return
       if (isOnlyDelivery && order?.delivery_type !== 1) return
       if (typeof order.status === 'undefined') return
       if (!isFilteredOrder(order)) {
@@ -826,6 +827,7 @@ export const DashboardOrdersList = (props) => {
     const handleRegisterOrder = (order) => {
       if (order?.products?.[0]?.type === 'gift_card') return
       if (customerId && order?.customer_id !== customerId) return
+      if (driverId && order?.driver_id !== driverId) return
       if (isOnlyDelivery && order?.delivery_type !== 1) return
       const found = orderList.orders.find(_order => _order?.id === order?.id)
       if (found) return
