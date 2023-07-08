@@ -27,6 +27,8 @@ export const CustomOrderDetails = (props) => {
   const [customersPhones, setCustomersPhones] = useState({ users: [], loading: false, error: null })
   const [businessList, setBusinessList] = useState({ loading: false, businesses: [], error: null })
   const [productList, setProductList] = useState({ loading: false, products: [], error: null })
+  const [extraFields, setExtraFields] = useState({})
+  const [actionState, setActionState] = useState({ loading: false, error: null })
 
   const cart = useMemo(() => {
     if (!orderState?.carts || !selectedBusiness?.id) return null
@@ -187,6 +189,48 @@ export const CustomOrderDetails = (props) => {
     }
   }
 
+  const handlePlaceOrderByTotal = async () => {
+    const customer = {
+      name: selectedUser?.name,
+      cellphone: selectedUser?.cellphone,
+      phone: selectedUser?.phone,
+      address: selectedUser?.address,
+      address_notes: selectedUser?.address_notes,
+      location: JSON.stringify(selectedUser?.location)
+    }
+
+    const changes = {
+      paymethod: 'cash',
+      business_id: selectedBusiness?.id,
+      delivery_type: orderState.options?.type || 1,
+      customer: JSON.stringify(customer),
+      ...extraFields
+    }
+
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true })
+      const requestOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(changes)
+      }
+      const response = await fetch(`${ordering.root}/orders/custom`, requestOptions)
+      const content = await response.json()
+      if (!content.error) {
+        showToast(ToastType.Success, t('CUSTOM_ORDER_CREATED', 'Custom order created'))
+        setActionState({ ...actionState, loading: false, error: null })
+      } else {
+        setActionState({ ...actionState, loading: false, error: content.result })
+      }
+    } catch (err) {
+      setActionState({ ...actionState, loading: false, error: [err.message] })
+    }
+  }
+
   useEffect(() => {
     if (phone && phone.length >= 7) {
       getUsers()
@@ -235,6 +279,10 @@ export const CustomOrderDetails = (props) => {
           getProducts={getProducts}
           handeUpdateProductCart={handeUpdateProductCart}
           cart={cart}
+          handlePlaceOrderByTotal={handlePlaceOrderByTotal}
+          setExtraFields={setExtraFields}
+          extraFields={extraFields}
+          actionState={actionState}
         />
       )}
     </>
