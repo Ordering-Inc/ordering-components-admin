@@ -300,39 +300,38 @@ export const OrdersManage = (props) => {
   useEffect(() => {
     if (loading) return
     const handleUpdateDriver = (driver) => {
-      const found = driversList.drivers.find(_driver => _driver.id === driver.id)
-      let _drivers = []
-      if (found) {
-        _drivers = driversList.drivers.filter(_driver => {
-          if (_driver.id === driver.id) {
-            Object.assign(_driver, driver)
-          }
-          return true
-        })
-      } else {
-        _drivers = [...driversList.drivers, driver]
-      }
-      setDriversList({
-        ...driversList,
-        drivers: _drivers
+      setDriversList(prevState => {
+        const driverIndex = prevState.drivers.findIndex(_driver => _driver.id === driver.id)
+        if (driverIndex !== -1) {
+          const updatedDrivers = [...prevState.drivers]
+          Object.assign(updatedDrivers[driverIndex], driver)
+          return { ...prevState, drivers: updatedDrivers }
+        } else {
+          const updatedDrivers = [...prevState.drivers, driver]
+          return { ...prevState, drivers: updatedDrivers }
+        }
       })
     }
     const handleTrackingDriver = (trackingData) => {
-      let drivers = []
-      drivers = driversList.drivers.filter(_driver => {
-        if (_driver.id === trackingData.driver_id) {
-          if (typeof trackingData.location === 'string') {
-            const trackingLocation = trackingData.location
-            const _location = trackingLocation.replaceAll('\\', '')
-            const location = JSON.parse(_location)
-            _driver.location = location
-          } else {
-            _driver.location = trackingData.location
+      setDriversList(prevState => {
+        const updatedDrivers = prevState.drivers.map(driver => {
+          if (driver.id === trackingData.driver_id) {
+            const updatedDriver = { ...driver }
+            if (typeof trackingData.location === 'string') {
+              const trackingLocation = trackingData.location
+              const _location = trackingLocation.replaceAll('\\', '')
+              const location = JSON.parse(_location)
+              updatedDriver.location = location
+            } else {
+              updatedDriver.location = trackingData.location
+            }
+            return updatedDriver
           }
-        }
-        return true
+          return driver
+        })
+
+        return { ...prevState, drivers: updatedDrivers }
       })
-      setDriversList({ ...driversList, drivers: drivers })
     }
     socket.on('drivers_update', handleUpdateDriver)
     socket.on('tracking_driver', handleTrackingDriver)
