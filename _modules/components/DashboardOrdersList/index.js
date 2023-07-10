@@ -849,6 +849,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderList.loading) return;
     var handleUpdateOrder = function handleUpdateOrder(order) {
       if (customerId && (order === null || order === void 0 ? void 0 : order.customer_id) !== customerId) return;
+      if (driverId && (order === null || order === void 0 ? void 0 : order.driver_id) !== driverId) return;
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       if (!(order !== null && order !== void 0 && order.driver) && order !== null && order !== void 0 && order.driver_id) {
         var updatedDriver = driversList === null || driversList === void 0 ? void 0 : driversList.drivers.find(function (driver) {
@@ -921,6 +922,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       var _order$products, _order$products$;
       if ((order === null || order === void 0 ? void 0 : (_order$products = order.products) === null || _order$products === void 0 ? void 0 : (_order$products$ = _order$products[0]) === null || _order$products$ === void 0 ? void 0 : _order$products$.type) === 'gift_card') return;
       if (customerId && (order === null || order === void 0 ? void 0 : order.customer_id) !== customerId) return;
+      if (driverId && (order === null || order === void 0 ? void 0 : order.driver_id) !== driverId) return;
       if (isOnlyDelivery && (order === null || order === void 0 ? void 0 : order.delivery_type) !== 1) return;
       var found = orderList.orders.find(function (_order) {
         return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
@@ -994,7 +996,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       socket.off('orders_register', handleRegisterOrder);
       socket.off('message', handleNewMessage);
     };
-  }, [orderList.orders, pagination, orderBy, socket, driversList, customerId]);
+  }, [orderList.orders, pagination, orderBy, socket, driversList, customerId, driverId]);
 
   // Listening for customer rating
   (0, _react.useEffect)(function () {

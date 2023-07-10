@@ -12,7 +12,6 @@ var _OrderContext = require("../../contexts/OrderContext");
 var _ApiContext = require("../../contexts/ApiContext");
 var _ToastContext = require("../../contexts/ToastContext");
 var _LanguageContext = require("../../contexts/LanguageContext");
-var _ConfigContext = require("../../contexts/ConfigContext");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -55,9 +54,6 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
     _useLanguage2 = _slicedToArray(_useLanguage, 2),
     t = _useLanguage2[1];
-  var _useConfig = (0, _ConfigContext.useConfig)(),
-    _useConfig2 = _slicedToArray(_useConfig, 1),
-    configs = _useConfig2[0].configs;
   var _useState = (0, _react.useState)(null),
     _useState2 = _slicedToArray(_useState, 2),
     selectedUser = _useState2[0],
@@ -94,29 +90,17 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     _useState12 = _slicedToArray(_useState11, 2),
     productList = _useState12[0],
     setProductList = _useState12[1];
-  var _useState13 = (0, _react.useState)({
-      loading: true,
-      code: 'US',
-      error: null
-    }),
+  var _useState13 = (0, _react.useState)({}),
     _useState14 = _slicedToArray(_useState13, 2),
-    defaultCountryCodeState = _useState14[0],
-    setDefaultCountryCodeState = _useState14[1];
-  var _useState15 = (0, _react.useState)({}),
-    _useState16 = _slicedToArray(_useState15, 2),
-    extraFields = _useState16[0],
-    setExtraFields = _useState16[1];
-  var _useState17 = (0, _react.useState)({
+    extraFields = _useState14[0],
+    setExtraFields = _useState14[1];
+  var _useState15 = (0, _react.useState)({
       loading: false,
       error: null
     }),
-    _useState18 = _slicedToArray(_useState17, 2),
-    actionState = _useState18[0],
-    setActionState = _useState18[1];
-  var googleMapsApiKey = (0, _react.useMemo)(function () {
-    var _configs$google_maps_;
-    return configs === null || configs === void 0 ? void 0 : (_configs$google_maps_ = configs.google_maps_api_key) === null || _configs$google_maps_ === void 0 ? void 0 : _configs$google_maps_.value;
-  }, [configs]);
+    _useState16 = _slicedToArray(_useState15, 2),
+    actionState = _useState16[0],
+    setActionState = _useState16[1];
   var cart = (0, _react.useMemo)(function () {
     if (!(orderState !== null && orderState !== void 0 && orderState.carts) || !(selectedBusiness !== null && selectedBusiness !== void 0 && selectedBusiness.id)) return null;
     return orderState === null || orderState === void 0 ? void 0 : orderState.carts["businessId:".concat(selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id)];
@@ -419,76 +403,6 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
       return _ref5.apply(this, arguments);
     };
   }();
-
-  /**
-   * Method to get the phone code from the location
-   */
-  var handleGetPhoneCode = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
-          case 0:
-            if (googleMapsApiKey) {
-              _context6.next = 2;
-              break;
-            }
-            return _context6.abrupt("return");
-          case 2:
-            setDefaultCountryCodeState(_objectSpread(_objectSpread({}, defaultCountryCodeState), {}, {
-              loading: true
-            }));
-            navigator.geolocation.getCurrentPosition(function (geo) {
-              var latitude = geo.coords.latitude;
-              var longitude = geo.coords.longitude;
-              var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=".concat(latitude, ",").concat(longitude, "&key=").concat(googleMapsApiKey);
-              fetch(url).then(function (response) {
-                return response.json();
-              }).then(function (data) {
-                var results = data.results;
-                if (results.length > 0) {
-                  var addressComponents = results[0].address_components;
-                  addressComponents.forEach(function (address) {
-                    if (address.types.includes('country')) {
-                      var _address$short_name;
-                      setDefaultCountryCodeState({
-                        loading: false,
-                        code: (_address$short_name = address.short_name) !== null && _address$short_name !== void 0 ? _address$short_name : 'US',
-                        error: null
-                      });
-                    }
-                  });
-                } else {
-                  setDefaultCountryCodeState({
-                    loading: false,
-                    code: '+1',
-                    error: null
-                  });
-                }
-              }).catch(function (err) {
-                setDefaultCountryCodeState(_objectSpread(_objectSpread({}, defaultCountryCodeState), {}, {
-                  loading: false,
-                  error: [err.message]
-                }));
-              });
-            }, function (err) {
-              setDefaultCountryCodeState(_objectSpread(_objectSpread({}, defaultCountryCodeState), {}, {
-                loading: false,
-                error: [err.message]
-              }));
-            }, {
-              timeout: 5000,
-              enableHighAccuracy: true
-            });
-          case 4:
-          case "end":
-            return _context6.stop();
-        }
-      }, _callee6);
-    }));
-    return function handleGetPhoneCode() {
-      return _ref6.apply(this, arguments);
-    };
-  }();
   (0, _react.useEffect)(function () {
     if (phone && phone.length >= 7) {
       getUsers();
@@ -518,7 +432,6 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     }
   }, [selectedUser]);
   (0, _react.useEffect)(function () {
-    handleGetPhoneCode();
     return function () {
       return handleDisableToast(true);
     };
@@ -540,7 +453,6 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     getProducts: getProducts,
     handeUpdateProductCart: handeUpdateProductCart,
     cart: cart,
-    defaultCountryCodeState: defaultCountryCodeState,
     handlePlaceOrderByTotal: handlePlaceOrderByTotal,
     setExtraFields: setExtraFields,
     extraFields: extraFields,
