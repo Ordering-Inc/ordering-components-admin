@@ -284,6 +284,30 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                     value: encodeURI("%".concat(searchValue, "%"))
                   }
                 });
+                searchConditions.push({
+                  attribute: 'external_id',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI("%".concat(searchValue, "%"))
+                  }
+                });
+                searchConditions.push({
+                  attribute: 'customer',
+                  conditions: [{
+                    attribute: 'name',
+                    value: {
+                      condition: 'ilike',
+                      value: encodeURI("%".concat(searchValue, "%"))
+                    }
+                  }]
+                });
+                searchConditions.push({
+                  attribute: 'cellphone',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI("%".concat(searchValue, "%"))
+                  }
+                });
               }
               if (isSearchByCustomerEmail) {
                 searchConditions.push({

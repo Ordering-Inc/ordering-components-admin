@@ -105,6 +105,15 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
     if (!(orderState !== null && orderState !== void 0 && orderState.carts) || !(selectedBusiness !== null && selectedBusiness !== void 0 && selectedBusiness.id)) return null;
     return orderState === null || orderState === void 0 ? void 0 : orderState.carts["businessId:".concat(selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id)];
   }, [orderState === null || orderState === void 0 ? void 0 : orderState.carts, selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id]);
+  var customerAddress = (0, _react.useMemo)(function () {
+    var address = null;
+    if (selectedUser !== null && selectedUser !== void 0 && selectedUser.addresses) {
+      address = selectedUser.addresses.find(function (address) {
+        return address === null || address === void 0 ? void 0 : address.default;
+      });
+    }
+    return address;
+  }, [selectedUser]);
 
   /**
    * Get users from API
@@ -337,14 +346,17 @@ var CustomOrderDetails = function CustomOrderDetails(props) {
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
-            customer = {
+            customer = _objectSpread(_objectSpread(_objectSpread({
               name: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.name,
               cellphone: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.cellphone,
-              phone: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.phone,
-              address: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.address,
-              address_notes: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.address_notes,
-              location: JSON.stringify(selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.location)
-            };
+              address: customerAddress === null || customerAddress === void 0 ? void 0 : customerAddress.address
+            }, (selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.phone) && {
+              phone: selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.phone
+            }), (customerAddress === null || customerAddress === void 0 ? void 0 : customerAddress.address_notes) && {
+              address_notes: customerAddress === null || customerAddress === void 0 ? void 0 : customerAddress.address_notes
+            }), {}, {
+              location: JSON.stringify(customerAddress === null || customerAddress === void 0 ? void 0 : customerAddress.location)
+            });
             changes = _objectSpread({
               paymethod: 'cash',
               business_id: selectedBusiness === null || selectedBusiness === void 0 ? void 0 : selectedBusiness.id,
