@@ -204,6 +204,38 @@ export const DashboardOrdersList = (props) => {
             }
           }
         )
+        searchConditions.push(
+          {
+            attribute: 'external_id',
+            value: {
+              condition: 'ilike',
+              value: encodeURI(`%${searchValue}%`)
+            }
+          }
+        )
+        searchConditions.push(
+          {
+            attribute: 'customer',
+            conditions: [
+              {
+                attribute: 'name',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${searchValue}%`)
+                }
+              }
+            ]
+          }
+        )
+        searchConditions.push(
+          {
+            attribute: 'cellphone',
+            value: {
+              condition: 'ilike',
+              value: encodeURI(`%${searchValue}%`)
+            }
+          }
+        )
       }
       if (isSearchByCustomerEmail) {
         searchConditions.push(

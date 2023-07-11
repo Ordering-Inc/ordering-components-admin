@@ -35,6 +35,14 @@ export const CustomOrderDetails = (props) => {
     return orderState?.carts[`businessId:${selectedBusiness?.id}`]
   }, [orderState?.carts, selectedBusiness?.id])
 
+  const customerAddress = useMemo(() => {
+    let address = null
+    if (selectedUser?.addresses) {
+      address = selectedUser.addresses.find(address => address?.default)
+    }
+    return address
+  }, [selectedUser])
+
   /**
    * Get users from API
    */
@@ -193,10 +201,10 @@ export const CustomOrderDetails = (props) => {
     const customer = {
       name: selectedUser?.name,
       cellphone: selectedUser?.cellphone,
-      phone: selectedUser?.phone,
-      address: selectedUser?.address,
-      address_notes: selectedUser?.address_notes,
-      location: JSON.stringify(selectedUser?.location)
+      address: customerAddress?.address,
+      ...(selectedUser?.phone && { phone: selectedUser?.phone }),
+      ...(customerAddress?.address_notes && { address_notes: customerAddress?.address_notes }),
+      location: JSON.stringify(customerAddress?.location)
     }
 
     const changes = {
