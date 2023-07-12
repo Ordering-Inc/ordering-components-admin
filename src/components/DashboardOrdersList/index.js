@@ -332,6 +332,27 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues?.assigned !== null) {
+        if (filterValues?.assigned === 0) {
+          filterConditons.push(
+            {
+              attribute: 'driver_id',
+              value: {
+                condition: '>=',
+                value: 0
+              }
+            }
+          )
+        }
+        if (filterValues?.assigned === 1) {
+          filterConditons.push(
+            {
+              attribute: 'driver_id',
+              value: null
+            }
+          )
+        }
+      }
       if (filterValues?.externalId) {
         filterConditons.push(
           {
