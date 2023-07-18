@@ -95,7 +95,7 @@ export const CustomOrderDetails = (props) => {
       })
 
       const parameters = {
-        location: location,
+        location: `${location.lat},${location.lng}`,
         type: orderState.options?.type || 1
       }
 
@@ -107,7 +107,7 @@ export const CustomOrderDetails = (props) => {
         }]
       }
 
-      const fetchEndpoint = ordering.businesses().where(conditions).asDashboard().select(businessPropsToFetch).parameters(parameters)
+      const fetchEndpoint = ordering.businesses().where(conditions).select(businessPropsToFetch).parameters(parameters)
       const { content: { error, result } } = await fetchEndpoint.get()
       if (!error) {
         setBusinessList({
@@ -240,6 +240,11 @@ export const CustomOrderDetails = (props) => {
   }
 
   useEffect(() => {
+    if (!customerAddress?.location || orderState?.loading) return
+    getBusinessList(customerAddress.location)
+  }, [customerAddress?.location, orderState])
+
+  useEffect(() => {
     if (phone && phone.length >= 7) {
       getUsers()
     }
@@ -291,6 +296,7 @@ export const CustomOrderDetails = (props) => {
           setExtraFields={setExtraFields}
           extraFields={extraFields}
           actionState={actionState}
+          customerAddress={customerAddress}
         />
       )}
     </>
