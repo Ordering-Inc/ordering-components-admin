@@ -1259,9 +1259,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
     }
   }, [state, socket, isDisableToast])
 
-  const handleJoinRooms = () => {
-    socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
-    socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+  const handleJoinMainRooms = () => {
     socket.join('drivers')
     socket.join({
       room: 'orders',
@@ -1277,9 +1275,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
     }
   }
 
-  const handleLeaveRooms = () => {
-    socket.leave(`carts_${customerState?.user?.id || session?.user?.id}`)
-    socket.leave(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+  const handleLeaveMainRooms = () => {
     socket.leave('drivers')
     socket.leave({
       room: 'orders',
@@ -1295,23 +1291,43 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
     }
   }
 
+  useEffect(() => {
+    if (!socket?.socket) return
+    handleJoinMainRooms()
+    socket.socket.on('connect', handleJoinMainRooms)
+    socket.socket.on('disconnect', handleLeaveMainRooms)
+
+    return () => {
+      handleJoinMainRooms()
+      socket.socket.off('connect', handleJoinMainRooms)
+      socket.socket.off('disconnect', handleLeaveMainRooms)
+    }
+  }, [socket?.socket])
+
+  const handleJoinCartRooms = () => {
+    socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
+    socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+  }
+
+  const handleLeaveCartRooms = () => {
+    socket.leave(`carts_${customerState?.user?.id || session?.user?.id}`)
+    socket.leave(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+  }
+
   /**
    * Join to carts room
    */
   useEffect(() => {
     if (!session.auth || session.loading || !socket?.socket) return
-    handleJoinRooms()
-    socket.socket.on('connect', handleJoinRooms)
-    socket.socket.on('disconnect', handleLeaveRooms)
-  }, [socket?.socket, session, customerState?.user?.id])
-
-  useEffect(() => {
+    handleJoinCartRooms()
+    socket.socket.on('connect', handleJoinCartRooms)
+    socket.socket.on('disconnect', handleLeaveCartRooms)
     return () => {
-      handleLeaveRooms()
-      socket.socket.off('connect', handleJoinRooms)
-      socket.socket.off('disconnect', handleLeaveRooms)
+      handleLeaveCartRooms()
+      socket.socket.off('connect', handleJoinCartRooms)
+      socket.socket.off('disconnect', handleLeaveCartRooms)
     }
-  }, [socket?.socket])
+  }, [socket?.socket, session, customerState?.user?.id])
 
   const functions = {
     refreshOrderOptions,
