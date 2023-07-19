@@ -2736,12 +2736,14 @@ var OrderProvider = function OrderProvider(_ref) {
     handleJoinRooms();
     socket.socket.on('connect', handleJoinRooms);
     socket.socket.on('disconnect', handleLeaveRooms);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session, customerState === null || customerState === void 0 ? void 0 : (_customerState$user5 = customerState.user) === null || _customerState$user5 === void 0 ? void 0 : _customerState$user5.id]);
+  (0, _react.useEffect)(function () {
     return function () {
       handleLeaveRooms();
       socket.socket.off('connect', handleJoinRooms);
       socket.socket.off('disconnect', handleLeaveRooms);
     };
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session, customerState === null || customerState === void 0 ? void 0 : (_customerState$user5 = customerState.user) === null || _customerState$user5 === void 0 ? void 0 : _customerState$user5.id]);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket]);
   var functions = {
     refreshOrderOptions: refreshOrderOptions,
     changeAddress: changeAddress,
