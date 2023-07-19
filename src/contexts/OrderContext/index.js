@@ -1300,17 +1300,18 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
    */
   useEffect(() => {
     if (!session.auth || session.loading || !socket?.socket) return
-
     handleJoinRooms()
     socket.socket.on('connect', handleJoinRooms)
     socket.socket.on('disconnect', handleLeaveRooms)
+  }, [socket?.socket, session, customerState?.user?.id])
 
+  useEffect(() => {
     return () => {
       handleLeaveRooms()
       socket.socket.off('connect', handleJoinRooms)
       socket.socket.off('disconnect', handleLeaveRooms)
     }
-  }, [socket?.socket, session, customerState?.user?.id])
+  }, [socket?.socket])
 
   const functions = {
     refreshOrderOptions,
