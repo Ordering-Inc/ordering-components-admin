@@ -285,7 +285,6 @@ export const BusinessDeliveryZone = (props) => {
         setFormState(prevState => ({ ...prevState, error: t('INVALID_KML_FILE', 'Invalid KML file') }))
       }
     } catch (error) {
-      console.log(error)
       setFormState(prevState => ({ ...prevState, error: t('INVALID_KML_FILE', 'Invalid KML file') }))
     }
   }
