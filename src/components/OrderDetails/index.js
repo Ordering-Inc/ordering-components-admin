@@ -69,6 +69,26 @@ export const OrderDetails = (props) => {
   }
 
   /**
+   * Method to update assigmentComment to order from API
+   * @param {object} comment assigned order id and driver id
+   */
+  const handleUpdateComment = async (comment) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+
+      const { content } = await ordering.setAccessToken(token).orders(orderId).save({ manual_driver_assignment_comment: comment })
+
+      if (!content.error) {
+        showToast(ToastType.Success, t('COMMENT_UPDATED', 'Comment updated'))
+      } else {
+        showToast(ToastType.Error, content?.result)
+      }
+    } catch (err) {
+      showToast(ToastType.Error, err.message)
+    }
+  }
+
+  /**
    * Method to send a message
    * @param {string} spot
    */
@@ -348,6 +368,7 @@ export const OrderDetails = (props) => {
           readMessages={readMessages}
           handleRefundPaymentsStripe={handleRefundPaymentsStripe}
           handleOrderRefund={handleOrderRefund}
+          handleUpdateComment={handleUpdateComment}
         />
       )}
     </>
