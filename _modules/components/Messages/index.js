@@ -56,7 +56,9 @@ var Messages = function Messages(props) {
     configState = _useConfig2[0];
   var _useUtils = (0, _UtilsContext.useUtils)(),
     _useUtils2 = _slicedToArray(_useUtils, 1),
-    getOrderState = _useUtils2[0].getOrderState;
+    _useUtils2$ = _useUtils2[0],
+    getOrderState = _useUtils2$.getOrderState,
+    parsePrice = _useUtils2$.parsePrice;
   var _useSession = (0, _SessionContext.useSession)(),
     _useSession2 = _slicedToArray(_useSession, 1),
     _useSession2$ = _useSession2[0],
@@ -165,6 +167,9 @@ var Messages = function Messages(props) {
       comment = t('ORDER_ATTRIBUTE_CHANGED_FROM_TO').replace('_attribute_', '<b>' + t(changeAttribute.toUpperCase()).toLowerCase() + '</b>').replace('_from_', '<b>' + getVehicleSmmary(message.change.old) + '</b>').replace('_to_', '<b>' + getVehicleSmmary(message.change.new) + '</b>');
     } else if (changeAttribute === 'reject_reason') {
       comment = t('ORDER_REJECT_REASON_IS', 'Order <b>reject reason</b> is _reject_reason_.').replace('_reject_reason_', '<b>' + t("REJECT_REASON_".concat(message.change.new.toUpperCase())) + '</b>');
+    } else if (changeAttribute === 'summary.refunded') {
+      var _message$change3;
+      comment = t('REFUNDED') + '<strong>' + parsePrice((_message$change3 = message.change) === null || _message$change3 === void 0 ? void 0 : _message$change3.new) + '</strong>';
     } else if (changeAttribute !== 'comment') {
       if (message.change.old) {
         comment = t('ORDER_ATTRIBUTE_CHANGED_FROM_TO').replace('_attribute_', '<b>' + t(changeAttribute.toUpperCase()).toLowerCase() + '</b>').replace('_from_', '<b>' + message.change.old + '</b>').replace('_to_', '<b>' + message.change.new + '</b>');
@@ -431,7 +436,7 @@ var Messages = function Messages(props) {
     if (messages.loading || orderMessages && setOrderMessages) return;
     var handleNewMessage = function handleNewMessage(message) {
       var _message$order;
-      if (((_message$order = message.order) === null || _message$order === void 0 ? void 0 : _message$order.id) === orderId) {
+      if (((_message$order = message.order) === null || _message$order === void 0 ? void 0 : _message$order.id) === orderId || (message === null || message === void 0 ? void 0 : message.order_id) === orderId) {
         var found = messages.messages.find(function (_message) {
           return _message.id === message.id;
         });
