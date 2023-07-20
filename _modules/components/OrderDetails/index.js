@@ -170,20 +170,61 @@ var OrderDetails = function OrderDetails(props) {
   }();
 
   /**
-   * Method to send a message
-   * @param {string} spot
+   * Method to update assigmentComment to order from API
+   * @param {object} comment assigned order id and driver id
    */
-  var sendMessage = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(spot) {
-      var _yield$fetch, status;
+  var handleUpdateComment = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(comment) {
+      var _yield$ordering$setAc, content;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
+            showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+            _context2.next = 4;
+            return ordering.setAccessToken(token).orders(orderId).save({
+              manual_driver_assignment_comment: comment
+            });
+          case 4:
+            _yield$ordering$setAc = _context2.sent;
+            content = _yield$ordering$setAc.content;
+            if (!content.error) {
+              showToast(_ToastContext.ToastType.Success, t('COMMENT_UPDATED', 'Comment updated'));
+            } else {
+              showToast(_ToastContext.ToastType.Error, content === null || content === void 0 ? void 0 : content.result);
+            }
+            _context2.next = 12;
+            break;
+          case 9:
+            _context2.prev = 9;
+            _context2.t0 = _context2["catch"](0);
+            showToast(_ToastContext.ToastType.Error, _context2.t0.message);
+          case 12:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2, null, [[0, 9]]);
+    }));
+    return function handleUpdateComment(_x2) {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  /**
+   * Method to send a message
+   * @param {string} spot
+   */
+  var sendMessage = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(spot) {
+      var _yield$fetch, status;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
             setMessageErrors(_objectSpread(_objectSpread({}, messageErrors), {}, {
               loading: true
             }));
-            _context2.next = 4;
+            _context3.next = 4;
             return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages"), {
               method: 'post',
               headers: {
@@ -198,29 +239,29 @@ var OrderDetails = function OrderDetails(props) {
               })
             });
           case 4:
-            _yield$fetch = _context2.sent;
+            _yield$fetch = _context3.sent;
             status = _yield$fetch.status;
             setMessageErrors(_objectSpread(_objectSpread({}, messageErrors), {}, {
               loading: false,
               status: status
             }));
-            _context2.next = 12;
+            _context3.next = 12;
             break;
           case 9:
-            _context2.prev = 9;
-            _context2.t0 = _context2["catch"](0);
+            _context3.prev = 9;
+            _context3.t0 = _context3["catch"](0);
             setMessageErrors(_objectSpread(_objectSpread({}, messageErrors), {}, {
               loading: false,
-              error: [_context2.t0.message]
+              error: [_context3.t0.message]
             }));
           case 12:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
-      }, _callee2, null, [[0, 9]]);
+      }, _callee3, null, [[0, 9]]);
     }));
-    return function sendMessage(_x2) {
-      return _ref2.apply(this, arguments);
+    return function sendMessage(_x3) {
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -228,8 +269,8 @@ var OrderDetails = function OrderDetails(props) {
    * handler send message with spot info
    * @param {number} param0
    */
-  var handlerSubmitSpotNumber = function handlerSubmitSpotNumber(_ref3) {
-    var spot = _ref3.spot;
+  var handlerSubmitSpotNumber = function handlerSubmitSpotNumber(_ref4) {
+    var spot = _ref4.spot;
     sendMessage(spot);
   };
 
@@ -237,10 +278,10 @@ var OrderDetails = function OrderDetails(props) {
    * Method to get order from API
    */
   var getOrder = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
       var options, functionFetch, _yield$functionFetch$, result, order;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
+      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+        while (1) switch (_context4.prev = _context4.next) {
           case 0:
             options = {};
             if (hashKey) {
@@ -253,7 +294,7 @@ var OrderDetails = function OrderDetails(props) {
                 mode: 'dashboard'
               };
             }
-            _context3.prev = 3;
+            _context4.prev = 3;
             setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
               loading: true
             }));
@@ -262,33 +303,33 @@ var OrderDetails = function OrderDetails(props) {
             } else {
               functionFetch = asDashboard ? ordering.setAccessToken(token).orders(orderId).asDashboard() : ordering.setAccessToken(token).orders(orderId);
             }
-            _context3.next = 8;
+            _context4.next = 8;
             return functionFetch.get();
           case 8:
-            _yield$functionFetch$ = _context3.sent;
+            _yield$functionFetch$ = _context4.sent;
             result = _yield$functionFetch$.content.result;
             order = Array.isArray(result) ? null : result;
             setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
               loading: false,
               order: order
             }));
-            _context3.next = 17;
+            _context4.next = 17;
             break;
           case 14:
-            _context3.prev = 14;
-            _context3.t0 = _context3["catch"](3);
+            _context4.prev = 14;
+            _context4.t0 = _context4["catch"](3);
             setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
               loading: false,
-              error: [_context3.t0.message]
+              error: [_context4.t0.message]
             }));
           case 17:
           case "end":
-            return _context3.stop();
+            return _context4.stop();
         }
-      }, _callee3, null, [[3, 14]]);
+      }, _callee4, null, [[3, 14]]);
     }));
     return function getOrder() {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   /**
@@ -296,16 +337,16 @@ var OrderDetails = function OrderDetails(props) {
    * @param {object} order orders id and new status
    */
   var handleUpdateOrderStatus = /*#__PURE__*/function () {
-    var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(order) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(order) {
       var response, content;
-      return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-        while (1) switch (_context4.prev = _context4.next) {
+      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
           case 0:
-            _context4.prev = 0;
+            _context5.prev = 0;
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: true
             }));
-            _context4.next = 4;
+            _context5.next = 4;
             return fetch("".concat(ordering.root, "/orders/").concat(order === null || order === void 0 ? void 0 : order.id), {
               method: 'PUT',
               headers: {
@@ -317,44 +358,44 @@ var OrderDetails = function OrderDetails(props) {
               })
             });
           case 4:
-            response = _context4.sent;
-            _context4.next = 7;
+            response = _context5.sent;
+            _context5.next = 7;
             return response.json();
           case 7:
-            content = _context4.sent;
+            content = _context5.sent;
             setActionStatus({
               loading: false,
               error: content.error ? content.result : null
             });
-            _context4.next = 14;
+            _context5.next = 14;
             break;
           case 11:
-            _context4.prev = 11;
-            _context4.t0 = _context4["catch"](0);
+            _context5.prev = 11;
+            _context5.t0 = _context5["catch"](0);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
-              error: [_context4.t0.message]
+              error: [_context5.t0.message]
             }));
           case 14:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
-      }, _callee4, null, [[0, 11]]);
+      }, _callee5, null, [[0, 11]]);
     }));
-    return function handleUpdateOrderStatus(_x3) {
-      return _ref5.apply(this, arguments);
+    return function handleUpdateOrderStatus(_x4) {
+      return _ref6.apply(this, arguments);
     };
   }();
   var readMessages = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
       var _messages$messages, _messages$messages2;
       var messageId, response, _yield$response$json2, result;
-      return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-        while (1) switch (_context5.prev = _context5.next) {
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
             messageId = messages === null || messages === void 0 ? void 0 : (_messages$messages = messages.messages[(messages === null || messages === void 0 ? void 0 : (_messages$messages2 = messages.messages) === null || _messages$messages2 === void 0 ? void 0 : _messages$messages2.length) - 1]) === null || _messages$messages === void 0 ? void 0 : _messages$messages.id;
-            _context5.prev = 1;
-            _context5.next = 4;
+            _context6.prev = 1;
+            _context6.next = 4;
             return fetch("".concat(ordering.root, "/orders/").concat(orderId, "/messages/").concat(messageId, "/read"), {
               method: 'GET',
               headers: {
@@ -363,36 +404,36 @@ var OrderDetails = function OrderDetails(props) {
               }
             });
           case 4:
-            response = _context5.sent;
-            _context5.next = 7;
+            response = _context6.sent;
+            _context6.next = 7;
             return response.json();
           case 7:
-            _yield$response$json2 = _context5.sent;
+            _yield$response$json2 = _context6.sent;
             result = _yield$response$json2.result;
             setMessagesReadList(result);
-            _context5.next = 15;
+            _context6.next = 15;
             break;
           case 12:
-            _context5.prev = 12;
-            _context5.t0 = _context5["catch"](1);
-            console.log(_context5.t0.message);
+            _context6.prev = 12;
+            _context6.t0 = _context6["catch"](1);
+            console.log(_context6.t0.message);
           case 15:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
-      }, _callee5, null, [[1, 12]]);
+      }, _callee6, null, [[1, 12]]);
     }));
     return function readMessages() {
-      return _ref6.apply(this, arguments);
+      return _ref7.apply(this, arguments);
     };
   }();
   var handleRefundPaymentsStripe = /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
       var _orderState$order, _orderState$order2, _orderState$order3, _orderState$order3$pa, requestOption, response, content;
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
+      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
+        while (1) switch (_context7.prev = _context7.next) {
           case 0:
-            _context6.prev = 0;
+            _context7.prev = 0;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: true
@@ -409,14 +450,14 @@ var OrderDetails = function OrderDetails(props) {
                 gateway: (_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : (_orderState$order3$pa = _orderState$order3.paymethod) === null || _orderState$order3$pa === void 0 ? void 0 : _orderState$order3$pa.gateway
               })
             };
-            _context6.next = 6;
+            _context7.next = 6;
             return fetch("".concat(ordering.root, "/payments/stripe/refund"), requestOption);
           case 6:
-            response = _context6.sent;
-            _context6.next = 9;
+            response = _context7.sent;
+            _context7.next = 9;
             return response.json();
           case 9:
-            content = _context6.sent;
+            content = _context7.sent;
             setActionStatus({
               loading: false,
               error: content.error ? content.result : null
@@ -429,32 +470,32 @@ var OrderDetails = function OrderDetails(props) {
               }));
               showToast(_ToastContext.ToastType.Success, t('ORDER_REFUNDED', 'Order refunded'));
             }
-            _context6.next = 17;
+            _context7.next = 17;
             break;
           case 14:
-            _context6.prev = 14;
-            _context6.t0 = _context6["catch"](0);
+            _context7.prev = 14;
+            _context7.t0 = _context7["catch"](0);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
-              error: [_context6.t0.message]
+              error: [_context7.t0.message]
             }));
           case 17:
           case "end":
-            return _context6.stop();
+            return _context7.stop();
         }
-      }, _callee6, null, [[0, 14]]);
+      }, _callee7, null, [[0, 14]]);
     }));
     return function handleRefundPaymentsStripe() {
-      return _ref7.apply(this, arguments);
+      return _ref8.apply(this, arguments);
     };
   }();
   var handleOrderRefund = /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(data) {
+    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(data) {
       var _orderState$order4, requestOption, response, content, _orderState$order6, refundData, _orderState$order5, _orderState$order5$pa, stripeEvent, updatedPaymentEvents;
-      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-        while (1) switch (_context7.prev = _context7.next) {
+      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) switch (_context8.prev = _context8.next) {
           case 0:
-            _context7.prev = 0;
+            _context8.prev = 0;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: true
@@ -467,14 +508,14 @@ var OrderDetails = function OrderDetails(props) {
               },
               body: JSON.stringify(data)
             };
-            _context7.next = 6;
+            _context8.next = 6;
             return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.id, "/refund"), requestOption);
           case 6:
-            response = _context7.sent;
-            _context7.next = 9;
+            response = _context8.sent;
+            _context8.next = 9;
             return response.json();
           case 9:
-            content = _context7.sent;
+            content = _context8.sent;
             setActionStatus({
               loading: false,
               error: content.error ? content.result : null
@@ -502,23 +543,23 @@ var OrderDetails = function OrderDetails(props) {
               }));
               showToast(_ToastContext.ToastType.Success, t('ORDER_REFUNDED', 'Order refunded'));
             }
-            _context7.next = 17;
+            _context8.next = 17;
             break;
           case 14:
-            _context7.prev = 14;
-            _context7.t0 = _context7["catch"](0);
+            _context8.prev = 14;
+            _context8.t0 = _context8["catch"](0);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
-              error: [_context7.t0.message]
+              error: [_context8.t0.message]
             }));
           case 17:
           case "end":
-            return _context7.stop();
+            return _context8.stop();
         }
-      }, _callee7, null, [[0, 14]]);
+      }, _callee8, null, [[0, 14]]);
     }));
-    return function handleOrderRefund(_x4) {
-      return _ref8.apply(this, arguments);
+    return function handleOrderRefund(_x5) {
+      return _ref9.apply(this, arguments);
     };
   }();
   (0, _react.useEffect)(function () {
@@ -584,7 +625,8 @@ var OrderDetails = function OrderDetails(props) {
     messagesReadList: messagesReadList,
     readMessages: readMessages,
     handleRefundPaymentsStripe: handleRefundPaymentsStripe,
-    handleOrderRefund: handleOrderRefund
+    handleOrderRefund: handleOrderRefund,
+    handleUpdateComment: handleUpdateComment
   })));
 };
 exports.OrderDetails = OrderDetails;

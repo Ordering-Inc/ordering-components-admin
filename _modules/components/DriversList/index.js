@@ -40,7 +40,8 @@ var DriversList = function DriversList(props) {
     isSearchByName = props.isSearchByName,
     isSearchByCellphone = props.isSearchByCellphone,
     isOrderDrivers = props.isOrderDrivers,
-    orderId = props.orderId;
+    orderId = props.orderId,
+    setIsCommentPopup = props.setIsCommentPopup;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -181,6 +182,7 @@ var DriversList = function DriversList(props) {
               } else {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'));
               }
+              setIsCommentPopup && setIsCommentPopup(true);
             }
             _context.next = 16;
             break;
