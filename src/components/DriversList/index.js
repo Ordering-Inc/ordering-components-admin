@@ -94,10 +94,10 @@ export const DriversList = (props) => {
       if (!content.error) {
         if (assign.driverId) {
           showToast(ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'))
+          setIsCommentPopup && setIsCommentPopup(true)
         } else {
           showToast(ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'))
         }
-        setIsCommentPopup && setIsCommentPopup(true)
       }
     } catch (err) {
       setDriverActionStatus({ ...driverActionStatus, loading: false, error: [err.message] })
