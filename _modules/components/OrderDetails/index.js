@@ -104,6 +104,10 @@ var OrderDetails = function OrderDetails(props) {
     _useState12 = _slicedToArray(_useState11, 2),
     customerInfoState = _useState12[0],
     setCustomerInfoState = _useState12[1];
+  var _useState13 = (0, _react.useState)({}),
+    _useState14 = _slicedToArray(_useState13, 2),
+    addressState = _useState14[0],
+    setAddressState = _useState14[1];
   var socket = (0, _WebsocketContext.useWebsocket)();
   var accessToken = props.accessToken || token;
 
@@ -178,8 +182,8 @@ var OrderDetails = function OrderDetails(props) {
   }();
 
   /**
-  * Method to update customer info to order from API
-  */
+   * Method to update customer info to order from API
+   */
   var handleUpdateCustomerInfo = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var _orderState$order, customer, _yield$ordering$setAc, content, updatedOrder;
@@ -188,7 +192,7 @@ var OrderDetails = function OrderDetails(props) {
           case 0:
             _context2.prev = 0;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
-            customer = _objectSpread(_objectSpread({}, orderState === null || orderState === void 0 ? void 0 : (_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.customer), customerInfoState === null || customerInfoState === void 0 ? void 0 : customerInfoState.customer);
+            customer = _objectSpread(_objectSpread(_objectSpread({}, orderState === null || orderState === void 0 ? void 0 : (_orderState$order = orderState.order) === null || _orderState$order === void 0 ? void 0 : _orderState$order.customer), customerInfoState === null || customerInfoState === void 0 ? void 0 : customerInfoState.customer), addressState);
             _context2.next = 5;
             return ordering.setAccessToken(token).orders(orderId).save({
               customer: customer
@@ -229,7 +233,7 @@ var OrderDetails = function OrderDetails(props) {
    */
   var handleUpdateComment = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(comment) {
-      var _yield$ordering$setAc2, content;
+      var _orderState$order2, _yield$ordering$setAc2, content;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
@@ -237,7 +241,8 @@ var OrderDetails = function OrderDetails(props) {
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             _context3.next = 4;
             return ordering.setAccessToken(token).orders(orderId).save({
-              manual_driver_assignment_comment: comment
+              manual_driver_assignment_comment: comment,
+              driver_id: orderState === null || orderState === void 0 ? void 0 : (_orderState$order2 = orderState.order) === null || _orderState$order2 === void 0 ? void 0 : _orderState$order2.driver_id
             });
           case 4:
             _yield$ordering$setAc2 = _context3.sent;
@@ -483,7 +488,7 @@ var OrderDetails = function OrderDetails(props) {
   }();
   var handleRefundPaymentsStripe = /*#__PURE__*/function () {
     var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8() {
-      var _orderState$order2, _orderState$order3, _orderState$order4, _orderState$order4$pa, requestOption, response, content;
+      var _orderState$order3, _orderState$order4, _orderState$order5, _orderState$order5$pa, requestOption, response, content;
       return _regeneratorRuntime().wrap(function _callee8$(_context8) {
         while (1) switch (_context8.prev = _context8.next) {
           case 0:
@@ -499,9 +504,9 @@ var OrderDetails = function OrderDetails(props) {
                 'Content-Type': 'application/json'
               },
               body: JSON.stringify({
-                order_id: (_orderState$order2 = orderState.order) === null || _orderState$order2 === void 0 ? void 0 : _orderState$order2.id,
-                business_id: (_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : _orderState$order3.business_id,
-                gateway: (_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : (_orderState$order4$pa = _orderState$order4.paymethod) === null || _orderState$order4$pa === void 0 ? void 0 : _orderState$order4$pa.gateway
+                order_id: (_orderState$order3 = orderState.order) === null || _orderState$order3 === void 0 ? void 0 : _orderState$order3.id,
+                business_id: (_orderState$order4 = orderState.order) === null || _orderState$order4 === void 0 ? void 0 : _orderState$order4.business_id,
+                gateway: (_orderState$order5 = orderState.order) === null || _orderState$order5 === void 0 ? void 0 : (_orderState$order5$pa = _orderState$order5.paymethod) === null || _orderState$order5$pa === void 0 ? void 0 : _orderState$order5$pa.gateway
               })
             };
             _context8.next = 6;
@@ -545,7 +550,7 @@ var OrderDetails = function OrderDetails(props) {
   }();
   var handleOrderRefund = /*#__PURE__*/function () {
     var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(data) {
-      var _orderState$order5, requestOption, response, content, _orderState$order7, refundData, _orderState$order6, _orderState$order6$pa, stripeEvent, updatedPaymentEvents;
+      var _orderState$order6, requestOption, response, content, _orderState$order8, refundData, _orderState$order7, _orderState$order7$pa, stripeEvent, updatedPaymentEvents;
       return _regeneratorRuntime().wrap(function _callee9$(_context9) {
         while (1) switch (_context9.prev = _context9.next) {
           case 0:
@@ -563,7 +568,7 @@ var OrderDetails = function OrderDetails(props) {
               body: JSON.stringify(data)
             };
             _context9.next = 6;
-            return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order5 = orderState.order) === null || _orderState$order5 === void 0 ? void 0 : _orderState$order5.id, "/refund"), requestOption);
+            return fetch("".concat(ordering.root, "/orders/").concat((_orderState$order6 = orderState.order) === null || _orderState$order6 === void 0 ? void 0 : _orderState$order6.id, "/refund"), requestOption);
           case 6:
             response = _context9.sent;
             _context9.next = 9;
@@ -577,7 +582,7 @@ var OrderDetails = function OrderDetails(props) {
             if (!content.error) {
               refundData = _toConsumableArray(content.result);
               if (data !== null && data !== void 0 && data.order_payment_event_id) {
-                stripeEvent = orderState === null || orderState === void 0 ? void 0 : (_orderState$order6 = orderState.order) === null || _orderState$order6 === void 0 ? void 0 : (_orderState$order6$pa = _orderState$order6.payment_events) === null || _orderState$order6$pa === void 0 ? void 0 : _orderState$order6$pa.find(function (event) {
+                stripeEvent = orderState === null || orderState === void 0 ? void 0 : (_orderState$order7 = orderState.order) === null || _orderState$order7 === void 0 ? void 0 : (_orderState$order7$pa = _orderState$order7.payment_events) === null || _orderState$order7$pa === void 0 ? void 0 : _orderState$order7$pa.find(function (event) {
                   return (event === null || event === void 0 ? void 0 : event.id) === data.order_payment_event_id;
                 });
                 if (stripeEvent) {
@@ -589,7 +594,7 @@ var OrderDetails = function OrderDetails(props) {
                   });
                 }
               }
-              updatedPaymentEvents = [].concat(_toConsumableArray((_orderState$order7 = orderState.order) === null || _orderState$order7 === void 0 ? void 0 : _orderState$order7.payment_events), _toConsumableArray(refundData));
+              updatedPaymentEvents = [].concat(_toConsumableArray((_orderState$order8 = orderState.order) === null || _orderState$order8 === void 0 ? void 0 : _orderState$order8.payment_events), _toConsumableArray(refundData));
               setOrderState(_objectSpread(_objectSpread({}, orderState), {}, {
                 order: _objectSpread(_objectSpread({}, orderState.order), {}, {
                   payment_events: updatedPaymentEvents
@@ -633,8 +638,8 @@ var OrderDetails = function OrderDetails(props) {
   (0, _react.useEffect)(function () {
     if (orderState.loading || loading) return;
     var handleUpdateOrder = function handleUpdateOrder(order) {
-      var _orderState$order8;
-      if ((order === null || order === void 0 ? void 0 : order.id) !== (orderState === null || orderState === void 0 ? void 0 : (_orderState$order8 = orderState.order) === null || _orderState$order8 === void 0 ? void 0 : _orderState$order8.id)) return;
+      var _orderState$order9;
+      if ((order === null || order === void 0 ? void 0 : order.id) !== (orderState === null || orderState === void 0 ? void 0 : (_orderState$order9 = orderState.order) === null || _orderState$order9 === void 0 ? void 0 : _orderState$order9.id)) return;
       delete order.total;
       delete order.subtotal;
       if (!(order !== null && order !== void 0 && order.driver) && order !== null && order !== void 0 && order.driver_id) {
@@ -688,7 +693,9 @@ var OrderDetails = function OrderDetails(props) {
     handleRefundPaymentsStripe: handleRefundPaymentsStripe,
     handleOrderRefund: handleOrderRefund,
     handleUpdateCustomerInfo: handleUpdateCustomerInfo,
-    handleUpdateComment: handleUpdateComment
+    handleUpdateComment: handleUpdateComment,
+    addressState: addressState,
+    setAddressState: setAddressState
   })));
 };
 exports.OrderDetails = OrderDetails;

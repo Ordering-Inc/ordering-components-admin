@@ -179,10 +179,10 @@ var DriversList = function DriversList(props) {
             if (!content.error) {
               if (assign.driverId) {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'));
+                setIsCommentPopup && setIsCommentPopup(true);
               } else {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'));
               }
-              setIsCommentPopup && setIsCommentPopup(true);
             }
             _context.next = 16;
             break;
