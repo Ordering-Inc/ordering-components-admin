@@ -31,6 +31,7 @@ export const OrderDetails = (props) => {
   const [messages, setMessages] = useState({ loading: true, error: null, messages: [] })
   const [messagesReadList, setMessagesReadList] = useState(false)
   const [customerInfoState, setCustomerInfoState] = useState({ error: null, customer: {}, loading: false })
+  const [addressState, setAddressState] = useState({})
 
   const socket = useWebsocket()
 
@@ -69,13 +70,13 @@ export const OrderDetails = (props) => {
     }
   }
 
-    /**
+  /**
    * Method to update customer info to order from API
    */
   const handleUpdateCustomerInfo = async () => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const customer = { ...orderState?.order?.customer, ...customerInfoState?.customer }
+      const customer = { ...orderState?.order?.customer, ...customerInfoState?.customer, ...addressState }
 
       const { content } = await ordering.setAccessToken(token).orders(orderId).save({ customer })
 
@@ -103,7 +104,7 @@ export const OrderDetails = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
 
-      const { content } = await ordering.setAccessToken(token).orders(orderId).save({ manual_driver_assignment_comment: comment })
+      const { content } = await ordering.setAccessToken(token).orders(orderId).save({ manual_driver_assignment_comment: comment, driver_id: orderState?.order?.driver_id })
 
       if (!content.error) {
         showToast(ToastType.Success, t('COMMENT_UPDATED', 'Comment updated'))
@@ -409,6 +410,8 @@ export const OrderDetails = (props) => {
           handleOrderRefund={handleOrderRefund}
           handleUpdateCustomerInfo={handleUpdateCustomerInfo}
           handleUpdateComment={handleUpdateComment}
+          addressState={addressState}
+          setAddressState={setAddressState}
         />
       )}
     </>
