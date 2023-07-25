@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes, { string, object, number } from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -49,6 +49,7 @@ export const DashboardOrdersList = (props) => {
 
   const requestsState = {}
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
+  const firstRender = useRef(true)
 
   const sortOrdersArray = (option, array) => {
     if (option === 'id') {
@@ -617,7 +618,7 @@ export const DashboardOrdersList = (props) => {
     if (!session.token) return
     try {
       setOrderList({ ...orderList, loading: true })
-      const response = await getOrders(pagination.pageSize, pagination.currentPage)
+      const response = await getOrders(pagination.pageSize, firstRender.current ? pagination.currentPage : 1)
 
       if (!response.content.error) {
         setPagination({
@@ -635,6 +636,7 @@ export const DashboardOrdersList = (props) => {
         orders: response.content.error ? [] : response.content.result,
         error: response.content.error ? response.content.result : null
       })
+      firstRender.current = false
     } catch (err) {
       if (err.constructor.name !== 'Cancel') {
         setOrderList({ ...orderList, loading: false, error: [err.message] })
