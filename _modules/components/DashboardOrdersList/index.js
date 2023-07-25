@@ -132,6 +132,8 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       actionStatus = _useState6[0],
       setActionStatus = _useState6[1];
 
+  var firstRender = (0, _react.useRef)(true);
+
   var sortOrdersArray = function sortOrdersArray(option, array) {
     if (option === 'id') {
       if (orderDirection === 'desc') {
@@ -809,7 +811,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 loading: true
               }));
               _context3.next = 6;
-              return getOrders(pagination.pageSize, pagination.currentPage);
+              return getOrders(pagination.pageSize, firstRender.current ? pagination.currentPage : 1);
 
             case 6:
               response = _context3.sent;
@@ -830,11 +832,12 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 orders: response.content.error ? [] : response.content.result,
                 error: response.content.error ? response.content.result : null
               });
-              _context3.next = 14;
+              firstRender.current = false;
+              _context3.next = 15;
               break;
 
-            case 11:
-              _context3.prev = 11;
+            case 12:
+              _context3.prev = 12;
               _context3.t0 = _context3["catch"](2);
 
               if (_context3.t0.constructor.name !== 'Cancel') {
@@ -844,12 +847,12 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 }));
               }
 
-            case 14:
+            case 15:
             case "end":
               return _context3.stop();
           }
         }
-      }, _callee3, null, [[2, 11]]);
+      }, _callee3, null, [[2, 12]]);
     }));
 
     return function loadOrders() {
