@@ -17,7 +17,8 @@ export const DashboardBusinessList = (props) => {
     isSearchByBusinessName,
     isSearchByBusinessEmail,
     isSearchByBusinessPhone,
-    noActiveStatusCondition
+    noActiveStatusCondition,
+    defaultActive
   } = props
 
   const [ordering] = useApi()
@@ -36,7 +37,7 @@ export const DashboardBusinessList = (props) => {
   })
 
   const [searchValue, setSearchValue] = useState(null)
-  const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(true)
+  const [selectedBusinessActiveState, setSelectedBusinessActiveState] = useState(defaultActive ?? true)
   const [businessTypeSelected, setBusinessTypeSelected] = useState(null)
   const [businessIds, setBusinessIds] = useState([])
   const [filterValues, setFilterValues] = useState({})
@@ -427,8 +428,8 @@ export const DashboardBusinessList = (props) => {
   /**
    * Method to change user active state for filter
    */
-  const handleChangeBusinessActiveState = () => {
-    setSelectedBusinessActiveState(!selectedBusinessActiveState)
+  const handleChangeBusinessActiveState = (active) => {
+    setSelectedBusinessActiveState(active)
   }
 
   /**
