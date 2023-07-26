@@ -99,6 +99,7 @@ var UsersList = function UsersList(props) {
       events = _useEvent2[0];
 
   var socket = (0, _WebsocketContext.useWebsocket)();
+  var firstRender = (0, _react.useRef)(true);
 
   var _useState = (0, _react.useState)({
     users: [],
@@ -133,7 +134,7 @@ var UsersList = function UsersList(props) {
       setUserTypesSelected = _useState10[1];
 
   var _useState11 = (0, _react.useState)({
-    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+    currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage : 1,
     pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
     totalItems: null,
     totalPages: null
@@ -629,11 +630,12 @@ var UsersList = function UsersList(props) {
                 setPaginationDetail(_objectSpread({}, pagination));
               }
 
-              _context.next = 41;
+              firstRender.current = false;
+              _context.next = 42;
               break;
 
-            case 38:
-              _context.prev = 38;
+            case 39:
+              _context.prev = 39;
               _context.t0 = _context["catch"](0);
 
               if (_context.t0.constructor.name !== 'Cancel') {
@@ -643,12 +645,12 @@ var UsersList = function UsersList(props) {
                 }));
               }
 
-            case 41:
+            case 42:
             case "end":
               return _context.stop();
           }
         }
-      }, _callee, null, [[0, 38]]);
+      }, _callee, null, [[0, 39]]);
     }));
 
     return function getUsers(_x, _x2) {
@@ -1344,17 +1346,11 @@ var UsersList = function UsersList(props) {
   }, [session]);
   (0, _react.useEffect)(function () {
     if (usersList.loading) return;
-    getUsers(1, null);
-  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified, selectedOccupation]);
+    getUsers(firstRender.current ? paginationProps.currentPage : 1, null);
+  }, [userTypesSelected, selectedUserActiveState, searchValue, isVerified, selectedOccupation, multiFilterValues, orderFilterValue]);
   (0, _react.useEffect)(function () {
     if ((Object.keys(filterValues === null || filterValues === void 0 ? void 0 : filterValues.changes).length > 0 || filterValues.clear) && !usersList.loading) getUsers(1, null);
   }, [filterValues]);
-  (0, _react.useEffect)(function () {
-    getUsers(1, null);
-  }, [multiFilterValues]);
-  (0, _react.useEffect)(function () {
-    if (!usersList.loading) getUsers(1, null);
-  }, [orderFilterValue]);
   (0, _react.useEffect)(function () {
     if (isProfessional) {
       getOccupations();
