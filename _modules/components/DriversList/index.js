@@ -41,7 +41,7 @@ var DriversList = function DriversList(props) {
     isSearchByCellphone = props.isSearchByCellphone,
     isOrderDrivers = props.isOrderDrivers,
     orderId = props.orderId,
-    setIsCommentPopup = props.setIsCommentPopup;
+    setCommentInfostate = props.setCommentInfostate;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -179,7 +179,10 @@ var DriversList = function DriversList(props) {
             if (!content.error) {
               if (assign.driverId) {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'));
-                setIsCommentPopup && setIsCommentPopup(true);
+                setCommentInfostate && setCommentInfostate({
+                  open: true,
+                  driverId: assign.driverId
+                });
               } else {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'));
               }
