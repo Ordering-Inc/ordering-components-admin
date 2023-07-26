@@ -12,6 +12,7 @@ var _SessionContext = require("../../contexts/SessionContext");
 var _ToastContext = require("../../contexts/ToastContext");
 var _LanguageContext = require("../../contexts/LanguageContext");
 var _EventContext = require("../../contexts/EventContext");
+var _WebsocketContext = require("../../contexts/WebsocketContext");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
@@ -63,6 +64,7 @@ var UsersList = function UsersList(props) {
   var _useEvent = (0, _EventContext.useEvent)(),
     _useEvent2 = _slicedToArray(_useEvent, 1),
     events = _useEvent2[0];
+  var socket = (0, _WebsocketContext.useWebsocket)();
   var _useState = (0, _react.useState)({
       users: [],
       loading: false,
@@ -1152,6 +1154,32 @@ var UsersList = function UsersList(props) {
       events.off('occupations_update');
     };
   }, [events]);
+  (0, _react.useEffect)(function () {
+    var handleUpdateDriver = function handleUpdateDriver(driver) {
+      var _usersList$users;
+      var selectedUser = usersList === null || usersList === void 0 ? void 0 : (_usersList$users = usersList.users) === null || _usersList$users === void 0 ? void 0 : _usersList$users.find(function (item) {
+        return (item === null || item === void 0 ? void 0 : item.id) === (driver === null || driver === void 0 ? void 0 : driver.id);
+      });
+      if (selectedUser && ((driver === null || driver === void 0 ? void 0 : driver.enabled) !== (selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.enabled) || (driver === null || driver === void 0 ? void 0 : driver.available) !== (selectedUser === null || selectedUser === void 0 ? void 0 : selectedUser.available))) {
+        var updatedUserList = usersList === null || usersList === void 0 ? void 0 : usersList.users.map(function (item) {
+          if (item.id === (driver === null || driver === void 0 ? void 0 : driver.id)) {
+            return _objectSpread(_objectSpread({}, item), {}, {
+              enabled: driver === null || driver === void 0 ? void 0 : driver.enabled,
+              available: driver === null || driver === void 0 ? void 0 : driver.available
+            });
+          }
+          return item;
+        });
+        setUsersList(_objectSpread(_objectSpread({}, usersList), {}, {
+          users: updatedUserList
+        }));
+      }
+    };
+    socket.on('drivers_update', handleUpdateDriver);
+    return function () {
+      socket.off('drivers_update', handleUpdateDriver);
+    };
+  }, [socket, usersList === null || usersList === void 0 ? void 0 : usersList.users]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     actionStatus: actionStatus,
     usersList: usersList,

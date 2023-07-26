@@ -1049,22 +1049,23 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
     });
     if (found) return;
-    if (isFilteredOrder(order)) {
-      if (orderStatus.includes(0) && order.status === 0 || orderStatus.includes(13) && order.status === 13) {
-        setPagination(function (prevPagination) {
-          return _objectSpread(_objectSpread({}, prevPagination), {}, {
-            total: prevPagination.total + 1
-          });
-        });
-        setOrderList(function (prevState) {
-          var orders = [order].concat(_toConsumableArray(prevState.orders));
-          var _orders = sortOrdersArray(orderBy, orders);
-          return _objectSpread(_objectSpread({}, prevState), {}, {
-            orders: _orders.slice(0, pagination.pageSize)
-          });
-        });
-      }
-    }
+    if (!isFilteredOrder(order)) return;
+    setPagination(function (prevPagination) {
+      return _objectSpread(_objectSpread({}, prevPagination), {}, {
+        total: prevPagination.total + 1
+      });
+    });
+    setOrderList(function (prevState) {
+      var found = prevState.orders.find(function (_order) {
+        return (_order === null || _order === void 0 ? void 0 : _order.id) === (order === null || order === void 0 ? void 0 : order.id);
+      });
+      if (found) return prevState;
+      var updatedOrders = [order].concat(_toConsumableArray(prevState.orders));
+      var sortedOrders = sortOrdersArray(orderBy, updatedOrders);
+      return _objectSpread(_objectSpread({}, prevState), {}, {
+        orders: sortedOrders.slice(0, pagination.pageSize)
+      });
+    });
   };
   var handleNewMessage = function handleNewMessage(message) {
     if (orderList.orders.length === 0) return;
