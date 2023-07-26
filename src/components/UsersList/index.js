@@ -5,6 +5,7 @@ import { useSession } from '../../contexts/SessionContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
 import { useEvent } from '../../contexts/EventContext'
+import { useWebsocket } from '../../contexts/WebsocketContext'
 
 export const UsersList = (props) => {
   const {
@@ -28,6 +29,7 @@ export const UsersList = (props) => {
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
   const [events] = useEvent()
+  const socket = useWebsocket()
 
   const [usersList, setUsersList] = useState({ users: [], loading: false, error: null })
   const [filterValues, setFilterValues] = useState({ clear: false, changes: {} })
@@ -888,6 +890,31 @@ export const UsersList = (props) => {
       events.off('occupations_update')
     }
   }, [events])
+
+  useEffect(() => {
+    const handleUpdateDriver = (driver) => {
+      const selectedUser = usersList?.users?.find(item => item?.id === driver?.id)
+      if (selectedUser && ((driver?.enabled !== selectedUser?.enabled) || (driver?.available !== selectedUser?.available))) {
+        const updatedUserList = usersList?.users.map(item => {
+          if (item.id === driver?.id) {
+            return {
+              ...item,
+              enabled: driver?.enabled,
+              available: driver?.available
+            }
+          }
+          return item
+        })
+        setUsersList({ ...usersList, users: updatedUserList })
+      }
+    }
+
+    socket.on('drivers_update', handleUpdateDriver)
+
+    return () => {
+      socket.off('drivers_update', handleUpdateDriver)
+    }
+  }, [socket, usersList?.users])
 
   return (
     <>
