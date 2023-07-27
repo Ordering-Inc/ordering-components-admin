@@ -47,6 +47,7 @@ var OpenCartListing = function OpenCartListing(props) {
     token = _useSession2$.token,
     loading = _useSession2$.loading;
   var requestsState = {};
+  var firstRender = (0, _react.useRef)(true);
   var _useState = (0, _react.useState)(null),
     _useState2 = _slicedToArray(_useState, 2),
     searchValue = _useState2[0],
@@ -79,7 +80,7 @@ var OpenCartListing = function OpenCartListing(props) {
     cartList = _useState12[0],
     setCartList = _useState12[1];
   var _useState13 = (0, _react.useState)({
-      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage : 1,
       pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
       totalItems: null,
       totalPages: null
@@ -423,25 +424,36 @@ var OpenCartListing = function OpenCartListing(props) {
                 error: content.result
               }));
             }
-            _context3.next = 21;
+            firstRender.current = false;
+            _context3.next = 22;
             break;
-          case 18:
-            _context3.prev = 18;
+          case 19:
+            _context3.prev = 19;
             _context3.t0 = _context3["catch"](0);
             setCartList(_objectSpread(_objectSpread({}, cartList), {}, {
               loading: false,
               error: [_context3.t0.message]
             }));
-          case 21:
+          case 22:
           case "end":
             return _context3.stop();
         }
-      }, _callee3, null, [[0, 18]]);
+      }, _callee3, null, [[0, 19]]);
     }));
     return function getCartList(_x3, _x4) {
       return _ref3.apply(this, arguments);
     };
   }();
+  var handleSuccessDeleteCart = function handleSuccessDeleteCart(cart) {
+    setCartList(_objectSpread(_objectSpread({}, cartList), {}, {
+      carts: cartList.carts.filter(function (_cart) {
+        return _cart.id !== cart.id;
+      })
+    }));
+    setPagination(_objectSpread(_objectSpread({}, pagination), {}, {
+      total: (pagination === null || pagination === void 0 ? void 0 : pagination.total) - 1
+    }));
+  };
 
   /**
   * Listening mulit carts delete action start
@@ -461,7 +473,7 @@ var OpenCartListing = function OpenCartListing(props) {
   }, [user, loading]);
   (0, _react.useEffect)(function () {
     if (cartList.loading) return;
-    getCartList(pagination.pageSize, 1);
+    getCartList(pagination.pageSize, firstRender.current ? pagination.currentPage : 1);
   }, [searchValue]);
   (0, _react.useEffect)(function () {
     if (Object.keys(filterValues).length > 0 && !cartList.loading) getCartList(pagination.pageSize, 1);
@@ -482,7 +494,8 @@ var OpenCartListing = function OpenCartListing(props) {
     setSelectedCartIds: setSelectedCartIds,
     getCartList: getCartList,
     pagination: pagination,
-    cartList: cartList
+    cartList: cartList,
+    handleSuccessDeleteCart: handleSuccessDeleteCart
   })));
 };
 exports.OpenCartListing = OpenCartListing;
