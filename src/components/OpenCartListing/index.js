@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
@@ -15,6 +15,7 @@ export const OpenCartListing = (props) => {
   const [{ user, token, loading }] = useSession()
 
   const requestsState = {}
+  const firstRender = useRef(true)
   const [searchValue, setSearchValue] = useState(null)
   const [filterValues, setFilterValues] = useState({})
   const [startMulitOrderDelete, setStartMulitOrderDelete] = useState(false)
@@ -22,7 +23,7 @@ export const OpenCartListing = (props) => {
   const [deletedCartId, setDeletedCartId] = useState(null)
   const [cartList, setCartList] = useState({ loading: false, carts: [], error: null })
   const [pagination, setPagination] = useState({
-    currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage - 1 : 0,
+    currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
     pageSize: paginationSettings.pageSize ?? 10,
     totalItems: null,
     totalPages: null
@@ -308,6 +309,7 @@ export const OpenCartListing = (props) => {
           error: content.result
         })
       }
+      firstRender.current = false
     } catch (err) {
       setCartList({
         ...cartList,
@@ -315,6 +317,17 @@ export const OpenCartListing = (props) => {
         error: [err.message]
       })
     }
+  }
+
+  const handleSuccessDeleteCart = (cart) => {
+    setCartList({
+      ...cartList,
+      carts: cartList.carts.filter(_cart => _cart.id !== cart.id)
+    })
+    setPagination({
+      ...pagination,
+      total: pagination?.total - 1
+    })
   }
 
   /**
@@ -338,7 +351,7 @@ export const OpenCartListing = (props) => {
 
   useEffect(() => {
     if (cartList.loading) return
-    getCartList(pagination.pageSize, 1)
+    getCartList(pagination.pageSize, firstRender.current ? pagination.currentPage : 1)
   }, [searchValue])
 
   useEffect(() => {
@@ -366,6 +379,7 @@ export const OpenCartListing = (props) => {
           getCartList={getCartList}
           pagination={pagination}
           cartList={cartList}
+          handleSuccessDeleteCart={handleSuccessDeleteCart}
         />
       )}
     </>
