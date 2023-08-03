@@ -248,7 +248,7 @@ var OrderDetails = function OrderDetails(props) {
             _yield$ordering$setAc2 = _context3.sent;
             content = _yield$ordering$setAc2.content;
             if (!content.error) {
-              showToast(_ToastContext.ToastType.Success, t('COMMENT_UPDATED', 'Comment updated'));
+              showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'));
             } else {
               showToast(_ToastContext.ToastType.Error, content === null || content === void 0 ? void 0 : content.result);
             }

@@ -179,10 +179,6 @@ var DriversList = function DriversList(props) {
             if (!content.error) {
               if (assign.driverId) {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'));
-                setCommentInfostate && setCommentInfostate({
-                  open: true,
-                  driverId: assign.driverId
-                });
               } else {
                 showToast(_ToastContext.ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'));
               }
