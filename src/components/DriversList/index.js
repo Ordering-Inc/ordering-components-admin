@@ -94,7 +94,6 @@ export const DriversList = (props) => {
       if (!content.error) {
         if (assign.driverId) {
           showToast(ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'))
-          setCommentInfostate && setCommentInfostate({ open: true, driverId: assign.driverId })
         } else {
           showToast(ToastType.Success, t('ORDER_DRIVER_REMOVED', 'Driver removed from the order'))
         }

@@ -107,7 +107,7 @@ export const OrderDetails = (props) => {
       const { content } = await ordering.setAccessToken(token).orders(orderId).save({ manual_driver_assignment_comment: commentInfo?.comment, driver_id: commentInfo?.driverId })
 
       if (!content.error) {
-        showToast(ToastType.Success, t('COMMENT_UPDATED', 'Comment updated'))
+        showToast(ToastType.Success, t('ORDER_DRIVER_ASSIGNED', 'Driver assigned to order'))
       } else {
         showToast(ToastType.Error, content?.result)
       }
