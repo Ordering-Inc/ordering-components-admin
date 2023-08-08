@@ -43,7 +43,8 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
     product = props.product,
     handleUpdateBusinessState = props.handleUpdateBusinessState,
     businessState = props.businessState,
-    setDataSelected = props.setDataSelected;
+    setDataSelected = props.setDataSelected,
+    handleUpdateCategoryState = props.handleUpdateCategoryState;
   var _useSession = (0, _SessionContext.useSession)(),
     _useSession2 = _slicedToArray(_useSession, 1),
     loading = _useSession2[0].loading;
@@ -379,7 +380,7 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
    */
   var handleChangeProductRank = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(transferProductId, params) {
-      var _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories;
+      var _yield$ordering$busin5, _yield$ordering$busin6, error, result, _categories, updateProducts;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
@@ -417,6 +418,17 @@ var SingleBusinessProduct = function SingleBusinessProduct(props) {
                 });
                 handleUpdateBusinessState(_objectSpread(_objectSpread({}, business), {}, {
                   categories: _categories
+                }));
+              }
+              if (handleUpdateCategoryState) {
+                updateProducts = category === null || category === void 0 ? void 0 : category.products.map(function (item) {
+                  if (item.id === result.id) {
+                    return _objectSpread(_objectSpread({}, item), result);
+                  }
+                  return item;
+                });
+                handleUpdateCategoryState(_objectSpread(_objectSpread({}, category), {}, {
+                  products: updateProducts
                 }));
               }
               showToast(_ToastContext.ToastType.Success, t('PRODUCT_UPDATED', 'Product updated'));

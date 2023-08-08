@@ -77,7 +77,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     orderList = _useState2[0],
     setOrderList = _useState2[1];
   var _useState3 = (0, _react.useState)({
-      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage : 1,
       pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10
     }),
     _useState4 = _slicedToArray(_useState3, 2),
@@ -96,6 +96,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     _useState6 = _slicedToArray(_useState5, 2),
     actionStatus = _useState6[0],
     setActionStatus = _useState6[1];
+  var firstRender = (0, _react.useRef)(true);
   var sortOrdersArray = function sortOrdersArray(option, array) {
     if (option === 'id') {
       if (orderDirection === 'desc') {
@@ -672,14 +673,9 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
               loading: true
             }));
             _context3.next = 6;
-            return getOrders(pagination.pageSize, 1);
+            return getOrders(pagination.pageSize, firstRender.current ? pagination.currentPage : 1);
           case 6:
             response = _context3.sent;
-            setOrderList({
-              loading: false,
-              orders: response.content.error ? [] : response.content.result,
-              error: response.content.error ? response.content.result : null
-            });
             if (!response.content.error) {
               setPagination({
                 currentPage: response.content.pagination.current_page,
@@ -690,10 +686,16 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 to: response.content.pagination.to
               });
             }
-            _context3.next = 14;
+            setOrderList({
+              loading: false,
+              orders: response.content.error ? [] : response.content.result,
+              error: response.content.error ? response.content.result : null
+            });
+            firstRender.current = false;
+            _context3.next = 15;
             break;
-          case 11:
-            _context3.prev = 11;
+          case 12:
+            _context3.prev = 12;
             _context3.t0 = _context3["catch"](2);
             if (_context3.t0.constructor.name !== 'Cancel') {
               setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
@@ -701,11 +703,11 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 error: [_context3.t0.message]
               }));
             }
-          case 14:
+          case 15:
           case "end":
             return _context3.stop();
         }
-      }, _callee3, null, [[2, 11]]);
+      }, _callee3, null, [[2, 12]]);
     }));
     return function loadOrders() {
       return _ref3.apply(this, arguments);
@@ -937,20 +939,6 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         orders: orders
       }));
     } else {
-      // if (Object.keys(filterValues).length > 0) {
-      //   const checkInnerContain = filterValues.statuses.every((el) => {
-      //     return orderStatus.indexOf(el) !== -1
-      //   })
-
-      //   const checkOutContain = orderStatus.every((el) => {
-      //     return filterValues.statuses.indexOf(el) !== -1
-      //   })
-
-      //   if (!checkInnerContain && !checkOutContain) {
-      //     setOrderList({ loading: false, orders: [], error: null })
-      //     return
-      //   }
-      // }
       loadOrders();
     }
     return function () {
