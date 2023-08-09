@@ -75,7 +75,7 @@ export const CheckoutFieldsSetting = (props) => {
       const response = await fetch(`${ordering.root}/validation_field_sites`, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        const checkoutFields = content.result.filter(field => !hideSettingList.includes(field?.validation_field?.code))
+        const checkoutFields = content.result.filter(field => field?.validation_field?.validate === 'checkout' && !hideSettingList.includes(field?.validation_field?.code))
         setCheckoutFieldsState({ fields: checkoutFields, loading: false })
       }
     } catch (err) {
