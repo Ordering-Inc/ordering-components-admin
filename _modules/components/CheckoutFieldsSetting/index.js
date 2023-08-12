@@ -173,8 +173,8 @@ var CheckoutFieldsSetting = function CheckoutFieldsSetting(props) {
             content = _context2.sent;
             if (!content.error) {
               checkoutFields = content.result.filter(function (field) {
-                var _field$validation_fie;
-                return !hideSettingList.includes(field === null || field === void 0 ? void 0 : (_field$validation_fie = field.validation_field) === null || _field$validation_fie === void 0 ? void 0 : _field$validation_fie.code);
+                var _field$validation_fie, _field$validation_fie2;
+                return (field === null || field === void 0 ? void 0 : (_field$validation_fie = field.validation_field) === null || _field$validation_fie === void 0 ? void 0 : _field$validation_fie.validate) === 'checkout' && !hideSettingList.includes(field === null || field === void 0 ? void 0 : (_field$validation_fie2 = field.validation_field) === null || _field$validation_fie2 === void 0 ? void 0 : _field$validation_fie2.code);
               });
               setCheckoutFieldsState({
                 fields: checkoutFields,

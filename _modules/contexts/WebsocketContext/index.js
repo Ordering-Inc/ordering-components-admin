@@ -37,6 +37,7 @@ var WebsocketContext = /*#__PURE__*/(0, _react.createContext)();
  */
 exports.WebsocketContext = WebsocketContext;
 var WebsocketProvider = function WebsocketProvider(_ref) {
+  var _session$user;
   var settings = _ref.settings,
     children = _ref.children;
   var _useSession = (0, _SessionContext.useSession)(),
@@ -68,24 +69,25 @@ var WebsocketProvider = function WebsocketProvider(_ref) {
     return function () {
       socket && socket.close();
     };
-  }, [socket]);
+  }, [socket, session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id]);
   (0, _react.useEffect)(function () {
-    if (socket !== null && socket !== void 0 && socket.socket) {
-      socket.socket.on('connect', function () {
-        window.localStorage.setItem('websocket-connected-date', new Date());
-        events.emit('websocket_connected');
-      });
-      socket.socket.on('disconnect', function (reason) {
-        if (reason === 'io server disconnect' && session.auth) {
-          window.setTimeout(socket.socket.connect(), 1000);
-        }
-      });
-      socket.socket.on('connect_error', function () {
-        if (session.auth) {
-          window.setTimeout(socket.socket.connect(), 1000);
-        }
-      });
-    }
+    if (!(socket !== null && socket !== void 0 && socket.socket)) return;
+    var disconnectTimeout = null;
+    var connectionErrorTimeout = null;
+    socket.socket.on('disconnect', function () {
+      disconnectTimeout = setTimeout(function () {
+        return socket.socket.connect();
+      }, 1000);
+    });
+    socket.socket.on('connect_error', function () {
+      connectionErrorTimeout = setTimeout(function () {
+        return socket.socket.connect();
+      }, 1000);
+    });
+    return function () {
+      clearInterval(disconnectTimeout);
+      clearInterval(connectionErrorTimeout);
+    };
   }, [socket === null || socket === void 0 ? void 0 : socket.socket, session]);
   return /*#__PURE__*/_react.default.createElement(WebsocketContext.Provider, {
     value: socket
