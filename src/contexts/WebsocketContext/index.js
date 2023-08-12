@@ -45,6 +45,12 @@ export const WebsocketProvider = ({ settings, children }) => {
     if (!socket?.socket) return
     let disconnectTimeout = null
     let connectionErrorTimeout = null
+
+    socket.socket.on('connect', () => {
+      window.localStorage.setItem('websocket-connected-date', new Date())
+      events.emit('websocket_connected')
+    })
+
     socket.socket.on('disconnect', () => {
       disconnectTimeout = setTimeout(() => socket.socket.connect(), 1000)
     })
