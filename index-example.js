@@ -14,7 +14,7 @@ const configFile = {
     version: 'v400'
   },
   socket: {
-    url: 'https://socket-v3.ordering.co'
+    url: 'https://socket.ordering.co'
   }
 }
 
