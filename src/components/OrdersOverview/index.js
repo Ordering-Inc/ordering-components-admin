@@ -106,7 +106,7 @@ export const OrdersOverview = (props) => {
     const _overview = { ...ordersOverviewStatus.overview }
 
     if (pendingState.includes(updateData.old)) {
-      _overview.pending = _overview.pending - 1
+      _overview.pending = _overview?.pending - 1
     } else if (inProgressState.includes(updateData.old)) {
       _overview.inProgress = _overview.inProgress - 1
     } else if (completedState.includes(updateData.old)) {
@@ -116,7 +116,7 @@ export const OrdersOverview = (props) => {
     }
 
     if (pendingState.includes(updateData.new)) {
-      _overview.pending = _overview.pending + 1
+      _overview.pending = _overview?.pending + 1
     } else if (inProgressState.includes(updateData.new)) {
       _overview.inProgress = _overview.inProgress + 1
     } else if (completedState.includes(updateData.new)) {
@@ -152,7 +152,7 @@ export const OrdersOverview = (props) => {
     const handleRegisterOrder = (order) => {
       const _overview = { ...ordersOverviewStatus.overview }
       _overview.total += 1
-      _overview.pending += 1
+      _overview?.pending += 1
       setOrdersOverviewStatus({ ...ordersOverviewStatus, overview: _overview })
     }
     socket.on('update_order', handleUpdateOrder)
