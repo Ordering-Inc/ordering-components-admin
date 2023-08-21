@@ -282,10 +282,10 @@ var OrdersManage = function OrdersManage(props) {
    * Object to save order substatuses
    */
   var _useState31 = (0, _react.useState)({
-      pending: orderStatuesList.pending,
-      inProgress: orderStatuesList.inProgress,
-      completed: orderStatuesList.completed,
-      cancelled: orderStatuesList.cancelled,
+      pending: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.pending,
+      inProgress: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.inProgress,
+      completed: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.completed,
+      cancelled: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.cancelled,
       all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
     }),
     _useState32 = _slicedToArray(_useState31, 2),
