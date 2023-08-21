@@ -653,7 +653,7 @@ var EnterprisePromotionDetails = function EnterprisePromotionDetails(props) {
     setPromotionState(_objectSpread(_objectSpread({}, promotionState), {}, {
       promotion: promotion
     }));
-  }, [promotion, promotionId]);
+  }, [JSON.stringify(promotion || {}), promotionId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     isAddMode: isAddMode,
     promotionState: promotionState,
