@@ -153,7 +153,7 @@ var OrdersOverview = function OrdersOverview(props) {
     var cancelledState = [2, 5, 6, 10, 12];
     var _overview = _objectSpread({}, ordersOverviewStatus.overview);
     if (pendingState.includes(updateData.old)) {
-      _overview.pending = _overview.pending - 1;
+      _overview.pending = (_overview === null || _overview === void 0 ? void 0 : _overview.pending) - 1;
     } else if (inProgressState.includes(updateData.old)) {
       _overview.inProgress = _overview.inProgress - 1;
     } else if (completedState.includes(updateData.old)) {
@@ -162,7 +162,7 @@ var OrdersOverview = function OrdersOverview(props) {
       _overview.cancelled = _overview.cancelled - 1;
     }
     if (pendingState.includes(updateData.new)) {
-      _overview.pending = _overview.pending + 1;
+      _overview.pending = (_overview === null || _overview === void 0 ? void 0 : _overview.pending) + 1;
     } else if (inProgressState.includes(updateData.new)) {
       _overview.inProgress = _overview.inProgress + 1;
     } else if (completedState.includes(updateData.new)) {
