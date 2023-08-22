@@ -152,7 +152,7 @@ export const OrdersOverview = (props) => {
     const handleRegisterOrder = (order) => {
       const _overview = { ...ordersOverviewStatus.overview }
       _overview.total += 1
-      _overview?.pending += 1
+      _overview.pending += 1
       setOrdersOverviewStatus({ ...ordersOverviewStatus, overview: _overview })
     }
     socket.on('update_order', handleUpdateOrder)
