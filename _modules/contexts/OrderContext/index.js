@@ -84,7 +84,7 @@ var OrderContext = /*#__PURE__*/(0, _react.createContext)();
 exports.OrderContext = OrderContext;
 
 var OrderProvider = function OrderProvider(_ref) {
-  var _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, _customerState$user7;
+  var _configState$configs, _configState$configs$, _configState$configs2, _configState$configs3, _customerState$user9;
 
   var Alert = _ref.Alert,
       children = _ref.children,
@@ -2682,7 +2682,7 @@ var OrderProvider = function OrderProvider(_ref) {
     };
   }, [state, socket, isDisableToast]);
 
-  var handleJoinMainRooms = function handleJoinMainRooms() {
+  var handleJoinMainRooms = function handleJoinMainRooms(customerId) {
     var _session$user2, _session$user3, _customerState$user, _session$user6;
 
     console.log('handleJoinMainRooms');
@@ -2702,11 +2702,11 @@ var OrderProvider = function OrderProvider(_ref) {
       socket.join("messages_orders_".concat(session === null || session === void 0 ? void 0 : (_session$user5 = session.user) === null || _session$user5 === void 0 ? void 0 : _session$user5.id));
     }
 
-    if (customerState !== null && customerState !== void 0 && (_customerState$user = customerState.user) !== null && _customerState$user !== void 0 && _customerState$user.id || session !== null && session !== void 0 && (_session$user6 = session.user) !== null && _session$user6 !== void 0 && _session$user6.id) {
+    if (customerId || customerState !== null && customerState !== void 0 && (_customerState$user = customerState.user) !== null && _customerState$user !== void 0 && _customerState$user.id || session !== null && session !== void 0 && (_session$user6 = session.user) !== null && _session$user6 !== void 0 && _session$user6.id) {
       var _customerState$user2, _session$user7, _customerState$user3, _session$user8;
 
-      socket.join("carts_".concat((customerState === null || customerState === void 0 ? void 0 : (_customerState$user2 = customerState.user) === null || _customerState$user2 === void 0 ? void 0 : _customerState$user2.id) || (session === null || session === void 0 ? void 0 : (_session$user7 = session.user) === null || _session$user7 === void 0 ? void 0 : _session$user7.id)));
-      socket.join("orderoptions_".concat((customerState === null || customerState === void 0 ? void 0 : (_customerState$user3 = customerState.user) === null || _customerState$user3 === void 0 ? void 0 : _customerState$user3.id) || (session === null || session === void 0 ? void 0 : (_session$user8 = session.user) === null || _session$user8 === void 0 ? void 0 : _session$user8.id)));
+      socket.join("carts_".concat(customerId || (customerState === null || customerState === void 0 ? void 0 : (_customerState$user2 = customerState.user) === null || _customerState$user2 === void 0 ? void 0 : _customerState$user2.id) || (session === null || session === void 0 ? void 0 : (_session$user7 = session.user) === null || _session$user7 === void 0 ? void 0 : _session$user7.id)));
+      socket.join("orderoptions_".concat(customerId || (customerState === null || customerState === void 0 ? void 0 : (_customerState$user3 = customerState.user) === null || _customerState$user3 === void 0 ? void 0 : _customerState$user3.id) || (session === null || session === void 0 ? void 0 : (_session$user8 = session.user) === null || _session$user8 === void 0 ? void 0 : _session$user8.id)));
     }
   };
 
@@ -2744,23 +2744,23 @@ var OrderProvider = function OrderProvider(_ref) {
 
   (0, _react.useEffect)(function () {
     if (!session.auth || session.loading || !(socket !== null && socket !== void 0 && socket.socket) || customerState.loading) return;
-    console.log('useEffect Join main room');
-    socket.socket.on('connect', handleJoinMainRooms);
+    socket.socket.on('connect', function () {
+      var _customerState$user7;
+
+      return handleJoinMainRooms(customerState === null || customerState === void 0 ? void 0 : (_customerState$user7 = customerState.user) === null || _customerState$user7 === void 0 ? void 0 : _customerState$user7.id);
+    });
     socket.socket.on('disconnect', handleLeaveMainRooms);
-
-    var handleLog = function handleLog(order) {
-      console.log(' handleJoinMainRooms orders_register', order);
-    };
-
-    socket.on('orders_register', handleLog);
     return function () {
-      socket.off('orders_register', handleLog);
       handleLeaveMainRooms();
       handleJoinMainRooms();
-      socket.socket.off('connect', handleJoinMainRooms);
+      socket.socket.off('connect', function () {
+        var _customerState$user8;
+
+        return handleJoinMainRooms(customerState === null || customerState === void 0 ? void 0 : (_customerState$user8 = customerState.user) === null || _customerState$user8 === void 0 ? void 0 : _customerState$user8.id);
+      });
       socket.socket.off('disconnect', handleLeaveMainRooms);
     };
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, customerState === null || customerState === void 0 ? void 0 : customerState.loading, customerState === null || customerState === void 0 ? void 0 : (_customerState$user7 = customerState.user) === null || _customerState$user7 === void 0 ? void 0 : _customerState$user7.id]);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, customerState === null || customerState === void 0 ? void 0 : customerState.loading, customerState === null || customerState === void 0 ? void 0 : (_customerState$user9 = customerState.user) === null || _customerState$user9 === void 0 ? void 0 : _customerState$user9.id]);
   var functions = {
     refreshOrderOptions: refreshOrderOptions,
     changeAddress: changeAddress,
