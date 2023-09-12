@@ -2747,7 +2747,14 @@ var OrderProvider = function OrderProvider(_ref) {
     console.log('useEffect Join main room');
     socket.socket.on('connect', handleJoinMainRooms);
     socket.socket.on('disconnect', handleLeaveMainRooms);
+
+    var handleLog = function handleLog(order) {
+      console.log(' handleJoinMainRooms orders_register', order);
+    };
+
+    socket.on('orders_register', handleLog);
     return function () {
+      socket.off('orders_register', handleLog);
       handleLeaveMainRooms();
       handleJoinMainRooms();
       socket.socket.off('connect', handleJoinMainRooms);
