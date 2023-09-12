@@ -1261,13 +1261,13 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
 
   const handleJoinMainRooms = () => {
     socket.join('drivers')
-    socket.join({
-      room: 'orders',
-      user_id: session?.user?.id,
-      role: 'manager'
-    })
+
     if (session?.user?.level === 0) {
-      socket.join('orders')
+      socket.join({
+        room: 'orders',
+        user_id: session?.user?.id,
+        role: 'manager'
+      })
       socket.join('messages_orders')
     } else {
       socket.join(`orders_${session?.user?.id}`)
@@ -1307,6 +1307,8 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
     socket.socket.on('connect', handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
     return () => {
+      handleLeaveMainRooms()
+      handleJoinMainRooms()
       socket.socket.off('connect', handleJoinMainRooms)
       socket.socket.off('disconnect', handleLeaveMainRooms)
     }
