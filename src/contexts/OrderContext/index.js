@@ -1293,12 +1293,10 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
 
   useEffect(() => {
     if (!socket?.socket) return
-    handleJoinMainRooms()
     socket.socket.on('connect', handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
 
     return () => {
-      handleJoinMainRooms()
       socket.socket.off('connect', handleJoinMainRooms)
       socket.socket.off('disconnect', handleLeaveMainRooms)
     }
@@ -1319,11 +1317,9 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
    */
   useEffect(() => {
     if (!session.auth || session.loading || !socket?.socket) return
-    handleJoinCartRooms()
     socket.socket.on('connect', handleJoinCartRooms)
     socket.socket.on('disconnect', handleLeaveCartRooms)
     return () => {
-      handleLeaveCartRooms()
       socket.socket.off('connect', handleJoinCartRooms)
       socket.socket.off('disconnect', handleLeaveCartRooms)
     }
