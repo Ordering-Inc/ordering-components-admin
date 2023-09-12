@@ -2683,18 +2683,17 @@ var OrderProvider = function OrderProvider(_ref) {
   }, [state, socket, isDisableToast]);
 
   var handleJoinMainRooms = function handleJoinMainRooms() {
-    var _session$user2, _customerState$user, _session$user6;
+    var _session$user2, _session$user3, _customerState$user, _session$user6;
 
-    socket.join('drivers');
+    console.log('handleJoinMainRooms');
+    socket.join({
+      room: 'orders',
+      user_id: session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.id,
+      role: 'manager'
+    });
 
-    if ((session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.level) === 0) {
-      var _session$user3;
-
-      socket.join({
-        room: 'orders',
-        user_id: session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id,
-        role: 'manager'
-      });
+    if ((session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.level) === 0) {
+      socket.join('orders');
       socket.join('messages_orders');
     } else {
       var _session$user4, _session$user5;
@@ -2745,6 +2744,7 @@ var OrderProvider = function OrderProvider(_ref) {
 
   (0, _react.useEffect)(function () {
     if (!session.auth || session.loading || !(socket !== null && socket !== void 0 && socket.socket) || customerState.loading) return;
+    console.log('useEffect Join main room');
     socket.socket.on('connect', handleJoinMainRooms);
     socket.socket.on('disconnect', handleLeaveMainRooms);
     return function () {
@@ -2753,7 +2753,7 @@ var OrderProvider = function OrderProvider(_ref) {
       socket.socket.off('connect', handleJoinMainRooms);
       socket.socket.off('disconnect', handleLeaveMainRooms);
     };
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, customerState.loading, customerState === null || customerState === void 0 ? void 0 : (_customerState$user7 = customerState.user) === null || _customerState$user7 === void 0 ? void 0 : _customerState$user7.id]);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, customerState === null || customerState === void 0 ? void 0 : customerState.loading, customerState === null || customerState === void 0 ? void 0 : (_customerState$user7 = customerState.user) === null || _customerState$user7 === void 0 ? void 0 : _customerState$user7.id]);
   var functions = {
     refreshOrderOptions: refreshOrderOptions,
     changeAddress: changeAddress,

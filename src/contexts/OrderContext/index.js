@@ -1260,14 +1260,14 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
   }, [state, socket, isDisableToast])
 
   const handleJoinMainRooms = () => {
-    socket.join('drivers')
-
+    console.log('handleJoinMainRooms')
+    socket.join({
+      room: 'orders',
+      user_id: session?.user?.id,
+      role: 'manager'
+    })
     if (session?.user?.level === 0) {
-      socket.join({
-        room: 'orders',
-        user_id: session?.user?.id,
-        role: 'manager'
-      })
+      socket.join('orders')
       socket.join('messages_orders')
     } else {
       socket.join(`orders_${session?.user?.id}`)
@@ -1304,6 +1304,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
    */
   useEffect(() => {
     if (!session.auth || session.loading || !socket?.socket || customerState.loading) return
+    console.log('useEffect Join main room')
     socket.socket.on('connect', handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
     return () => {
@@ -1312,7 +1313,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
       socket.socket.off('connect', handleJoinMainRooms)
       socket.socket.off('disconnect', handleLeaveMainRooms)
     }
-  }, [socket?.socket, session?.auth, session?.loading, customerState.loading, customerState?.user?.id])
+  }, [socket?.socket, session?.auth, session?.loading, customerState?.loading, customerState?.user?.id])
 
   const functions = {
     refreshOrderOptions,
