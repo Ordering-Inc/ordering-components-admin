@@ -23,7 +23,7 @@ export const OrderContext = createContext()
  * This provider has a reducer for manage order state
  * @param {props} props
  */
-export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId, isDisabledDefaultOpts, businessSlug, disableRooms }) => {
+export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId, isDisabledDefaultOpts, businessSlug }) => {
   const [confirmAlert, setConfirm] = useState({ show: false })
   const [alert, setAlert] = useState({ show: false })
   const [ordering] = useApi()
