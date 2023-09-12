@@ -1259,7 +1259,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
     }
   }, [state, socket, isDisableToast])
 
-  const handleJoinMainRooms = (customerId) => {
+  const handleJoinMainRooms = () => {
     console.log('handleJoinMainRooms')
     socket.join({
       room: 'orders',
@@ -1273,9 +1273,9 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
       socket.join(`orders_${session?.user?.id}`)
       socket.join(`messages_orders_${session?.user?.id}`)
     }
-    if (customerId || customerState?.user?.id || session?.user?.id) {
-      socket.join(`carts_${customerId || customerState?.user?.id || session?.user?.id}`)
-      socket.join(`orderoptions_${customerId || customerState?.user?.id || session?.user?.id}`)
+    if (customerState?.user?.id || session?.user?.id) {
+      socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
+      socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
     }
   }
 
@@ -1304,13 +1304,13 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
    */
   useEffect(() => {
     if (!session.auth || session.loading || !socket?.socket || customerState.loading) return
-    socket.socket.on('connect', () => handleJoinMainRooms(customerState?.user?.id))
+    socket.socket.on('connect', () => handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
 
     return () => {
       handleLeaveMainRooms()
       handleJoinMainRooms()
-      socket.socket.off('connect', () => handleJoinMainRooms(customerState?.user?.id))
+      socket.socket.off('connect', () => handleJoinMainRooms)
       socket.socket.off('disconnect', handleLeaveMainRooms)
     }
   }, [socket?.socket, session?.auth, session?.loading, customerState?.loading, customerState?.user?.id])
