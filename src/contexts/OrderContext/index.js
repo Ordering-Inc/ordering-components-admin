@@ -23,7 +23,7 @@ export const OrderContext = createContext()
  * This provider has a reducer for manage order state
  * @param {props} props
  */
-export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId, isDisabledDefaultOpts, businessSlug }) => {
+export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId, isDisabledDefaultOpts, businessSlug, disableRooms }) => {
   const [confirmAlert, setConfirm] = useState({ show: false })
   const [alert, setAlert] = useState({ show: false })
   const [ordering] = useApi()
@@ -1273,6 +1273,10 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
       socket.join(`orders_${session?.user?.id}`)
       socket.join(`messages_orders_${session?.user?.id}`)
     }
+    if (customerState?.user?.id || session?.user?.id) {
+      socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
+      socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+    }
   }
 
   const handleLeaveMainRooms = () => {
@@ -1289,41 +1293,24 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
       socket.leave(`orders_${session?.user?.id}`)
       socket.leave(`messages_orders_${session?.user?.id}`)
     }
+    if (customerState?.user?.id || session?.user?.id) {
+      socket.leave(`carts_${customerState?.user?.id || session?.user?.id}`)
+      socket.leave(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
+    }
   }
 
+  /**
+   * Join to main room
+   */
   useEffect(() => {
-    if (!socket?.socket) return
+    if (!session.auth || session.loading || !socket?.socket || customerState.loading) return
     socket.socket.on('connect', handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
-
     return () => {
       socket.socket.off('connect', handleJoinMainRooms)
       socket.socket.off('disconnect', handleLeaveMainRooms)
     }
-  }, [socket?.socket])
-
-  const handleJoinCartRooms = () => {
-    socket.join(`carts_${customerState?.user?.id || session?.user?.id}`)
-    socket.join(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
-  }
-
-  const handleLeaveCartRooms = () => {
-    socket.leave(`carts_${customerState?.user?.id || session?.user?.id}`)
-    socket.leave(`orderoptions_${customerState?.user?.id || session?.user?.id}`)
-  }
-
-  /**
-   * Join to carts room
-   */
-  useEffect(() => {
-    if (!session.auth || session.loading || !socket?.socket) return
-    socket.socket.on('connect', handleJoinCartRooms)
-    socket.socket.on('disconnect', handleLeaveCartRooms)
-    return () => {
-      socket.socket.off('connect', handleJoinCartRooms)
-      socket.socket.off('disconnect', handleLeaveCartRooms)
-    }
-  }, [socket?.socket, session, customerState?.user?.id])
+  }, [socket?.socket, session?.auth, session?.loading, customerState.loading, customerState?.user?.id])
 
   const functions = {
     refreshOrderOptions,
