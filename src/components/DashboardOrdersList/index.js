@@ -42,7 +42,6 @@ export const DashboardOrdersList = (props) => {
   const [configState] = useConfig()
 
   const [orderList, setOrderList] = useState({ loading: !orders, error: null, orders: [] })
-  // console.log('orderList', orderList)
   const [pagination, setPagination] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
     pageSize: paginationSettings.pageSize ?? 10
