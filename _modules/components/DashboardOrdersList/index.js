@@ -1099,7 +1099,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     if (orderList.loading) return;
     if ((pagination === null || pagination === void 0 ? void 0 : pagination.currentPage) !== 0 && (pagination === null || pagination === void 0 ? void 0 : pagination.total) !== 0) {
       if (Math.ceil((pagination === null || pagination === void 0 ? void 0 : pagination.total) / pagination.pageSize) >= (pagination === null || pagination === void 0 ? void 0 : pagination.currentPage)) {
-        if (orderList.orders.length === 0) {
+        if (orderList.orders.length === 0 && (filterValues && Object.keys(filterValues).length > 0 || !!searchValue)) {
           getPageOrders(pagination.pageSize, pagination.currentPage);
         }
       } else {
