@@ -42,6 +42,7 @@ export const DashboardOrdersList = (props) => {
   const [configState] = useConfig()
 
   const [orderList, setOrderList] = useState({ loading: !orders, error: null, orders: [] })
+  // console.log('orderList', orderList)
   const [pagination, setPagination] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
     pageSize: paginationSettings.pageSize ?? 10
@@ -240,7 +241,7 @@ export const DashboardOrdersList = (props) => {
               value: encodeURI(`%${searchValue}%`)
             }
           }
-        )
+        ) 
       }
       if (isSearchByCustomerEmail) {
         searchConditions.push(
@@ -459,8 +460,24 @@ export const DashboardOrdersList = (props) => {
       if (filterValues.driverGroupIds.length !== 0) {
         filterConditons.push(
           {
-            attribute: 'driver_id',
+            attribute: 'driver_group_id',
             value: filterValues.driverGroupIds
+          }
+        )
+      }
+      if (filterValues.driverGroupBusinessIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'driver_group_business',
+            conditions: [
+              {
+                attribute: 'driver_group_id',
+                value: {
+                  condition: '=',
+                  value: filterValues.driverGroupBusinessIds
+                }
+              }
+            ]
           }
         )
       }
