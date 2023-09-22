@@ -74,7 +74,7 @@ export const EnterprisePromotionDetails = (props) => {
    * @param {changes} changes parameters to change
    */
   const handleChangeItem = (changes) => {
-    setFormState({
+        setFormState({
       ...formState,
       changes: {
         ...formState.changes,
@@ -372,7 +372,6 @@ export const EnterprisePromotionDetails = (props) => {
   }
 
   const initSetting = (promotion) => {
-    cleanFormState()
     const businessIds = promotion?.businesses?.reduce((ids, business) => [...ids, business.id], [])
     setSelectedBusinessIds(businessIds || [])
     const sitesIds = promotion?.sites?.reduce((ids, site) => [...ids, site.id], [])
