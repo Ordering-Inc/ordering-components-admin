@@ -240,7 +240,7 @@ export const DashboardOrdersList = (props) => {
               value: encodeURI(`%${searchValue}%`)
             }
           }
-        )
+        ) 
       }
       if (isSearchByCustomerEmail) {
         searchConditions.push(
@@ -459,8 +459,24 @@ export const DashboardOrdersList = (props) => {
       if (filterValues.driverGroupIds.length !== 0) {
         filterConditons.push(
           {
-            attribute: 'driver_id',
+            attribute: 'driver_group_id',
             value: filterValues.driverGroupIds
+          }
+        )
+      }
+      if (filterValues.driverGroupBusinessIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'driver_group_business',
+            conditions: [
+              {
+                attribute: 'driver_group_id',
+                value: {
+                  condition: '=',
+                  value: filterValues.driverGroupBusinessIds
+                }
+              }
+            ]
           }
         )
       }
