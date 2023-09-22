@@ -13,7 +13,6 @@ import { WebStrategy } from '../../webStrategy'
 import { ValidationFieldsProvider } from '../ValidationsFieldsContext'
 import { CustomerProvider } from '../CustomerContext'
 import { SiteProvider } from '../SiteContext'
-import { OptimizationLoadProvider } from '../OptimizationLoadContext'
 
 /**
  * Create OrderingContext
@@ -32,31 +31,29 @@ export const OrderingProvider = ({ Alert, settings, children }) => {
     <OrderingContext.Provider>
       <EventProvider>
         <ApiProvider settings={settings}>
-          <OptimizationLoadProvider settings={settings} strategy={webStrategy}>
-            <LanguageProvider strategy={webStrategy}>
-              <SessionProvider strategy={webStrategy}>
-                <ConfigProvider>
-                  <UtilsProviders>
-                    <ToastProvider>
-                      <ValidationFieldsProvider>
-                        <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
-                          <SiteProvider>
-                            <CustomerProvider strategy={webStrategy}>
-                              <OrderProvider strategy={webStrategy} Alert={Alert}>
-                                <BusinessProvider>
-                                  {children}
-                                </BusinessProvider>
-                              </OrderProvider>
-                            </CustomerProvider>
-                          </SiteProvider>
-                        </WebsocketProvider>
-                      </ValidationFieldsProvider>
-                    </ToastProvider>
-                  </UtilsProviders>
-                </ConfigProvider>
-              </SessionProvider>
-            </LanguageProvider>
-          </OptimizationLoadProvider>
+          <LanguageProvider strategy={webStrategy}>
+            <SessionProvider strategy={webStrategy}>
+              <ConfigProvider>
+                <UtilsProviders>
+                  <ToastProvider>
+                    <ValidationFieldsProvider>
+                      <WebsocketProvider settings={Object.assign(settings.socket, { project: settings.project })}>
+                        <SiteProvider>
+                          <CustomerProvider strategy={webStrategy}>
+                            <OrderProvider strategy={webStrategy} Alert={Alert}>
+                              <BusinessProvider>
+                                {children}
+                              </BusinessProvider>
+                            </OrderProvider>
+                          </CustomerProvider>
+                        </SiteProvider>
+                      </WebsocketProvider>
+                    </ValidationFieldsProvider>
+                  </ToastProvider>
+                </UtilsProviders>
+              </ConfigProvider>
+            </SessionProvider>
+          </LanguageProvider>
         </ApiProvider>
       </EventProvider>
     </OrderingContext.Provider>
