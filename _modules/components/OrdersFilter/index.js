@@ -39,6 +39,7 @@ var OrdersFilter = function OrdersFilter(props) {
       orderId: null,
       externalId: null,
       groupTypes: [],
+      groupTypesUnassigned: [],
       dateType: null,
       deliveryFromDatetime: null,
       deliveryEndDatetime: null,
@@ -53,13 +54,14 @@ var OrdersFilter = function OrdersFilter(props) {
       currency: [],
       metafield: [],
       logisticStatus: null,
-      assigned: null
+      assigned: null,
+      driverGroupBusinessIds: []
     }),
     _useState2 = _slicedToArray(_useState, 2),
     filterValues = _useState2[0],
     setFilterValues = _useState2[1];
 
-  /**
+  /** 
    * Changer order Id
    * @param {EventTarget} e Related HTML event
    */
@@ -126,6 +128,26 @@ var OrdersFilter = function OrdersFilter(props) {
     // setGroupDriverIds(_driverIds)
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
       groupTypes: _groupTypes
+    }));
+  };
+
+  /**
+  * Change group type
+  * * @param {object} groupTypeUnassigned Group type unassigned
+  */
+  var handleChangeGroupUnassigned = function handleChangeGroupUnassigned(groupTypeUnassigned) {
+    var _groupTypesUnassigned = _toConsumableArray(filterValues.groupTypesUnassigned);
+    if (!_groupTypesUnassigned.includes(groupTypeUnassigned)) {
+      _groupTypesUnassigned.push(groupTypeUnassigned);
+    } else {
+      _groupTypesUnassigned = _groupTypesUnassigned.filter(function (type) {
+        return type !== groupTypeUnassigned;
+      });
+    }
+
+    // setGroupDriverIds(_driverIds)
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      groupTypesUnassigned: _groupTypesUnassigned
     }));
   };
   /**
@@ -425,6 +447,11 @@ var OrdersFilter = function OrdersFilter(props) {
       driverGroupIds: uniqueDriverIds
     }));
   }, [filterValues.groupTypes]);
+  (0, _react.useEffect)(function () {
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      driverGroupBusinessIds: filterValues.groupTypesUnassigned
+    }));
+  }, [filterValues.groupTypesUnassigned]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     filterValues: filterValues,
     handleChangeOrderId: handleChangeOrderId,
@@ -445,7 +472,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleAddMetaField: handleAddMetaField,
     handleDeleteMetafield: handleDeleteMetafield,
     handleChangeExternalId: handleChangeExternalId,
-    handleChangeChildFilterValue: handleChangeChildFilterValue
+    handleChangeChildFilterValue: handleChangeChildFilterValue,
+    handleChangeGroupUnassigned: handleChangeGroupUnassigned
   })));
 };
 exports.OrdersFilter = OrdersFilter;
