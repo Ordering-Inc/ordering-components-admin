@@ -236,6 +236,7 @@ import { CustomerContext, CustomerProvider, useCustomer } from './contexts/Custo
 import { SiteContext, SiteProvider, useSite } from './contexts/SiteContext'
 import { ValidationFieldsContext, ValidationFieldsProvider, useValidationFields } from './contexts/ValidationsFieldsContext'
 import { ToastContext, ToastProvider, useToast, ToastType } from './contexts/ToastContext'
+import { OptimizationLoadContext, OptimizationLoadProvider, useOptimizationLoad } from './contexts/OptimizationLoadContext'
 import { PaymentOptionCash } from './components/PaymentOptionCash'
 import { PaymentOptionPaypal } from './components/PaymentOptionPaypal'
 import { PaymentOptionStripe } from './components/PaymentOptionStripe'
@@ -570,6 +571,9 @@ export {
   SiteContext,
   SiteProvider,
   useSite,
+  OptimizationLoadContext,
+  OptimizationLoadProvider,
+  useOptimizationLoad,
 
   // Constants
   CODES
