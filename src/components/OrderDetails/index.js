@@ -358,6 +358,17 @@ export const OrderDetails = (props) => {
     })
   }
 
+  useEffect(() => {
+    if (props.order) {
+      setOrderState({
+        ...orderState,
+        order: props.order
+      })
+    } else {
+      getOrder()
+    }
+  }, [orderId])
+
     useEffect(() => {
     if (orderState.loading || loading) return
     const handleUpdateOrder = (order) => {
@@ -380,17 +391,6 @@ export const OrderDetails = (props) => {
       socket.off('update_order', handleUpdateOrder)
     }
   }, [orderState.order, socket, loading, drivers])
-
-  useEffect(() => {
-    if (props.order) {
-      setOrderState({
-        ...orderState,
-        order: props.order
-      })
-    } else {
-      getOrder()
-    }
-  }, [orderId])
 
   useEffect(() => {
     const handleCustomerReviewed = (review) => {
