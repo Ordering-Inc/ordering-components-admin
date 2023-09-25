@@ -401,19 +401,23 @@ var OrdersFilter = function OrdersFilter(props) {
       orderId: null,
       externalId: null,
       groupTypes: [],
+      groupTypesUnassigned: [],
+      dateType: null,
       deliveryFromDatetime: null,
       deliveryEndDatetime: null,
-      logisticStatus: null,
-      assigned: null,
       businessIds: [],
       driverIds: [],
+      driverGroupIds: [],
       cityIds: [],
       statuses: [],
       deliveryTypes: [],
       paymethodIds: [],
       countryCode: [],
       currency: [],
-      metafield: []
+      metafield: [],
+      logisticStatus: null,
+      assigned: null,
+      driverGroupBusinessIds: []
     });
   };
   (0, _react.useEffect)(function () {
