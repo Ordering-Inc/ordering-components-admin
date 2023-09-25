@@ -222,9 +222,31 @@ export const OrderDetails = (props) => {
         body: JSON.stringify({ status: order.newStatus })
       })
       const content = await response.json()
+      if(!content.error) {
+        if (order?.id !== orderState?.order?.id) return
+        delete content.result.total
+        delete content.result.subtotal
+        if (!order?.driver && order?.driver_id) {
+          const updatedDriver = drivers.find(driver => driver.id === order.driver_id)
+          if (updatedDriver) {
+            order.driver = { ...updatedDriver }
+          }
+        }
+        setOrderState({
+          ...orderState,
+          order: Object.assign(orderState.order, content.result)
+        })
+      }
+      if(content.error) {
+        setActionStatus({
+          ...actionStatus,
+          loading: false,
+          error: content.error ? content.result : null
+        })
+      }
       setActionStatus({
+        ...actionStatus,
         loading: false,
-        error: content.error ? content.result : null
       })
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -336,18 +358,7 @@ export const OrderDetails = (props) => {
     })
   }
 
-  useEffect(() => {
-    if (props.order) {
-      setOrderState({
-        ...orderState,
-        order: props.order
-      })
-    } else {
-      getOrder()
-    }
-  }, [orderId])
-
-  useEffect(() => {
+    useEffect(() => {
     if (orderState.loading || loading) return
     const handleUpdateOrder = (order) => {
       if (order?.id !== orderState?.order?.id) return
@@ -369,6 +380,17 @@ export const OrderDetails = (props) => {
       socket.off('update_order', handleUpdateOrder)
     }
   }, [orderState.order, socket, loading, drivers])
+
+  useEffect(() => {
+    if (props.order) {
+      setOrderState({
+        ...orderState,
+        order: props.order
+      })
+    } else {
+      getOrder()
+    }
+  }, [orderId])
 
   useEffect(() => {
     const handleCustomerReviewed = (review) => {
