@@ -15,6 +15,7 @@ var _LanguageContext = require("../../contexts/LanguageContext");
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
 function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
@@ -41,7 +42,9 @@ var DriversList = function DriversList(props) {
     isSearchByCellphone = props.isSearchByCellphone,
     isOrderDrivers = props.isOrderDrivers,
     orderId = props.orderId,
-    setCommentInfostate = props.setCommentInfostate;
+    setCommentInfostate = props.setCommentInfostate,
+    disableSocketRoomDriver = props.disableSocketRoomDriver,
+    useBatchSockets = props.useBatchSockets;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -78,6 +81,8 @@ var DriversList = function DriversList(props) {
     _useState8 = _slicedToArray(_useState7, 2),
     assignedOrders = _useState8[0],
     setAssignedOrders = _useState8[1];
+  var controller = new AbortController();
+  var signal = controller.signal;
   var activeOrderStatuses = [0, 13, 7, 8, 4, 9, 3, 14, 18, 19, 20, 21, 22, 23];
   var socket = (0, _WebsocketContext.useWebsocket)();
 
@@ -446,7 +451,8 @@ var DriversList = function DriversList(props) {
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: "Bearer ".concat(session.token)
-              }
+              },
+              signal: signal
             };
             _context4.next = 6;
             return fetch("".concat(ordering.root, "/controls/orders/").concat(orderId), requestOptions);
@@ -634,6 +640,9 @@ var DriversList = function DriversList(props) {
       if (requestsState.drivers) {
         requestsState.drivers.cancel();
       }
+      if (isOrderDrivers) {
+        controller === null || controller === void 0 ? void 0 : controller.abort();
+      }
     };
   }, [drivers, searchValue, orderId]);
 
@@ -684,13 +693,119 @@ var DriversList = function DriversList(props) {
         drivers: drivers
       }));
     };
-    socket.on('drivers_update', handleUpdateDriver);
-    socket.on('tracking_driver', handleTrackingDriver);
+    var handleBatchDriverChanges = function handleBatchDriverChanges(changes) {
+      setDriversList(function (prevState) {
+        var updatedDrivers = prevState.drivers.map(function (driver) {
+          var changeData = changes.find(function (change) {
+            return change.driver_id === driver.id;
+          });
+          if (changeData) {
+            var updatedDriver = _objectSpread({}, driver);
+            var _iterator = _createForOfIteratorHelper(changeData.changes),
+              _step;
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                var change = _step.value;
+                updatedDriver[change.attribute] = change.new;
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+            return updatedDriver;
+          }
+          return driver;
+        });
+        return _objectSpread(_objectSpread({}, prevState), {}, {
+          drivers: updatedDrivers
+        });
+      });
+    };
+    var handleBatchDriverLocations = function handleBatchDriverLocations(locations) {
+      setDriversList(function (prevState) {
+        var updatedDrivers = prevState.drivers.map(function (driver) {
+          var locationData = locations.find(function (location) {
+            return location.driver_id === driver.id;
+          });
+          if (locationData) {
+            var updatedDriver = _objectSpread({}, driver);
+            updatedDriver.location = locationData.location;
+            return updatedDriver;
+          }
+          return driver;
+        });
+        return _objectSpread(_objectSpread({}, prevState), {}, {
+          drivers: updatedDrivers
+        });
+      });
+    };
+    if (!disableSocketRoomDriver) {
+      if (!useBatchSockets) {
+        socket.on('drivers_update', handleUpdateDriver);
+        socket.on('tracking_driver', handleTrackingDriver);
+      } else {
+        socket.on('batch_driver_locations', handleBatchDriverLocations);
+        socket.on('batch_driver_changes', handleBatchDriverChanges);
+      }
+    }
     return function () {
-      socket.off('drivers_update', handleUpdateDriver);
-      socket.off('tracking_driver', handleTrackingDriver);
+      if (!disableSocketRoomDriver) {
+        if (!useBatchSockets) {
+          socket.off('drivers_update', handleUpdateDriver);
+          socket.off('tracking_driver', handleTrackingDriver);
+        } else {
+          socket.off('batch_driver_locations', handleBatchDriverLocations);
+          socket.off('batch_driver_changes', handleBatchDriverChanges);
+        }
+      }
     };
   }, [socket, session === null || session === void 0 ? void 0 : session.loading, driversList.drivers]);
+  var handleJoinMainRooms = function handleJoinMainRooms() {
+    if (!useBatchSockets) {
+      socket.join('drivers');
+    } else {
+      var _session$user, _session$user2;
+      socket.join({
+        room: 'driver_locations',
+        user_id: session === null || session === void 0 ? void 0 : (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id,
+        role: 'manager'
+      });
+      socket.join({
+        room: 'drivers',
+        user_id: session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.id,
+        role: 'manager'
+      });
+    }
+  };
+  var handleLeaveMainRooms = function handleLeaveMainRooms() {
+    if (!useBatchSockets) {
+      socket.leave('drivers');
+    } else {
+      var _session$user3, _session$user4;
+      socket.leave({
+        room: 'driver_locations',
+        user_id: session === null || session === void 0 ? void 0 : (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id,
+        role: 'manager'
+      });
+      socket.leave({
+        room: 'drivers',
+        user_id: session === null || session === void 0 ? void 0 : (_session$user4 = session.user) === null || _session$user4 === void 0 ? void 0 : _session$user4.id,
+        role: 'manager'
+      });
+    }
+  };
+  (0, _react.useEffect)(function () {
+    if (!(session !== null && session !== void 0 && session.auth) || session !== null && session !== void 0 && session.loading || !(socket !== null && socket !== void 0 && socket.socket) || disableSocketRoomDriver) return;
+    handleJoinMainRooms();
+    socket.socket.on('connect', handleJoinMainRooms);
+    socket.socket.on('disconnect', handleLeaveMainRooms);
+    return function () {
+      handleLeaveMainRooms();
+      socket.socket.off('connect', handleJoinMainRooms);
+      socket.socket.off('disconnect', handleLeaveMainRooms);
+    };
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, disableSocketRoomDriver, useBatchSockets]);
   (0, _react.useEffect)(function () {
     getOnlineOfflineDrivers(driversList.drivers);
   }, [driversList.drivers]);
