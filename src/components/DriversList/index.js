@@ -414,7 +414,7 @@ export const DriversList = (props) => {
         requestsState.drivers.cancel()
       }
       if (isOrderDrivers) {
-      controller?.abort();
+        controller?.abort();
       }
     }
   }, [drivers, searchValue, orderId])
