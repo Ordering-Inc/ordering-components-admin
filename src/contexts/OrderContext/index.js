@@ -1260,7 +1260,6 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
   }, [state, socket, isDisableToast])
 
   const handleJoinMainRooms = () => {
-    socket.join('drivers')
     socket.join({
       room: 'orders',
       user_id: session?.user?.id,
@@ -1280,7 +1279,6 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
   }
 
   const handleLeaveMainRooms = () => {
-    socket.leave('drivers')
     socket.leave({
       room: 'orders',
       user_id: session?.user?.id,
@@ -1303,7 +1301,7 @@ export const OrderProvider = ({ Alert, children, strategy, isAlsea, franchiseId,
    * Join to main room
    */
   useEffect(() => {
-    if (!session.auth || session.loading || !socket?.socket || customerState.loading) return
+    if (!session.auth || session?.loading || !socket?.socket || customerState?.loading) return
     socket.socket.on('connect', handleJoinMainRooms)
     socket.socket.on('disconnect', handleLeaveMainRooms)
 
