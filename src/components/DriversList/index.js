@@ -553,16 +553,18 @@ export const DriversList = (props) => {
     }
   }
 
+  const handleSocketDisconnect = () => {
+    socket.socket.on('connect', handleJoinMainRooms)
+  }
+
   useEffect(() => {
     if (!session?.auth || session?.loading || !socket?.socket || disableSocketRoomDriver) return
     handleJoinMainRooms()
-    socket.socket.on('connect', handleJoinMainRooms)
-    socket.socket.on('disconnect', handleLeaveMainRooms)
+    socket.socket.on('disconnect', handleSocketDisconnect)
 
     return () => {
       handleLeaveMainRooms()
-      socket.socket.off('connect', handleJoinMainRooms)
-      socket.socket.off('disconnect', handleLeaveMainRooms)
+      socket.socket.off('disconnect', handleSocketDisconnect)
     }
   }, [socket?.socket, session?.auth, session?.loading, disableSocketRoomDriver, useBatchSockets])
 
