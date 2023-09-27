@@ -631,6 +631,9 @@ var OrdersManage = function OrdersManage(props) {
       });
     }
   };
+  var handleSocketDisconnect = function handleSocketDisconnect() {
+    socket.socket.on('connect', handleJoinMainRooms);
+  };
 
   /**
    * Listening driver change
@@ -679,7 +682,6 @@ var OrdersManage = function OrdersManage(props) {
       });
     };
     var handleBatchDriverChanges = function handleBatchDriverChanges(changes) {
-      console.log('handleBatchDriverChanges', changes);
       setDriversList(function (prevState) {
         var updatedDrivers = prevState.drivers.map(function (driver) {
           var changeData = changes.find(function (change) {
@@ -709,7 +711,6 @@ var OrdersManage = function OrdersManage(props) {
       });
     };
     var handleBatchDriverLocations = function handleBatchDriverLocations(locations) {
-      console.log('handleBatchDriverLocations', locations);
       setDriversList(function (prevState) {
         var updatedDrivers = prevState.drivers.map(function (driver) {
           var locationData = locations.find(function (location) {
@@ -750,14 +751,11 @@ var OrdersManage = function OrdersManage(props) {
   }, [socket, loading, driversList.drivers, useBatchSockets]);
   (0, _react.useEffect)(function () {
     if (!auth || loading || !(socket !== null && socket !== void 0 && socket.socket) || disableSocketRoomDriver) return;
-    console.log('Use effect handleJoinMainRooms');
     handleJoinMainRooms();
-    socket.socket.on('connect', handleJoinMainRooms);
-    socket.socket.on('disconnect', handleLeaveMainRooms);
+    socket.socket.on('disconnect', handleSocketDisconnect);
     return function () {
       handleLeaveMainRooms();
-      socket.socket.off('connect', handleJoinMainRooms);
-      socket.socket.off('disconnect', handleLeaveMainRooms);
+      socket.socket.off('disconnect', handleSocketDisconnect);
     };
   }, [socket === null || socket === void 0 ? void 0 : socket.socket, auth, loading, disableSocketRoomDriver, useBatchSockets]);
 
