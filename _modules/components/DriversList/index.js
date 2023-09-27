@@ -795,15 +795,16 @@ var DriversList = function DriversList(props) {
       });
     }
   };
+  var handleSocketDisconnect = function handleSocketDisconnect() {
+    socket.socket.on('connect', handleJoinMainRooms);
+  };
   (0, _react.useEffect)(function () {
     if (!(session !== null && session !== void 0 && session.auth) || session !== null && session !== void 0 && session.loading || !(socket !== null && socket !== void 0 && socket.socket) || disableSocketRoomDriver) return;
     handleJoinMainRooms();
-    socket.socket.on('connect', handleJoinMainRooms);
-    socket.socket.on('disconnect', handleLeaveMainRooms);
+    socket.socket.on('disconnect', handleSocketDisconnect);
     return function () {
       handleLeaveMainRooms();
-      socket.socket.off('connect', handleJoinMainRooms);
-      socket.socket.off('disconnect', handleLeaveMainRooms);
+      socket.socket.off('disconnect', handleSocketDisconnect);
     };
   }, [socket === null || socket === void 0 ? void 0 : socket.socket, session === null || session === void 0 ? void 0 : session.auth, session === null || session === void 0 ? void 0 : session.loading, disableSocketRoomDriver, useBatchSockets]);
   (0, _react.useEffect)(function () {
