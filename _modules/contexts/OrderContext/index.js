@@ -2219,7 +2219,6 @@ var OrderProvider = function OrderProvider(_ref) {
   }, [state, socket, isDisableToast]);
   var handleJoinMainRooms = function handleJoinMainRooms() {
     var _session$user2, _session$user3, _customerState$user, _session$user6;
-    socket.join('drivers');
     socket.join({
       room: 'orders',
       user_id: session === null || session === void 0 ? void 0 : (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.id,
@@ -2241,7 +2240,6 @@ var OrderProvider = function OrderProvider(_ref) {
   };
   var handleLeaveMainRooms = function handleLeaveMainRooms() {
     var _session$user9, _session$user10, _customerState$user4, _session$user13;
-    socket.leave('drivers');
     socket.leave({
       room: 'orders',
       user_id: session === null || session === void 0 ? void 0 : (_session$user9 = session.user) === null || _session$user9 === void 0 ? void 0 : _session$user9.id,
@@ -2266,7 +2264,7 @@ var OrderProvider = function OrderProvider(_ref) {
    * Join to main room
    */
   (0, _react.useEffect)(function () {
-    if (!session.auth || session.loading || !(socket !== null && socket !== void 0 && socket.socket) || customerState.loading) return;
+    if (!session.auth || session !== null && session !== void 0 && session.loading || !(socket !== null && socket !== void 0 && socket.socket) || customerState !== null && customerState !== void 0 && customerState.loading) return;
     socket.socket.on('connect', handleJoinMainRooms);
     socket.socket.on('disconnect', handleLeaveMainRooms);
     return function () {
