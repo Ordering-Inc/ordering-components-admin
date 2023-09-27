@@ -323,6 +323,10 @@ export const OrdersManage = (props) => {
     }
   }
 
+  const handleSocketDisconnect = () => {
+    socket.socket.on('connect', handleJoinMainRooms)
+  }
+
   /**
    * Listening driver change
    */
@@ -363,7 +367,6 @@ export const OrdersManage = (props) => {
       })
     }
     const handleBatchDriverChanges = (changes) => {
-      console.log('handleBatchDriverChanges', changes)
       setDriversList((prevState) => {
         const updatedDrivers = prevState.drivers.map((driver) => {
           const changeData = changes.find((change) => change.driver_id === driver.id)
@@ -380,7 +383,6 @@ export const OrdersManage = (props) => {
       })
     }
     const handleBatchDriverLocations = (locations) => {
-      console.log('handleBatchDriverLocations', locations)
       setDriversList((prevState) => {
         const updatedDrivers = prevState.drivers.map((driver) => {
           const locationData = locations.find((location) => location.driver_id === driver.id)
@@ -419,15 +421,12 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     if (!auth || loading || !socket?.socket || disableSocketRoomDriver) return
-    console.log('Use effect handleJoinMainRooms')
     handleJoinMainRooms()
-    socket.socket.on('connect', handleJoinMainRooms)
-    socket.socket.on('disconnect', handleLeaveMainRooms)
+    socket.socket.on('disconnect', handleSocketDisconnect)
 
     return () => {
       handleLeaveMainRooms()
-      socket.socket.off('connect', handleJoinMainRooms)
-      socket.socket.off('disconnect', handleLeaveMainRooms)
+      socket.socket.off('disconnect', handleSocketDisconnect)
     }
   }, [socket?.socket, auth, loading, disableSocketRoomDriver, useBatchSockets])
 
