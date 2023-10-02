@@ -417,7 +417,7 @@ export const OrdersManage = (props) => {
         }
       }
     }
-  }, [socket, loading, driversList.drivers, useBatchSockets])
+  }, [socket, loading, useBatchSockets])
 
   useEffect(() => {
     if (!auth || loading || !socket?.socket || disableSocketRoomDriver) return
