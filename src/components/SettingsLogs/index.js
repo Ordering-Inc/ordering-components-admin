@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { useApi } from 'ordering-components-admin'
+import { useApi } from '../../contexts/ApiContext'
 
 /**
  * Component to get settings logs without UI component
