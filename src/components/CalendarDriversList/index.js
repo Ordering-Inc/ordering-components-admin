@@ -61,7 +61,7 @@ export const CalendarDriversList = (props) => {
    * Method to get drivers from API
    * @param {Number} page change time
    * @param {Number} pageSize open or close time
-   * @param {Number} selectedGroupId open break or close break time
+   * @param {Number} selectedGroupId
    */
   const getDrivers = async (page, pageSize, selectedGroupId) => {
     try {
