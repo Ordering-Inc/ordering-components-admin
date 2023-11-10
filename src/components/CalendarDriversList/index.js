@@ -283,7 +283,7 @@ export const CalendarDriversList = (props) => {
   }
 
   /**
-  * Method to delete block time
+  * Method to edit block time
   */
   const EditBlockTime = async () => {
     try {
