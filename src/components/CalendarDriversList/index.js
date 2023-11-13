@@ -235,7 +235,7 @@ export const CalendarDriversList = (props) => {
   /**
   * Method to delete block time
   */
-  const DeleteBlockTime = async () => {
+  const deleteBlockTime = async () => {
     try {
       setScheduleState({ ...scheduleState, loading: true })
       const requestOptions = {
@@ -285,7 +285,7 @@ export const CalendarDriversList = (props) => {
   /**
   * Method to edit block time
   */
-  const EditBlockTime = async () => {
+  const editBlockTime = async () => {
     try {
       setScheduleState({ ...scheduleState, loading: true })
       const requestOptions = {
@@ -402,14 +402,14 @@ export const CalendarDriversList = (props) => {
           selectedBlock={selectedBlock}
           setAlertState={setAlertState}
           timeErrorList={timeErrorList}
-          EditBlockTime={EditBlockTime}
+          editBlockTime={editBlockTime}
           openEditModal={openEditModal}
           setPropagation={setPropagation}
           showBreakBlock={showBreakBlock}
           selectedGroupId={selectedGroupId}
           paginationProps={paginationProps}
           setSelectedDate={setSelectedDate}
-          DeleteBlockTime={DeleteBlockTime}
+          deleteBlockTime={deleteBlockTime}
           openDeleteModal={openDeleteModal}
           setScheduleState={setScheduleState}
           setSelectedBlock={setSelectedBlock}
