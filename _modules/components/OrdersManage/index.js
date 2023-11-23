@@ -225,6 +225,14 @@ var OrdersManage = function OrdersManage(props) {
       draggable: false,
       colSpan: 1,
       order: 12
+    },
+    channel: {
+      visable: false,
+      title: t('CHANNEL', 'Channel'),
+      className: 'channel',
+      draggable: true,
+      colSpan: 1,
+      order: 13
     }
   };
   var _useState17 = (0, _react.useState)(allowColumnsModel),
