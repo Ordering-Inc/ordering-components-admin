@@ -248,11 +248,15 @@ export const UsersExportCSV = (props) => {
           }
         }
       }
+      const filterConditonsObj = {
+        conditions:filterConditons,
+        conector: 'AND'
+      }
 
       const functionFetch = filterApply
         ? isOrdersCountValue 
-          ? `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id&orders_count_condition=${(props.multiFilterValues?.ordersCount?.condition)}&orders_count_value=${(props.multiFilterValues?.ordersCount?.value)}&where=${JSON.stringify(filterConditons)}`
-          : `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id&where=${JSON.stringify(filterConditons)}`
+          ? `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id&orders_count_condition=${(props.multiFilterValues?.ordersCount?.condition)}&orders_count_value=${(props.multiFilterValues?.ordersCount?.value)}&where=${JSON.stringify(filterConditonsObj)}`
+          : `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id&where=${JSON.stringify(filterConditonsObj)}`
         : defaultConditions.length > 0
           ? `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id&where=${JSON.stringify(defaultConditions)}`
           : `${ordering.root}/users_new.csv?mode=dashboard&orderBy=id`
