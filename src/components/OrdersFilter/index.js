@@ -34,7 +34,8 @@ export const OrdersFilter = (props) => {
     driverGroupBusinessIds: [],
     customerName: null,
     customerEmail: null,
-    customerCellphone: null
+    customerCellphone: null,
+    customerLastname: null
   })
 
   /**
@@ -321,7 +322,8 @@ export const OrdersFilter = (props) => {
       driverGroupBusinessIds: [],
       customerName: null,
       customerEmail: null,
-      customerCellphone: null
+      customerCellphone: null,
+      customerLastname: null
     })
   }
 

@@ -426,6 +426,22 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues?.customerLastname) {
+        filterConditons.push(
+          {
+            attribute: 'customer',
+            conditions: [
+              {
+                attribute: 'lastname',
+                value: {
+                  condition: 'ilike',
+                  value: encodeURI(`%${filterValues?.customerLastname}%`)
+                }
+              }
+            ]
+          }
+        )
+      }
       if (filterValues?.customerCellphone) {
         filterConditons.push(
           {
