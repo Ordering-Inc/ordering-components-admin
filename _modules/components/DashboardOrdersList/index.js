@@ -288,14 +288,14 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   attribute: 'id',
                   value: {
                     condition: 'ilike',
-                    value: encodeURI("%".concat(searchValue, "%"))
+                    value: encodeURIComponent("%".concat(searchValue, "%"))
                   }
                 });
                 searchConditions.push({
                   attribute: 'external_id',
                   value: {
                     condition: 'ilike',
-                    value: encodeURI("%".concat(searchValue, "%"))
+                    value: encodeURIComponent("%".concat(searchValue, "%"))
                   }
                 });
               }
@@ -343,7 +343,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   attribute: 'external_id',
                   value: {
                     condition: 'ilike',
-                    value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId, "%"))
+                    value: encodeURIComponent("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId, "%"))
                   }
                 });
               }
