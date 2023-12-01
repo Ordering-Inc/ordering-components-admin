@@ -205,7 +205,7 @@ export const DashboardOrdersList = (props) => {
             attribute: 'id',
             value: {
               condition: 'ilike',
-              value: encodeURI(`%${searchValue}%`)
+              value: encodeURIComponent(`%${searchValue}%`)
             }
           }
         )
@@ -214,7 +214,7 @@ export const DashboardOrdersList = (props) => {
             attribute: 'external_id',
             value: {
               condition: 'ilike',
-              value: encodeURI(`%${searchValue}%`)
+              value: encodeURIComponent(`%${searchValue}%`)
             }
           }
         )
@@ -273,7 +273,7 @@ export const DashboardOrdersList = (props) => {
             attribute: 'external_id',
             value: {
               condition: 'ilike',
-              value: encodeURI(`%${filterValues?.externalId}%`)
+              value: encodeURIComponent(`%${filterValues?.externalId}%`)
             }
           }
         )
