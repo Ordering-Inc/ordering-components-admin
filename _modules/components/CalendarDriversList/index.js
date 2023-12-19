@@ -50,69 +50,72 @@ var CalendarDriversList = function CalendarDriversList(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     isTimeChangeError = _useState4[0],
     setIsTimeChangeError = _useState4[1];
-  var _useState5 = (0, _react.useState)({
-      state: {},
-      error: null,
-      loading: false
-    }),
+  var _useState5 = (0, _react.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
-    scheduleState = _useState6[0],
-    setScheduleState = _useState6[1];
-  var _useState7 = (0, _react.useState)({
-      user: null,
-      block: null
-    }),
+    showBreakBlock = _useState6[0],
+    setShowBreakBlock = _useState6[1];
+  var _useState7 = (0, _react.useState)('none'),
     _useState8 = _slicedToArray(_useState7, 2),
-    selectedBlock = _useState8[0],
-    setSelectedBlock = _useState8[1];
+    propagation = _useState8[0],
+    setPropagation = _useState8[1];
   var _useState9 = (0, _react.useState)(false),
     _useState10 = _slicedToArray(_useState9, 2),
-    showBreakBlock = _useState10[0],
-    setShowBreakBlock = _useState10[1];
-  var _useState11 = (0, _react.useState)('none'),
-    _useState12 = _slicedToArray(_useState11, 2),
-    propagation = _useState12[0],
-    setPropagation = _useState12[1];
-  var _useState13 = (0, _react.useState)(false),
-    _useState14 = _slicedToArray(_useState13, 2),
-    openDeleteModal = _useState14[0],
-    setOpenDeleteModal = _useState14[1];
-  var _useState15 = (0, _react.useState)({
+    openDeleteModal = _useState10[0],
+    setOpenDeleteModal = _useState10[1];
+  var _useState11 = (0, _react.useState)({
       open: false,
       events: [],
       user: null
     }),
-    _useState16 = _slicedToArray(_useState15, 2),
-    stackEventsState = _useState16[0],
-    setStackEventsState = _useState16[1];
-  var _useState17 = (0, _react.useState)({
+    _useState12 = _slicedToArray(_useState11, 2),
+    stackEventsState = _useState12[0],
+    setStackEventsState = _useState12[1];
+  var _useState13 = (0, _react.useState)({
       open: false,
       content: []
     }),
+    _useState14 = _slicedToArray(_useState13, 2),
+    alertState = _useState14[0],
+    setAlertState = _useState14[1];
+  var _useState15 = (0, _react.useState)(false),
+    _useState16 = _slicedToArray(_useState15, 2),
+    openEditModal = _useState16[0],
+    setOpenEditModal = _useState16[1];
+  var _useState17 = (0, _react.useState)(false),
     _useState18 = _slicedToArray(_useState17, 2),
-    alertState = _useState18[0],
-    setAlertState = _useState18[1];
-  var _useState19 = (0, _react.useState)(false),
+    openModal = _useState18[0],
+    setOpenModal = _useState18[1];
+  var _useState19 = (0, _react.useState)([(0, _moment.default)().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'), (0, _moment.default)().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss')]),
     _useState20 = _slicedToArray(_useState19, 2),
-    openEditModal = _useState20[0],
-    setOpenEditModal = _useState20[1];
-  var _useState21 = (0, _react.useState)(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block ? selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block = selectedBlock.block) === null || _selectedBlock$block === void 0 ? void 0 : _selectedBlock$block.start : new Date()),
+    date = _useState20[0],
+    setDate = _useState20[1];
+  var _useState21 = (0, _react.useState)({
+      user: null,
+      block: null
+    }),
     _useState22 = _slicedToArray(_useState21, 2),
-    selectedDate = _useState22[0],
-    setSelectedDate = _useState22[1];
-  var _useState23 = (0, _react.useState)(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block ? selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block2 = selectedBlock.block) === null || _selectedBlock$block2 === void 0 ? void 0 : _selectedBlock$block2.until : new Date()),
+    selectedBlock = _useState22[0],
+    setSelectedBlock = _useState22[1];
+  var _useState23 = (0, _react.useState)(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block ? selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block = selectedBlock.block) === null || _selectedBlock$block === void 0 ? void 0 : _selectedBlock$block.start : new Date()),
     _useState24 = _slicedToArray(_useState23, 2),
-    selectedUntilDate = _useState24[0],
-    setSelectedUntilDate = _useState24[1];
-  var _useState25 = (0, _react.useState)(false),
-    _useState26 = _slicedToArray(_useState25, 2),
-    openModal = _useState26[0],
-    setOpenModal = _useState26[1];
+    selectedDate = _useState24[0],
+    setSelectedDate = _useState24[1];
   var actualDate = (0, _moment.default)(selectedDate).format('YYYY-MM-DD');
-  var _useState27 = (0, _react.useState)([(0, _moment.default)().startOf('day').format('YYYY-MM-DD HH:mm:ss'), (0, _moment.default)().endOf('day').format('YYYY-MM-DD HH:mm:ss')]),
+  var _useState25 = (0, _react.useState)(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block ? selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block2 = selectedBlock.block) === null || _selectedBlock$block2 === void 0 ? void 0 : _selectedBlock$block2.until : new Date()),
+    _useState26 = _slicedToArray(_useState25, 2),
+    selectedUntilDate = _useState26[0],
+    setSelectedUntilDate = _useState26[1];
+  var _useState27 = (0, _react.useState)({
+      state: {
+        start: "".concat(actualDate, " 00:00:00"),
+        end: "".concat(actualDate, " 23:59:00")
+      },
+      error: null,
+      loading: false
+    }),
     _useState28 = _slicedToArray(_useState27, 2),
-    date = _useState28[0],
-    setDate = _useState28[1];
+    scheduleState = _useState28[0],
+    setScheduleState = _useState28[1];
   var _useState29 = (0, _react.useState)({
       currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage : 1,
       pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
@@ -151,7 +154,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
    */
   var getDrivers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize, selectedGroupId) {
-      var requestOptions, response, content, result, pagination, error, nextPageItems, remainingItems;
+      var requestOptions, response, content, result, pagination, error, formattedUtcToLocalUsers, nextPageItems, remainingItems;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -181,7 +184,19 @@ var CalendarDriversList = function CalendarDriversList(props) {
                 error: result
               }));
             } else {
-              driversList.users = result;
+              formattedUtcToLocalUsers = result.map(function (user) {
+                return _objectSpread(_objectSpread({}, user), {}, {
+                  delivery_blocks: user.delivery_blocks.map(function (block) {
+                    return _objectSpread(_objectSpread({}, block), {}, {
+                      start: (0, _moment.default)(_moment.default.utc(block.start).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
+                      end: (0, _moment.default)(_moment.default.utc(block.end).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
+                      break_start: block.break_start ? (0, _moment.default)(_moment.default.utc(block.break_start).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null,
+                      break_end: block.break_end ? (0, _moment.default)(_moment.default.utc(block.break_end).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null
+                    });
+                  })
+                });
+              });
+              driversList.users = formattedUtcToLocalUsers;
               setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
                 loading: false
               }));
@@ -221,7 +236,6 @@ var CalendarDriversList = function CalendarDriversList(props) {
       return _ref.apply(this, arguments);
     };
   }();
-
   /**
    * Method to validate time
    * @param {String} changeTime change time
@@ -256,7 +270,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
     } else {
       var _scheduleState$state9, _scheduleState$state10, _scheduleState$state11, _scheduleState$state12, _scheduleState$state13, _scheduleState$state14, _scheduleState$state15, _scheduleState$state16;
       _isTimeChangeError = !isBreak ? _date.isSameOrBefore(scheduleState !== null && scheduleState !== void 0 && (_scheduleState$state9 = scheduleState.state) !== null && _scheduleState$state9 !== void 0 && _scheduleState$state9.start ? (0, _moment.default)(scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state10 = scheduleState.state) === null || _scheduleState$state10 === void 0 ? void 0 : _scheduleState$state10.start) : '00:00') : _date.isSameOrBefore(scheduleState !== null && scheduleState !== void 0 && (_scheduleState$state11 = scheduleState.state) !== null && _scheduleState$state11 !== void 0 && _scheduleState$state11.break_start ? (0, _moment.default)(scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state12 = scheduleState.state) === null || _scheduleState$state12 === void 0 ? void 0 : _scheduleState$state12.break_start) : '00:00') || _date.isSameOrBefore(scheduleState !== null && scheduleState !== void 0 && (_scheduleState$state13 = scheduleState.state) !== null && _scheduleState$state13 !== void 0 && _scheduleState$state13.start ? (0, _moment.default)(scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state14 = scheduleState.state) === null || _scheduleState$state14 === void 0 ? void 0 : _scheduleState$state14.start) : '00:00') || _date.isSameOrAfter(scheduleState !== null && scheduleState !== void 0 && (_scheduleState$state15 = scheduleState.state) !== null && _scheduleState$state15 !== void 0 && _scheduleState$state15.end ? (0, _moment.default)(scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state16 = scheduleState.state) === null || _scheduleState$state16 === void 0 ? void 0 : _scheduleState$state16.end) : '23:59');
-      if (_isTimeChangeError && !isEdit) {
+      if (_isTimeChangeError && !(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block)) {
         setIsTimeChangeError({
           state: true,
           error: isBreak ? 2 : 0
@@ -283,11 +297,33 @@ var CalendarDriversList = function CalendarDriversList(props) {
   */
   var handleAddBlockTime = /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var _selectedBlock$user, requestOptions, response, _yield$response$json, error, result;
+      var _selectedBlock$user, scheduleUtc, requestOptions, response, _yield$response$json, error, result;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
+            scheduleUtc = {
+              start: (0, _moment.default)(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+              end: (0, _moment.default)(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
+            };
+            if (scheduleState.state.rrule) {
+              scheduleUtc.rrule = scheduleState.state.rrule;
+            }
+            if (scheduleState.state.until) {
+              scheduleUtc.until = (0, _moment.default)(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.break_start) {
+              scheduleUtc.break_start = (0, _moment.default)(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.break_end) {
+              scheduleUtc.break_end = (0, _moment.default)(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.name) {
+              scheduleUtc.name = scheduleState.state.name;
+            }
+            if (scheduleState.state.description) {
+              scheduleUtc.description = scheduleState.state.description;
+            }
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: true
             }));
@@ -297,25 +333,25 @@ var CalendarDriversList = function CalendarDriversList(props) {
                 'Content-Type': 'application/json',
                 Authorization: "Bearer ".concat(session.token)
               },
-              body: JSON.stringify(scheduleState.state)
+              body: JSON.stringify(scheduleUtc)
             };
-            _context2.next = 5;
+            _context2.next = 12;
             return fetch("".concat(ordering.root, "/drivers/").concat(selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$user = selectedBlock.user) === null || _selectedBlock$user === void 0 ? void 0 : _selectedBlock$user.id, "/delivery_blocks"), requestOptions);
-          case 5:
+          case 12:
             response = _context2.sent;
-            _context2.next = 8;
+            _context2.next = 15;
             return response.json();
-          case 8:
+          case 15:
             _yield$response$json = _context2.sent;
             error = _yield$response$json.error;
             result = _yield$response$json.result;
             if (error) {
-              _context2.next = 19;
+              _context2.next = 26;
               break;
             }
-            _context2.next = 14;
+            _context2.next = 21;
             return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
-          case 14:
+          case 21:
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               state: {},
@@ -326,9 +362,9 @@ var CalendarDriversList = function CalendarDriversList(props) {
               block: null
             });
             setOpenModal(false);
-            _context2.next = 21;
+            _context2.next = 28;
             break;
-          case 19:
+          case 26:
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               error: result
@@ -337,21 +373,21 @@ var CalendarDriversList = function CalendarDriversList(props) {
               open: true,
               content: result
             });
-          case 21:
-            _context2.next = 26;
+          case 28:
+            _context2.next = 33;
             break;
-          case 23:
-            _context2.prev = 23;
+          case 30:
+            _context2.prev = 30;
             _context2.t0 = _context2["catch"](0);
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               error: [_context2.t0.message]
             }));
-          case 26:
+          case 33:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[0, 23]]);
+      }, _callee2, null, [[0, 30]]);
     }));
     return function handleAddBlockTime() {
       return _ref6.apply(this, arguments);
@@ -448,7 +484,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
   */
   var editBlockTime = /*#__PURE__*/function () {
     var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _selectedBlock$user3, _selectedBlock$block8, requestOptions, response, _yield$response$json3, error, result;
+      var _selectedBlock$user3, _selectedBlock$block8, scheduleUtc, requestOptions, response, _yield$response$json3, error, result;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
@@ -456,33 +492,55 @@ var CalendarDriversList = function CalendarDriversList(props) {
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: true
             }));
+            scheduleUtc = {
+              start: (0, _moment.default)(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+              end: (0, _moment.default)(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
+            };
+            if (scheduleState.state.rrule) {
+              scheduleUtc.rrule = scheduleState.state.rrule;
+            }
+            if (scheduleState.state.until) {
+              scheduleUtc.until = (0, _moment.default)(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.break_start) {
+              scheduleUtc.break_start = (0, _moment.default)(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.break_end) {
+              scheduleUtc.break_end = (0, _moment.default)(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss');
+            }
+            if (scheduleState.state.name) {
+              scheduleUtc.name = scheduleState.state.name;
+            }
+            if (scheduleState.state.description) {
+              scheduleUtc.description = scheduleState.state.description;
+            }
             requestOptions = {
               method: 'PUT',
               headers: {
                 'Content-Type': 'application/json',
                 Authorization: "Bearer ".concat(session.token)
               },
-              body: JSON.stringify(_objectSpread(_objectSpread({}, scheduleState.state), {}, {
+              body: JSON.stringify(_objectSpread(_objectSpread({}, scheduleUtc), {}, {
                 propagation: propagation
               }))
             };
-            _context4.next = 5;
+            _context4.next = 12;
             return fetch("".concat(ordering.root, "/drivers/").concat(selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$user3 = selectedBlock.user) === null || _selectedBlock$user3 === void 0 ? void 0 : _selectedBlock$user3.id, "/delivery_blocks/").concat(selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block8 = selectedBlock.block) === null || _selectedBlock$block8 === void 0 ? void 0 : _selectedBlock$block8.id), requestOptions);
-          case 5:
+          case 12:
             response = _context4.sent;
-            _context4.next = 8;
+            _context4.next = 15;
             return response.json();
-          case 8:
+          case 15:
             _yield$response$json3 = _context4.sent;
             error = _yield$response$json3.error;
             result = _yield$response$json3.result;
             if (error) {
-              _context4.next = 22;
+              _context4.next = 29;
               break;
             }
-            _context4.next = 14;
+            _context4.next = 21;
             return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
-          case 14:
+          case 21:
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               state: {},
@@ -500,9 +558,9 @@ var CalendarDriversList = function CalendarDriversList(props) {
               events: [],
               user: null
             });
-            _context4.next = 24;
+            _context4.next = 31;
             break;
-          case 22:
+          case 29:
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               error: result
@@ -511,41 +569,40 @@ var CalendarDriversList = function CalendarDriversList(props) {
               open: true,
               content: result
             });
-          case 24:
-            _context4.next = 29;
+          case 31:
+            _context4.next = 36;
             break;
-          case 26:
-            _context4.prev = 26;
+          case 33:
+            _context4.prev = 33;
             _context4.t0 = _context4["catch"](0);
             setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
               loading: false,
               error: [_context4.t0.message]
             }));
-          case 29:
+          case 36:
           case "end":
             return _context4.stop();
         }
-      }, _callee4, null, [[0, 26]]);
+      }, _callee4, null, [[0, 33]]);
     }));
     return function editBlockTime() {
       return _ref8.apply(this, arguments);
     };
   }();
+  var handleSelectedUntilDate = function handleSelectedUntilDate(date) {
+    if ((0, _moment.default)(date).isSameOrBefore(selectedDate)) return;
+    setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
+      state: _objectSpread(_objectSpread({}, scheduleState.state), {}, {
+        until: (0, _moment.default)(date).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      })
+    }));
+  };
   (0, _react.useEffect)(function () {
     if (!selectedGroupId) return;
     getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
   }, [selectedGroupId, date]);
   (0, _react.useEffect)(function () {
-    if ((0, _moment.default)(selectedUntilDate).isSameOrBefore(selectedDate)) return;
-    setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
-      state: _objectSpread(_objectSpread({}, scheduleState.state), {}, {
-        until: (0, _moment.default)(selectedUntilDate).endOf('day').format('YYYY-MM-DD HH:mm:ss')
-      })
-    }));
-  }, [selectedUntilDate]);
-  (0, _react.useEffect)(function () {
     var _scheduleState$state$3, _scheduleState$state19, _selectedBlock$block9, _scheduleState$state$4, _scheduleState$state20, _selectedBlock$block10, _scheduleState$state$5, _scheduleState$state21, _selectedBlock$block11, _scheduleState$state$6, _scheduleState$state22, _selectedBlock$block12;
-    if (!(selectedBlock !== null && selectedBlock !== void 0 && selectedBlock.block)) return;
     var _startHour = (0, _moment.default)((_scheduleState$state$3 = scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state19 = scheduleState.state) === null || _scheduleState$state19 === void 0 ? void 0 : _scheduleState$state19.start) !== null && _scheduleState$state$3 !== void 0 ? _scheduleState$state$3 : selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block9 = selectedBlock.block) === null || _selectedBlock$block9 === void 0 ? void 0 : _selectedBlock$block9.start).format('HH:mm');
     var _endHour = (0, _moment.default)((_scheduleState$state$4 = scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state20 = scheduleState.state) === null || _scheduleState$state20 === void 0 ? void 0 : _scheduleState$state20.end) !== null && _scheduleState$state$4 !== void 0 ? _scheduleState$state$4 : selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block10 = selectedBlock.block) === null || _selectedBlock$block10 === void 0 ? void 0 : _selectedBlock$block10.end).format('HH:mm');
     var _breakStartHour = (0, _moment.default)((_scheduleState$state$5 = scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state21 = scheduleState.state) === null || _scheduleState$state21 === void 0 ? void 0 : _scheduleState$state21.break_start) !== null && _scheduleState$state$5 !== void 0 ? _scheduleState$state$5 : selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block11 = selectedBlock.block) === null || _selectedBlock$block11 === void 0 ? void 0 : _selectedBlock$block11.break_start).format('HH:mm');
@@ -559,6 +616,12 @@ var CalendarDriversList = function CalendarDriversList(props) {
       start: "".concat(actualDate, " ").concat(_startHour, ":00"),
       end: "".concat(actualDate, " ").concat(_endHour, ":00")
     };
+    if (!(0, _moment.default)(selectedDate).isSameOrBefore(selectedUntilDate)) {
+      changes = _objectSpread(_objectSpread({}, changes), {}, {
+        until: (0, _moment.default)(selectedDate).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      });
+      setSelectedUntilDate(selectedDate);
+    }
     setScheduleState(_objectSpread(_objectSpread({}, scheduleState), {}, {
       state: _objectSpread(_objectSpread({}, scheduleState.state), changes)
     }));
@@ -588,6 +651,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
     showBreakBlock: showBreakBlock,
     selectedGroupId: selectedGroupId,
     paginationProps: paginationProps,
+    actualDate: actualDate,
     setSelectedDate: setSelectedDate,
     deleteBlockTime: deleteBlockTime,
     openDeleteModal: openDeleteModal,
@@ -604,7 +668,8 @@ var CalendarDriversList = function CalendarDriversList(props) {
     setStackEventsState: setStackEventsState,
     setSelectedUntilDate: setSelectedUntilDate,
     setIsTimeChangeError: setIsTimeChangeError,
-    handleChangeScheduleTime: handleChangeScheduleTime
+    handleChangeScheduleTime: handleChangeScheduleTime,
+    handleSelectedUntilDate: handleSelectedUntilDate
   })));
 };
 exports.CalendarDriversList = CalendarDriversList;
