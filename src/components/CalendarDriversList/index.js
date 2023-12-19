@@ -14,23 +14,32 @@ export const CalendarDriversList = (props) => {
   const [ordering] = useApi()
   const [, t] = useLanguage()
   const [selectedGroupId, setSelectedGroupId] = useState(null)
-  const [isTimeChangeError, setIsTimeChangeError] = useState({state: false, error: null})
-  const [scheduleState, setScheduleState] = useState({state: {}, error: null, loading: false})
+  const [isTimeChangeError, setIsTimeChangeError] = useState({ state: false, error: null })
+
+  const [showBreakBlock, setShowBreakBlock] = useState(false)
+  const [propagation, setPropagation] = useState('none')
+  const [openDeleteModal, setOpenDeleteModal] = useState(false)
+  const [stackEventsState, setStackEventsState] = useState({ open: false, events: [], user: null })
+  const [alertState, setAlertState] = useState({ open: false, content: [] })
+  const [openEditModal, setOpenEditModal] = useState(false)
+
+  const [openModal, setOpenModal] = useState(false)
+  const [date, setDate] = useState([moment().startOf('day').utc().format('YYYY-MM-DD HH:mm:ss'), moment().endOf('day').utc().format('YYYY-MM-DD HH:mm:ss')])
   const [selectedBlock, setSelectedBlock] = useState({
     user: null,
     block: null
   })
-  const [showBreakBlock, setShowBreakBlock] = useState(false)
-  const [propagation, setPropagation] = useState('none')
-  const [openDeleteModal, setOpenDeleteModal] = useState(false)
-  const [stackEventsState, setStackEventsState] = useState({open: false, events: [], user: null})
-  const [alertState, setAlertState] = useState({ open: false, content: [] })
-  const [openEditModal, setOpenEditModal] = useState(false)
-  const [selectedDate, setSelectedDate] = useState(selectedBlock?.block ? selectedBlock?.block?.start : new Date)
-  const [selectedUntilDate, setSelectedUntilDate] = useState(selectedBlock?.block ? selectedBlock?.block?.until : new Date)
-  const [openModal, setOpenModal] = useState(false)
+  const [selectedDate, setSelectedDate] = useState(selectedBlock?.block ? selectedBlock?.block?.start : new Date())
   const actualDate = moment(selectedDate).format('YYYY-MM-DD')
-  const [date, setDate] = useState([moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'), moment().endOf('day').format('YYYY-MM-DD HH:mm:ss')])
+  const [selectedUntilDate, setSelectedUntilDate] = useState(selectedBlock?.block ? selectedBlock?.block?.until : new Date())
+  const [scheduleState, setScheduleState] = useState({
+    state: {
+      start: `${actualDate} 00:00:00`,
+      end: `${actualDate} 23:59:00`
+    },
+    error: null,
+    loading: false
+  })
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
     pageSize: paginationSettings.pageSize ?? 10,
@@ -67,17 +76,18 @@ export const CalendarDriversList = (props) => {
     try {
       setDriversList({ ...driversList, loading: true })
 
-        const requestOptions = {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${session.token}`
-          }
+      const requestOptions = {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.token}`
         }
-        const response = await fetch(`${ordering.root}/drivergroups/${selectedGroupId}/drivers?delivery_block_from=${date[0]}&delivery_block_to=${date[1]}&page=${page}&page_size=${pageSize}`, requestOptions)
-        const content = await response.json()
+      }
+      const response = await fetch(`${ordering.root}/drivergroups/${selectedGroupId}/drivers?delivery_block_from=${date[0]}&delivery_block_to=${date[1]}&page=${page}&page_size=${pageSize}`, requestOptions)
+      const content = await response.json()
 
       const { result, pagination, error } = content
+
       if (error) {
         setDriversList({
           ...driversList,
@@ -85,7 +95,17 @@ export const CalendarDriversList = (props) => {
           error: result
         })
       } else {
-        driversList.users = result
+        const formattedUtcToLocalUsers = result.map(user => ({
+          ...user,
+          delivery_blocks: user.delivery_blocks.map(block => ({
+            ...block,
+            start: moment(moment.utc(block.start).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
+            end: moment(moment.utc(block.end).toDate()).local().format('YYYY-MM-DD HH:mm:ss'),
+            break_start: block.break_start ? moment(moment.utc(block.break_start).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null,
+            break_end: block.break_end ? moment(moment.utc(block.break_end).toDate()).local().format('YYYY-MM-DD HH:mm:ss') : null
+          }))
+        }))
+        driversList.users = formattedUtcToLocalUsers
         setDriversList({
           ...driversList,
           loading: false
@@ -116,7 +136,6 @@ export const CalendarDriversList = (props) => {
       }
     }
   }
-
   /**
    * Method to validate time
    * @param {String} changeTime change time
@@ -124,7 +143,6 @@ export const CalendarDriversList = (props) => {
    * @param {Boolean} isBreak open break or close break time
    */
   const handleChangeScheduleTime = (changeTime, isOpen, isBreak) => {
-
     const _date = moment(`${actualDate} ${changeTime}:00`)
 
     let _isTimeChangeError = false
@@ -136,58 +154,80 @@ export const CalendarDriversList = (props) => {
           error: isBreak ? 3 : 1
         })
       } else {
-        isBreak ?
-        setScheduleState({
-          ...scheduleState,
-          state: {
-            ...scheduleState.state,
-            break_start: `${actualDate} ${changeTime}:00`,
-            break_end: scheduleState?.break_end ?? selectedBlock?.block?.break_end ?? `${actualDate} 23:59:00`
-          }
-        }) :
-        setScheduleState({
-          ...scheduleState,
-          state: {
-            ...scheduleState.state,
-            start: `${actualDate} ${changeTime}:00`,
-            end: scheduleState?.end ?? selectedBlock?.block?.end ?? `${actualDate} 23:59:00`
-          }
-        })
+        isBreak
+          ? setScheduleState({
+            ...scheduleState,
+            state: {
+              ...scheduleState.state,
+              break_start: `${actualDate} ${changeTime}:00`,
+              break_end: scheduleState?.break_end ?? selectedBlock?.block?.break_end ?? `${actualDate} 23:59:00`
+            }
+          })
+          : setScheduleState({
+            ...scheduleState,
+            state: {
+              ...scheduleState.state,
+              start: `${actualDate} ${changeTime}:00`,
+              end: scheduleState?.end ?? selectedBlock?.block?.end ?? `${actualDate} 23:59:00`
+            }
+          })
       }
     } else {
       _isTimeChangeError = !isBreak ? _date.isSameOrBefore(scheduleState?.state?.start ? moment(scheduleState?.state?.start) : '00:00') : (_date.isSameOrBefore(scheduleState?.state?.break_start ? moment(scheduleState?.state?.break_start) : '00:00') || _date.isSameOrBefore(scheduleState?.state?.start ? moment(scheduleState?.state?.start) : '00:00') || _date.isSameOrAfter(scheduleState?.state?.end ? moment(scheduleState?.state?.end) : '23:59'))
-      if (_isTimeChangeError && !isEdit) {
+      if (_isTimeChangeError && !selectedBlock?.block) {
         setIsTimeChangeError({
           state: true,
           error: isBreak ? 2 : 0
         })
       } else {
-        isBreak ?
-        setScheduleState({
-          ...scheduleState,
-          state: {
-            ...scheduleState.state,
-            break_start: scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start ?? `${actualDate} 00:00:00`,
-            break_end: `${actualDate} ${changeTime}:00`
-          }
-        }) :
-        setScheduleState({
-          ...scheduleState,
-          state: {
-            ...scheduleState.state,
-            start: scheduleState?.state?.start ?? selectedBlock?.block?.start ?? `${actualDate} 00:00:00`,
-            end: `${actualDate} ${changeTime}:00`
-          }
-        })
+        isBreak
+          ? setScheduleState({
+            ...scheduleState,
+            state: {
+              ...scheduleState.state,
+              break_start: scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start ?? `${actualDate} 00:00:00`,
+              break_end: `${actualDate} ${changeTime}:00`
+            }
+          })
+          : setScheduleState({
+            ...scheduleState,
+            state: {
+              ...scheduleState.state,
+              start: scheduleState?.state?.start ?? selectedBlock?.block?.start ?? `${actualDate} 00:00:00`,
+              end: `${actualDate} ${changeTime}:00`
+            }
+          })
       }
     }
   }
 
-   /**
-   * Method to add block time
-   */
+  /**
+  * Method to add block time
+  */
   const handleAddBlockTime = async () => {
     try {
+      const scheduleUtc = {
+        start: moment(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+        end: moment(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.rrule) {
+        scheduleUtc.rrule = scheduleState.state.rrule
+      }
+      if (scheduleState.state.until) {
+        scheduleUtc.until = moment(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.break_start) {
+        scheduleUtc.break_start = moment(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.break_end) {
+        scheduleUtc.break_end = moment(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.name) {
+        scheduleUtc.name = scheduleState.state.name
+      }
+      if (scheduleState.state.description) {
+        scheduleUtc.description = scheduleState.state.description
+      }
       setScheduleState({ ...scheduleState, loading: true })
       const requestOptions = {
         method: 'POST',
@@ -195,7 +235,7 @@ export const CalendarDriversList = (props) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.token}`
         },
-        body: JSON.stringify(scheduleState.state)
+        body: JSON.stringify(scheduleUtc)
       }
       const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks`, requestOptions)
       const { error, result } = await response.json()
@@ -265,7 +305,7 @@ export const CalendarDriversList = (props) => {
         setOpenModal(false)
         setOpenDeleteModal(false)
         setPropagation('none')
-        setStackEventsState({open: false, events: [], user: null})
+        setStackEventsState({ open: false, events: [], user: null })
       } else {
         setScheduleState({
           ...scheduleState,
@@ -288,6 +328,28 @@ export const CalendarDriversList = (props) => {
   const editBlockTime = async () => {
     try {
       setScheduleState({ ...scheduleState, loading: true })
+      const scheduleUtc = {
+        start: moment(scheduleState.state.start).utc().format('YYYY-MM-DD HH:mm:ss'),
+        end: moment(scheduleState.state.end).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.rrule) {
+        scheduleUtc.rrule = scheduleState.state.rrule
+      }
+      if (scheduleState.state.until) {
+        scheduleUtc.until = moment(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.break_start) {
+        scheduleUtc.break_start = moment(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.break_end) {
+        scheduleUtc.break_end = moment(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss')
+      }
+      if (scheduleState.state.name) {
+        scheduleUtc.name = scheduleState.state.name
+      }
+      if (scheduleState.state.description) {
+        scheduleUtc.description = scheduleState.state.description
+      }
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -295,7 +357,7 @@ export const CalendarDriversList = (props) => {
           Authorization: `Bearer ${session.token}`
         },
         body: JSON.stringify({
-          ...scheduleState.state,
+          ...scheduleUtc,
           propagation: propagation
         })
       }
@@ -316,7 +378,7 @@ export const CalendarDriversList = (props) => {
         setOpenModal(false)
         setOpenEditModal(false)
         setPropagation('none')
-        setStackEventsState({open: false, events: [], user: null})
+        setStackEventsState({ open: false, events: [], user: null })
       } else {
         setScheduleState({
           ...scheduleState,
@@ -337,50 +399,56 @@ export const CalendarDriversList = (props) => {
     }
   }
 
+  const handleSelectedUntilDate = (date) => {
+    if (moment(date).isSameOrBefore(selectedDate)) return
+    setScheduleState({
+      ...scheduleState,
+      state: {
+        ...scheduleState.state,
+        until: moment(date).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      }
+    })
+  }
+
   useEffect(() => {
     if (!selectedGroupId) return
     getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
   }, [selectedGroupId, date])
 
   useEffect(() => {
-    if(moment(selectedUntilDate).isSameOrBefore(selectedDate)) return
+    const _startHour = moment(scheduleState?.state?.start ?? selectedBlock?.block?.start).format('HH:mm')
+    const _endHour = moment(scheduleState?.state?.end ?? selectedBlock?.block?.end).format('HH:mm')
+    const _breakStartHour = moment(scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start).format('HH:mm')
+    const _breakEndHour = moment(scheduleState?.state?.break_end ?? selectedBlock?.block?.break_end).format('HH:mm')
+
+    let changes = showBreakBlock ? {
+      start: `${actualDate} ${_startHour}:00`,
+      end: `${actualDate} ${_endHour}:00`,
+      break_start: `${actualDate} ${_breakStartHour}:00`,
+      break_end: `${actualDate} ${_breakEndHour}:00`
+    } : {
+      start: `${actualDate} ${_startHour}:00`,
+      end: `${actualDate} ${_endHour}:00`
+    }
+    if (!moment(selectedDate).isSameOrBefore(selectedUntilDate)) {
+      changes = {
+        ...changes,
+        until: moment(selectedDate).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+      }
+      setSelectedUntilDate(selectedDate)
+    }
+
     setScheduleState({
       ...scheduleState,
       state: {
         ...scheduleState.state,
-        until: moment(selectedUntilDate).endOf('day').format('YYYY-MM-DD HH:mm:ss')
+        ...changes
       }
     })
-  }, [selectedUntilDate])
-
-  useEffect(() => {
-    if(!selectedBlock?.block) return
-      const _startHour = moment(scheduleState?.state?.start ?? selectedBlock?.block?.start).format('HH:mm')
-      const _endHour = moment(scheduleState?.state?.end ?? selectedBlock?.block?.end).format('HH:mm')
-      const _breakStartHour = moment(scheduleState?.state?.break_start ?? selectedBlock?.block?.break_start).format('HH:mm')
-      const _breakEndHour = moment(scheduleState?.state?.break_end ?? selectedBlock?.block?.break_end).format('HH:mm')
-
-      const changes = showBreakBlock ? {
-        start: `${actualDate} ${_startHour}:00`,
-        end: `${actualDate} ${_endHour}:00`,
-        break_start: `${actualDate} ${_breakStartHour}:00`,
-        break_end: `${actualDate} ${_breakEndHour}:00`
-      } : {
-        start: `${actualDate} ${_startHour}:00`,
-        end: `${actualDate} ${_endHour}:00`
-      }
-
-      setScheduleState({
-        ...scheduleState,
-        state: {
-          ...scheduleState.state,
-          ...changes
-        }
-      })
   }, [selectedDate])
 
   useEffect(() => {
-    if(!selectedBlock?.block) return
+    if (!selectedBlock?.block) return
     setShowBreakBlock(!!(selectedBlock?.block?.break_start))
   }, [selectedBlock])
 
@@ -408,6 +476,7 @@ export const CalendarDriversList = (props) => {
           showBreakBlock={showBreakBlock}
           selectedGroupId={selectedGroupId}
           paginationProps={paginationProps}
+          actualDate={actualDate}
           setSelectedDate={setSelectedDate}
           deleteBlockTime={deleteBlockTime}
           openDeleteModal={openDeleteModal}
@@ -425,6 +494,7 @@ export const CalendarDriversList = (props) => {
           setSelectedUntilDate={setSelectedUntilDate}
           setIsTimeChangeError={setIsTimeChangeError}
           handleChangeScheduleTime={handleChangeScheduleTime}
+          handleSelectedUntilDate={handleSelectedUntilDate}
         />
       )}
     </>
