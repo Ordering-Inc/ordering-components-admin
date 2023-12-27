@@ -40,6 +40,8 @@ export const CalendarDriversList = (props) => {
     error: null,
     loading: false
   })
+  const [ruleState, setRuleState] = useState({ freq: null, byweekday: [] })
+
   const [paginationProps, setPaginationProps] = useState({
     currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
     pageSize: paginationSettings.pageSize ?? 10,
@@ -66,6 +68,28 @@ export const CalendarDriversList = (props) => {
    */
   const [driversList, setDriversList] = useState({ users: [], loading: false, error: null })
 
+  const handleSetInitialStates = () => {
+    setSelectedBlock({
+      user: null,
+      block: null
+    })
+    const initialState = {
+      start: `${actualDate} 00:00:00`,
+      end: `${actualDate} 23:59:00`
+    }
+    setScheduleState({
+      state: initialState,
+      loading: false,
+      error: null
+    })
+    setShowBreakBlock(false)
+    setRuleState({ freq: null, byweekday: [] })
+    setPropagation('none')
+    setSelectedDate(new Date())
+    setSelectedUntilDate(new Date())
+    setStackEventsState({ open: false, events: [], user: null })
+    setOpenModal(false)
+  }
   /**
    * Method to get drivers from API
    * @param {Number} page change time
@@ -216,10 +240,10 @@ export const CalendarDriversList = (props) => {
       if (scheduleState.state.until) {
         scheduleUtc.until = moment(scheduleState.state.until).utc().format('YYYY-MM-DD HH:mm:ss')
       }
-      if (scheduleState.state.break_start) {
+      if (scheduleState.state.break_start && showBreakBlock) {
         scheduleUtc.break_start = moment(scheduleState.state.break_start).utc().format('YYYY-MM-DD HH:mm:ss')
       }
-      if (scheduleState.state.break_end) {
+      if (scheduleState.state.break_end && showBreakBlock) {
         scheduleUtc.break_end = moment(scheduleState.state.break_end).utc().format('YYYY-MM-DD HH:mm:ss')
       }
       if (scheduleState.state.name) {
@@ -241,17 +265,7 @@ export const CalendarDriversList = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          state: {},
-          error: null
-        })
-        setSelectedBlock({
-          user: null,
-          block: null
-        })
-        setOpenModal(false)
+        handleSetInitialStates()
       } else {
         setScheduleState({
           ...scheduleState,
@@ -292,20 +306,8 @@ export const CalendarDriversList = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          state: {},
-          error: null
-        })
-        setSelectedBlock({
-          user: null,
-          block: null
-        })
-        setOpenModal(false)
+        handleSetInitialStates()
         setOpenDeleteModal(false)
-        setPropagation('none')
-        setStackEventsState({ open: false, events: [], user: null })
       } else {
         setScheduleState({
           ...scheduleState,
@@ -365,20 +367,8 @@ export const CalendarDriversList = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
-        setScheduleState({
-          ...scheduleState,
-          loading: false,
-          state: {},
-          error: null
-        })
-        setSelectedBlock({
-          user: null,
-          block: null
-        })
-        setOpenModal(false)
+        handleSetInitialStates()
         setOpenEditModal(false)
-        setPropagation('none')
-        setStackEventsState({ open: false, events: [], user: null })
       } else {
         setScheduleState({
           ...scheduleState,
@@ -400,7 +390,7 @@ export const CalendarDriversList = (props) => {
   }
 
   const handleSelectedUntilDate = (date) => {
-    if (moment(date).isSameOrBefore(selectedDate)) return
+    // if (moment(date).isSameOrBefore(selectedDate)) return
     setScheduleState({
       ...scheduleState,
       state: {
@@ -448,9 +438,8 @@ export const CalendarDriversList = (props) => {
   }, [selectedDate])
 
   useEffect(() => {
-    if (!selectedBlock?.block) return
     setShowBreakBlock(!!(selectedBlock?.block?.break_start))
-  }, [selectedBlock])
+  }, [selectedBlock?.block?.break_start])
 
   return (
     <>
@@ -476,6 +465,8 @@ export const CalendarDriversList = (props) => {
           showBreakBlock={showBreakBlock}
           selectedGroupId={selectedGroupId}
           paginationProps={paginationProps}
+          ruleState={ruleState}
+          setRuleState={setRuleState}
           actualDate={actualDate}
           setSelectedDate={setSelectedDate}
           deleteBlockTime={deleteBlockTime}
@@ -495,6 +486,7 @@ export const CalendarDriversList = (props) => {
           setIsTimeChangeError={setIsTimeChangeError}
           handleChangeScheduleTime={handleChangeScheduleTime}
           handleSelectedUntilDate={handleSelectedUntilDate}
+          handleSetInitialStates={handleSetInitialStates}
         />
       )}
     </>
