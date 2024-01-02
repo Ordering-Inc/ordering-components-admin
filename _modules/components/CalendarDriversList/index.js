@@ -172,8 +172,8 @@ var CalendarDriversList = function CalendarDriversList(props) {
       byweekday: []
     });
     setPropagation('none');
-    setSelectedDate(new Date());
-    setSelectedUntilDate(new Date());
+    setSelectedDate(new Date(date[0]));
+    setSelectedUntilDate(new Date(date[0]));
     setStackEventsState({
       open: false,
       events: [],
@@ -626,6 +626,11 @@ var CalendarDriversList = function CalendarDriversList(props) {
     var _selectedBlock$block13;
     setShowBreakBlock(!!(selectedBlock !== null && selectedBlock !== void 0 && (_selectedBlock$block13 = selectedBlock.block) !== null && _selectedBlock$block13 !== void 0 && _selectedBlock$block13.break_start));
   }, [selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block14 = selectedBlock.block) === null || _selectedBlock$block14 === void 0 ? void 0 : _selectedBlock$block14.break_start]);
+  (0, _react.useEffect)(function () {
+    if (date[0]) {
+      handleSetInitialStates();
+    }
+  }, [date]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     date: date,
     setDate: setDate,
