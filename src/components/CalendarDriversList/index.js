@@ -85,8 +85,8 @@ export const CalendarDriversList = (props) => {
     setShowBreakBlock(false)
     setRuleState({ freq: null, byweekday: [] })
     setPropagation('none')
-    setSelectedDate(new Date())
-    setSelectedUntilDate(new Date())
+    setSelectedDate(new Date(date[0]))
+    setSelectedUntilDate(new Date(date[0]))
     setStackEventsState({ open: false, events: [], user: null })
     setOpenModal(false)
   }
@@ -440,6 +440,12 @@ export const CalendarDriversList = (props) => {
   useEffect(() => {
     setShowBreakBlock(!!(selectedBlock?.block?.break_start))
   }, [selectedBlock?.block?.break_start])
+
+  useEffect(() => {
+    if (date[0]) {
+      handleSetInitialStates()
+    }
+  }, [date])
 
   return (
     <>
