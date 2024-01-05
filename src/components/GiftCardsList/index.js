@@ -41,19 +41,11 @@ export const GiftCardsList = (props) => {
       })
       let where = []
       const conditions = []
-      if (activeStatus === 'pending') {
+      if (activeStatus) {
         conditions.push(
           {
             attribute: 'status',
-            value: ['pending', 'sent']
-          }
-        )
-      }
-      if (activeStatus  !== 'pending') {
-        conditions.push(
-          {
-            attribute: 'status',
-            value: activeStatus
+            value: activeStatus === 'pending' ? ['pending', 'sent'] : activeStatus
           }
         )
       }
