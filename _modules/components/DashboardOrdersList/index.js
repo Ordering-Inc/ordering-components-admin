@@ -569,6 +569,33 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   }]
                 });
               }
+              if (filterValues !== null && filterValues !== void 0 && filterValues.offerId) {
+                console.log(filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId);
+                filterConditons.push({
+                  attribute: 'offers',
+                  conditions: [{
+                    attribute: 'offer_id',
+                    value: {
+                      condition: '=',
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId
+                    }
+                  }],
+                  conector: 'OR'
+                });
+              }
+              if (filterValues !== null && filterValues !== void 0 && filterValues.coupon) {
+                filterConditons.push({
+                  attribute: 'offers',
+                  conditions: [{
+                    attribute: 'coupon',
+                    value: {
+                      condition: '=',
+                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon, "%"))
+                    }
+                  }],
+                  conector: 'OR'
+                });
+              }
               if (filterConditons.length) {
                 conditions.push({
                   conector: 'AND',
@@ -723,6 +750,14 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
           filterCheck = false;
         }
       });
+    }
+    if (filterValues !== null && filterValues !== void 0 && filterValues.offerId) {
+      var _order$offerId;
+      if (!(order !== null && order !== void 0 && (_order$offerId = order.offerId) !== null && _order$offerId !== void 0 && _order$offerId.toString().includes(filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId))) filterCheck = false;
+    }
+    if (filterValues !== null && filterValues !== void 0 && filterValues.coupon) {
+      var _order$coupon;
+      if (!(order !== null && order !== void 0 && (_order$coupon = order.coupon) !== null && _order$coupon !== void 0 && _order$coupon.toString().includes(filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon))) filterCheck = false;
     }
     return filterCheck;
   };
