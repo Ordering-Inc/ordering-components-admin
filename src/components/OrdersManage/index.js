@@ -14,7 +14,8 @@ export const OrdersManage = (props) => {
     driversPropsToFetch,
     disableSocketRoomDriver,
     useBatchSockets,
-    useFranchiseImages
+    useFranchiseImages,
+    adminPropsToFetch
   } = props
 
   const [ordering] = useApi()
@@ -70,6 +71,10 @@ export const OrdersManage = (props) => {
    * Object to save drivers
    */
   const [driversList, setDriversList] = useState({ drivers: [], loading: true, error: null })
+    /**
+   * Object to save admins
+   */
+    const [adminsList, setAdminsList] = useState({ admins: [], loading: true, error: null })
   /**
    * Object to save paymethods
    */
@@ -226,6 +231,35 @@ export const OrdersManage = (props) => {
       setActionStatus({ loading: false, error: [error.message] })
     }
   }
+  
+  /**
+   * Method to get Admins from API
+   */
+    const getAdministrator = async () => {
+      try {
+        const source = {}
+  
+        const { content: { result } } = await ordering
+          .setAccessToken(token)
+          .users()
+          .select(adminPropsToFetch)
+          .where([{ attribute: 'level', value: [0] }])
+          .get({ cancelToken: source })
+  
+          setAdminsList({
+          ...adminsList,
+          loading: false,
+          admins: result
+        })
+        console.log(JSON.stringify(result))
+      } catch (err) {
+        setAdminsList({
+          ...adminsList,
+          loading: false,
+          error: err.message
+        })
+      }
+    }
 
   /**
    * Method to get drivers from API
@@ -495,6 +529,7 @@ export const OrdersManage = (props) => {
     if (user?.level === 0 || user?.level === 2 || user?.level === 5) {
       getDrivers()
     }
+    getAdministrator()
     getControlsOrders()
 
     return () => {
@@ -568,6 +603,7 @@ export const OrdersManage = (props) => {
           timeStatus={timeStatus}
           setTimeStatus={setTimeStatus}
           franchisesList={franchisesList}
+          adminsList={adminsList}
         />
       )}
     </>
@@ -603,6 +639,12 @@ OrdersManage.propTypes = {
 
 OrdersManage.defaultProps = {
   driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
+  adminPropsToFetch: [
+    'name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'schedule', 'external_id',
+    'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'max_days_in_future', 'push_tokens',
+    'address_notes', 'driver_zone_restriction', 'mono_session', 'dropdown_option_id', 'dropdown_option', 'location', 'available',
+    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups', 'created_at', 'timezone', 'busy'
+  ],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],

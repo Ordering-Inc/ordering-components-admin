@@ -568,6 +568,14 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues.administratorIds.length !== 0) {
+        filterConditons.push(
+          {
+            attribute: 'administrator_id',
+            value: filterValues.administratorIds
+          }
+        )
+      }
       if (filterValues?.offerId) {
         console.log(filterValues?.offerId)
         filterConditons.push(
