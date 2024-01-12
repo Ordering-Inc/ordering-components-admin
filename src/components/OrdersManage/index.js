@@ -231,35 +231,7 @@ export const OrdersManage = (props) => {
       setActionStatus({ loading: false, error: [error.message] })
     }
   }
-  
-  /**
-   * Method to get Admins from API
-   */
-    const getAdministrator = async () => {
-      try {
-        const source = {}
-  
-        const { content: { result } } = await ordering
-          .setAccessToken(token)
-          .users()
-          .select(adminPropsToFetch)
-          .where([{ attribute: 'level', value: [0] }])
-          .get({ cancelToken: source })
-  
-          setAdminsList({
-          ...adminsList,
-          loading: false,
-          admins: result
-        })
-        console.log(JSON.stringify(result))
-      } catch (err) {
-        setAdminsList({
-          ...adminsList,
-          loading: false,
-          error: err.message
-        })
-      }
-    }
+
 
   /**
    * Method to get drivers from API
@@ -318,6 +290,11 @@ export const OrdersManage = (props) => {
           ...businessesList,
           loading: false,
           businesses: content.result.businesses
+        })
+        setAdminsList({
+          ...adminsList,
+          loading: false,
+          admins:content.result.agents
         })
         setActionStatus({ ...actionStatus, loading: false })
       } else {
@@ -529,7 +506,6 @@ export const OrdersManage = (props) => {
     if (user?.level === 0 || user?.level === 2 || user?.level === 5) {
       getDrivers()
     }
-    getAdministrator()
     getControlsOrders()
 
     return () => {

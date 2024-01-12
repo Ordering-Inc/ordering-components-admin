@@ -569,9 +569,9 @@ export const DashboardOrdersList = (props) => {
         )
       }
       if (filterValues.administratorIds.length !== 0) {
-        filterConditons.push(
+        conditions.push(
           {
-            attribute: 'administrator_id',
+            attribute: 'agent_id',
             value: filterValues.administratorIds
           }
         )
