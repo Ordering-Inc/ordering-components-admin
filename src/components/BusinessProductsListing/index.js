@@ -498,7 +498,7 @@ export const BusinessProductsListing = (props) => {
   }, [businessState?.loading])
 
   useEffect(() => {
-    if (searchValue === null) {
+    if (searchValue === null || searchValue === '') {
       getProducts(true, 1)
     } else {
       getProducts(searchValue)
