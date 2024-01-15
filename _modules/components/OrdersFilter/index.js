@@ -376,6 +376,24 @@ var OrdersFilter = function OrdersFilter(props) {
   };
 
   /**
+  * Change admin
+  * * @param {number} adminID admin id
+  */
+  var handleChangeAdmin = function handleChangeAdmin(adminId) {
+    var _adminIds = _toConsumableArray(filterValues.administratorIds);
+    if (!_adminIds.includes(adminId)) {
+      _adminIds.push(adminId);
+    } else {
+      _adminIds = _adminIds.filter(function (id) {
+        return id !== adminId;
+      });
+    }
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      administratorIds: _adminIds
+    }));
+  };
+
+  /**
    * Reset filter values
   */
   var handleResetFilterValues = function handleResetFilterValues() {
@@ -405,7 +423,8 @@ var OrdersFilter = function OrdersFilter(props) {
       customerCellphone: null,
       customerLastname: null,
       coupon: null,
-      offerId: null
+      offerId: null,
+      administratorIds: []
     };
     setFilterValues(initialValues);
     handleFilterValues(initialValues);
@@ -467,7 +486,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangeExternalId: handleChangeExternalId,
     handleChangeChildFilterValue: handleChangeChildFilterValue,
     handleChangeGroupUnassigned: handleChangeGroupUnassigned,
-    handleChangeOfferId: handleChangeOfferId
+    handleChangeOfferId: handleChangeOfferId,
+    handleChangeAdmin: handleChangeAdmin
   })));
 };
 exports.OrdersFilter = OrdersFilter;

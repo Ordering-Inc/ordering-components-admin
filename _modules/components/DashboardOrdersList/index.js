@@ -569,8 +569,13 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   }]
                 });
               }
+              if (filterValues.administratorIds.length !== 0) {
+                conditions.push({
+                  attribute: 'agent_id',
+                  value: filterValues.administratorIds
+                });
+              }
               if (filterValues !== null && filterValues !== void 0 && filterValues.offerId) {
-                console.log(filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId);
                 filterConditons.push({
                   attribute: 'offers',
                   conditions: [{
@@ -579,8 +584,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                       condition: '=',
                       value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId
                     }
-                  }],
-                  conector: 'OR'
+                  }]
                 });
               }
               if (filterValues !== null && filterValues !== void 0 && filterValues.coupon) {
@@ -590,10 +594,9 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                     attribute: 'coupon',
                     value: {
                       condition: '=',
-                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon, "%"))
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon
                     }
-                  }],
-                  conector: 'OR'
+                  }]
                 });
               }
               if (filterConditons.length) {
