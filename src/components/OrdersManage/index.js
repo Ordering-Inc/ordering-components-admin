@@ -14,8 +14,7 @@ export const OrdersManage = (props) => {
     driversPropsToFetch,
     disableSocketRoomDriver,
     useBatchSockets,
-    useFranchiseImages,
-    adminPropsToFetch
+    useFranchiseImages
   } = props
 
   const [ordering] = useApi()
@@ -294,7 +293,7 @@ export const OrdersManage = (props) => {
         setAdminsList({
           ...adminsList,
           loading: false,
-          admins:content.result.agents
+          admins: content.result.agents
         })
         setActionStatus({ ...actionStatus, loading: false })
       } else {
@@ -615,12 +614,6 @@ OrdersManage.propTypes = {
 
 OrdersManage.defaultProps = {
   driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
-  adminPropsToFetch: [
-    'name', 'lastname', 'email', 'phone', 'photo', 'cellphone', 'schedule', 'external_id',
-    'country_phone_code', 'city_id', 'city', 'address', 'addresses', 'max_days_in_future', 'push_tokens',
-    'address_notes', 'driver_zone_restriction', 'mono_session', 'dropdown_option_id', 'dropdown_option', 'location', 'available',
-    'zipcode', 'level', 'enabled', 'middle_name', 'second_lastname', 'birthdate', 'drivergroups', 'created_at', 'timezone', 'busy'
-  ],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
