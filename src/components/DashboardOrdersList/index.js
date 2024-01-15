@@ -568,8 +568,15 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues.administratorIds.length !== 0) {
+        conditions.push(
+          {
+            attribute: 'agent_id',
+            value: filterValues.administratorIds
+          }
+        )
+      }
       if (filterValues?.offerId) {
-        console.log(filterValues?.offerId)
         filterConditons.push(
           {
             attribute: 'offers',
@@ -581,8 +588,7 @@ export const DashboardOrdersList = (props) => {
                   value: filterValues?.offerId
                 }
               }
-            ],
-            conector: 'OR'
+            ]
           }
         )
       }
@@ -595,11 +601,10 @@ export const DashboardOrdersList = (props) => {
                 attribute: 'coupon',
                 value: {
                   condition: '=',
-                  value: encodeURI(`%${filterValues?.coupon}%`)
+                  value: filterValues?.coupon
                 }
               }
-            ],
-            conector: 'OR'
+            ]
           }
         )
       }

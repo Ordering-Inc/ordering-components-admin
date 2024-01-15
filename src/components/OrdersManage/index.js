@@ -70,6 +70,10 @@ export const OrdersManage = (props) => {
    * Object to save drivers
    */
   const [driversList, setDriversList] = useState({ drivers: [], loading: true, error: null })
+    /**
+   * Object to save admins
+   */
+    const [adminsList, setAdminsList] = useState({ admins: [], loading: true, error: null })
   /**
    * Object to save paymethods
    */
@@ -227,6 +231,7 @@ export const OrdersManage = (props) => {
     }
   }
 
+
   /**
    * Method to get drivers from API
    */
@@ -284,6 +289,11 @@ export const OrdersManage = (props) => {
           ...businessesList,
           loading: false,
           businesses: content.result.businesses
+        })
+        setAdminsList({
+          ...adminsList,
+          loading: false,
+          admins: content.result.agents
         })
         setActionStatus({ ...actionStatus, loading: false })
       } else {
@@ -568,6 +578,7 @@ export const OrdersManage = (props) => {
           timeStatus={timeStatus}
           setTimeStatus={setTimeStatus}
           franchisesList={franchisesList}
+          adminsList={adminsList}
         />
       )}
     </>
