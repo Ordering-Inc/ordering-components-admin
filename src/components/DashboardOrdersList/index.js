@@ -1007,7 +1007,6 @@ export const DashboardOrdersList = (props) => {
     if (found) return
     if (!isDeepEmptyObject(filterValues)) return
     if (!isFilteredOrder(order)) return
-    setPagination(prevPagination => ({ ...prevPagination, total: prevPagination.total + 1 }))
     setOrderList(prevState => {
       const found = prevState.orders.find(_order => _order?.id === order?.id)
       if (found) return prevState
@@ -1019,6 +1018,7 @@ export const DashboardOrdersList = (props) => {
         orders: sortedOrders.slice(0, pagination.pageSize)
       }
     })
+    setPagination(prevPagination => ({ ...prevPagination, total: prevPagination.total + 1 }))
   }
 
   const handleNewMessage = (message) => {
