@@ -12,7 +12,8 @@ export const BusinessFilter = (props) => {
     availableMenus: { value: '', condition: '=' },
     menus: { value: '', condition: '=' },
     enabled: null,
-    featured: null
+    featured: null,
+    externalId: null
   }
   /**
    * This property is used to set in state the current value
