@@ -205,7 +205,16 @@ var DashboardBusinessList = function DashboardBusinessList(props) {
                   attribute: 'name',
                   value: {
                     condition: 'ilike',
-                    value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.name, "%"))
+                    value: encodeURIComponent("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.name, "%"))
+                  }
+                });
+              }
+              if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId) !== null) {
+                filterConditons.push({
+                  attribute: 'external_id',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURIComponent("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId, "%"))
                   }
                 });
               }

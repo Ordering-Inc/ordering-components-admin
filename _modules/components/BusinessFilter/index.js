@@ -40,7 +40,8 @@ var BusinessFilter = function BusinessFilter(props) {
       condition: '='
     },
     enabled: null,
-    featured: null
+    featured: null,
+    externalId: null
   };
   /**
    * This property is used to set in state the current value
