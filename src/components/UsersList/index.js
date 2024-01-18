@@ -270,13 +270,24 @@ export const UsersList = (props) => {
       if (Object.keys(multiFilterValues).length > 0) {
         const filterConditons = []
 
-        if (multiFilterValues.id && parseInt(multiFilterValues.id) > 0) {
+        if (multiFilterValues?.id && parseInt(multiFilterValues?.id) > 0) {
           filterConditons.push(
             {
               attribute: 'id',
               value: {
                 condition: 'ilike',
                 value: encodeURI(`%${parseInt(multiFilterValues.id)}%`)
+              }
+            }
+          )
+        }
+        if (multiFilterValues?.externalId && parseInt(multiFilterValues?.externalId) > 0) {
+          filterConditons.push(
+            {
+              attribute: 'external_id',
+              value: {
+                condition: 'ilike',
+                value: encodeURI(`%${parseInt(multiFilterValues.externalId)}%`)
               }
             }
           )
