@@ -347,12 +347,21 @@ var UsersList = function UsersList(props) {
             }
             if (Object.keys(multiFilterValues).length > 0) {
               filterConditons = [];
-              if (multiFilterValues.id && parseInt(multiFilterValues.id) > 0) {
+              if (multiFilterValues !== null && multiFilterValues !== void 0 && multiFilterValues.id && parseInt(multiFilterValues === null || multiFilterValues === void 0 ? void 0 : multiFilterValues.id) > 0) {
                 filterConditons.push({
                   attribute: 'id',
                   value: {
                     condition: 'ilike',
                     value: encodeURI("%".concat(parseInt(multiFilterValues.id), "%"))
+                  }
+                });
+              }
+              if (multiFilterValues !== null && multiFilterValues !== void 0 && multiFilterValues.externalId && parseInt(multiFilterValues === null || multiFilterValues === void 0 ? void 0 : multiFilterValues.externalId) > 0) {
+                filterConditons.push({
+                  attribute: 'external_id',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI("%".concat(parseInt(multiFilterValues.externalId), "%"))
                   }
                 });
               }
