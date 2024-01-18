@@ -147,7 +147,18 @@ export const DashboardBusinessList = (props) => {
             attribute: 'name',
             value: {
               condition: 'ilike',
-              value: encodeURI(`%${filterValues?.name}%`)
+              value: encodeURIComponent(`%${filterValues?.name}%`)
+            }
+          }
+        )
+      }
+      if (filterValues?.externalId !== null) {
+        filterConditons.push(
+          {
+            attribute: 'external_id',
+            value: {
+              condition: 'ilike',
+              value: encodeURIComponent(`%${filterValues?.externalId}%`)
             }
           }
         )
