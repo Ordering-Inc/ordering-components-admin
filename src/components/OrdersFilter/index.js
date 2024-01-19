@@ -315,7 +315,7 @@ export const OrdersFilter = (props) => {
 
   useEffect(() => {
     let groupDriverIds = []
-    if (filterValues.groupTypes.length > 0) {
+    if (filterValues.groupTypes?.length > 0) {
       for (const groupId of filterValues.groupTypes) {
         const selectedDriverGroup = driverGroupList.groups.find(group => group.id === groupId)
         if (selectedDriverGroup) {
