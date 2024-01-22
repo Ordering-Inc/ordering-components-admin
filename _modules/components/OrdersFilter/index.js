@@ -365,6 +365,35 @@ var OrdersFilter = function OrdersFilter(props) {
   };
 
   /**
+   * Changer offer Id
+   * @param {EventTarget} e Related HTML event
+   */
+  var handleChangeOfferId = function handleChangeOfferId(e) {
+    var offerId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      offerId: offerId
+    }));
+  };
+
+  /**
+  * Change admin
+  * * @param {number} adminID admin id
+  */
+  var handleChangeAdmin = function handleChangeAdmin(adminId) {
+    var _adminIds = _toConsumableArray(filterValues.administratorIds);
+    if (!_adminIds.includes(adminId)) {
+      _adminIds.push(adminId);
+    } else {
+      _adminIds = _adminIds.filter(function (id) {
+        return id !== adminId;
+      });
+    }
+    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
+      administratorIds: _adminIds
+    }));
+  };
+
+  /**
    * Reset filter values
   */
   var handleResetFilterValues = function handleResetFilterValues() {
@@ -392,7 +421,8 @@ var OrdersFilter = function OrdersFilter(props) {
       customerName: null,
       customerEmail: null,
       customerCellphone: null,
-      customerLastname: null
+      customerLastname: null,
+      administratorIds: []
     };
     setFilterValues(initialValues);
     handleFilterValues(initialValues);
@@ -453,7 +483,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleDeleteMetafield: handleDeleteMetafield,
     handleChangeExternalId: handleChangeExternalId,
     handleChangeChildFilterValue: handleChangeChildFilterValue,
-    handleChangeGroupUnassigned: handleChangeGroupUnassigned
+    handleChangeGroupUnassigned: handleChangeGroupUnassigned,
+    handleChangeAdmin: handleChangeAdmin
   })));
 };
 exports.OrdersFilter = OrdersFilter;
