@@ -583,6 +583,30 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                   }]
                 });
               }
+              if (filterValues !== null && filterValues !== void 0 && filterValues.offerId) {
+                filterConditons.push({
+                  attribute: 'offers',
+                  conditions: [{
+                    attribute: 'offer_id',
+                    value: {
+                      condition: '=',
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId
+                    }
+                  }]
+                });
+              }
+              if (filterValues !== null && filterValues !== void 0 && filterValues.coupon) {
+                filterConditons.push({
+                  attribute: 'offers',
+                  conditions: [{
+                    attribute: 'coupon',
+                    value: {
+                      condition: '=',
+                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon
+                    }
+                  }]
+                });
+              }
               if (filterConditons.length) {
                 conditions.push({
                   conector: 'AND',
