@@ -583,6 +583,38 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
+      if (filterValues?.offerId) {
+        filterConditons.push(
+          {
+            attribute: 'offers',
+            conditions: [
+              {
+                attribute: 'offer_id',
+                value: {
+                  condition: '=',
+                  value: filterValues?.offerId
+                }
+              }
+            ]
+          }
+        )
+      }
+      if (filterValues?.coupon) {
+        filterConditons.push(
+          {
+            attribute: 'offers',
+            conditions: [
+              {
+                attribute: 'coupon',
+                value: {
+                  condition: '=',
+                  value: filterValues?.coupon
+                }
+              }
+            ]
+          }
+        )
+      }
 
       if (filterConditons.length) {
         conditions.push({
