@@ -269,6 +269,30 @@ export const OrdersFilter = (props) => {
   }
 
   /**
+   * Changer offer Id
+   * @param {EventTarget} e Related HTML event
+   */
+  const handleChangeOfferId = (e) => {
+    const offerId = e.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
+    setFilterValues({ ...filterValues, offerId })
+  }
+
+     /**
+   * Change admin
+   * * @param {number} adminID admin id
+  */
+     const handleChangeAdmin = (adminId) => {
+      let _adminIds = [...filterValues.administratorIds]
+      if (!_adminIds.includes(adminId)) {
+        _adminIds.push(adminId)
+      } else {
+        _adminIds = _adminIds.filter((id) => id !== adminId)
+      }
+      setFilterValues({ ...filterValues, administratorIds: _adminIds })
+    }
+
+
+  /**
    * Reset filter values
   */
   const handleResetFilterValues = () => {
@@ -296,7 +320,8 @@ export const OrdersFilter = (props) => {
       customerName: null,
       customerEmail: null,
       customerCellphone: null,
-      customerLastname: null
+      customerLastname: null,
+      administratorIds:[]
     }
     setFilterValues(initialValues)
     handleFilterValues(initialValues)
@@ -346,6 +371,7 @@ export const OrdersFilter = (props) => {
           handleChangeExternalId={handleChangeExternalId}
           handleChangeChildFilterValue={handleChangeChildFilterValue}
           handleChangeGroupUnassigned={handleChangeGroupUnassigned}
+          handleChangeAdmin={handleChangeAdmin}
         />
       )}
     </>
