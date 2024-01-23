@@ -27,6 +27,7 @@ export const DashboardOrdersList = (props) => {
     filterValues,
     searchValue,
     isSearchByOrderId,
+    isSearchByCustomerName,
     isSearchByCustomerEmail,
     isSearchByCustomerPhone,
     isSearchByBusinessName,
@@ -231,20 +232,22 @@ export const DashboardOrdersList = (props) => {
         )
       }
       if (!isAlsea) {
-        searchConditions.push(
-          {
-            attribute: 'customer',
-            conditions: [
-              {
-                attribute: 'name',
-                value: {
-                  condition: 'ilike',
-                  value: encodeURI(`%${searchValue}%`)
+        if (isSearchByCustomerName) {
+          searchConditions.push(
+            {
+              attribute: 'customer',
+              conditions: [
+                {
+                  attribute: 'name',
+                  value: {
+                    condition: 'ilike',
+                    value: encodeURI(`%${searchValue}%`)
+                  }
                 }
-              }
-            ]
-          }
-        )
+              ]
+            }
+          )
+        }
         if (isSearchByCustomerEmail) {
           searchConditions.push(
             {
@@ -648,6 +651,10 @@ export const DashboardOrdersList = (props) => {
       if (isSearchByOrderId) {
         if ((order?.id?.toString() || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
       }
+      if (isSearchByCustomerName) {
+        if ((order?.customer?.name || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
+      }
+
       if (isSearchByCustomerEmail) {
         if ((order?.customer?.email || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true
       }
@@ -717,7 +724,8 @@ export const DashboardOrdersList = (props) => {
       }
     }
     if (filterValues?.driverGroupIds?.length > 0) {
-      if (!filterValues.driverGroupIds.includes(order.driver_group_id)) {
+      const lastDriverId = lastHistoryData?.find(item => item.attribute === 'driver_id')?.old
+      if (!filterValues.driverGroupIds.includes(order.driver_id) && !filterValues.driverGroupIds.includes(lastDriverId)) {
         filterCheck = false
       }
     }
@@ -928,7 +936,7 @@ export const DashboardOrdersList = (props) => {
     if (!isFilteredOrder(order)) {
       const length = order?.history?.length
       const lastHistoryData = order?.history[length - 1]?.data
-      if (isFilteredOrder(order, lastHistoryData) && pagination.total > 0) {
+      if (isFilteredOrder(order, lastHistoryData)) {
         setPagination(prevPagination => ({ ...prevPagination, total: prevPagination.total - 1 }))
       }
       setOrderList(prevState => {
