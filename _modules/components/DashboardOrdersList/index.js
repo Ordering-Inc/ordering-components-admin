@@ -55,6 +55,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
     filterValues = props.filterValues,
     searchValue = props.searchValue,
     isSearchByOrderId = props.isSearchByOrderId,
+    isSearchByCustomerName = props.isSearchByCustomerName,
     isSearchByCustomerEmail = props.isSearchByCustomerEmail,
     isSearchByCustomerPhone = props.isSearchByCustomerPhone,
     isSearchByBusinessName = props.isSearchByBusinessName,
@@ -311,16 +312,18 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
                 });
               }
               if (!isAlsea) {
-                searchConditions.push({
-                  attribute: 'customer',
-                  conditions: [{
-                    attribute: 'name',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURI("%".concat(searchValue, "%"))
-                    }
-                  }]
-                });
+                if (isSearchByCustomerName) {
+                  searchConditions.push({
+                    attribute: 'customer',
+                    conditions: [{
+                      attribute: 'name',
+                      value: {
+                        condition: 'ilike',
+                        value: encodeURI("%".concat(searchValue, "%"))
+                      }
+                    }]
+                  });
+                }
                 if (isSearchByCustomerEmail) {
                   searchConditions.push({
                     attribute: 'customer',
@@ -649,13 +652,17 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
         var _order$id;
         if (((order === null || order === void 0 ? void 0 : (_order$id = order.id) === null || _order$id === void 0 ? void 0 : _order$id.toString()) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
       }
-      if (isSearchByCustomerEmail) {
+      if (isSearchByCustomerName) {
         var _order$customer;
-        if (((order === null || order === void 0 ? void 0 : (_order$customer = order.customer) === null || _order$customer === void 0 ? void 0 : _order$customer.email) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
+        if (((order === null || order === void 0 ? void 0 : (_order$customer = order.customer) === null || _order$customer === void 0 ? void 0 : _order$customer.name) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
+      }
+      if (isSearchByCustomerEmail) {
+        var _order$customer2;
+        if (((order === null || order === void 0 ? void 0 : (_order$customer2 = order.customer) === null || _order$customer2 === void 0 ? void 0 : _order$customer2.email) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
       }
       if (isSearchByCustomerPhone) {
-        var _order$customer2;
-        if (((order === null || order === void 0 ? void 0 : (_order$customer2 = order.customer) === null || _order$customer2 === void 0 ? void 0 : _order$customer2.cellphone) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
+        var _order$customer3;
+        if (((order === null || order === void 0 ? void 0 : (_order$customer3 = order.customer) === null || _order$customer3 === void 0 ? void 0 : _order$customer3.cellphone) || '').toLowerCase().includes(lowerCaseSearchValue)) searchCheck = true;
       }
       if (isSearchByBusinessName) {
         var _order$business;
@@ -725,7 +732,11 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       }
     }
     if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$driverG = filterValues.driverGroupIds) === null || _filterValues$driverG === void 0 ? void 0 : _filterValues$driverG.length) > 0) {
-      if (!filterValues.driverGroupIds.includes(order.driver_group_id)) {
+      var _lastHistoryData$find3;
+      var _lastDriverId = lastHistoryData === null || lastHistoryData === void 0 ? void 0 : (_lastHistoryData$find3 = lastHistoryData.find(function (item) {
+        return item.attribute === 'driver_id';
+      })) === null || _lastHistoryData$find3 === void 0 ? void 0 : _lastHistoryData$find3.old;
+      if (!filterValues.driverGroupIds.includes(order.driver_id) && !filterValues.driverGroupIds.includes(_lastDriverId)) {
         filterCheck = false;
       }
     }
@@ -733,10 +744,10 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       if (!filterValues.currency.includes(order === null || order === void 0 ? void 0 : order.currency)) filterCheck = false;
     }
     if (filterValues !== null && filterValues !== void 0 && filterValues.logisticStatus) {
-      var _lastHistoryData$find3;
-      var lastLogisticStatus = lastHistoryData === null || lastHistoryData === void 0 ? void 0 : (_lastHistoryData$find3 = lastHistoryData.find(function (item) {
+      var _lastHistoryData$find4;
+      var lastLogisticStatus = lastHistoryData === null || lastHistoryData === void 0 ? void 0 : (_lastHistoryData$find4 = lastHistoryData.find(function (item) {
         return item.attribute === 'logistic_status';
-      })) === null || _lastHistoryData$find3 === void 0 ? void 0 : _lastHistoryData$find3.old;
+      })) === null || _lastHistoryData$find4 === void 0 ? void 0 : _lastHistoryData$find4.old;
       if ((order === null || order === void 0 ? void 0 : order.logistic_status) !== parseInt(filterValues === null || filterValues === void 0 ? void 0 : filterValues.logisticStatus) && lastLogisticStatus !== parseInt(filterValues === null || filterValues === void 0 ? void 0 : filterValues.logisticStatus)) filterCheck = false;
     }
     if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$metafie2 = filterValues.metafield) === null || _filterValues$metafie2 === void 0 ? void 0 : _filterValues$metafie2.length) > 0) {
@@ -1054,7 +1065,7 @@ var DashboardOrdersList = function DashboardOrdersList(props) {
       var _order$history, _order$history2;
       var length = order === null || order === void 0 ? void 0 : (_order$history = order.history) === null || _order$history === void 0 ? void 0 : _order$history.length;
       var lastHistoryData = order === null || order === void 0 ? void 0 : (_order$history2 = order.history[length - 1]) === null || _order$history2 === void 0 ? void 0 : _order$history2.data;
-      if (isFilteredOrder(order, lastHistoryData) && pagination.total > 0) {
+      if (isFilteredOrder(order, lastHistoryData)) {
         setPagination(function (prevPagination) {
           return _objectSpread(_objectSpread({}, prevPagination), {}, {
             total: prevPagination.total - 1
