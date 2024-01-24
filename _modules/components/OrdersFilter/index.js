@@ -422,7 +422,9 @@ var OrdersFilter = function OrdersFilter(props) {
       customerEmail: null,
       customerCellphone: null,
       customerLastname: null,
-      administratorIds: []
+      administratorIds: [],
+      coupon: null,
+      offerId: null
     };
     setFilterValues(initialValues);
     handleFilterValues(initialValues);
@@ -484,7 +486,8 @@ var OrdersFilter = function OrdersFilter(props) {
     handleChangeExternalId: handleChangeExternalId,
     handleChangeChildFilterValue: handleChangeChildFilterValue,
     handleChangeGroupUnassigned: handleChangeGroupUnassigned,
-    handleChangeAdmin: handleChangeAdmin
+    handleChangeAdmin: handleChangeAdmin,
+    handleChangeOfferId: handleChangeOfferId
   })));
 };
 exports.OrdersFilter = OrdersFilter;
