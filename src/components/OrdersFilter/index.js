@@ -321,7 +321,9 @@ export const OrdersFilter = (props) => {
       customerEmail: null,
       customerCellphone: null,
       customerLastname: null,
-      administratorIds:[]
+      administratorIds:[],
+      coupon: null,
+      offerId: null
     }
     setFilterValues(initialValues)
     handleFilterValues(initialValues)
@@ -372,6 +374,7 @@ export const OrdersFilter = (props) => {
           handleChangeChildFilterValue={handleChangeChildFilterValue}
           handleChangeGroupUnassigned={handleChangeGroupUnassigned}
           handleChangeAdmin={handleChangeAdmin}
+          handleChangeOfferId={handleChangeOfferId}
         />
       )}
     </>

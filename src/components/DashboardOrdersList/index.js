@@ -744,6 +744,12 @@ export const DashboardOrdersList = (props) => {
         }
       })
     }
+    if (filterValues?.offerId) {
+      if (!order?.offerId?.toString().includes(filterValues?.offerId)) filterCheck = false
+    }
+    if (filterValues?.coupon) {
+      if (!order?.coupon?.toString().includes(filterValues?.coupon)) filterCheck = false
+    }
     return filterCheck
   }
 
