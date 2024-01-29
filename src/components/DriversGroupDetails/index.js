@@ -90,10 +90,14 @@ export const DriversGroupDetails = (props) => {
    * Method to update selected drivers group from API
    * @param {Object} changes
    */
-  const handleUpdateDriversGroup = async (changes) => {
+  const handleUpdateDriversGroup = async (_changes) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true, error: null })
+      const changes = {
+        ..._changes,
+        driver_available_max_distance: _changes?.driver_available_max_distance || null
+      }
       const requestOptions = {
         method: 'PUT',
         headers: {
@@ -165,14 +169,17 @@ export const DriversGroupDetails = (props) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ loading: true, error: null })
-
+      const changes = {
+        ...changesState,
+        driver_available_max_distance: changesState?.driver_available_max_distance || null
+      }
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(changesState)
+        body: JSON.stringify(changes)
       }
       const response = await fetch(`${ordering.root}/drivergroups`, requestOptions)
       const content = await response.json()
@@ -201,6 +208,11 @@ export const DriversGroupDetails = (props) => {
 
   const handleChangesState = (changes) => {
     setChangesState({ ...changesState, ...changes })
+  }
+
+  const handleChangeMaxDistance = (value) => {
+    const maxDistance = value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
+    setChangesState({ ...changesState, driver_available_max_distance: maxDistance })
   }
 
   const handleSelectBusiness = (businessId, checked) => {
@@ -435,6 +447,7 @@ export const DriversGroupDetails = (props) => {
             handleAddDriversGroup={handleAddDriversGroup}
             handleChangeType={handleChangeType}
             handleSelectDriverManager={handleSelectDriverManager}
+            handleChangeMaxDistance={handleChangeMaxDistance}
           />
         )
       }
