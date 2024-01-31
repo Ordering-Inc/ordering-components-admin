@@ -39,17 +39,17 @@ var CalendarDriversList = function CalendarDriversList(props) {
   var _useLanguage = (0, _LanguageContext.useLanguage)(),
     _useLanguage2 = _slicedToArray(_useLanguage, 2),
     t = _useLanguage2[1];
-  var _useState = (0, _react.useState)(null),
-    _useState2 = _slicedToArray(_useState, 2),
-    selectedGroupId = _useState2[0],
-    setSelectedGroupId = _useState2[1];
-  var _useState3 = (0, _react.useState)({
+  var _useState = (0, _react.useState)({
       state: false,
       error: null
     }),
+    _useState2 = _slicedToArray(_useState, 2),
+    isTimeChangeError = _useState2[0],
+    setIsTimeChangeError = _useState2[1];
+  var _useState3 = (0, _react.useState)(null),
     _useState4 = _slicedToArray(_useState3, 2),
-    isTimeChangeError = _useState4[0],
-    setIsTimeChangeError = _useState4[1];
+    selectedGroup = _useState4[0],
+    setSelectedGroup = _useState4[1];
   var _useState5 = (0, _react.useState)(false),
     _useState6 = _slicedToArray(_useState5, 2),
     showBreakBlock = _useState6[0],
@@ -185,7 +185,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
    * Method to get drivers from API
    * @param {Number} page change time
    * @param {Number} pageSize open or close time
-   * @param {Number} selectedGroupId
+   * @param {Number} selectedGroup
    */
   var getDrivers = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize, selectedGroupId) {
@@ -385,7 +385,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
               break;
             }
             _context2.next = 21;
-            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
+            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup === null || selectedGroup === void 0 ? void 0 : selectedGroup.id);
           case 21:
             handleSetInitialStates();
             _context2.next = 26;
@@ -458,7 +458,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
               break;
             }
             _context3.next = 14;
-            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
+            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup === null || selectedGroup === void 0 ? void 0 : selectedGroup.id);
           case 14:
             handleSetInitialStates();
             setOpenDeleteModal(false);
@@ -550,7 +550,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
               break;
             }
             _context4.next = 21;
-            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
+            return getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup === null || selectedGroup === void 0 ? void 0 : selectedGroup.id);
           case 21:
             handleSetInitialStates();
             setOpenEditModal(false);
@@ -594,9 +594,9 @@ var CalendarDriversList = function CalendarDriversList(props) {
     }));
   };
   (0, _react.useEffect)(function () {
-    if (!selectedGroupId) return;
-    getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId);
-  }, [selectedGroupId, date]);
+    if (!(selectedGroup !== null && selectedGroup !== void 0 && selectedGroup.id)) return;
+    getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup === null || selectedGroup === void 0 ? void 0 : selectedGroup.id);
+  }, [selectedGroup === null || selectedGroup === void 0 ? void 0 : selectedGroup.id, date]);
   (0, _react.useEffect)(function () {
     var _scheduleState$state$3, _scheduleState$state19, _selectedBlock$block9, _scheduleState$state$4, _scheduleState$state20, _selectedBlock$block10, _scheduleState$state$5, _scheduleState$state21, _selectedBlock$block11, _scheduleState$state$6, _scheduleState$state22, _selectedBlock$block12;
     var _startHour = (0, _moment.default)((_scheduleState$state$3 = scheduleState === null || scheduleState === void 0 ? void 0 : (_scheduleState$state19 = scheduleState.state) === null || _scheduleState$state19 === void 0 ? void 0 : _scheduleState$state19.start) !== null && _scheduleState$state$3 !== void 0 ? _scheduleState$state$3 : selectedBlock === null || selectedBlock === void 0 ? void 0 : (_selectedBlock$block9 = selectedBlock.block) === null || _selectedBlock$block9 === void 0 ? void 0 : _selectedBlock$block9.start).format('HH:mm');
@@ -649,7 +649,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
     openEditModal: openEditModal,
     setPropagation: setPropagation,
     showBreakBlock: showBreakBlock,
-    selectedGroupId: selectedGroupId,
+    selectedGroup: selectedGroup,
     paginationProps: paginationProps,
     ruleState: ruleState,
     setRuleState: setRuleState,
@@ -666,7 +666,7 @@ var CalendarDriversList = function CalendarDriversList(props) {
     setShowBreakBlock: setShowBreakBlock,
     setOpenDeleteModal: setOpenDeleteModal,
     handleAddBlockTime: handleAddBlockTime,
-    setSelectedGroupId: setSelectedGroupId,
+    setSelectedGroup: setSelectedGroup,
     setStackEventsState: setStackEventsState,
     setSelectedUntilDate: setSelectedUntilDate,
     setIsTimeChangeError: setIsTimeChangeError,
