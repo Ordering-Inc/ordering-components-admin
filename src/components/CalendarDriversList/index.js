@@ -13,9 +13,8 @@ export const CalendarDriversList = (props) => {
 
   const [ordering] = useApi()
   const [, t] = useLanguage()
-  const [selectedGroupId, setSelectedGroupId] = useState(null)
   const [isTimeChangeError, setIsTimeChangeError] = useState({ state: false, error: null })
-
+  const [selectedGroup, setSelectedGroup] = useState(null)
   const [showBreakBlock, setShowBreakBlock] = useState(false)
   const [propagation, setPropagation] = useState('none')
   const [openDeleteModal, setOpenDeleteModal] = useState(false)
@@ -94,7 +93,7 @@ export const CalendarDriversList = (props) => {
    * Method to get drivers from API
    * @param {Number} page change time
    * @param {Number} pageSize open or close time
-   * @param {Number} selectedGroupId
+   * @param {Number} selectedGroup
    */
   const getDrivers = async (page, pageSize, selectedGroupId) => {
     try {
@@ -264,7 +263,7 @@ export const CalendarDriversList = (props) => {
       const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
+        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
         handleSetInitialStates()
       } else {
         setScheduleState({
@@ -305,7 +304,7 @@ export const CalendarDriversList = (props) => {
       const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks/${selectedBlock?.block?.id}`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
+        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
         handleSetInitialStates()
         setOpenDeleteModal(false)
       } else {
@@ -366,7 +365,7 @@ export const CalendarDriversList = (props) => {
       const response = await fetch(`${ordering.root}/drivers/${selectedBlock?.user?.id}/delivery_blocks/${selectedBlock?.block?.id}`, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
-        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
+        await getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
         handleSetInitialStates()
         setOpenEditModal(false)
       } else {
@@ -401,9 +400,9 @@ export const CalendarDriversList = (props) => {
   }
 
   useEffect(() => {
-    if (!selectedGroupId) return
-    getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroupId)
-  }, [selectedGroupId, date])
+    if (!selectedGroup?.id) return
+    getDrivers(paginationProps.currentPage, paginationProps.pageSize, selectedGroup?.id)
+  }, [selectedGroup?.id, date])
 
   useEffect(() => {
     const _startHour = moment(scheduleState?.state?.start ?? selectedBlock?.block?.start).format('HH:mm')
@@ -469,7 +468,7 @@ export const CalendarDriversList = (props) => {
           openEditModal={openEditModal}
           setPropagation={setPropagation}
           showBreakBlock={showBreakBlock}
-          selectedGroupId={selectedGroupId}
+          selectedGroup={selectedGroup}
           paginationProps={paginationProps}
           ruleState={ruleState}
           setRuleState={setRuleState}
@@ -486,7 +485,7 @@ export const CalendarDriversList = (props) => {
           setShowBreakBlock={setShowBreakBlock}
           setOpenDeleteModal={setOpenDeleteModal}
           handleAddBlockTime={handleAddBlockTime}
-          setSelectedGroupId={setSelectedGroupId}
+          setSelectedGroup={setSelectedGroup}
           setStackEventsState={setStackEventsState}
           setSelectedUntilDate={setSelectedUntilDate}
           setIsTimeChangeError={setIsTimeChangeError}
