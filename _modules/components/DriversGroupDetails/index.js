@@ -493,7 +493,8 @@ var DriversGroupDetails = function DriversGroupDetails(props) {
     }
     setSelectedDriverIds(filteredIds);
     setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
-      drivers: JSON.stringify(filteredIds)
+      drivers: JSON.stringify(filteredIds),
+      temporary_drivers: JSON.stringify(selectedDriverTemporaryIds)
     }));
   };
   var handleSelectDriverTemporary = function handleSelectDriverTemporary(driverId, checked, temporaryAt) {
