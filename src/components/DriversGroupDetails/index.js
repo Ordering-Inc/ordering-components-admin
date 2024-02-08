@@ -280,7 +280,8 @@ export const DriversGroupDetails = (props) => {
     setSelectedDriverIds(filteredIds)
     setChangesState({
       ...changesState,
-      drivers: JSON.stringify(filteredIds)
+      drivers: JSON.stringify(filteredIds),
+      temporary_drivers: JSON.stringify(selectedDriverTemporaryIds)
     })
   }
 
