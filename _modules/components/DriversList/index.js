@@ -89,8 +89,8 @@ var DriversList = function DriversList(props) {
     setAssignedOrders = _useState8[1];
   var _useState9 = (0, _react.useState)({
       initialPage: 1,
-      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage : 1,
-      pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
+      currentPage: (paginationSettings === null || paginationSettings === void 0 ? void 0 : paginationSettings.controlType) === 'pages' && paginationSettings !== null && paginationSettings !== void 0 && paginationSettings.initialPage && (paginationSettings === null || paginationSettings === void 0 ? void 0 : paginationSettings.initialPage) >= 1 ? paginationSettings === null || paginationSettings === void 0 ? void 0 : paginationSettings.initialPage : 1,
+      pageSize: (_paginationSettings$p = paginationSettings === null || paginationSettings === void 0 ? void 0 : paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
       totalItems: null,
       totalPages: null
     }),
