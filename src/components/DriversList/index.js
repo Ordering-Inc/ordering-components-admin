@@ -36,12 +36,12 @@ export const DriversList = (props) => {
   const [assignedOrders, setAssignedOrders] = useState({ loading: false, error: null, orders: [] })
   const [paginationDrivers, setPaginationDrivers] = useState({
     initialPage: 1,
-    currentPage: (paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1) ? paginationSettings.initialPage : 1,
-    pageSize: paginationSettings.pageSize ?? 10,
+    currentPage: (paginationSettings?.controlType === 'pages' && paginationSettings?.initialPage && paginationSettings?.initialPage >= 1) ? paginationSettings?.initialPage : 1,
+    pageSize: paginationSettings?.pageSize ?? 10,
     totalItems: null,
     totalPages: null
   })
-  const controller = new AbortController();
+  const controller = new AbortController()
   const signal = controller.signal
   const activeOrderStatuses = [0, 13, 7, 8, 4, 9, 3, 14, 18, 19, 20, 21, 22, 23]
 
@@ -482,7 +482,7 @@ export const DriversList = (props) => {
         requestsState.drivers.cancel()
       }
       if (isOrderDrivers) {
-        controller?.abort();
+        controller?.abort()
       }
     }
   }, [JSON.stringify(drivers), orderId, useDriversByProps, searchValue])
