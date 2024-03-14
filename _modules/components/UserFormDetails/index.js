@@ -87,6 +87,10 @@ var UserFormDetails = function UserFormDetails(props) {
     _useState8 = _slicedToArray(_useState7, 2),
     selectedDriverGroupIds = _useState8[0],
     setSelectedDriverGroupIds = _useState8[1];
+  var _useState9 = (0, _react.useState)(null),
+    _useState10 = _slicedToArray(_useState9, 2),
+    cellphoneStartZero = _useState10[0],
+    setCellphoneStartZero = _useState10[1];
   var requestsState = {};
   var accessToken = useDefualtSessionManager ? session.token : props.accessToken;
   (0, _react.useEffect)(function () {
@@ -163,6 +167,9 @@ var UserFormDetails = function UserFormDetails(props) {
             }));
             if (changes) {
               formState.changes = _objectSpread(_objectSpread({}, formState.changes), changes);
+              if (cellphoneStartZero) {
+                formState.changes.cellphone = cellphoneStartZero;
+              }
             }
             if (!isImage) {
               _context.next = 25;
@@ -467,7 +474,8 @@ var UserFormDetails = function UserFormDetails(props) {
     handleChangeUserType: handleChangeUserType,
     handleChangeOccupation: handleChangeOccupation,
     selectedDriverGroupIds: selectedDriverGroupIds,
-    handleDriverGroupClick: handleDriverGroupClick
+    handleDriverGroupClick: handleDriverGroupClick,
+    setCellphoneStartZero: setCellphoneStartZero
   })));
 };
 exports.UserFormDetails = UserFormDetails;
