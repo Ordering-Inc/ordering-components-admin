@@ -303,11 +303,14 @@ var UserFormDetails = function UserFormDetails(props) {
             if (isProfessional) Object.assign(changes, {
               level: 8
             });
-            _context2.next = 6;
+            if (cellphoneStartZero) {
+              changes.cellphone = cellphoneStartZero;
+            }
+            _context2.next = 7;
             return ordering.users().save(changes, {
               accessToken: accessToken
             });
-          case 6:
+          case 7:
             response = _context2.sent;
             setFormState(_objectSpread(_objectSpread({}, formState), {}, {
               changes: response.content.error ? formState.changes : {},
@@ -325,10 +328,10 @@ var UserFormDetails = function UserFormDetails(props) {
                 props.onClose();
               }
             }
-            _context2.next = 14;
+            _context2.next = 15;
             break;
-          case 11:
-            _context2.prev = 11;
+          case 12:
+            _context2.prev = 12;
             _context2.t0 = _context2["catch"](0);
             setFormState(_objectSpread(_objectSpread({}, formState), {}, {
               result: {
@@ -337,11 +340,11 @@ var UserFormDetails = function UserFormDetails(props) {
               },
               loading: false
             }));
-          case 14:
+          case 15:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[0, 11]]);
+      }, _callee2, null, [[0, 12]]);
     }));
     return function handleAddClick() {
       return _ref2.apply(this, arguments);
