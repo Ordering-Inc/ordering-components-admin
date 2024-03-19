@@ -188,6 +188,9 @@ export const UserFormDetails = (props) => {
       setFormState({ ...formState, loading: true })
       const changes = { ...formState?.changes }
       if (isProfessional) Object.assign(changes, { level: 8 })
+      if (cellphoneStartZero) {
+        changes.cellphone = cellphoneStartZero
+      }
       const response = await ordering.users().save(changes, {
         accessToken: accessToken
       })
