@@ -30,12 +30,8 @@ export const BusinessMenu = (props) => {
       const { content: { error, result } } = await ordering.setAccessToken(token).businesses(business.id).select(propsToFetch).asDashboard().get()
       const _business = Array.isArray(result) ? null : result
       if (!error) {
-        const _menus = {}
-        if (result?.menus) _menus.menus = result?.menus
-        if (result?.menus_shared) _menus.menusShared = result?.menus_shared
         setBusinessMenusState({
           ...businessMenusState,
-          ..._menus,
           loading: false
         })
       } else {
@@ -201,7 +197,7 @@ export const BusinessMenu = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites,products&mode=dashboard`, requestOptions)
       const { result, error } = await response.json()
       if (!error) {
         let sites = {}
@@ -228,6 +224,12 @@ export const BusinessMenu = (props) => {
           )
           const { result: sitesResult } = await response2.json()
           setSitesState({ ...sitesState, loading: false, sites: sitesResult })
+          setBusinessMenusState({
+            ...businessMenusState,
+            loading: false,
+            menus: result,
+            error: null
+          })
         } catch (err) {
           setBusinessMenusState({
             ...businessMenusState,
@@ -328,5 +330,5 @@ BusinessMenu.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'categories', 'menus', 'menus_shared', 'categories_shared', 'header', 'logo']
+  propsToFetch: ['id', 'categories', 'categories_shared', 'header', 'logo']
 }
