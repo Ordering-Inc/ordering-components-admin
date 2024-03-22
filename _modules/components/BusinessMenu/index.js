@@ -129,7 +129,7 @@ var BusinessMenu = function BusinessMenu(props) {
    */
   var handleChangeBusinessMenuActiveState = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(menuId, enabled) {
-      var requestOptions, endPoint, response, content, _business, menus, menusShared;
+      var requestOptions, endPoint, response, content, menus, menusShared;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
@@ -158,7 +158,6 @@ var BusinessMenu = function BusinessMenu(props) {
           case 10:
             content = _context2.sent;
             if (!content.error) {
-              _business = {};
               if (!isSelectedSharedMenus) {
                 menus = businessMenusState.menus.filter(function (menu) {
                   if (menu.id === menuId) {
@@ -170,9 +169,6 @@ var BusinessMenu = function BusinessMenu(props) {
                   loading: false,
                   menus: menus
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
               } else {
                 menusShared = businessMenusState.menusShared.map(function (menu) {
                   if (menu.id === menuId) {
@@ -186,11 +182,7 @@ var BusinessMenu = function BusinessMenu(props) {
                   loading: false,
                   menusShared: menusShared
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus_shared: menusShared
-                });
               }
-              handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
               showToast(_ToastContext.ToastType.Success, t('MENU_SAVED', 'Products catalog saved'));
             } else {
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
@@ -224,7 +216,7 @@ var BusinessMenu = function BusinessMenu(props) {
    */
   var handleDeleteBusinessMenu = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(menuId) {
-      var requestOptions, endPoint, response, content, _business, menus, menusShared;
+      var requestOptions, endPoint, response, content, menus, menusShared;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
@@ -250,7 +242,6 @@ var BusinessMenu = function BusinessMenu(props) {
           case 10:
             content = _context3.sent;
             if (!content.error) {
-              _business = {};
               if (!isSelectedSharedMenus) {
                 menus = businessMenusState.menus.filter(function (menu) {
                   return menu.id !== menuId;
@@ -259,9 +250,6 @@ var BusinessMenu = function BusinessMenu(props) {
                   loading: false,
                   menus: menus
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus: menus
-                });
               } else {
                 menusShared = businessMenusState.menusShared.filter(function (menu) {
                   return menu.id !== menuId;
@@ -270,11 +258,7 @@ var BusinessMenu = function BusinessMenu(props) {
                   loading: false,
                   menusShared: menusShared
                 }));
-                _business = _objectSpread(_objectSpread({}, business), {}, {
-                  menus_shared: menusShared
-                });
               }
-              handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business);
               showToast(_ToastContext.ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'));
             } else {
               setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), {}, {
@@ -399,20 +383,12 @@ var BusinessMenu = function BusinessMenu(props) {
     };
   }();
   (0, _react.useEffect)(function () {
-    if (business !== null && business !== void 0 && business.menus || business !== null && business !== void 0 && business.menus_shared) {
-      var data = {};
-      if (business !== null && business !== void 0 && business.menus) data.menus = business === null || business === void 0 ? void 0 : business.menus;
-      if (business !== null && business !== void 0 && business.menus_shared) data.menusShared = business === null || business === void 0 ? void 0 : business.menus_shared;
-      setBusinessMenusState(_objectSpread(_objectSpread({}, businessMenusState), data));
-    } else {
-      getBusinessMenus();
-    }
-  }, [business === null || business === void 0 ? void 0 : business.menu, business === null || business === void 0 ? void 0 : business.menus_shared]);
-  (0, _react.useEffect)(function () {
+    getBusinessMenus();
     getBusinessMenuChannels();
   }, []);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     businessMenusState: businessMenusState,
+    setBusinessMenusState: setBusinessMenusState,
     isSelectedSharedMenus: isSelectedSharedMenus,
     sitesState: sitesState,
     handleChangeBusinessMenuActiveState: handleChangeBusinessMenuActiveState,
