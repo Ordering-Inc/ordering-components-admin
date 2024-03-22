@@ -76,7 +76,6 @@ export const BusinessMenu = (props) => {
       const response = await fetch(endPoint, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        let _business = {}
         if (!isSelectedSharedMenus) {
           const menus = businessMenusState.menus.filter(menu => {
             if (menu.id === menuId) {
@@ -87,9 +86,8 @@ export const BusinessMenu = (props) => {
           setBusinessMenusState({
             ...businessMenusState,
             loading: false,
-            menus: menus
+            menus
           })
-          _business = { ...business, menus: menus }
         } else {
           const menusShared = businessMenusState.menusShared.map(menu => {
             if (menu.id === menuId) {
@@ -104,11 +102,9 @@ export const BusinessMenu = (props) => {
           setBusinessMenusState({
             ...businessMenusState,
             loading: false,
-            menusShared: menusShared
+            menusShared
           })
-          _business = { ...business, menus_shared: menusShared }
         }
-        handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
         showToast(ToastType.Success, t('MENU_SAVED', 'Products catalog saved'))
       } else {
         setBusinessMenusState({
@@ -149,7 +145,6 @@ export const BusinessMenu = (props) => {
       const response = await fetch(endPoint, requestOptions)
       const content = await response.json()
       if (!content.error) {
-        let _business = {}
         if (!isSelectedSharedMenus) {
           const menus = businessMenusState.menus.filter(menu => menu.id !== menuId)
           setBusinessMenusState({
@@ -157,17 +152,14 @@ export const BusinessMenu = (props) => {
             loading: false,
             menus: menus
           })
-          _business = { ...business, menus: menus }
         } else {
           const menusShared = businessMenusState.menusShared.filter(menu => menu.id !== menuId)
           setBusinessMenusState({
             ...businessMenusState,
             loading: false,
-            menusShared: menusShared
+            menusShared
           })
-          _business = { ...business, menus_shared: menusShared }
         }
-        handleSuccessBusinessMenu && handleSuccessBusinessMenu(_business)
         showToast(ToastType.Success, t('MENU_DELETED', 'Products catalog deleted'))
       } else {
         setBusinessMenusState({
@@ -254,20 +246,7 @@ export const BusinessMenu = (props) => {
   }
 
   useEffect(() => {
-    if (business?.menus || business?.menus_shared) {
-      const data = {}
-      if (business?.menus) data.menus = business?.menus
-      if (business?.menus_shared) data.menusShared = business?.menus_shared
-      setBusinessMenusState({
-        ...businessMenusState,
-        ...data
-      })
-    } else {
-      getBusinessMenus()
-    }
-  }, [business?.menu, business?.menus_shared])
-
-  useEffect(() => {
+    getBusinessMenus()
     getBusinessMenuChannels()
   }, [])
 
@@ -278,6 +257,7 @@ export const BusinessMenu = (props) => {
           <UIComponent
             {...props}
             businessMenusState={businessMenusState}
+            setBusinessMenusState={setBusinessMenusState}
             isSelectedSharedMenus={isSelectedSharedMenus}
             sitesState={sitesState}
             handleChangeBusinessMenuActiveState={handleChangeBusinessMenuActiveState}
