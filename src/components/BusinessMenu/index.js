@@ -216,10 +216,13 @@ export const BusinessMenu = (props) => {
           )
           const { result: sitesResult } = await response2.json()
           setSitesState({ ...sitesState, loading: false, sites: sitesResult })
+          const menus = result.filter(menu => menu?.business_id === business?.id)
+          const menusShared = result.filter(menu => menu?.business_id !== business?.id)
           setBusinessMenusState({
             ...businessMenusState,
             loading: false,
-            menus: result,
+            menus,
+            menusShared,
             error: null
           })
         } catch (err) {
