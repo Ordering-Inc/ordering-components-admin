@@ -189,7 +189,7 @@ export const BusinessMenu = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites,products&mode=dashboard`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites,products,businesses&mode=dashboard`, requestOptions)
       const { result, error } = await response.json()
       if (!error) {
         let sites = {}
