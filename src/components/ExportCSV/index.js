@@ -44,7 +44,6 @@ export const ExportCSV = (props) => {
 
       if (filterApply) {
         if (Object.keys(filterValues).length) {
-          console.log(filterValues)
           if (filterValues.statuses !== undefined) {
             if (filterValues.statuses?.length > 0) {
               filterConditons.push({ attribute: 'status', value: filterValues.statuses })
@@ -372,7 +371,6 @@ export const ExportCSV = (props) => {
         })
       }
     } catch (err) {
-      console.log(err)
       setActionStatus({
         ...actionStatus,
         loading: false,
