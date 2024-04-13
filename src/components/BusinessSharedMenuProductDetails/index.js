@@ -11,7 +11,8 @@ export const BusinessSharedMenuProductDetails = (props) => {
     product,
     UIComponent,
     business,
-    handleUpdateBusinessState
+    setMenuList,
+    menuList
   } = props
 
   const [ordering] = useApi()
@@ -21,6 +22,40 @@ export const BusinessSharedMenuProductDetails = (props) => {
   const [productState, setProductState] = useState({ loading: false, error: null, product: product || {} })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [timeoutState, setTimeoutState] = useState(null)
+
+  const getProduct = async () => {
+    try {
+      setProductState({
+        ...productState,
+        loading: true
+      })
+      const { content: { error, result } } = await ordering
+        .businesses(business.id)
+        .categories(productState?.product?.category_id)
+        .products(productState?.product?.id)
+        .get()
+
+      if (!error) {
+        setProductState({
+          loading: false,
+          product: result,
+          error: null
+        })
+      } else {
+        setProductState({
+          ...productState,
+          loading: false,
+          error: result
+        })
+      }
+    } catch (err) {
+      setProductState({
+        ...productState,
+        loading: false,
+        error: [err.message]
+      })
+    }
+  }
 
   /**
    * Method to update the business shared menu product
@@ -48,19 +83,24 @@ export const BusinessSharedMenuProductDetails = (props) => {
           ...productState,
           product: { ...productState.product, ...changes }
         })
-        const menusShared = business.menus_shared.filter(sharedMenu => {
+        const menusShared = menuList?.menusShared?.filter(sharedMenu => {
           const products = sharedMenu.products.map(_product => {
-            if (_product.id === product.id) {
-              return Object.assign(_product, changes)
+            if (_product.id === product?.id) {
+              return {
+                ..._product,
+                ...changes
+              }
             }
             return _product
           })
           sharedMenu.products = [...products]
           return true
         })
-        const _business = { ...business, menus_shared: menusShared }
-        handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
+        setMenuList({
+          ...menuList,
+          menusShared
+        })
         setFormState({
           loading: false,
           changes: {},
@@ -70,7 +110,7 @@ export const BusinessSharedMenuProductDetails = (props) => {
         setFormState({
           ...formState,
           loading: false,
-          error: content.resulut
+          error: content.result
         })
       }
     } catch (err) {
@@ -113,19 +153,24 @@ export const BusinessSharedMenuProductDetails = (props) => {
           ...productState,
           product: { ...productState.product, ...updatedProduct }
         })
-        const menusShared = business.menus_shared.filter(sharedMenu => {
+        const menusShared = menuList?.menusShared?.filter(sharedMenu => {
           const products = sharedMenu.products.map(_product => {
-            if (_product.id === product.id) {
-              return Object.assign(_product, updatedProduct)
+            if (_product.id === product?.id) {
+              return {
+                ..._product,
+                ...updatedProduct
+              }
             }
             return _product
           })
           sharedMenu.products = [...products]
           return true
         })
-        const _business = { ...business, menus_shared: menusShared }
-        handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
+        setMenuList({
+          ...menuList,
+          menusShared
+        })
         setFormState({
           loading: false,
           changes: {},
@@ -135,7 +180,7 @@ export const BusinessSharedMenuProductDetails = (props) => {
         setFormState({
           ...formState,
           loading: false,
-          error: content.resulut
+          error: content.result
         })
       }
     } catch (err) {
@@ -185,19 +230,24 @@ export const BusinessSharedMenuProductDetails = (props) => {
           ...productState,
           product: { ...productState.product, ...updatedProduct }
         })
-        const menusShared = business.menus_shared.filter(sharedMenu => {
+        const menusShared = menuList?.menusShared?.filter(sharedMenu => {
           const products = sharedMenu.products.map(_product => {
-            if (_product.id === product.id) {
-              return Object.assign(_product, updatedProduct)
+            if (_product.id === product?.id) {
+              return {
+                ..._product,
+                ...updatedProduct
+              }
             }
             return _product
           })
           sharedMenu.products = [...products]
           return true
         })
-        const _business = { ...business, menus_shared: menusShared }
-        handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
+        setMenuList({
+          ...menuList,
+          menusShared
+        })
         setFormState({
           loading: false,
           changes: {},
@@ -207,7 +257,7 @@ export const BusinessSharedMenuProductDetails = (props) => {
         setFormState({
           ...formState,
           loading: false,
-          error: content.resulut
+          error: content.result
         })
       }
     } catch (err) {
@@ -263,19 +313,24 @@ export const BusinessSharedMenuProductDetails = (props) => {
           ...productState,
           product: { ...productState.product, ...updatedProduct }
         })
-        const menusShared = business.menus_shared.filter(sharedMenu => {
+        const menusShared = menuList?.menusShared?.filter(sharedMenu => {
           const products = sharedMenu.products.map(_product => {
-            if (_product.id === product.id) {
-              return Object.assign(_product, updatedProduct)
+            if (_product.id === product?.id) {
+              return {
+                ..._product,
+                ...updatedProduct
+              }
             }
             return _product
           })
           sharedMenu.products = [...products]
           return true
         })
-        const _business = { ...business, menus_shared: menusShared }
-        handleUpdateBusinessState && handleUpdateBusinessState(_business)
         showToast(ToastType.Success, t('PRODUCT_SAVED', 'Product saved'))
+        setMenuList({
+          ...menuList,
+          menusShared
+        })
         setFormState({
           loading: false,
           changes: {},
@@ -285,7 +340,7 @@ export const BusinessSharedMenuProductDetails = (props) => {
         setFormState({
           ...formState,
           loading: false,
-          error: content.resulut
+          error: content.result
         })
       }
     } catch (err) {
@@ -333,6 +388,12 @@ export const BusinessSharedMenuProductDetails = (props) => {
     })
     setProductState({ ...productState, product: product || {} })
   }, [product])
+
+  useEffect(() => {
+    if (!productState?.loading && productState?.product?.id && productState?.product?.category_id && business.id) {
+      getProduct()
+    }
+  }, [productState?.product?.id])
 
   return (
     <>
