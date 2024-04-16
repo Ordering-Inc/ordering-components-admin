@@ -23,40 +23,6 @@ export const BusinessSharedMenuProductDetails = (props) => {
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
   const [timeoutState, setTimeoutState] = useState(null)
 
-  const getProduct = async () => {
-    try {
-      setProductState({
-        ...productState,
-        loading: true
-      })
-      const { content: { error, result } } = await ordering
-        .businesses(business.id)
-        .categories(productState?.product?.category_id)
-        .products(productState?.product?.id)
-        .get()
-
-      if (!error) {
-        setProductState({
-          loading: false,
-          product: result,
-          error: null
-        })
-      } else {
-        setProductState({
-          ...productState,
-          loading: false,
-          error: result
-        })
-      }
-    } catch (err) {
-      setProductState({
-        ...productState,
-        loading: false,
-        error: [err.message]
-      })
-    }
-  }
-
   /**
    * Method to update the business shared menu product
    * @param {Object} changes changes to update
@@ -388,12 +354,6 @@ export const BusinessSharedMenuProductDetails = (props) => {
     })
     setProductState({ ...productState, product: product || {} })
   }, [product])
-
-  useEffect(() => {
-    if (!productState?.loading && productState?.product?.id && productState?.product?.category_id && business.id) {
-      getProduct()
-    }
-  }, [productState?.product?.id])
 
   return (
     <>
