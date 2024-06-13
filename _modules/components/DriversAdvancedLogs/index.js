@@ -4,11 +4,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.ExportCSV = void 0;
+exports.DriversAdvancedLogs = void 0;
 var _react = _interopRequireWildcard(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
-var _ApiContext = require("../../contexts/ApiContext");
 var _SessionContext = require("../../contexts/SessionContext");
+var _ApiContext = require("../../contexts/ApiContext");
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
 function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -27,391 +27,154 @@ function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o =
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-var ExportCSV = function ExportCSV(props) {
+var DriversAdvancedLogs = function DriversAdvancedLogs(props) {
+  var _paginationSettings$p;
   var UIComponent = props.UIComponent,
-    filterValues = props.filterValues,
-    ordersStatusGroup = props.ordersStatusGroup,
-    selectedSubOrderStatus = props.selectedSubOrderStatus,
-    franchiseId = props.franchiseId;
+    paginationSettings = props.paginationSettings,
+    userId = props.userId;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
   var _useSession = (0, _SessionContext.useSession)(),
     _useSession2 = _slicedToArray(_useSession, 1),
-    _useSession2$ = _useSession2[0],
-    token = _useSession2$.token,
-    loading = _useSession2$.loading;
-  var _useState = (0, _react.useState)({
-      loading: false,
-      error: null,
-      result: null
-    }),
-    _useState2 = _slicedToArray(_useState, 2),
-    actionStatus = _useState2[0],
-    setActionStatus = _useState2[1];
+    session = _useSession2[0];
 
   /**
-   * Method to get csv from API
+   * Array to save logistics
    */
-  var getCSV = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, _filterValues$country, _filterValues$currenc, _filterValues$driverG, _filterValues$driverG2, _filterValues$cityIds, _filterValues$adminis, _filterValues$statuse, _filterValues$busines, _filterValues$driverI, _filterValues$deliver, _filterValues$paymeth, _filterValues$offerId, _filterValues$coupon, functionFetch, response, _yield$response$json, error, result;
+  var _useState = (0, _react.useState)({
+      logs: [],
+      loading: true,
+      error: null
+    }),
+    _useState2 = _slicedToArray(_useState, 2),
+    logsList = _useState2[0],
+    setLogsList = _useState2[1];
+  var _useState3 = (0, _react.useState)({
+      currentPage: paginationSettings.controlType === 'pages' && paginationSettings.initialPage && paginationSettings.initialPage >= 1 ? paginationSettings.initialPage - 1 : 0,
+      pageSize: (_paginationSettings$p = paginationSettings.pageSize) !== null && _paginationSettings$p !== void 0 ? _paginationSettings$p : 10,
+      totalItems: null,
+      totalPages: null
+    }),
+    _useState4 = _slicedToArray(_useState3, 2),
+    paginationProps = _useState4[0],
+    setPaginationProps = _useState4[1];
+  /**
+   * Method to get logistics from API
+   */
+  var getDriversAdvancedLogs = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(page, pageSize) {
+      var requestOptions, conditions, response, _yield$response$json, error, pagination, result;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
-            if (!loading) {
-              _context.next = 2;
-              break;
-            }
-            return _context.abrupt("return");
-          case 2:
-            _context.prev = 2;
-            setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+            _context.prev = 0;
+            setLogsList(_objectSpread(_objectSpread({}, logsList), {}, {
               loading: true
             }));
             requestOptions = {
               method: 'GET',
               headers: {
                 'Content-Type': 'application/json',
-                Authorization: "Bearer ".concat(token)
+                Authorization: "Bearer ".concat(session.token)
               }
             };
-            filterConditons = [];
-            if (franchiseId) {
-              filterConditons.push({
-                attribute: 'ref_business',
-                conditions: [{
-                  attribute: 'franchise_id',
-                  value: franchiseId
-                }]
-              });
-            }
-            if (filterApply) {
-              if (Object.keys(filterValues).length) {
-                if (filterValues.statuses !== undefined) {
-                  if (((_filterValues$statuse = filterValues.statuses) === null || _filterValues$statuse === void 0 ? void 0 : _filterValues$statuse.length) > 0) {
-                    filterConditons.push({
-                      attribute: 'status',
-                      value: filterValues.statuses
-                    });
-                  } else {
-                    filterConditons.push({
-                      attribute: 'status',
-                      value: selectedSubOrderStatus[ordersStatusGroup] || [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                    });
-                  }
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.externalId) {
-                  filterConditons.push({
-                    attribute: 'external_id',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURIComponent("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId, "%"))
-                    }
-                  });
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.orderId) {
-                  filterConditons.push({
-                    attribute: 'id',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.orderId, "%"))
-                    }
-                  });
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.logisticStatus) !== null) {
-                  filterConditons.push({
-                    attribute: 'logistic_status',
-                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.logisticStatus
-                  });
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) !== null) {
-                  if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) === 0) {
-                    filterConditons.push({
-                      attribute: 'driver_id',
-                      value: {
-                        condition: '>=',
-                        value: 0
-                      }
-                    });
-                  }
-                  if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.assigned) === 1) {
-                    filterConditons.push({
-                      attribute: 'driver_id',
-                      value: null
-                    });
-                  }
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.externalId) {
-                  filterConditons.push({
-                    attribute: 'external_id',
-                    value: {
-                      condition: 'ilike',
-                      value: encodeURIComponent("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.externalId, "%"))
-                    }
-                  });
-                }
-                if (filterValues.deliveryFromDatetime !== null) {
-                  filterConditons.push({
-                    attribute: 'delivery_datetime',
-                    value: {
-                      condition: '>=',
-                      value: encodeURI(filterValues.deliveryFromDatetime)
-                    }
-                  });
-                }
-                if (filterValues.deliveryEndDatetime !== null) {
-                  filterConditons.push({
-                    attribute: 'delivery_datetime',
-                    value: {
-                      condition: '<=',
-                      value: filterValues.deliveryEndDatetime
-                    }
-                  });
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$country = filterValues.countryCode) === null || _filterValues$country === void 0 ? void 0 : _filterValues$country.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'country_code',
-                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.countryCode
-                  });
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$currenc = filterValues.currency) === null || _filterValues$currenc === void 0 ? void 0 : _filterValues$currenc.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'currency',
-                    value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.currency
-                  });
-                }
-                if (filterValues.deliveryEndDatetime !== undefined) {
-                  if (filterValues.deliveryEndDatetime !== null) {
-                    filterConditons.push({
-                      attribute: 'delivery_datetime',
-                      value: {
-                        condition: '<=',
-                        value: filterValues.deliveryEndDatetime
-                      }
-                    });
-                  }
-                }
-                if (filterValues.businessIds !== undefined) {
-                  if (((_filterValues$busines = filterValues.businessIds) === null || _filterValues$busines === void 0 ? void 0 : _filterValues$busines.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'business_id',
-                      value: filterValues.businessIds
-                    });
-                  }
-                }
-                if (filterValues.driverIds !== undefined) {
-                  if (((_filterValues$driverI = filterValues.driverIds) === null || _filterValues$driverI === void 0 ? void 0 : _filterValues$driverI.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'driver_id',
-                      value: filterValues.driverIds
-                    });
-                  }
-                }
-                if (filterValues.deliveryTypes !== undefined) {
-                  if (((_filterValues$deliver = filterValues.deliveryTypes) === null || _filterValues$deliver === void 0 ? void 0 : _filterValues$deliver.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'delivery_type',
-                      value: filterValues.deliveryTypes
-                    });
-                  }
-                }
-                if (((_filterValues$driverG = filterValues.driverGroupIds) === null || _filterValues$driverG === void 0 ? void 0 : _filterValues$driverG.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'driver_group_id',
-                    value: filterValues.driverGroupIds
-                  });
-                }
-                if (((_filterValues$driverG2 = filterValues.driverGroupBusinessIds) === null || _filterValues$driverG2 === void 0 ? void 0 : _filterValues$driverG2.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'driver_group_business',
-                    conditions: [{
-                      attribute: 'driver_group_id',
-                      value: {
-                        condition: '=',
-                        value: filterValues.driverGroupBusinessIds
-                      }
-                    }]
-                  });
-                }
-                if (filterValues.paymethodIds !== undefined) {
-                  if (((_filterValues$paymeth = filterValues.paymethodIds) === null || _filterValues$paymeth === void 0 ? void 0 : _filterValues$paymeth.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'paymethod_id',
-                      value: filterValues.paymethodIds
-                    });
-                  }
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : (_filterValues$cityIds = filterValues.cityIds) === null || _filterValues$cityIds === void 0 ? void 0 : _filterValues$cityIds.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'business',
-                    conditions: [{
-                      attribute: 'city_id',
-                      value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.cityIds
-                    }]
-                  });
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.customerName) {
-                  filterConditons.push({
-                    attribute: 'customer',
-                    conditions: [{
-                      attribute: 'name',
-                      value: {
-                        condition: 'ilike',
-                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.customerName, "%"))
-                      }
-                    }]
-                  });
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.customerLastname) {
-                  filterConditons.push({
-                    attribute: 'customer',
-                    conditions: [{
-                      attribute: 'lastname',
-                      value: {
-                        condition: 'ilike',
-                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.customerLastname, "%"))
-                      }
-                    }]
-                  });
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.customerCellphone) {
-                  filterConditons.push({
-                    attribute: 'customer',
-                    conditions: [{
-                      attribute: 'cellphone',
-                      value: {
-                        condition: 'ilike',
-                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.customerCellphone, "%"))
-                      }
-                    }]
-                  });
-                }
-                if (filterValues !== null && filterValues !== void 0 && filterValues.customerEmail) {
-                  filterConditons.push({
-                    attribute: 'customer',
-                    conditions: [{
-                      attribute: 'email',
-                      value: {
-                        condition: 'ilike',
-                        value: encodeURI("%".concat(filterValues === null || filterValues === void 0 ? void 0 : filterValues.customerEmail, "%"))
-                      }
-                    }]
-                  });
-                }
-                if (((_filterValues$adminis = filterValues.administratorIds) === null || _filterValues$adminis === void 0 ? void 0 : _filterValues$adminis.length) !== 0) {
-                  filterConditons.push({
-                    attribute: 'agent_id',
-                    value: filterValues.administratorIds
-                  });
-                }
-                if ((filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId) !== null) {
-                  if (((_filterValues$offerId = filterValues.offerId) === null || _filterValues$offerId === void 0 ? void 0 : _filterValues$offerId.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'offers',
-                      conditions: [{
-                        attribute: 'offer_id',
-                        value: {
-                          condition: '=',
-                          value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.offerId
-                        }
-                      }]
-                    });
-                  }
-                }
-                if (filterValues.coupon !== null) {
-                  if (((_filterValues$coupon = filterValues.coupon) === null || _filterValues$coupon === void 0 ? void 0 : _filterValues$coupon.length) !== 0) {
-                    filterConditons.push({
-                      attribute: 'offers',
-                      conditions: [{
-                        attribute: 'coupon',
-                        value: {
-                          condition: '=',
-                          value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon
-                        }
-                      }]
-                    });
-                  }
-                }
-              }
-            }
-            functionFetch = filterApply ? "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id");
-            _context.next = 11;
-            return fetch(functionFetch, requestOptions);
-          case 11:
+            conditions = [{
+              attribute: 'author_id',
+              value: userId
+            }];
+            _context.next = 6;
+            return fetch("".concat(ordering.root, "/tracking_events?page=").concat(page, "&page_size=").concat(pageSize, "&where=").concat(JSON.stringify(conditions)), requestOptions);
+          case 6:
             response = _context.sent;
-            _context.next = 14;
+            _context.next = 9;
             return response.json();
-          case 14:
+          case 9:
             _yield$response$json = _context.sent;
             error = _yield$response$json.error;
+            pagination = _yield$response$json.pagination;
             result = _yield$response$json.result;
             if (!error) {
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+              setLogsList(_objectSpread(_objectSpread({}, logsList), {}, {
                 loading: false,
-                result: result,
-                error: null
+                logs: result
+              }));
+              setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
+                currentPage: pagination.current_page,
+                totalPages: pagination.total_pages,
+                totalItems: pagination.total,
+                from: pagination.from,
+                to: pagination.to
               }));
             } else {
-              setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+              setLogsList(_objectSpread(_objectSpread({}, logsList), {}, {
                 loading: false,
-                error: result
+                error: error
               }));
             }
-            _context.next = 23;
+            _context.next = 19;
             break;
-          case 20:
-            _context.prev = 20;
-            _context.t0 = _context["catch"](2);
-            setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
+          case 16:
+            _context.prev = 16;
+            _context.t0 = _context["catch"](0);
+            setLogsList(_objectSpread(_objectSpread({}, logsList), {}, {
               loading: false,
-              error: _context.t0
+              error: _context.t0.message
             }));
-          case 23:
+          case 19:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[2, 20]]);
+      }, _callee, null, [[0, 16]]);
     }));
-    return function getCSV(_x2) {
+    return function getDriversAdvancedLogs(_x2, _x3) {
       return _ref.apply(this, arguments);
     };
   }();
+  (0, _react.useEffect)(function () {
+    getDriversAdvancedLogs(1, null);
+  }, [userId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
-    actionStatus: actionStatus,
-    getCSV: getCSV
+    logsList: logsList,
+    paginationProps: paginationProps,
+    getDriversAdvancedLogs: getDriversAdvancedLogs
   })));
 };
-exports.ExportCSV = ExportCSV;
-ExportCSV.propTypes = {
+exports.DriversAdvancedLogs = DriversAdvancedLogs;
+DriversAdvancedLogs.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
   UIComponent: _propTypes.default.elementType,
   /**
-   * Components types before my orders
+   * Components types before drivers group logs
    * Array of type components, the parent props will pass to these components
    */
   beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
   /**
-   * Components types after my orders
+   * Components types after drivers group logs
    * Array of type components, the parent props will pass to these components
    */
   afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
   /**
-   * Elements before my orders
+   * Elements before drivers group logs
    * Array of HTML/Components elements, these components will not get the parent props
    */
   beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
   /**
-   * Elements after my orders
+   * Elements after drivers group logs
    * Array of HTML/Components elements, these components will not get the parent props
    */
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
-ExportCSV.defaultProps = {
+DriversAdvancedLogs.defaultProps = {
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
-  afterElements: []
+  afterElements: [],
+  paginationSettings: {
+    initialPage: 1,
+    pageSize: 10,
+    controlType: 'infinity'
+  }
 };
