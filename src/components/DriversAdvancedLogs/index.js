@@ -41,7 +41,16 @@ export const DriversAdvancedLogs = (props) => {
         attribute: 'author_id',
         value: userId
       }]
-      const response = await fetch(`${ordering.root}/tracking_events?page=${page}&page_size=${pageSize}&where=${JSON.stringify(conditions)}`, requestOptions)
+      const query = {
+        page,
+        page_size: pageSize,
+        orderBy: '-created_at'
+      }
+      let queryString = ''
+      Object.keys(query).map(param => {
+        queryString = queryString + `${param}=${query[param]}&`
+      })
+      const response = await fetch(`${ordering.root}/tracking_events?${queryString}&where=${JSON.stringify(conditions)}`, requestOptions)
       const { error, pagination, result } = await response.json()
       if (!error) {
         setLogsList({ ...logsList, loading: false, logs: result })
