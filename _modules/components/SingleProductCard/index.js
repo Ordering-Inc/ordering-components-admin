@@ -6,12 +6,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.SingleProductCard = void 0;
 var _react = _interopRequireDefault(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var SingleProductCard = function SingleProductCard(props) {
+function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
+var SingleProductCard = exports.SingleProductCard = function SingleProductCard(props) {
   var UIComponent = props.UIComponent;
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, props));
 };
-exports.SingleProductCard = SingleProductCard;
 SingleProductCard.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
