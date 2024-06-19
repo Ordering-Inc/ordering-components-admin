@@ -4,8 +4,8 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.stringToSlug = exports.randomString = exports.getUniqueId = exports.getDistance = exports.deepEqual = exports.convertToRadian = void 0;
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-var randomString = function randomString() {
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+var randomString = exports.randomString = function randomString() {
   var length = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 10;
   var alphabet = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   var result = '';
@@ -15,8 +15,7 @@ var randomString = function randomString() {
   }
   return result;
 };
-exports.randomString = randomString;
-var deepEqual = function deepEqual(object1, object2) {
+var deepEqual = exports.deepEqual = function deepEqual(object1, object2) {
   var keys1 = Object.keys(object1);
   var keys2 = Object.keys(object2);
   if (keys1.length !== keys2.length) {
@@ -33,11 +32,10 @@ var deepEqual = function deepEqual(object1, object2) {
   }
   return true;
 };
-exports.deepEqual = deepEqual;
 var isObject = function isObject(object) {
   return object != null && _typeof(object) === 'object';
 };
-var stringToSlug = function stringToSlug(str) {
+var stringToSlug = exports.stringToSlug = function stringToSlug(str) {
   var _str;
   str = str.replace(/^\s+|\s+$/g, ''); // trim
   str = (_str = str) === null || _str === void 0 ? void 0 : _str.toLowerCase();
@@ -62,8 +60,7 @@ var stringToSlug = function stringToSlug(str) {
  * @param {number} value for transform
  *
  */
-exports.stringToSlug = stringToSlug;
-var convertToRadian = function convertToRadian(value) {
+var convertToRadian = exports.convertToRadian = function convertToRadian(value) {
   return value * Math.PI / 180;
 };
 
@@ -74,8 +71,8 @@ var convertToRadian = function convertToRadian(value) {
  * @param {*} lat2 lat from second point
  * @param {*} lon2 lon from second point
  */
-exports.convertToRadian = convertToRadian;
-var getDistance = function getDistance(lat1, lon1, lat2, lon2) {
+
+var getDistance = exports.getDistance = function getDistance(lat1, lon1, lat2, lon2) {
   var R = 6371; // km
   var dLat = convertToRadian(lat2 - lat1);
   var dLon = convertToRadian(lon2 - lon1);
@@ -89,10 +86,8 @@ var getDistance = function getDistance(lat1, lon1, lat2, lon2) {
 /**
  * Function to get unique id
  */
-exports.getDistance = getDistance;
-var getUniqueId = function getUniqueId() {
+var getUniqueId = exports.getUniqueId = function getUniqueId() {
   var dateString = Date.now().toString(36);
   var randomness = Math.random().toString(36).substr(2);
   return dateString + randomness;
 };
-exports.getUniqueId = getUniqueId;
