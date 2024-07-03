@@ -170,6 +170,9 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
               setMenuList(_objectSpread(_objectSpread({}, menuList), {}, {
                 menus: menus
               }));
+              setBusinessMenuState(_objectSpread(_objectSpread({}, businessMenuState), {}, {
+                menu: _objectSpread(_objectSpread({}, businessMenuState.menu), content.result)
+              }));
               showToast(_ToastContext.ToastType.Success, t('MENU_SAVED', 'Products catalog saved'));
             }
             _context.next = 19;
