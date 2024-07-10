@@ -351,7 +351,7 @@ export const OrdersManage = (props) => {
   }
 
   const handleJoinMainRooms = () => {
-    socket.join({ // este no necesita conectarse en el orders list
+    socket.join({
       room: 'driver_locations',
       user_id: user?.id,
       role: 'manager'
