@@ -515,10 +515,10 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
                   value: filterValues.deliveryTypes
                 });
               }
-              if (filterValues.driverGroupIds.length !== 0) {
+              if (filterValues.groupTypesUnassigned.length !== 0) {
                 filterConditons.push({
                   attribute: 'driver_group_id',
-                  value: filterValues.driverGroupIds
+                  value: filterValues.groupTypesUnassigned
                 });
               }
               if (filterValues.driverGroupBusinessIds.length !== 0) {
@@ -1075,16 +1075,22 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
     setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
       orders: orders
     }));
-    setPagination(_objectSpread(_objectSpread({}, pagination), {}, {
-      total: (pagination === null || pagination === void 0 ? void 0 : pagination.total) - totalDeletedCount
-    }));
+    setPagination(function (prevPagination) {
+      return _objectSpread(_objectSpread({}, prevPagination), {}, {
+        total: Math.max(0, (prevPagination === null || prevPagination === void 0 ? void 0 : prevPagination.total) - totalDeletedCount)
+      });
+    });
   }, [JSON.stringify(deletedOrderIds)]);
 
   /**
    * Listening sesssion and filter values change
    */
   (0, _react.useEffect)(function () {
-    if (session !== null && session !== void 0 && session.loading || configState.loading) return;
+    var filterObjectValues = Object === null || Object === void 0 ? void 0 : Object.values(filterValues);
+    var hasFilterApplied = filterObjectValues.some(function (filt) {
+      return filt !== null && (filt === null || filt === void 0 ? void 0 : filt.length) > 0;
+    });
+    if (session !== null && session !== void 0 && session.loading || configState.loading || hasFilterApplied || (filterObjectValues === null || filterObjectValues === void 0 ? void 0 : filterObjectValues.length) === 0) return;
     if (orders) {
       setOrderList(_objectSpread(_objectSpread({}, orderList), {}, {
         orders: orders
@@ -1097,7 +1103,22 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
         requestsState.orders.cancel();
       }
     };
-  }, [session, searchValue, orderBy, filterValues, isOnlyDelivery, driverId, customerId, businessId, orders, orderStatus, timeStatus, configState.loading]);
+  }, [session, orders, configState.loading, isOnlyDelivery, driverId, customerId, businessId, orderStatus, timeStatus, searchValue, orderBy, JSON.stringify(filterValues)]);
+  (0, _react.useEffect)(function () {
+    var filterObjectValues = Object === null || Object === void 0 ? void 0 : Object.values(filterValues);
+    var hasFilterApplied = filterObjectValues.some(function (filt) {
+      return filt !== null && (filt === null || filt === void 0 ? void 0 : filt.length) > 0;
+    });
+    if (!hasFilterApplied) {
+      return;
+    }
+    loadOrders();
+    return function () {
+      if (requestsState.orders) {
+        requestsState.orders.cancel();
+      }
+    };
+  }, [JSON.stringify(filterValues)]);
   var handleUpdateOrder = function handleUpdateOrder(order) {
     var _order$products;
     if ((order === null || order === void 0 || (_order$products = order.products) === null || _order$products === void 0 || (_order$products = _order$products[0]) === null || _order$products === void 0 ? void 0 : _order$products.type) === 'gift_card') return;
@@ -1112,7 +1133,7 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
       if (isFilteredOrder(order, lastHistoryData)) {
         setPagination(function (prevPagination) {
           return _objectSpread(_objectSpread({}, prevPagination), {}, {
-            total: prevPagination.total - 1
+            total: Math.max(0, prevPagination.total - 1)
           });
         });
       }
@@ -1249,7 +1270,7 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
         if (orderList.orders.length === 0 && (filterValues && Object.keys(filterValues).length > 0 || !!searchValue)) {
           getPageOrders(pagination.pageSize, pagination.currentPage);
         }
-      } else {
+      } else if (pagination.currentPage - 1 > 0) {
         getPageOrders(pagination.pageSize, pagination.currentPage - 1);
       }
     }

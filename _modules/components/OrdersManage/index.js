@@ -41,8 +41,8 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     statusGroup = props.statusGroup,
     driversPropsToFetch = props.driversPropsToFetch,
     disableSocketRoomDriver = props.disableSocketRoomDriver,
-    useBatchSockets = props.useBatchSockets,
-    useFranchiseImages = props.useFranchiseImages;
+    useFranchiseImages = props.useFranchiseImages,
+    defaultFilterValues = props.defaultFilterValues;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -78,7 +78,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     _useState4 = _slicedToArray(_useState3, 2),
     ordersStatusGroup = _useState4[0],
     setOrdersStatusGroup = _useState4[1];
-  var _useState5 = (0, _react.useState)({}),
+  var _useState5 = (0, _react.useState)(defaultFilterValues || {}),
     _useState6 = _slicedToArray(_useState5, 2),
     filterValues = _useState6[0],
     setFilterValues = _useState6[1];
@@ -718,36 +718,28 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     };
   }();
   var handleJoinMainRooms = function handleJoinMainRooms() {
-    if (!useBatchSockets) {
-      socket.join('drivers');
-    } else {
-      socket.join({
-        room: 'driver_locations',
-        user_id: user === null || user === void 0 ? void 0 : user.id,
-        role: 'manager'
-      });
-      socket.join({
-        room: 'drivers',
-        user_id: user === null || user === void 0 ? void 0 : user.id,
-        role: 'manager'
-      });
-    }
+    socket.join({
+      room: 'driver_locations',
+      user_id: user === null || user === void 0 ? void 0 : user.id,
+      role: 'manager'
+    });
+    socket.join({
+      room: 'drivers',
+      user_id: user === null || user === void 0 ? void 0 : user.id,
+      role: 'manager'
+    });
   };
   var handleLeaveMainRooms = function handleLeaveMainRooms() {
-    if (!useBatchSockets) {
-      socket.leave('drivers');
-    } else {
-      socket.leave({
-        room: 'driver_locations',
-        user_id: user === null || user === void 0 ? void 0 : user.id,
-        role: 'manager'
-      });
-      socket.leave({
-        room: 'drivers',
-        user_id: user === null || user === void 0 ? void 0 : user.id,
-        role: 'manager'
-      });
-    }
+    socket.leave({
+      room: 'driver_locations',
+      user_id: user === null || user === void 0 ? void 0 : user.id,
+      role: 'manager'
+    });
+    socket.leave({
+      room: 'drivers',
+      user_id: user === null || user === void 0 ? void 0 : user.id,
+      role: 'manager'
+    });
   };
   var handleSocketDisconnect = function handleSocketDisconnect() {
     socket.socket.on('connect', handleJoinMainRooms);
@@ -758,47 +750,6 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
    */
   (0, _react.useEffect)(function () {
     if (loading) return;
-    var handleUpdateDriver = function handleUpdateDriver(driver) {
-      setDriversList(function (prevState) {
-        var driverIndex = prevState.drivers.findIndex(function (_driver) {
-          return _driver.id === driver.id;
-        });
-        if (driverIndex !== -1) {
-          var updatedDrivers = _toConsumableArray(prevState.drivers);
-          Object.assign(updatedDrivers[driverIndex], driver);
-          return _objectSpread(_objectSpread({}, prevState), {}, {
-            drivers: updatedDrivers
-          });
-        } else {
-          var _updatedDrivers = [].concat(_toConsumableArray(prevState.drivers), [driver]);
-          return _objectSpread(_objectSpread({}, prevState), {}, {
-            drivers: _updatedDrivers
-          });
-        }
-      });
-    };
-    var handleTrackingDriver = function handleTrackingDriver(trackingData) {
-      setDriversList(function (prevState) {
-        var updatedDrivers = prevState.drivers.map(function (driver) {
-          if (driver.id === trackingData.driver_id) {
-            var updatedDriver = _objectSpread({}, driver);
-            if (typeof trackingData.location === 'string') {
-              var trackingLocation = trackingData.location;
-              var _location = trackingLocation.replaceAll('\\', '');
-              var location = JSON.parse(_location);
-              updatedDriver.location = location;
-            } else {
-              updatedDriver.location = trackingData.location;
-            }
-            return updatedDriver;
-          }
-          return driver;
-        });
-        return _objectSpread(_objectSpread({}, prevState), {}, {
-          drivers: updatedDrivers
-        });
-      });
-    };
     var handleBatchDriverChanges = function handleBatchDriverChanges(changes) {
       setDriversList(function (prevState) {
         var updatedDrivers = prevState.drivers.map(function (driver) {
@@ -847,26 +798,16 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
       });
     };
     if (!disableSocketRoomDriver) {
-      if (!useBatchSockets) {
-        socket.on('drivers_update', handleUpdateDriver);
-        socket.on('tracking_driver', handleTrackingDriver);
-      } else {
-        socket.on('batch_driver_locations', handleBatchDriverLocations);
-        socket.on('batch_driver_changes', handleBatchDriverChanges);
-      }
+      socket.on('batch_driver_locations', handleBatchDriverLocations);
+      socket.on('batch_driver_changes', handleBatchDriverChanges);
     }
     return function () {
       if (!disableSocketRoomDriver) {
-        if (!useBatchSockets) {
-          socket.off('drivers_update', handleUpdateDriver);
-          socket.off('tracking_driver', handleTrackingDriver);
-        } else {
-          socket.off('batch_driver_locations', handleBatchDriverLocations);
-          socket.off('batch_driver_changes', handleBatchDriverChanges);
-        }
+        socket.off('batch_driver_locations', handleBatchDriverLocations);
+        socket.off('batch_driver_changes', handleBatchDriverChanges);
       }
     };
-  }, [socket, loading, useBatchSockets]);
+  }, [socket, loading]);
   (0, _react.useEffect)(function () {
     if (!auth || loading || !(socket !== null && socket !== void 0 && socket.socket) || disableSocketRoomDriver) return;
     handleJoinMainRooms();
@@ -875,7 +816,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
       handleLeaveMainRooms();
       socket.socket.off('disconnect', handleSocketDisconnect);
     };
-  }, [socket === null || socket === void 0 ? void 0 : socket.socket, auth, loading, disableSocketRoomDriver, useBatchSockets]);
+  }, [socket === null || socket === void 0 ? void 0 : socket.socket, auth, loading, disableSocketRoomDriver]);
 
   /**
    * Listening multi orders action start to change status
