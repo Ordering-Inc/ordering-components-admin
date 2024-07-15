@@ -22,7 +22,8 @@ export const DriversList = (props) => {
     searchFilterValue,
     driverGroupList,
     useDriversByProps,
-    paginationSettings
+    paginationSettings,
+    disableDriverLocationsSockets
   } = props
 
   const [ordering] = useApi()
@@ -541,11 +542,13 @@ export const DriversList = (props) => {
   }, [socket, session?.loading, driversList.drivers])
 
   const handleJoinMainRooms = () => {
-    socket.join({
-      room: 'driver_locations',
-      user_id: session?.user?.id,
-      role: 'manager'
-    })
+    if (!disableDriverLocationsSockets) {
+      socket.join({
+        room: 'driver_locations',
+        user_id: session?.user?.id,
+        role: 'manager'
+      })
+    }
     socket.join({
       room: 'drivers',
       user_id: session?.user?.id,

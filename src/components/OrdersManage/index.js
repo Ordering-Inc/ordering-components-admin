@@ -14,7 +14,9 @@ export const OrdersManage = (props) => {
     driversPropsToFetch,
     disableSocketRoomDriver,
     useFranchiseImages,
-    defaultFilterValues
+    defaultFilterValues,
+    getDriversByControls,
+    disableDriverLocationsSockets
   } = props
 
   const [ordering] = useApi()
@@ -294,6 +296,13 @@ export const OrdersManage = (props) => {
           loading: false,
           admins: content.result.agents
         })
+        if (getDriversByControls) {
+          setDriversList({
+            ...driversList,
+            loading: false,
+            drivers: content.result.drivers
+          })
+        }
         setActionStatus({ ...actionStatus, loading: false })
       } else {
         setActionStatus({ loading: false, error: content?.result })
@@ -351,11 +360,13 @@ export const OrdersManage = (props) => {
   }
 
   const handleJoinMainRooms = () => {
-    socket.join({
-      room: 'driver_locations',
-      user_id: user?.id,
-      role: 'manager'
-    })
+    if (!disableDriverLocationsSockets) {
+      socket.join({
+        room: 'driver_locations',
+        user_id: user?.id,
+        role: 'manager'
+      })
+    }
     socket.join({
       room: 'drivers',
       user_id: user?.id,
@@ -449,7 +460,7 @@ export const OrdersManage = (props) => {
 
   useEffect(() => {
     if (loading) return
-    if (user?.level === 0 || user?.level === 2 || user?.level === 5) {
+    if (!getDriversByControls && (user?.level === 0 || user?.level === 2 || user?.level === 5)) {
       getDrivers()
     }
     getControlsOrders()
@@ -560,7 +571,7 @@ OrdersManage.propTypes = {
 }
 
 OrdersManage.defaultProps = {
-  driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
+  driversPropsToFetch: ['id', 'name', 'lastname', 'location', 'enabled', 'available', 'busy', 'driver_groups.name', 'driver_groups.id', 'assigned_orders_count', 'photo'],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
