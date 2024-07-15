@@ -46,7 +46,8 @@ var DriversList = exports.DriversList = function DriversList(props) {
     searchFilterValue = props.searchFilterValue,
     driverGroupList = props.driverGroupList,
     useDriversByProps = props.useDriversByProps,
-    paginationSettings = props.paginationSettings;
+    paginationSettings = props.paginationSettings,
+    disableDriverLocationsSockets = props.disableDriverLocationsSockets;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -805,12 +806,15 @@ var DriversList = exports.DriversList = function DriversList(props) {
     };
   }, [socket, session === null || session === void 0 ? void 0 : session.loading, driversList.drivers]);
   var handleJoinMainRooms = function handleJoinMainRooms() {
-    var _session$user, _session$user2;
-    socket.join({
-      room: 'driver_locations',
-      user_id: session === null || session === void 0 || (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id,
-      role: 'manager'
-    });
+    var _session$user2;
+    if (!disableDriverLocationsSockets) {
+      var _session$user;
+      socket.join({
+        room: 'driver_locations',
+        user_id: session === null || session === void 0 || (_session$user = session.user) === null || _session$user === void 0 ? void 0 : _session$user.id,
+        role: 'manager'
+      });
+    }
     socket.join({
       room: 'drivers',
       user_id: session === null || session === void 0 || (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.id,

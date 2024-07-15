@@ -42,7 +42,9 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     driversPropsToFetch = props.driversPropsToFetch,
     disableSocketRoomDriver = props.disableSocketRoomDriver,
     useFranchiseImages = props.useFranchiseImages,
-    defaultFilterValues = props.defaultFilterValues;
+    defaultFilterValues = props.defaultFilterValues,
+    getDriversByControls = props.getDriversByControls,
+    disableDriverLocationsSockets = props.disableDriverLocationsSockets;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -619,6 +621,12 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
                 loading: false,
                 admins: content.result.agents
               }));
+              if (getDriversByControls) {
+                setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
+                  loading: false,
+                  drivers: content.result.drivers
+                }));
+              }
               setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
                 loading: false
               }));
@@ -718,11 +726,13 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     };
   }();
   var handleJoinMainRooms = function handleJoinMainRooms() {
-    socket.join({
-      room: 'driver_locations',
-      user_id: user === null || user === void 0 ? void 0 : user.id,
-      role: 'manager'
-    });
+    if (!disableDriverLocationsSockets) {
+      socket.join({
+        room: 'driver_locations',
+        user_id: user === null || user === void 0 ? void 0 : user.id,
+        role: 'manager'
+      });
+    }
     socket.join({
       room: 'drivers',
       user_id: user === null || user === void 0 ? void 0 : user.id,
@@ -827,7 +837,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
   }, [selectedOrderIds, startMulitOrderStatusChange]);
   (0, _react.useEffect)(function () {
     if (loading) return;
-    if ((user === null || user === void 0 ? void 0 : user.level) === 0 || (user === null || user === void 0 ? void 0 : user.level) === 2 || (user === null || user === void 0 ? void 0 : user.level) === 5) {
+    if (!getDriversByControls && ((user === null || user === void 0 ? void 0 : user.level) === 0 || (user === null || user === void 0 ? void 0 : user.level) === 2 || (user === null || user === void 0 ? void 0 : user.level) === 5)) {
       getDrivers();
     }
     getControlsOrders();
@@ -953,7 +963,7 @@ OrdersManage.propTypes = {
   afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
 };
 OrdersManage.defaultProps = {
-  driversPropsToFetch: ['id', 'name', 'lastname', 'assigned_orders_count', 'available', 'phone', 'cellphone', 'location', 'photo', 'qualification', 'last_order_assigned_at'],
+  driversPropsToFetch: ['id', 'name', 'lastname', 'location', 'enabled', 'available', 'busy', 'driver_groups.name', 'driver_groups.id', 'assigned_orders_count', 'photo'],
   beforeComponents: [],
   afterComponents: [],
   beforeElements: [],
