@@ -526,7 +526,7 @@ var DriversList = exports.DriversList = function DriversList(props) {
               signal: signal
             };
             _context4.next = 6;
-            return fetch("".concat(ordering.root, "/controls/orders/").concat(orderId), requestOptions);
+            return fetch("".concat(ordering.root, "/controls/orders/").concat(orderId, "?version=v2"), requestOptions);
           case 6:
             response = _context4.sent;
             _context4.next = 9;

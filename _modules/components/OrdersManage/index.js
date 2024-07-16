@@ -270,77 +270,88 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     driverGroupList = _useState22[0],
     setDriverGroupList = _useState22[1];
   /**
+  * Object to save driver group list
+  */
+  var _useState23 = (0, _react.useState)({
+      groups: [],
+      loading: false,
+      error: null
+    }),
+    _useState24 = _slicedToArray(_useState23, 2),
+    assignableDriverGroupList = _useState24[0],
+    setAssignableDriverGroupList = _useState24[1];
+  /**
    * Object to save drivers
    */
-  var _useState23 = (0, _react.useState)({
+  var _useState25 = (0, _react.useState)({
       drivers: [],
       loading: true,
       error: null
     }),
-    _useState24 = _slicedToArray(_useState23, 2),
-    driversList = _useState24[0],
-    setDriversList = _useState24[1];
+    _useState26 = _slicedToArray(_useState25, 2),
+    driversList = _useState26[0],
+    setDriversList = _useState26[1];
   /**
   * Object to save admins
   */
-  var _useState25 = (0, _react.useState)({
+  var _useState27 = (0, _react.useState)({
       admins: [],
       loading: true,
       error: null
     }),
-    _useState26 = _slicedToArray(_useState25, 2),
-    adminsList = _useState26[0],
-    setAdminsList = _useState26[1];
+    _useState28 = _slicedToArray(_useState27, 2),
+    adminsList = _useState28[0],
+    setAdminsList = _useState28[1];
   /**
    * Object to save paymethods
    */
-  var _useState27 = (0, _react.useState)({
+  var _useState29 = (0, _react.useState)({
       paymethods: [],
       loading: true,
       error: null
     }),
-    _useState28 = _slicedToArray(_useState27, 2),
-    paymethodsList = _useState28[0],
-    setPaymethodsList = _useState28[1];
+    _useState30 = _slicedToArray(_useState29, 2),
+    paymethodsList = _useState30[0],
+    setPaymethodsList = _useState30[1];
   /**
    * Object to save businesses
    */
-  var _useState29 = (0, _react.useState)({
+  var _useState31 = (0, _react.useState)({
       businesses: [],
       loading: true,
       error: null
     }),
-    _useState30 = _slicedToArray(_useState29, 2),
-    businessesList = _useState30[0],
-    setBusinessesList = _useState30[1];
+    _useState32 = _slicedToArray(_useState31, 2),
+    businessesList = _useState32[0],
+    setBusinessesList = _useState32[1];
   /**
    * Array to save the cities
    */
-  var _useState31 = (0, _react.useState)([]),
-    _useState32 = _slicedToArray(_useState31, 2),
-    citiesList = _useState32[0],
-    setCitiesList = _useState32[1];
+  var _useState33 = (0, _react.useState)([]),
+    _useState34 = _slicedToArray(_useState33, 2),
+    citiesList = _useState34[0],
+    setCitiesList = _useState34[1];
 
   /**
    * Object to save selected order ids
    */
-  var _useState33 = (0, _react.useState)([]),
-    _useState34 = _slicedToArray(_useState33, 2),
-    selectedOrderIds = _useState34[0],
-    setSelectedOrderIds = _useState34[1];
+  var _useState35 = (0, _react.useState)([]),
+    _useState36 = _slicedToArray(_useState35, 2),
+    selectedOrderIds = _useState36[0],
+    setSelectedOrderIds = _useState36[1];
   /**
    * Object to save order substatuses
    */
-  var _useState35 = (0, _react.useState)({
+  var _useState37 = (0, _react.useState)({
       pending: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.pending,
       inProgress: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.inProgress,
       completed: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.completed,
       cancelled: orderStatuesList === null || orderStatuesList === void 0 ? void 0 : orderStatuesList.cancelled,
       all: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
     }),
-    _useState36 = _slicedToArray(_useState35, 2),
-    selectedSubOrderStatus = _useState36[0],
-    setSelectedSubOrderStatus = _useState36[1];
+    _useState38 = _slicedToArray(_useState37, 2),
+    selectedSubOrderStatus = _useState38[0],
+    setSelectedSubOrderStatus = _useState38[1];
 
   /**
    * Save ids of orders selected
@@ -596,7 +607,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
               }
             };
             _context4.next = 5;
-            return fetch("".concat(ordering.root, "/controls/orders"), requestOptions);
+            return fetch("".concat(ordering.root, "/controls/orders?version=v2"), requestOptions);
           case 5:
             response = _context4.sent;
             _context4.next = 8;
@@ -608,6 +619,10 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
               setDriverGroupList(_objectSpread(_objectSpread({}, driverGroupList), {}, {
                 loading: false,
                 groups: content.result.driver_groups
+              }));
+              setAssignableDriverGroupList(_objectSpread(_objectSpread({}, assignableDriverGroupList), {}, {
+                loading: false,
+                groups: content.result.assignable_driver_groups
               }));
               setPaymethodsList(_objectSpread(_objectSpread({}, paymethodsList), {}, {
                 loading: false,
@@ -933,7 +948,8 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     timeStatus: timeStatus,
     setTimeStatus: setTimeStatus,
     franchisesList: franchisesList,
-    adminsList: adminsList
+    adminsList: adminsList,
+    assignableDriverGroupList: assignableDriverGroupList
   })));
 };
 OrdersManage.propTypes = {
