@@ -69,6 +69,10 @@ export const OrdersManage = (props) => {
    */
   const [driverGroupList, setDriverGroupList] = useState({ groups: [], loading: false, error: null })
   /**
+  * Object to save driver group list
+  */
+  const [assignableDriverGroupList, setAssignableDriverGroupList] = useState({ groups: [], loading: false, error: null })
+  /**
    * Object to save drivers
    */
   const [driversList, setDriversList] = useState({ drivers: [], loading: true, error: null })
@@ -272,7 +276,7 @@ export const OrdersManage = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/controls/orders`, requestOptions)
+      const response = await fetch(`${ordering.root}/controls/orders?version=v2`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setCitiesList(content.result.cities)
@@ -280,6 +284,11 @@ export const OrdersManage = (props) => {
           ...driverGroupList,
           loading: false,
           groups: content.result.driver_groups
+        })
+        setAssignableDriverGroupList({
+          ...assignableDriverGroupList,
+          loading: false,
+          groups: content.result.assignable_driver_groups
         })
         setPaymethodsList({
           ...paymethodsList,
@@ -537,6 +546,7 @@ export const OrdersManage = (props) => {
           setTimeStatus={setTimeStatus}
           franchisesList={franchisesList}
           adminsList={adminsList}
+          assignableDriverGroupList={assignableDriverGroupList}
         />
       )}
     </>

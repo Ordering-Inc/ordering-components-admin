@@ -333,7 +333,7 @@ export const DriversList = (props) => {
         },
         signal
       }
-      const response = await fetch(`${ordering.root}/controls/orders/${orderId}`, requestOptions)
+      const response = await fetch(`${ordering.root}/controls/orders/${orderId}?version=v2`, requestOptions)
       const { error, result } = await response.json()
 
       const drivers = result?.drivers?.map(driver => ({ ...driver, enabled: true }))
