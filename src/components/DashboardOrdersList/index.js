@@ -754,8 +754,7 @@ export const DashboardOrdersList = (props) => {
       }
     }
     if (filterValues?.driverGroupIds?.length > 0) {
-      const lastDriverId = lastHistoryData?.find(item => item.attribute === 'driver_id')?.old
-      if (!filterValues.driverGroupIds.includes(order.driver_id) && !filterValues.driverGroupIds.includes(lastDriverId)) {
+      if (!filterValues?.driverGroupIds?.some(driverGroup => order?.assignable_driver_groups?.includes?.(driverGroup))) {
         filterCheck = false
       }
     }
