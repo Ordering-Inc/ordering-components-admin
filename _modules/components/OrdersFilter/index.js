@@ -5,17 +5,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.OrdersFilter = void 0;
-var _react = _interopRequireWildcard(require("react"));
+var _react = _interopRequireDefault(require("react"));
 var _propTypes = _interopRequireDefault(require("prop-types"));
 var _dayjs = _interopRequireDefault(require("dayjs"));
 var _utc = _interopRequireDefault(require("dayjs/plugin/utc"));
 var _timezone = _interopRequireDefault(require("dayjs/plugin/timezone"));
 var _SessionContext = require("../../contexts/SessionContext");
 function _interopRequireDefault(e) { return e && e.__esModule ? e : { default: e }; }
-function _getRequireWildcardCache(e) { if ("function" != typeof WeakMap) return null; var r = new WeakMap(), t = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(e) { return e ? t : r; })(e); }
-function _interopRequireWildcard(e, r) { if (!r && e && e.__esModule) return e; if (null === e || "object" != _typeof(e) && "function" != typeof e) return { default: e }; var t = _getRequireWildcardCache(r); if (t && t.has(e)) return t.get(e); var n = { __proto__: null }, a = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var u in e) if ("default" !== u && {}.hasOwnProperty.call(e, u)) { var i = a ? Object.getOwnPropertyDescriptor(e, u) : null; i && (i.get || i.set) ? Object.defineProperty(n, u, i) : n[u] = e[u]; } return n.default = e, t && t.set(e, n), n; }
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t.return || t.return(); } finally { if (u) throw o; } } }; }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
@@ -35,7 +32,6 @@ _dayjs.default.extend(_utc.default);
 _dayjs.default.extend(_timezone.default);
 var OrdersFilter = exports.OrdersFilter = function OrdersFilter(props) {
   var UIComponent = props.UIComponent,
-    driverGroupList = props.driverGroupList,
     filterValues = props.filterValues,
     setFilterValues = props.setFilterValues,
     handleFilterValues = props.handleFilterValues;
@@ -99,7 +95,7 @@ var OrdersFilter = exports.OrdersFilter = function OrdersFilter(props) {
    * * @param {object} groupType Group type
    */
   var handleChangeGroup = function handleChangeGroup(groupType) {
-    var _groupTypes = _toConsumableArray(filterValues.groupTypes);
+    var _groupTypes = _toConsumableArray(filterValues.driverGroupBusinessIds);
     if (!_groupTypes.includes(groupType)) {
       _groupTypes.push(groupType);
     } else {
@@ -110,7 +106,7 @@ var OrdersFilter = exports.OrdersFilter = function OrdersFilter(props) {
 
     // setGroupDriverIds(_driverIds)
     setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
-      groupTypes: _groupTypes
+      driverGroupBusinessIds: _groupTypes
     }));
   };
 
@@ -455,42 +451,6 @@ var OrdersFilter = exports.OrdersFilter = function OrdersFilter(props) {
     setFilterValues(initialValues);
     handleFilterValues(initialValues);
   };
-  (0, _react.useEffect)(function () {
-    var groupDriverIds = [];
-    if (filterValues.groupTypes.length > 0) {
-      var _iterator = _createForOfIteratorHelper(filterValues.groupTypes),
-        _step;
-      try {
-        var _loop = function _loop() {
-          var groupId = _step.value;
-          var selectedDriverGroup = driverGroupList.groups.find(function (group) {
-            return group.id === groupId;
-          });
-          if (selectedDriverGroup) {
-            groupDriverIds = [].concat(_toConsumableArray(groupDriverIds), _toConsumableArray(selectedDriverGroup === null || selectedDriverGroup === void 0 ? void 0 : selectedDriverGroup.drivers));
-          }
-        };
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          _loop();
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-    }
-    var uniqueDriverIds = groupDriverIds.filter(function (v, i, a) {
-      return a.indexOf(v) === i;
-    });
-    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
-      driverGroupIds: uniqueDriverIds
-    }));
-  }, [filterValues.groupTypes]);
-  (0, _react.useEffect)(function () {
-    setFilterValues(_objectSpread(_objectSpread({}, filterValues), {}, {
-      driverGroupBusinessIds: filterValues.groupTypesUnassigned
-    }));
-  }, [filterValues.groupTypesUnassigned]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     handleChangeOrderId: handleChangeOrderId,
     handleChangeGroup: handleChangeGroup,
