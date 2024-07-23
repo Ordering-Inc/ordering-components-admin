@@ -31,9 +31,8 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 var DriversList = exports.DriversList = function DriversList(props) {
-  var _paginationSettings$p, _driversList$drivers3;
-  var drivers = props.drivers,
-    UIComponent = props.UIComponent,
+  var _paginationSettings$p, _props$driversList, _props$driversList5, _props$driversList7, _props$driversList8, _driversList$drivers3;
+  var UIComponent = props.UIComponent,
     propsToFetch = props.propsToFetch,
     isSearchByName = props.isSearchByName,
     isSearchByCellphone = props.isSearchByCellphone,
@@ -105,12 +104,11 @@ var DriversList = exports.DriversList = function DriversList(props) {
   var _useSession = (0, _SessionContext.useSession)(),
     _useSession2 = _slicedToArray(_useSession, 1),
     session = _useSession2[0];
-
   /**
    * Array to save drivers
    */
   var _useState11 = (0, _react.useState)({
-      drivers: useDriversByProps ? drivers : [],
+      drivers: useDriversByProps ? (_props$driversList = props.driversList) === null || _props$driversList === void 0 ? void 0 : _props$driversList.drivers : [],
       loading: !useDriversByProps,
       error: null
     }),
@@ -506,7 +504,7 @@ var DriversList = exports.DriversList = function DriversList(props) {
    */
   var getOrderDrivers = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-      var _result$drivers, requestOptions, response, _yield$response$json2, error, result, _drivers;
+      var _result$drivers, requestOptions, response, _yield$response$json2, error, result, drivers;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
@@ -535,14 +533,14 @@ var DriversList = exports.DriversList = function DriversList(props) {
             _yield$response$json2 = _context4.sent;
             error = _yield$response$json2.error;
             result = _yield$response$json2.result;
-            _drivers = result === null || result === void 0 || (_result$drivers = result.drivers) === null || _result$drivers === void 0 ? void 0 : _result$drivers.map(function (driver) {
+            drivers = result === null || result === void 0 || (_result$drivers = result.drivers) === null || _result$drivers === void 0 ? void 0 : _result$drivers.map(function (driver) {
               return _objectSpread(_objectSpread({}, driver), {}, {
                 enabled: true
               });
             });
             setDriversList({
               loading: false,
-              drivers: error ? [] : _drivers,
+              drivers: error ? [] : drivers,
               error: error ? result : null
             });
             setCompanysList({
@@ -711,13 +709,15 @@ var DriversList = exports.DriversList = function DriversList(props) {
     getOnlineOfflineDrivers(driversList.drivers);
   }, [driversSubfilter, filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds, searchFilterValue, useDriversByProps]);
   (0, _react.useEffect)(function () {
+    var _props$driversList2;
     if (useDriversByProps) return;
-    if (drivers) {
+    if ((_props$driversList2 = props.driversList) !== null && _props$driversList2 !== void 0 && _props$driversList2.drivers) {
+      var _props$driversList3, _props$driversList4;
       setDriversList(_objectSpread(_objectSpread({}, driversList), {}, {
-        drivers: drivers,
+        drivers: (_props$driversList3 = props.driversList) === null || _props$driversList3 === void 0 ? void 0 : _props$driversList3.drivers,
         loading: false
       }));
-      getOnlineOfflineDrivers(drivers);
+      getOnlineOfflineDrivers((_props$driversList4 = props.driversList) === null || _props$driversList4 === void 0 ? void 0 : _props$driversList4.drivers);
     } else {
       if (isOrderDrivers) {
         getOrderDrivers();
@@ -733,15 +733,17 @@ var DriversList = exports.DriversList = function DriversList(props) {
         controller === null || controller === void 0 || controller.abort();
       }
     };
-  }, [JSON.stringify(drivers), orderId, useDriversByProps, searchValue]);
+  }, [(_props$driversList5 = props.driversList) === null || _props$driversList5 === void 0 ? void 0 : _props$driversList5.loading, orderId, useDriversByProps, searchValue]);
   (0, _react.useEffect)(function () {
+    var _props$driversList6;
     if (!useDriversByProps) return;
     setDriversList({
-      drivers: drivers,
+      drivers: (_props$driversList6 = props.driversList) === null || _props$driversList6 === void 0 ? void 0 : _props$driversList6.drivers,
       loading: false,
       error: null
     });
-  }, [JSON.stringify(drivers), driversSubfilter, filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds, searchFilterValue, useDriversByProps]);
+  }, [(_props$driversList7 = props.driversList) === null || _props$driversList7 === void 0 ? void 0 : _props$driversList7.loading, driversSubfilter, filterValues === null || filterValues === void 0 ? void 0 : filterValues.driverIds, searchFilterValue, useDriversByProps]);
+
   /**
    * Listening driver change
    */
@@ -804,7 +806,7 @@ var DriversList = exports.DriversList = function DriversList(props) {
         socket.off('batch_driver_changes', handleBatchDriverChanges);
       }
     };
-  }, [socket, session === null || session === void 0 ? void 0 : session.loading, driversList.drivers]);
+  }, [socket, session === null || session === void 0 ? void 0 : session.loading, (_props$driversList8 = props.driversList) === null || _props$driversList8 === void 0 ? void 0 : _props$driversList8.loading]);
   var handleJoinMainRooms = function handleJoinMainRooms() {
     var _session$user2;
     if (!disableDriverLocationsSockets) {
