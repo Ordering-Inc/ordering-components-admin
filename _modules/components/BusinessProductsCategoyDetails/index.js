@@ -233,7 +233,7 @@ var BusinessProductsCategoyDetails = exports.BusinessProductsCategoyDetails = fu
             }));
             changes = _objectSpread({}, formState.changes);
             for (key in changes) {
-              if (changes[key] === null || keysToDelete.includes(key)) {
+              if (!(key === 'snooze_until' && changes[key] === null) && changes[key] === null || keysToDelete.includes(key)) {
                 delete changes[key];
               }
             }
