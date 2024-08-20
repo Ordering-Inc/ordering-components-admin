@@ -155,7 +155,7 @@ export const BusinessProductsCategoyDetails = (props) => {
         })
         const changes = { ...formState.changes }
         for (const key in changes) {
-          if (changes[key] === null || keysToDelete.includes(key)) {
+          if ((!(key === 'snooze_until' && changes[key] === null) && changes[key] === null) || keysToDelete.includes(key)) {
             delete changes[key]
           }
         }
