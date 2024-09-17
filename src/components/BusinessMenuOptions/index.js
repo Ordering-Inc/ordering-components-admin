@@ -104,6 +104,7 @@ export const BusinessMenuOptions = (props) => {
             if (isUpdatedProducts) {
               menu.products = [...selectedProducts]
             }
+            setCurrentMenu(menu)
           }
           return true
         })
