@@ -165,6 +165,7 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
                   if (isUpdatedProducts) {
                     menu.products = _toConsumableArray(selectedProducts);
                   }
+                  setCurrentMenu(menu);
                 }
                 return true;
               });
