@@ -242,6 +242,7 @@ import { ToastContext, ToastProvider, useToast, ToastType } from './contexts/Toa
 import { PaymentOptionCash } from './components/PaymentOptionCash'
 import { PaymentOptionPaypal } from './components/PaymentOptionPaypal'
 import { PaymentOptionStripe } from './components/PaymentOptionStripe'
+import { PaymentOptionStripeLink } from './components/PaymentOptionStripeLink'
 import { PaymentOptionStripeDirect } from './components/PaymentOptionStripeDirect'
 import { PaymentOptionStripeRedirect } from './components/PaymentOptionStripeRedirect'
 import { ReportsDriverFilter } from './components/ReportsDriverFilter'
@@ -504,6 +505,7 @@ export {
   PaymentOptionCash,
   PaymentOptionPaypal,
   PaymentOptionStripe,
+  PaymentOptionStripeLink,
   PaymentOptionStripeDirect,
   PaymentOptionStripeRedirect,
   PhoneAutocomplete,

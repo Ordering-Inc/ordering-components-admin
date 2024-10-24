@@ -126,7 +126,9 @@ export const BusinessWalletsList = (props) => {
   }
 
   useEffect(() => {
-    getLoyaltyPlans()
+    if (loyaltyPlanState?.loading) {
+      getLoyaltyPlans()
+    }
     if (business?.configs) return
     getWalletsList()
   }, [business?.configs])
