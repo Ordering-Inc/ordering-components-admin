@@ -48,6 +48,8 @@ export const OrdersManage = (props) => {
     offlineDrivers: [],
     selectedDriver: null
   })
+  const [detailsOrder, setDetailsOrder] = useState(null)
+
   const allowColumnsModel = {
     slaBar: { visable: false, title: '', className: '', draggable: false, colSpan: 1, order: -2 },
     orderNumber: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
@@ -441,7 +443,15 @@ export const OrdersManage = (props) => {
         })
         return { ...prevState, drivers: updatedDrivers }
       })
-
+      if (detailsOrder?.id && detailsOrder?.driver_id) {
+        const selectedDriverLocation = locationMap.get(detailsOrder.driver_id)
+        if (selectedDriverLocation) {
+          setDetailsOrder(prevState => ({
+            ...prevState,
+            driver: { ...prevState.driver, location: selectedDriverLocation }
+          }))
+        }
+      }
       if (mapsData?.selectedDriver?.id) {
         const selectedDriverLocation = locationMap.get(mapsData.selectedDriver.id)
         if (selectedDriverLocation) {
@@ -477,7 +487,7 @@ export const OrdersManage = (props) => {
         socket.off('batch_driver_changes', handleBatchDriverChanges)
       }
     }
-  }, [socket, loading, mapsData?.selectedDriver?.id])
+  }, [socket, loading, mapsData?.selectedDriver?.id, detailsOrder?.id])
 
   useEffect(() => {
     if (!auth || loading || !socket?.socket || disableSocketRoomDriver) return
@@ -580,6 +590,8 @@ export const OrdersManage = (props) => {
           assignableDriverGroupList={assignableDriverGroupList}
           mapsData={mapsData}
           setMapsData={setMapsData}
+          detailsOrder={detailsOrder}
+          setDetailsOrder={setDetailsOrder}
         />
       )}
     </>
