@@ -220,6 +220,7 @@ export const ProductExtraOptionDetails = (props) => {
    */
   const handleUpdateSubOption = async (changesParam) => {
     try {
+      if (!changesParam?.id && !editSubOptionId) return
       const _changes = changesParam || { ...changesState.changes }
       let changes = {}
       for (const key in _changes) {
