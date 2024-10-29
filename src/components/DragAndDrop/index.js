@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-export const DragAndDrop = ({ onDrop, children, className, style }) => {
+export const DragAndDrop = ({ onDrop, children, className, style, disabled }) => {
   const [classname, setClassname] = useState()
 
   const handleDrop = (e) => {
+    if (disabled) return
     e.preventDefault()
     e.stopPropagation()
     onDrop(e.dataTransfer)
