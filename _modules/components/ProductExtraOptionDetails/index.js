@@ -508,6 +508,10 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
                 option: updatedOption,
                 loading: false
               }));
+              setChangesState({
+                changes: {},
+                result: {}
+              });
               options = extra.options.filter(function (option) {
                 if (option.id === updatedOption.id) {
                   Object.assign(option, updatedOption);
