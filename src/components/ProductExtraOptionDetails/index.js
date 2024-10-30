@@ -307,6 +307,10 @@ export const ProductExtraOptionDetails = (props) => {
         })
         const updatedOption = { ...optionState.option, suboptions: subOptions }
         setOptionState({ ...optionState, option: updatedOption, loading: false })
+        setChangesState({
+          changes: {},
+          result: {}
+        })
         const options = extra.options.filter(option => {
           if (option.id === updatedOption.id) {
             Object.assign(option, updatedOption)
