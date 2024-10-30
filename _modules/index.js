@@ -1143,6 +1143,12 @@ Object.defineProperty(exports, "PaymentOptionStripeDirect", {
     return _PaymentOptionStripeDirect.PaymentOptionStripeDirect;
   }
 });
+Object.defineProperty(exports, "PaymentOptionStripeLink", {
+  enumerable: true,
+  get: function get() {
+    return _PaymentOptionStripeLink.PaymentOptionStripeLink;
+  }
+});
 Object.defineProperty(exports, "PaymentOptionStripeRedirect", {
   enumerable: true,
   get: function get() {
@@ -2065,6 +2071,7 @@ var _ToastContext = require("./contexts/ToastContext");
 var _PaymentOptionCash = require("./components/PaymentOptionCash");
 var _PaymentOptionPaypal = require("./components/PaymentOptionPaypal");
 var _PaymentOptionStripe = require("./components/PaymentOptionStripe");
+var _PaymentOptionStripeLink = require("./components/PaymentOptionStripeLink");
 var _PaymentOptionStripeDirect = require("./components/PaymentOptionStripeDirect");
 var _PaymentOptionStripeRedirect = require("./components/PaymentOptionStripeRedirect");
 var _ReportsDriverFilter = require("./components/ReportsDriverFilter");
