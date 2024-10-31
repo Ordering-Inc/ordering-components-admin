@@ -356,6 +356,12 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
         while (1) switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
+            if (!(!(changesParam !== null && changesParam !== void 0 && changesParam.id) && !editSubOptionId)) {
+              _context.next = 3;
+              break;
+            }
+            return _context.abrupt("return");
+          case 3:
             _changes = changesParam || _objectSpread({}, changesState.changes);
             changes = {};
             for (key in _changes) {
@@ -364,11 +370,11 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
               }
             }
             if (!(Object.keys(changes).length === 0)) {
-              _context.next = 6;
+              _context.next = 8;
               break;
             }
             return _context.abrupt("return");
-          case 6:
+          case 8:
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
               loading: true
@@ -381,20 +387,20 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
               },
               body: JSON.stringify(changes)
             };
-            _context.next = 11;
+            _context.next = 13;
             return fetch("".concat(ordering.root, "/business/").concat(business.id, "/extras/").concat(extra.id, "/options/").concat(option.id, "/suboptions/").concat((changesParam === null || changesParam === void 0 ? void 0 : changesParam.id) || editSubOptionId), requestOptions);
-          case 11:
+          case 13:
             response = _context.sent;
-            _context.next = 14;
+            _context.next = 16;
             return response.json();
-          case 14:
+          case 16:
             content = _context.sent;
             setChangesState({
               changes: content.error ? changesState.changes : {},
               result: content === null || content === void 0 ? void 0 : content.result
             });
             if (content.error) {
-              _context.next = 26;
+              _context.next = 28;
               break;
             }
             subOptions = optionState.option.suboptions.filter(function (subOption) {
@@ -423,21 +429,21 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
             handleSuccessUpdateBusiness(updatedExtra);
             showToast(_ToastContext.ToastType.Success, t('CHOICE_SAVED', 'Choice saved'));
             return _context.abrupt("return", true);
-          case 26:
-            _context.next = 31;
-            break;
           case 28:
-            _context.prev = 28;
+            _context.next = 33;
+            break;
+          case 30:
+            _context.prev = 30;
             _context.t0 = _context["catch"](0);
             setOptionState(_objectSpread(_objectSpread({}, optionState), {}, {
               loading: false,
               error: _context.t0.message
             }));
-          case 31:
+          case 33:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 28]]);
+      }, _callee, null, [[0, 30]]);
     }));
     return function handleUpdateSubOption(_x) {
       return _ref.apply(this, arguments);
@@ -502,6 +508,10 @@ var ProductExtraOptionDetails = exports.ProductExtraOptionDetails = function Pro
                 option: updatedOption,
                 loading: false
               }));
+              setChangesState({
+                changes: {},
+                result: {}
+              });
               options = extra.options.filter(function (option) {
                 if (option.id === updatedOption.id) {
                   Object.assign(option, updatedOption);

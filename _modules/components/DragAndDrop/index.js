@@ -18,12 +18,14 @@ var DragAndDrop = exports.DragAndDrop = function DragAndDrop(_ref) {
   var onDrop = _ref.onDrop,
     children = _ref.children,
     className = _ref.className,
-    style = _ref.style;
+    style = _ref.style,
+    disabled = _ref.disabled;
   var _useState = (0, _react.useState)(),
     _useState2 = _slicedToArray(_useState, 2),
     classname = _useState2[0],
     setClassname = _useState2[1];
   var handleDrop = function handleDrop(e) {
+    if (disabled) return;
     e.preventDefault();
     e.stopPropagation();
     onDrop(e.dataTransfer);
