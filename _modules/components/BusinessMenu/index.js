@@ -32,7 +32,8 @@ var BusinessMenu = exports.BusinessMenu = function BusinessMenu(props) {
   var business = props.business,
     UIComponent = props.UIComponent,
     handleSuccessBusinessMenu = props.handleSuccessBusinessMenu,
-    propsToFetch = props.propsToFetch;
+    propsToFetch = props.propsToFetch,
+    propsToFetchMenuChannel = props.propsToFetchMenuChannel;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -304,7 +305,7 @@ var BusinessMenu = exports.BusinessMenu = function BusinessMenu(props) {
               }
             };
             _context4.next = 5;
-            return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus?params=sites,products,businesses&mode=dashboard"), requestOptions);
+            return fetch("".concat(ordering.root, "/business/").concat(business.id, "/menus?params=").concat(propsToFetchMenuChannel.join(','), "&mode=dashboard"), requestOptions);
           case 5:
             response = _context4.sent;
             _context4.next = 8;
@@ -466,5 +467,6 @@ BusinessMenu.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'categories', 'categories_shared', 'header', 'logo', 'timezone']
+  propsToFetch: ['id', 'categories', 'categories_shared', 'header', 'logo', 'timezone'],
+  propsToFetchMenuChannel: ['sites', 'products', 'businesses', 'enabled', 'business_id', 'name', 'comment', 'schedule', 'pickup', 'delivery', 'eatin', 'curbside', 'driver_thru', 'schedule_ranges', 'all_products', 'use_business_schedule', 'external_id', 'seat_delivery', 'catering_delivery', 'catering_pickup', 'snooze_until', 'reservation']
 };
