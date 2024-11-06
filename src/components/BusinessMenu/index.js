@@ -10,7 +10,8 @@ export const BusinessMenu = (props) => {
     business,
     UIComponent,
     handleSuccessBusinessMenu,
-    propsToFetch
+    propsToFetch,
+    propsToFetchMenuChannel
   } = props
   const [ordering] = useApi()
   const [{ token }] = useSession()
@@ -190,7 +191,7 @@ export const BusinessMenu = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=sites,products,businesses&mode=dashboard`, requestOptions)
+      const response = await fetch(`${ordering.root}/business/${business.id}/menus?params=${propsToFetchMenuChannel.join(',')}&mode=dashboard`, requestOptions)
       const { result, error } = await response.json()
       if (!error) {
         let sites = {}
@@ -317,5 +318,11 @@ BusinessMenu.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'categories', 'categories_shared', 'header', 'logo', 'timezone']
+  propsToFetch: ['id', 'categories', 'categories_shared', 'header', 'logo', 'timezone'],
+  propsToFetchMenuChannel: [
+    'sites', 'products', 'businesses', 'enabled', 'business_id', 'name', 'comment', 'schedule',
+    'pickup', 'delivery', 'eatin', 'curbside', 'driver_thru', 'schedule_ranges',
+    'all_products', 'use_business_schedule', 'external_id', 'seat_delivery', 'catering_delivery',
+    'catering_pickup', 'snooze_until', 'reservation'
+  ]
 }
