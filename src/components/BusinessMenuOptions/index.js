@@ -104,7 +104,7 @@ export const BusinessMenuOptions = (props) => {
             if (isUpdatedProducts) {
               menu.products = [...selectedProducts]
             }
-            setCurrentMenu(menu)
+            setCurrentMenu({ menu })
           }
           return true
         })
@@ -318,6 +318,7 @@ export const BusinessMenuOptions = (props) => {
 
   const getSharedMenuProducts = async () => {
     try {
+      setCurrentMenu({ loading: true })
       const paramsToFetch = ['id', 'name', 'enabled', 'featured', 'upselling', 'price', 'extras', 'inventoried', 'category_id']
       const response = await fetch(`${ordering.root}/business/${business?.id}/menus_shared/${menu?.id}/products?params=${paramsToFetch}`, {
         method: 'GET',
@@ -332,16 +333,21 @@ export const BusinessMenuOptions = (props) => {
         setSelectedProductsIds(_selectedProductsIds)
         setSelectedProducts(result)
         setCurrentMenu({
-          ...menu,
-          products: result
+          menu: {
+            ...menu,
+            products: result
+          },
+          loading: false
         })
         return
       }
+      setCurrentMenu({ loading: false })
       setFormState({
         ...formState,
         error: result
       })
     } catch (err) {
+      setCurrentMenu({ loading: false })
       setFormState({
         ...formState,
         error: err.message
