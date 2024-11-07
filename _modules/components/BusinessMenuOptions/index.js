@@ -165,7 +165,9 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
                   if (isUpdatedProducts) {
                     menu.products = _toConsumableArray(selectedProducts);
                   }
-                  setCurrentMenu(menu);
+                  setCurrentMenu({
+                    menu: menu
+                  });
                 }
                 return true;
               });
@@ -437,8 +439,11 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
             _context4.prev = 0;
+            setCurrentMenu({
+              loading: true
+            });
             paramsToFetch = ['id', 'name', 'enabled', 'featured', 'upselling', 'price', 'extras', 'inventoried', 'category_id'];
-            _context4.next = 4;
+            _context4.next = 5;
             return fetch("".concat(ordering.root, "/business/").concat(business === null || business === void 0 ? void 0 : business.id, "/menus_shared/").concat(menu === null || menu === void 0 ? void 0 : menu.id, "/products?params=").concat(paramsToFetch), {
               method: 'GET',
               headers: {
@@ -446,16 +451,16 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
                 Authorization: "Bearer ".concat(token)
               }
             });
-          case 4:
+          case 5:
             response = _context4.sent;
-            _context4.next = 7;
+            _context4.next = 8;
             return response.json();
-          case 7:
+          case 8:
             _yield$response$json = _context4.sent;
             result = _yield$response$json.result;
             error = _yield$response$json.error;
             if (error) {
-              _context4.next = 16;
+              _context4.next = 17;
               break;
             }
             _selectedProductsIds = result === null || result === void 0 ? void 0 : result.reduce(function (ids, product) {
@@ -463,27 +468,36 @@ var BusinessMenuOptions = exports.BusinessMenuOptions = function BusinessMenuOpt
             }, []);
             setSelectedProductsIds(_selectedProductsIds);
             setSelectedProducts(result);
-            setCurrentMenu(_objectSpread(_objectSpread({}, menu), {}, {
-              products: result
-            }));
+            setCurrentMenu({
+              menu: _objectSpread(_objectSpread({}, menu), {}, {
+                products: result
+              }),
+              loading: false
+            });
             return _context4.abrupt("return");
-          case 16:
+          case 17:
+            setCurrentMenu({
+              loading: false
+            });
             setFormState(_objectSpread(_objectSpread({}, formState), {}, {
               error: result
             }));
-            _context4.next = 22;
+            _context4.next = 25;
             break;
-          case 19:
-            _context4.prev = 19;
+          case 21:
+            _context4.prev = 21;
             _context4.t0 = _context4["catch"](0);
+            setCurrentMenu({
+              loading: false
+            });
             setFormState(_objectSpread(_objectSpread({}, formState), {}, {
               error: _context4.t0.message
             }));
-          case 22:
+          case 25:
           case "end":
             return _context4.stop();
         }
-      }, _callee4, null, [[0, 19]]);
+      }, _callee4, null, [[0, 21]]);
     }));
     return function getSharedMenuProducts() {
       return _ref4.apply(this, arguments);
