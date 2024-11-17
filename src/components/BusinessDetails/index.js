@@ -418,6 +418,7 @@ export const BusinessDetails = (props) => {
       }
       setBusinessState({
         ...businessState,
+        error: error ? result : null,
         loading: false
       })
     } catch (err) {
