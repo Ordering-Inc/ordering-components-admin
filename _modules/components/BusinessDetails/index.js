@@ -762,6 +762,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
               showToast(_ToastContext.ToastType.Success, (result === null || result === void 0 ? void 0 : result[0]) || t('OK', 'OK'));
             }
             setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
+              error: error ? result : null,
               loading: false
             }));
             _context11.next = 18;
