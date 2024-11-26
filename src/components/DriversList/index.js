@@ -20,7 +20,8 @@ export const DriversList = (props) => {
     filterValues,
     useDriversByProps,
     paginationSettings,
-    disableDriverLocationsSockets
+    disableDriverLocationsSockets,
+    enableSocketEventDriverRoom
   } = props
 
   const [ordering] = useApi()
@@ -526,12 +527,12 @@ export const DriversList = (props) => {
       })
     }
 
-    if (!disableSocketRoomDriver) {
+    if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
       socket.on('batch_driver_locations', handleBatchDriverLocations)
       socket.on('batch_driver_changes', handleBatchDriverChanges)
     }
     return () => {
-      if (!disableSocketRoomDriver) {
+      if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
         socket.off('batch_driver_locations', handleBatchDriverLocations)
         socket.off('batch_driver_changes', handleBatchDriverChanges)
       }
