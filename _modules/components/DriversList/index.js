@@ -44,7 +44,8 @@ var DriversList = exports.DriversList = function DriversList(props) {
     filterValues = props.filterValues,
     useDriversByProps = props.useDriversByProps,
     paginationSettings = props.paginationSettings,
-    disableDriverLocationsSockets = props.disableDriverLocationsSockets;
+    disableDriverLocationsSockets = props.disableDriverLocationsSockets,
+    enableSocketEventDriverRoom = props.enableSocketEventDriverRoom;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -797,12 +798,12 @@ var DriversList = exports.DriversList = function DriversList(props) {
         });
       });
     };
-    if (!disableSocketRoomDriver) {
+    if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
       socket.on('batch_driver_locations', handleBatchDriverLocations);
       socket.on('batch_driver_changes', handleBatchDriverChanges);
     }
     return function () {
-      if (!disableSocketRoomDriver) {
+      if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
         socket.off('batch_driver_locations', handleBatchDriverLocations);
         socket.off('batch_driver_changes', handleBatchDriverChanges);
       }
