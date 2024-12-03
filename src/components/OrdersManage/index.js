@@ -49,11 +49,12 @@ export const OrdersManage = (props) => {
     selectedDriver: null
   })
   const [detailsOrder, setDetailsOrder] = useState(null)
+  const showExternalId = configState?.configs?.change_order_id?.value === '1'
 
   const allowColumnsModel = {
     slaBar: { visable: false, title: '', className: '', draggable: false, colSpan: 1, order: -2 },
-    orderNumber: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
-    dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: 0 },
+    orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
+    dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 },
     externalId: { visable: false, title: t('EXTERNAL_ID', 'External id'), className: 'externalId', draggable: true, colSpan: 1, order: 1 },
     status: { visable: true, title: t('STATUS', 'Status'), className: 'statusInfo', draggable: true, colSpan: 1, order: 2 },
     agent: { visable: false, title: t('AGENT', 'Agent'), className: 'agent', draggable: true, colSpan: 1, order: 3 },
