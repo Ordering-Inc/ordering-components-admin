@@ -18,7 +18,7 @@ export const ExportCSV = (props) => {
   /**
    * Method to get csv from API
    */
-  const getCSV = async (filterApply) => {
+  const getCSV = async (filterApply, exportWithoutMetafields) => {
     if (loading) return
     try {
       setActionStatus({ ...actionStatus, loading: true })
@@ -29,9 +29,11 @@ export const ExportCSV = (props) => {
           Authorization: `Bearer ${token}`
         }
       }
-
       const filterConditons = []
-
+      const propsToFetch = ['paymethod', 'payment_events', 'driver', 'driver_group', 'driver_company', 'agent', 'delivery_datetime', 'unread', 'franchise']
+      if (!exportWithoutMetafields) {
+        propsToFetch.push('metafields')
+      }
       if (franchiseId) {
         filterConditons.push({
           attribute: 'ref_business',
@@ -352,8 +354,8 @@ export const ExportCSV = (props) => {
         }
       }
       const functionFetch = filterApply
-        ? `${ordering.root}/orders_v2.csv?mode=dashboard&orderBy=id&where=${JSON.stringify(filterConditons)}`
-        : `${ordering.root}/orders_v2.csv?mode=dashboard&orderBy=id`
+        ? `${ordering.root}/orders_v2.csv?mode=dashboard&orderBy=id&where=${JSON.stringify(filterConditons)}&params=${propsToFetch}`
+        : `${ordering.root}/orders_v2.csv?mode=dashboard&orderBy=id&params=${propsToFetch}`
 
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
@@ -361,7 +363,7 @@ export const ExportCSV = (props) => {
         setActionStatus({
           ...actionStatus,
           loading: false,
-          result: result,
+          result,
           error: null
         })
       } else {
