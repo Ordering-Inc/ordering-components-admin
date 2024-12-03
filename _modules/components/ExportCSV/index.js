@@ -54,8 +54,8 @@ var ExportCSV = exports.ExportCSV = function ExportCSV(props) {
    * Method to get csv from API
    */
   var getCSV = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(filterApply) {
-      var requestOptions, filterConditons, _filterValues$country, _filterValues$currenc, _filterValues$driverG, _filterValues$driverG2, _filterValues$cityIds, _filterValues$adminis, _filterValues$statuse, _filterValues$busines, _filterValues$driverI, _filterValues$deliver, _filterValues$paymeth, _filterValues$offerId, _filterValues$coupon, functionFetch, response, _yield$response$json, error, result;
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(filterApply, exportWithoutMetafields) {
+      var requestOptions, filterConditons, propsToFetch, _filterValues$country, _filterValues$currenc, _filterValues$driverG, _filterValues$driverG2, _filterValues$cityIds, _filterValues$adminis, _filterValues$statuse, _filterValues$busines, _filterValues$driverI, _filterValues$deliver, _filterValues$paymeth, _filterValues$offerId, _filterValues$coupon, functionFetch, response, _yield$response$json, error, result;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -77,6 +77,10 @@ var ExportCSV = exports.ExportCSV = function ExportCSV(props) {
               }
             };
             filterConditons = [];
+            propsToFetch = ['paymethod', 'payment_events', 'driver', 'driver_group', 'driver_company', 'agent', 'delivery_datetime', 'unread', 'franchise'];
+            if (!exportWithoutMetafields) {
+              propsToFetch.push('metafields');
+            }
             if (franchiseId) {
               filterConditons.push({
                 attribute: 'ref_business',
@@ -335,14 +339,14 @@ var ExportCSV = exports.ExportCSV = function ExportCSV(props) {
                 }
               }
             }
-            functionFetch = filterApply ? "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons)) : "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id");
-            _context.next = 11;
+            functionFetch = filterApply ? "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id&where=").concat(JSON.stringify(filterConditons), "&params=").concat(propsToFetch) : "".concat(ordering.root, "/orders_v2.csv?mode=dashboard&orderBy=id&params=").concat(propsToFetch);
+            _context.next = 13;
             return fetch(functionFetch, requestOptions);
-          case 11:
+          case 13:
             response = _context.sent;
-            _context.next = 14;
+            _context.next = 16;
             return response.json();
-          case 14:
+          case 16:
             _yield$response$json = _context.sent;
             error = _yield$response$json.error;
             result = _yield$response$json.result;
@@ -358,22 +362,22 @@ var ExportCSV = exports.ExportCSV = function ExportCSV(props) {
                 error: result
               }));
             }
-            _context.next = 23;
+            _context.next = 25;
             break;
-          case 20:
-            _context.prev = 20;
+          case 22:
+            _context.prev = 22;
             _context.t0 = _context["catch"](2);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
               error: _context.t0
             }));
-          case 23:
+          case 25:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[2, 20]]);
+      }, _callee, null, [[2, 22]]);
     }));
-    return function getCSV(_x) {
+    return function getCSV(_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }();
