@@ -68,39 +68,32 @@ export const Schedule = (props) => {
    * @param {Number} lapseIndex lapse no
    * @param {Boolean} isOpen open or close
    */
-  const handleChangeScheduleTime = (changeTime, daysOfWeekIndex, lapseIndex, isOpen) => {
+  const handleChangeScheduleTime = (changeTime, daysOfWeekIndex, lapseIndex, isOpen, value) => {
     const _schedule = [...scheduleState]
     const currentLapses = [..._schedule[daysOfWeekIndex].lapses]
-
-    const hour = parseInt(changeTime.split(':')[0])
-    const minute = parseInt(changeTime.split(':')[1])
 
     let changeScheduleTime
     let _isTimeChangeError = false
     if (isOpen) {
-      _isTimeChangeError = convertMinutes({ hour, minute }) >= convertMinutes(currentLapses[lapseIndex].close)
+      const open = { ...currentLapses[lapseIndex].open, [value]: changeTime }
+      _isTimeChangeError = convertMinutes({ hour: open.hour, minute: open.minute }) >= convertMinutes(currentLapses[lapseIndex].close)
       if (_isTimeChangeError) {
         setIsTimeChangeError(true)
       } else {
         changeScheduleTime = {
-          open: {
-            hour: hour,
-            minute: minute
-          },
+          open,
           close: currentLapses[lapseIndex].close
         }
       }
     } else {
-      _isTimeChangeError = convertMinutes(currentLapses[lapseIndex].open) >= convertMinutes({ hour, minute })
+      const close = { ...currentLapses[lapseIndex].close, [value]: changeTime }
+      _isTimeChangeError = convertMinutes(currentLapses[lapseIndex].open) >= convertMinutes({ hour: close.hour, minute: close.minute })
       if (_isTimeChangeError) {
         setIsTimeChangeError(true)
       } else {
         changeScheduleTime = {
           open: currentLapses[lapseIndex].open,
-          close: {
-            hour: hour,
-            minute: minute
-          }
+          close
         }
       }
     }
@@ -143,31 +136,33 @@ export const Schedule = (props) => {
    * @param {String} changeTime change time
    * @param {Boolean} isOpen open or close
    */
-  const handleChangeAddScheduleTime = (changeTime, isOpen) => {
-    const hour = parseInt(changeTime.split(':')[0])
-    const minute = parseInt(changeTime.split(':')[1])
-    let _isTimeChangeError = false
-    if (isOpen) {
-      _isTimeChangeError = convertMinutes({ hour, minute }) >= convertMinutes(addScheduleTime.close)
-      if (_isTimeChangeError) {
-        setIsTimeChangeError(true)
+  const handleChangeAddScheduleTime = (changeTime, isOpen, value) => {
+    setAddScheduleTime((prevProps) => {
+      let _isTimeChangeError = false
+      if (isOpen) {
+        const open = { ...prevProps.open, [value]: changeTime }
+        _isTimeChangeError = convertMinutes({ hour: open.hour, minute: open.minute }) >= convertMinutes(prevProps.close)
+        if (_isTimeChangeError) {
+          setIsTimeChangeError(true)
+          return prevProps
+        }
+        return {
+          ...prevProps,
+          open
+        }
       } else {
-        setAddScheduleTime({
-          ...addScheduleTime,
-          open: { hour: hour, minute: minute }
-        })
+        const close = { ...prevProps.close, [value]: changeTime }
+        _isTimeChangeError = convertMinutes(prevProps.open) >= convertMinutes({ hour: close.hour, minute: close.minute })
+        if (_isTimeChangeError) {
+          setIsTimeChangeError(true)
+          return prevProps
+        }
+        return {
+          ...prevProps,
+          close
+        }
       }
-    } else {
-      _isTimeChangeError = convertMinutes(addScheduleTime.open) >= convertMinutes({ hour, minute })
-      if (_isTimeChangeError) {
-        setIsTimeChangeError(true)
-      } else {
-        setAddScheduleTime({
-          ...addScheduleTime,
-          close: { hour: hour, minute: minute }
-        })
-      }
-    }
+    })
   }
 
   /**
