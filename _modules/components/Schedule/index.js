@@ -116,43 +116,37 @@ var Schedule = exports.Schedule = function Schedule(props) {
    * @param {Number} lapseIndex lapse no
    * @param {Boolean} isOpen open or close
    */
-  var handleChangeScheduleTime = function handleChangeScheduleTime(changeTime, daysOfWeekIndex, lapseIndex, isOpen) {
+  var handleChangeScheduleTime = function handleChangeScheduleTime(changeTime, daysOfWeekIndex, lapseIndex, isOpen, value) {
     var _schedule = _toConsumableArray(scheduleState);
     var currentLapses = _toConsumableArray(_schedule[daysOfWeekIndex].lapses);
-    var hour = parseInt(changeTime.split(':')[0]);
-    var minute = parseInt(changeTime.split(':')[1]);
     var changeScheduleTime;
     var _isTimeChangeError = false;
     if (isOpen) {
+      var open = _objectSpread(_objectSpread({}, currentLapses[lapseIndex].open), {}, _defineProperty({}, value, changeTime));
       _isTimeChangeError = convertMinutes({
-        hour: hour,
-        minute: minute
+        hour: open.hour,
+        minute: open.minute
       }) >= convertMinutes(currentLapses[lapseIndex].close);
       if (_isTimeChangeError) {
         setIsTimeChangeError(true);
       } else {
         changeScheduleTime = {
-          open: {
-            hour: hour,
-            minute: minute
-          },
+          open: open,
           close: currentLapses[lapseIndex].close
         };
       }
     } else {
+      var close = _objectSpread(_objectSpread({}, currentLapses[lapseIndex].close), {}, _defineProperty({}, value, changeTime));
       _isTimeChangeError = convertMinutes(currentLapses[lapseIndex].open) >= convertMinutes({
-        hour: hour,
-        minute: minute
+        hour: close.hour,
+        minute: close.minute
       });
       if (_isTimeChangeError) {
         setIsTimeChangeError(true);
       } else {
         changeScheduleTime = {
           open: currentLapses[lapseIndex].open,
-          close: {
-            hour: hour,
-            minute: minute
-          }
+          close: close
         };
       }
     }
@@ -199,41 +193,37 @@ var Schedule = exports.Schedule = function Schedule(props) {
    * @param {String} changeTime change time
    * @param {Boolean} isOpen open or close
    */
-  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(changeTime, isOpen) {
-    var hour = parseInt(changeTime.split(':')[0]);
-    var minute = parseInt(changeTime.split(':')[1]);
-    var _isTimeChangeError = false;
-    if (isOpen) {
-      _isTimeChangeError = convertMinutes({
-        hour: hour,
-        minute: minute
-      }) >= convertMinutes(addScheduleTime.close);
-      if (_isTimeChangeError) {
-        setIsTimeChangeError(true);
+  var handleChangeAddScheduleTime = function handleChangeAddScheduleTime(changeTime, isOpen, value) {
+    setAddScheduleTime(function (prevProps) {
+      var _isTimeChangeError = false;
+      if (isOpen) {
+        var open = _objectSpread(_objectSpread({}, prevProps.open), {}, _defineProperty({}, value, changeTime));
+        _isTimeChangeError = convertMinutes({
+          hour: open.hour,
+          minute: open.minute
+        }) >= convertMinutes(prevProps.close);
+        if (_isTimeChangeError) {
+          setIsTimeChangeError(true);
+          return prevProps;
+        }
+        return _objectSpread(_objectSpread({}, prevProps), {}, {
+          open: open
+        });
       } else {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          open: {
-            hour: hour,
-            minute: minute
-          }
-        }));
+        var close = _objectSpread(_objectSpread({}, prevProps.close), {}, _defineProperty({}, value, changeTime));
+        _isTimeChangeError = convertMinutes(prevProps.open) >= convertMinutes({
+          hour: close.hour,
+          minute: close.minute
+        });
+        if (_isTimeChangeError) {
+          setIsTimeChangeError(true);
+          return prevProps;
+        }
+        return _objectSpread(_objectSpread({}, prevProps), {}, {
+          close: close
+        });
       }
-    } else {
-      _isTimeChangeError = convertMinutes(addScheduleTime.open) >= convertMinutes({
-        hour: hour,
-        minute: minute
-      });
-      if (_isTimeChangeError) {
-        setIsTimeChangeError(true);
-      } else {
-        setAddScheduleTime(_objectSpread(_objectSpread({}, addScheduleTime), {}, {
-          close: {
-            hour: hour,
-            minute: minute
-          }
-        }));
-      }
-    }
+    });
   };
 
   /**
