@@ -156,18 +156,46 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
       geocoder.geocode({
         latLng: pos
       }, function (results) {
-        var zipcode = null;
-        if (results && results.length > 0) {
+        var _results$;
+        if (results && results.length > 0 && results !== null && results !== void 0 && (_results$ = results[0]) !== null && _results$ !== void 0 && _results$.address_components) {
           var _address$location, _address$location2;
+          var addressObj = {};
+          var cityFallback = results[0].address_components.find(function (component) {
+            return component.types.includes('administrative_area_level_2');
+          });
           var _iterator = _createForOfIteratorHelper(results[0].address_components),
             _step;
           try {
             for (_iterator.s(); !(_step = _iterator.n()).done;) {
+              var _component$types;
               var component = _step.value;
               var addressType = component.types[0];
               if (addressType === 'postal_code') {
-                zipcode = component.short_name;
-                break;
+                addressObj.zipcode = component.short_name;
+              }
+              if (addressType === 'street_number') {
+                addressObj.street_number = component.long_name;
+              }
+              if (addressType === 'neighborhood') {
+                addressObj.neighborhood = component.long_name;
+              }
+              if (addressType === 'route') {
+                addressObj.route = component.long_name;
+              }
+              if (addressType === 'locality') {
+                addressObj.city = component.long_name || cityFallback.long_name;
+                addressObj.locality = component.long_name;
+              }
+              if ((_component$types = component.types) !== null && _component$types !== void 0 && _component$types.includes('sublocality')) {
+                addressObj.sublocality = component.long_name;
+              }
+              if (addressType === 'country') {
+                addressObj.country = component.long_name;
+                addressObj.country_code = component.short_name;
+              }
+              if (addressType === 'administrative_area_level_1') {
+                addressObj.state = component.long_name;
+                addressObj.state_code = component.short_name;
               }
             }
           } catch (err) {
@@ -175,14 +203,13 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
           } finally {
             _iterator.f();
           }
-          var address = {
+          var address = _objectSpread({
             address: results[0].formatted_address,
             location: {
               lat: pos === null || pos === void 0 ? void 0 : pos.lat(),
               lng: pos === null || pos === void 0 ? void 0 : pos.lng()
-            },
-            zipcode: zipcode
-          };
+            }
+          }, addressObj);
           handleChangeAddressMap && handleChangeAddressMap(address);
           center.lat = (_address$location = address.location) === null || _address$location === void 0 ? void 0 : _address$location.lat;
           center.lng = (_address$location2 = address.location) === null || _address$location2 === void 0 ? void 0 : _address$location2.lng;
