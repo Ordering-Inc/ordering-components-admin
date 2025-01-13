@@ -42,30 +42,54 @@ const AutocompleteInput = (props) => {
       const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, options)
       autocomplete.addListener('place_changed', () => {
         const place = autocomplete.getPlace()
-        let postalCode = null
-        for (const component of place.address_components) {
-          const addressType = component.types[0]
-          if (addressType === 'postal_code') {
-            postalCode = component.short_name || component.long_name
-            break
+        const addressObj = {}
+        const cityFallback = place?.address_components.find(component => component.types.includes('administrative_area_level_2'))
+        if (place?.address_components) {
+          for (const component of place.address_components) {
+            const addressType = component.types[0]
+            if (addressType === 'postal_code') {
+              addressObj.zipcode = component.short_name || component.long_name
+            }
+            if (addressType === 'street_number') {
+              addressObj.street_number = component.long_name
+            }
+            if (addressType === 'neighborhood') {
+              addressObj.neighborhood = component.long_name
+            }
+            if (addressType === 'route') {
+              addressObj.route = component.long_name
+            }
+            if (addressType === 'locality') {
+              addressObj.city = component.long_name || cityFallback.long_name
+              addressObj.locality = component.long_name
+            }
+            if (component.types?.includes('sublocality')) {
+              addressObj.sublocality = component.long_name
+            }
+            if (addressType === 'country') {
+              addressObj.country = component.long_name
+              addressObj.country_code = component.short_name
+            }
+            if (addressType === 'administrative_area_level_1') {
+              addressObj.state = component.long_name
+              addressObj.state_code = component.short_name
+            }
           }
-        }
-        const address = {
-          address: place.formatted_address,
-          location: {
-            lat: place.geometry.location.lat(),
-            lng: place.geometry.location.lng()
-          },
-          utc_offset: place.utc_offset_minutes,
-          map_data: {
-            library: 'google',
-            place_id: place.place_id
+          const address = {
+            address: place.formatted_address,
+            location: {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            },
+            utc_offset: place.utc_offset_minutes,
+            map_data: {
+              library: 'google',
+              place_id: place.place_id
+            },
+            ...addressObj
           }
+          onChangeAddress(address)
         }
-        if (postalCode) {
-          address.zipcode = postalCode
-        }
-        onChangeAddress(address)
       })
     }
   }, [googleReady])
