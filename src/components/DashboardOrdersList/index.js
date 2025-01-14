@@ -37,7 +37,6 @@ export const DashboardOrdersList = (props) => {
     isSearchByBusinessName,
     isSearchByDriverName,
     orderIdForUnreadCountUpdate,
-    timeStatus,
     driversList,
     allowColumns,
     setAllowColumns
@@ -205,15 +204,6 @@ export const DashboardOrdersList = (props) => {
           value: franchiseId
         }]
       })
-    }
-
-    if (timeStatus) {
-      conditions.push(
-        {
-          attribute: 'time_status',
-          value: timeStatus
-        }
-      )
     }
 
     if (searchValue) {
@@ -632,7 +622,14 @@ export const DashboardOrdersList = (props) => {
           }
         )
       }
-
+      if (filterValues?.timeStatus) {
+        filterConditons.push(
+          {
+            attribute: 'time_status',
+            value: filterValues?.timeStatus
+          }
+        )
+      }
       if (filterConditons.length) {
         conditions.push({
           conector: 'AND',
@@ -971,7 +968,7 @@ export const DashboardOrdersList = (props) => {
         requestsState.orders.cancel()
       }
     }
-  }, [session, orders, configState.loading, isOnlyDelivery, driverId, customerId, businessId, orderStatus, timeStatus, searchValue, orderBy, JSON.stringify(filterValues)])
+  }, [session, orders, configState.loading, isOnlyDelivery, driverId, customerId, businessId, orderStatus, searchValue, orderBy, JSON.stringify(filterValues)])
 
   useEffect(() => {
     const filterObjectValues = Object?.values(filterValues)
