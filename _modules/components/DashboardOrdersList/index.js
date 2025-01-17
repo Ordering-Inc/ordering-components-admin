@@ -1025,11 +1025,7 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
             return _context6.abrupt("return");
           case 3:
             _settings = session === null || session === void 0 || (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.settings;
-            _allowColumnsUpdated = _objectSpread(_objectSpread({}, allowColumnsUpdated), {}, {
-              timer: _objectSpread(_objectSpread({}, allowColumnsUpdated === null || allowColumnsUpdated === void 0 ? void 0 : allowColumnsUpdated.timer), {}, {
-                visable: false
-              })
-            });
+            _allowColumnsUpdated = _objectSpread({}, allowColumnsUpdated);
             _context6.next = 7;
             return ordering.users(session === null || session === void 0 || (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id).save({
               settings: _objectSpread(_objectSpread({}, _settings), {}, {
