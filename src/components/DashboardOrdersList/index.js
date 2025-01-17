@@ -902,7 +902,7 @@ export const DashboardOrdersList = (props) => {
     try {
       if (!session?.user?.id) return
       const _settings = session?.user?.settings
-      const _allowColumnsUpdated = { ...allowColumnsUpdated, timer: { ...allowColumnsUpdated?.timer, visable: false } }
+      const _allowColumnsUpdated = { ...allowColumnsUpdated }
       await ordering.users(session?.user?.id).save({ settings: { ..._settings, orderColumns: _allowColumnsUpdated } }, {
         accessToken: accessToken
       })
