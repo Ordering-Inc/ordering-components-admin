@@ -938,10 +938,43 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
                 _context6.next = 8;
                 break;
               }
-              setAllowColumns((_result$settings2 = result.settings) === null || _result$settings2 === void 0 ? void 0 : _result$settings2.orderColumns);
+              setAllowColumns(_objectSpread(_objectSpread({}, (_result$settings2 = result.settings) === null || _result$settings2 === void 0 ? void 0 : _result$settings2.orderColumns), {}, {
+                orderNumber: {
+                  visable: !showExternalId,
+                  title: '',
+                  className: '',
+                  draggable: false,
+                  colSpan: 1,
+                  order: -1
+                },
+                dateTime: {
+                  visable: true,
+                  title: '',
+                  className: '',
+                  draggable: false,
+                  colSpan: 1,
+                  order: showExternalId ? -1 : 0
+                }
+              }));
               return _context6.abrupt("return");
             case 8:
               setAllowColumns(_objectSpread(_objectSpread({}, allowColumnsModel), {}, {
+                orderNumber: {
+                  visable: !showExternalId,
+                  title: '',
+                  className: '',
+                  draggable: false,
+                  colSpan: 1,
+                  order: -1
+                },
+                dateTime: {
+                  visable: true,
+                  title: '',
+                  className: '',
+                  draggable: false,
+                  colSpan: 1,
+                  order: showExternalId ? -1 : 0
+                },
                 slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
                   visable: (configState === null || configState === void 0 || (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 || (_configState$configs2 = _configState$configs2.order_deadlines_enabled) === null || _configState$configs2 === void 0 ? void 0 : _configState$configs2.value) === '1'
                 }),
