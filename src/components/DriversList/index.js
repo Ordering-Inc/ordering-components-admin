@@ -527,12 +527,12 @@ export const DriversList = (props) => {
       })
     }
 
-    if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
+    if (!disableSocketRoomDriver || (socket?.socket?._callbacks?.$batch_driver_changes && socket?.socket?._callbacks?.$batch_driver_locations) || enableSocketEventDriverRoom) {
       socket.on('batch_driver_locations', handleBatchDriverLocations)
       socket.on('batch_driver_changes', handleBatchDriverChanges)
     }
     return () => {
-      if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
+      if (!disableSocketRoomDriver || (socket?.socket?._callbacks?.$batch_driver_changes && socket?.socket?._callbacks?.$batch_driver_locations) || enableSocketEventDriverRoom) {
         socket.off('batch_driver_locations', handleBatchDriverLocations)
         socket.off('batch_driver_changes', handleBatchDriverChanges)
       }
