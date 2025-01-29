@@ -743,6 +743,7 @@ var DriversList = exports.DriversList = function DriversList(props) {
    * Listening driver change
    */
   (0, _react.useEffect)(function () {
+    var _socket$socket, _socket$socket2;
     if (session !== null && session !== void 0 && session.loading) return;
     var handleBatchDriverChanges = function handleBatchDriverChanges(changes) {
       setDriversList(function (prevState) {
@@ -798,12 +799,13 @@ var DriversList = exports.DriversList = function DriversList(props) {
         });
       });
     };
-    if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
+    if (!disableSocketRoomDriver || socket !== null && socket !== void 0 && (_socket$socket = socket.socket) !== null && _socket$socket !== void 0 && (_socket$socket = _socket$socket._callbacks) !== null && _socket$socket !== void 0 && _socket$socket.$batch_driver_changes && socket !== null && socket !== void 0 && (_socket$socket2 = socket.socket) !== null && _socket$socket2 !== void 0 && (_socket$socket2 = _socket$socket2._callbacks) !== null && _socket$socket2 !== void 0 && _socket$socket2.$batch_driver_locations || enableSocketEventDriverRoom) {
       socket.on('batch_driver_locations', handleBatchDriverLocations);
       socket.on('batch_driver_changes', handleBatchDriverChanges);
     }
     return function () {
-      if (!disableSocketRoomDriver || enableSocketEventDriverRoom) {
+      var _socket$socket3, _socket$socket4;
+      if (!disableSocketRoomDriver || socket !== null && socket !== void 0 && (_socket$socket3 = socket.socket) !== null && _socket$socket3 !== void 0 && (_socket$socket3 = _socket$socket3._callbacks) !== null && _socket$socket3 !== void 0 && _socket$socket3.$batch_driver_changes && socket !== null && socket !== void 0 && (_socket$socket4 = socket.socket) !== null && _socket$socket4 !== void 0 && (_socket$socket4 = _socket$socket4._callbacks) !== null && _socket$socket4 !== void 0 && _socket$socket4.$batch_driver_locations || enableSocketEventDriverRoom) {
         socket.off('batch_driver_locations', handleBatchDriverLocations);
         socket.off('batch_driver_changes', handleBatchDriverChanges);
       }

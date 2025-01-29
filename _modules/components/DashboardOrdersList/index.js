@@ -66,7 +66,6 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
     isSearchByBusinessName = props.isSearchByBusinessName,
     isSearchByDriverName = props.isSearchByDriverName,
     orderIdForUnreadCountUpdate = props.orderIdForUnreadCountUpdate,
-    timeStatus = props.timeStatus,
     driversList = props.driversList,
     allowColumns = props.allowColumns,
     setAllowColumns = props.setAllowColumns;
@@ -295,12 +294,6 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
                   attribute: 'franchise_id',
                   value: franchiseId
                 }]
-              });
-            }
-            if (timeStatus) {
-              conditions.push({
-                attribute: 'time_status',
-                value: timeStatus
               });
             }
             if (searchValue) {
@@ -626,6 +619,12 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
                   }]
                 });
               }
+              if (filterValues !== null && filterValues !== void 0 && filterValues.timeStatus) {
+                filterConditons.push({
+                  attribute: 'time_status',
+                  value: filterValues === null || filterValues === void 0 ? void 0 : filterValues.timeStatus
+                });
+              }
               if (filterConditons.length) {
                 conditions.push({
                   conector: 'AND',
@@ -647,11 +646,11 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
             } else {
               functionFetch = ordering.setAccessToken(accessToken).orders().asDashboard().where(where);
             }
-            _context2.next = 21;
+            _context2.next = 20;
             return functionFetch.get(options);
-          case 21:
+          case 20:
             return _context2.abrupt("return", _context2.sent);
-          case 22:
+          case 21:
           case "end":
             return _context2.stop();
         }
@@ -1026,11 +1025,7 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
             return _context6.abrupt("return");
           case 3:
             _settings = session === null || session === void 0 || (_session$user2 = session.user) === null || _session$user2 === void 0 ? void 0 : _session$user2.settings;
-            _allowColumnsUpdated = _objectSpread(_objectSpread({}, allowColumnsUpdated), {}, {
-              timer: _objectSpread(_objectSpread({}, allowColumnsUpdated === null || allowColumnsUpdated === void 0 ? void 0 : allowColumnsUpdated.timer), {}, {
-                visable: false
-              })
-            });
+            _allowColumnsUpdated = _objectSpread({}, allowColumnsUpdated);
             _context6.next = 7;
             return ordering.users(session === null || session === void 0 || (_session$user3 = session.user) === null || _session$user3 === void 0 ? void 0 : _session$user3.id).save({
               settings: _objectSpread(_objectSpread({}, _settings), {}, {
@@ -1119,7 +1114,7 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
         requestsState.orders.cancel();
       }
     };
-  }, [session, orders, configState.loading, isOnlyDelivery, driverId, customerId, businessId, orderStatus, timeStatus, searchValue, orderBy, JSON.stringify(filterValues)]);
+  }, [session, orders, configState.loading, isOnlyDelivery, driverId, customerId, businessId, orderStatus, searchValue, orderBy, JSON.stringify(filterValues)]);
   (0, _react.useEffect)(function () {
     var filterObjectValues = Object === null || Object === void 0 ? void 0 : Object.values(filterValues);
     var hasFilterApplied = filterObjectValues.some(function (filt) {

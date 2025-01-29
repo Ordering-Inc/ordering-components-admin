@@ -446,7 +446,8 @@ var OrdersFilter = exports.OrdersFilter = function OrdersFilter(props) {
       customerLastname: null,
       administratorIds: [],
       coupon: null,
-      offerId: null
+      offerId: null,
+      timeStatus: null
     };
     setFilterValues(initialValues);
     handleFilterValues(initialValues);
