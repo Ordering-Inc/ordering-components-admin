@@ -530,12 +530,18 @@ export const OrdersManage = (props) => {
         const response = await ordering.users(user.id).select(['settings']).get()
         const { content: { error, result } } = response
         if (!error && result.settings?.orderColumns) {
-          setAllowColumns(result.settings?.orderColumns)
+          setAllowColumns({
+            ...result.settings?.orderColumns,
+            orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
+            dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 }
+          })
           return
         }
 
         setAllowColumns({
           ...allowColumnsModel,
+          orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
+          dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 },
           slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' },
           timer: { ...allowColumnsModel?.timer, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
         })
