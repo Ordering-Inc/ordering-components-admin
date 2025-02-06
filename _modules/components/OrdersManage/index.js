@@ -924,7 +924,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
     if (!user.id || configState !== null && configState !== void 0 && configState.loading) return;
     var getUser = /*#__PURE__*/function () {
       var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
-        var _result$settings, _configState$configs2, _configState$configs3, response, _response$content, error, result, _result$settings2, _configState$configs4, _configState$configs5;
+        var _result$settings, _configState$configs3, _configState$configs4, response, _response$content, error, result, baseColumnConfig, _result$settings2, _configState$configs2, _configState$configs5, _configState$configs6;
         return _regeneratorRuntime().wrap(function _callee6$(_context6) {
           while (1) switch (_context6.prev = _context6.next) {
             case 0:
@@ -934,11 +934,7 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
             case 3:
               response = _context6.sent;
               _response$content = response.content, error = _response$content.error, result = _response$content.result;
-              if (!(!error && (_result$settings = result.settings) !== null && _result$settings !== void 0 && _result$settings.orderColumns)) {
-                _context6.next = 8;
-                break;
-              }
-              setAllowColumns(_objectSpread(_objectSpread({}, (_result$settings2 = result.settings) === null || _result$settings2 === void 0 ? void 0 : _result$settings2.orderColumns), {}, {
+              baseColumnConfig = {
                 orderNumber: {
                   visable: !showExternalId,
                   title: '',
@@ -955,51 +951,44 @@ var OrdersManage = exports.OrdersManage = function OrdersManage(props) {
                   colSpan: 1,
                   order: showExternalId ? -1 : 0
                 }
-              }));
-              return _context6.abrupt("return");
-            case 8:
-              setAllowColumns(_objectSpread(_objectSpread({}, allowColumnsModel), {}, {
-                orderNumber: {
-                  visable: !showExternalId,
-                  title: '',
-                  className: '',
-                  draggable: false,
-                  colSpan: 1,
-                  order: -1
-                },
-                dateTime: {
-                  visable: true,
-                  title: '',
-                  className: '',
-                  draggable: false,
-                  colSpan: 1,
-                  order: showExternalId ? -1 : 0
-                },
+              };
+              if (!(!error && (_result$settings = result.settings) !== null && _result$settings !== void 0 && _result$settings.orderColumns)) {
+                _context6.next = 9;
+                break;
+              }
+              setAllowColumns(_objectSpread(_objectSpread(_objectSpread({}, (_result$settings2 = result.settings) === null || _result$settings2 === void 0 ? void 0 : _result$settings2.orderColumns), baseColumnConfig), {}, {
                 slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
                   visable: (configState === null || configState === void 0 || (_configState$configs2 = configState.configs) === null || _configState$configs2 === void 0 || (_configState$configs2 = _configState$configs2.order_deadlines_enabled) === null || _configState$configs2 === void 0 ? void 0 : _configState$configs2.value) === '1'
-                }),
-                timer: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.timer), {}, {
-                  visable: (configState === null || configState === void 0 || (_configState$configs3 = configState.configs) === null || _configState$configs3 === void 0 || (_configState$configs3 = _configState$configs3.order_deadlines_enabled) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value) === '1'
                 })
               }));
-              _context6.next = 14;
+              return _context6.abrupt("return");
+            case 9:
+              setAllowColumns(_objectSpread(_objectSpread(_objectSpread({}, allowColumnsModel), baseColumnConfig), {}, {
+                timer: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.timer), {}, {
+                  visable: (configState === null || configState === void 0 || (_configState$configs3 = configState.configs) === null || _configState$configs3 === void 0 || (_configState$configs3 = _configState$configs3.order_deadlines_enabled) === null || _configState$configs3 === void 0 ? void 0 : _configState$configs3.value) === '1'
+                }),
+                slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
+                  visable: (configState === null || configState === void 0 || (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 || (_configState$configs4 = _configState$configs4.order_deadlines_enabled) === null || _configState$configs4 === void 0 ? void 0 : _configState$configs4.value) === '1'
+                })
+              }));
+              _context6.next = 15;
               break;
-            case 11:
-              _context6.prev = 11;
+            case 12:
+              _context6.prev = 12;
               _context6.t0 = _context6["catch"](0);
               setAllowColumns(_objectSpread(_objectSpread({}, allowColumnsModel), {}, {
                 slaBar: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.slaBar), {}, {
-                  visable: (configState === null || configState === void 0 || (_configState$configs4 = configState.configs) === null || _configState$configs4 === void 0 || (_configState$configs4 = _configState$configs4.order_deadlines_enabled) === null || _configState$configs4 === void 0 ? void 0 : _configState$configs4.value) === '1'
+                  visable: (configState === null || configState === void 0 || (_configState$configs5 = configState.configs) === null || _configState$configs5 === void 0 || (_configState$configs5 = _configState$configs5.order_deadlines_enabled) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value) === '1'
                 }),
                 timer: _objectSpread(_objectSpread({}, allowColumnsModel === null || allowColumnsModel === void 0 ? void 0 : allowColumnsModel.timer), {}, {
-                  visable: (configState === null || configState === void 0 || (_configState$configs5 = configState.configs) === null || _configState$configs5 === void 0 || (_configState$configs5 = _configState$configs5.order_deadlines_enabled) === null || _configState$configs5 === void 0 ? void 0 : _configState$configs5.value) === '1'
+                  visable: (configState === null || configState === void 0 || (_configState$configs6 = configState.configs) === null || _configState$configs6 === void 0 || (_configState$configs6 = _configState$configs6.order_deadlines_enabled) === null || _configState$configs6 === void 0 ? void 0 : _configState$configs6.value) === '1'
                 })
               }));
-            case 14:
+            case 15:
             case "end":
               return _context6.stop();
           }
-        }, _callee6, null, [[0, 11]]);
+        }, _callee6, null, [[0, 12]]);
       }));
       return function getUser() {
         return _ref6.apply(this, arguments);
