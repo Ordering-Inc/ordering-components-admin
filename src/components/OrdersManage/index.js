@@ -529,21 +529,24 @@ export const OrdersManage = (props) => {
       try {
         const response = await ordering.users(user.id).select(['settings']).get()
         const { content: { error, result } } = response
+        const baseColumnConfig = {
+          orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
+          dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 }
+        }
         if (!error && result.settings?.orderColumns) {
           setAllowColumns({
             ...result.settings?.orderColumns,
-            orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
-            dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 }
+            ...baseColumnConfig,
+            slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
           })
           return
         }
 
         setAllowColumns({
           ...allowColumnsModel,
-          orderNumber: { visable: !showExternalId, title: '', className: '', draggable: false, colSpan: 1, order: -1 },
-          dateTime: { visable: true, title: '', className: '', draggable: false, colSpan: 1, order: showExternalId ? -1 : 0 },
-          slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' },
-          timer: { ...allowColumnsModel?.timer, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
+          ...baseColumnConfig,
+          timer: { ...allowColumnsModel?.timer, visable: configState?.configs?.order_deadlines_enabled?.value === '1' },
+          slaBar: { ...allowColumnsModel?.slaBar, visable: configState?.configs?.order_deadlines_enabled?.value === '1' }
         })
       } catch (err) {
         setAllowColumns({
