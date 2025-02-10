@@ -13,7 +13,8 @@ export const BusinessMenuShare = (props) => {
     businesses,
     busienssesPropsToFetch,
     setMenuList,
-    menuList
+    menuList,
+    setCurrentMenu
   } = props
 
   const [ordering] = useApi()
@@ -97,6 +98,7 @@ export const BusinessMenuShare = (props) => {
           }
           return true
         })
+        setCurrentMenu && setCurrentMenu({ menu: _businessMenu })
         setMenuList({
           ...menuList,
           menus
