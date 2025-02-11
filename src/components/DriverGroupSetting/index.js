@@ -8,7 +8,8 @@ import { useLanguage } from '../../contexts/LanguageContext'
 export const DriverGroupSetting = (props) => {
   const {
     userId,
-    UIComponent
+    UIComponent,
+    isDriverManager
   } = props
 
   const [ordering] = useApi()
@@ -52,7 +53,7 @@ export const DriverGroupSetting = (props) => {
           conector: 'AND'
         }
       }
-      const response = await fetch(`${ordering.root}/drivergroups?params=name,drivers,type&where=${JSON.stringify(where)}`, requestOptions)
+      const response = await fetch(`${ordering.root}/drivergroups?params=name,drivers,administrators,type&where=${JSON.stringify(where)}`, requestOptions)
       const content = await response.json()
       if (!content.error) {
         setDriversGroupsState({ ...driversGroupsState, groups: content.result, loading: false })
@@ -89,7 +90,7 @@ export const DriverGroupSetting = (props) => {
           }
           return true
         })
-        setDriversGroupsState({ ...driversGroupsState, groups: groups })
+        setDriversGroupsState({ ...driversGroupsState, groups })
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
@@ -101,22 +102,30 @@ export const DriverGroupSetting = (props) => {
 
   const handleCheckboxClick = (groupId) => {
     const selectedGroup = driversGroupsState.groups.find(group => group.id === groupId)
-    const driverIds = selectedGroup.drivers?.reduce((ids, driver) => [...ids, driver.id], [])
-    let changedDriverIds = []
-    if (driverIds.includes(userId)) {
-      changedDriverIds = driverIds.filter(id => id !== userId)
+    const userIds = isDriverManager
+      ? selectedGroup.administrators?.reduce((ids, admin) => [...ids, admin.id], [])
+      : selectedGroup.drivers?.reduce((ids, driver) => [...ids, driver.id], [])
+
+    let changedUserIds = []
+    if (userIds.includes(userId)) {
+      changedUserIds = userIds.filter(id => id !== userId)
     } else {
-      changedDriverIds = [...driverIds, userId]
+      changedUserIds = [...userIds, userId]
     }
 
-    const changes = { drivers: JSON.stringify(changedDriverIds) }
+    const changes = isDriverManager
+      ? { administrators: JSON.stringify(changedUserIds) }
+      : { drivers: JSON.stringify(changedUserIds) }
+
     handleUpdateDriversGroup(groupId, changes)
   }
 
   useEffect(() => {
     if (driversGroupsState.loading) return
     const groupIds = driversGroupsState.groups?.reduce((ids, group) => {
-      const found = group.drivers.find(driver => driver.id === userId)
+      const found = isDriverManager
+        ? group.administrators.find(admin => admin.id === userId)
+        : group.drivers.find(driver => driver.id === userId)
       if (found) return [...ids, group.id]
       else return [...ids]
     }, [])
