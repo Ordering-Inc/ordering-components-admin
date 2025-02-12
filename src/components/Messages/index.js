@@ -64,6 +64,13 @@ export const Messages = (props) => {
     return vehicle?.type + ' ' + vehicle?.model + ' ' + vehicle?.car_registration + ' ' + vehicle?.color
   }
 
+  const getAuthor = (message) => {
+    if (message?.author_id) {
+      return message?.author?.name + (message?.author?.lastname ? ' ' + message?.author?.lastname : '')
+    }
+    return t('AUTHOR_SYSTEM', 'System')
+  }
+
   const getHistoryComment = (message) => {
     let comment = ''
     const changeAttribute = message?.change?.attribute
@@ -136,7 +143,7 @@ export const Messages = (props) => {
       if (user.level === 0 || user.level === 2) {
         comment += '<br>-'
         if (message.app_id) comment += '<br><strong>' + t('APP_ID') + ':</strong> ' + message.app_id
-        comment += '<br><strong>' + t('AUTHOR', 'Author') + ':</strong> ' + ((message.author_id) ? (message.author.name + (message.author.lastname ? ' ' + message.author.lastname : '')) : t('AUTHOR_SYSTEM', 'System'))
+        comment += '<br><strong>' + t('AUTHOR', 'Author') + ':</strong> ' + getAuthor(message)
         if (message.user_agent) comment += '<br><strong>' + t('USER_AGENT') + ':</strong> ' + message.user_agent
         if (message.location) comment += '<br><strong>' + t('LOCATION') + ':</strong> <img src="' + getStaticMapByLocation(message.location, '250x100') + '" />'
         comment += '<br><strong>' + t('IP') + ':</strong> ' + message.ip
