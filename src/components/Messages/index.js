@@ -136,7 +136,7 @@ export const Messages = (props) => {
       if (user.level === 0 || user.level === 2) {
         comment += '<br>-'
         if (message.app_id) comment += '<br><strong>' + t('APP_ID') + ':</strong> ' + message.app_id
-        comment += '<br><strong>' + t('AUTHOR', 'Author') + ':</strong> ' + ((message.author_id) ? (message.author.name + (message.author.lastname ? ' ' + message.author.lastname : '')) : t('SYSTEM', 'System'))
+        comment += '<br><strong>' + t('AUTHOR', 'Author') + ':</strong> ' + ((message.author_id) ? (message.author.name + (message.author.lastname ? ' ' + message.author.lastname : '')) : t('AUTHOR_SYSTEM', 'System'))
         if (message.user_agent) comment += '<br><strong>' + t('USER_AGENT') + ':</strong> ' + message.user_agent
         if (message.location) comment += '<br><strong>' + t('LOCATION') + ':</strong> <img src="' + getStaticMapByLocation(message.location, '250x100') + '" />'
         comment += '<br><strong>' + t('IP') + ':</strong> ' + message.ip
