@@ -66,7 +66,7 @@ export const Messages = (props) => {
 
   const getAuthor = (message) => {
     if (message?.author_id) {
-      return message?.author?.name + (message?.author?.lastname ? ' ' + message?.author?.lastname : '')
+      return (message?.author?.name || '') + (message?.author?.lastname ? ' ' + message?.author?.lastname : '')
     }
     return t('AUTHOR_SYSTEM', 'System')
   }
