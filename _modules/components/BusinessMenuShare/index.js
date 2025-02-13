@@ -41,7 +41,8 @@ var BusinessMenuShare = exports.BusinessMenuShare = function BusinessMenuShare(p
     businesses = props.businesses,
     busienssesPropsToFetch = props.busienssesPropsToFetch,
     setMenuList = props.setMenuList,
-    menuList = props.menuList;
+    menuList = props.menuList,
+    setCurrentMenu = props.setCurrentMenu;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -181,7 +182,7 @@ var BusinessMenuShare = exports.BusinessMenuShare = function BusinessMenuShare(p
           case 6:
             content = _context3.sent;
             if (content.error) {
-              _context3.next = 30;
+              _context3.next = 31;
               break;
             }
             menuBusinesses = [];
@@ -241,6 +242,9 @@ var BusinessMenuShare = exports.BusinessMenuShare = function BusinessMenuShare(p
               }
               return true;
             });
+            setCurrentMenu && setCurrentMenu({
+              menu: _businessMenu
+            });
             setMenuList(_objectSpread(_objectSpread({}, menuList), {}, {
               menus: menus
             }));
@@ -251,11 +255,11 @@ var BusinessMenuShare = exports.BusinessMenuShare = function BusinessMenuShare(p
               }
             });
             showToast(_ToastContext.ToastType.Success, t('BUSINESS_SAVED', 'Business saved'));
-          case 30:
-            _context3.next = 35;
+          case 31:
+            _context3.next = 36;
             break;
-          case 32:
-            _context3.prev = 32;
+          case 33:
+            _context3.prev = 33;
             _context3.t2 = _context3["catch"](0);
             setActionState({
               loading: false,
@@ -263,11 +267,11 @@ var BusinessMenuShare = exports.BusinessMenuShare = function BusinessMenuShare(p
                 error: false
               }
             });
-          case 35:
+          case 36:
           case "end":
             return _context3.stop();
         }
-      }, _callee2, null, [[0, 32], [10, 19, 22, 25]]);
+      }, _callee2, null, [[0, 33], [10, 19, 22, 25]]);
     }));
     return function handleShareBusinesses() {
       return _ref2.apply(this, arguments);
