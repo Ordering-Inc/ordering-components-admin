@@ -114,8 +114,8 @@ export const DriverGroupSetting = (props) => {
     }
 
     const changes = isDriverManager
-      ? { administrators: JSON.stringify(changedUserIds) }
-      : { drivers: JSON.stringify(changedUserIds) }
+      ? { administrators: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null }
+      : { drivers: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null }
 
     handleUpdateDriversGroup(groupId, changes)
   }
