@@ -234,9 +234,9 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
       changedUserIds = [].concat(_toConsumableArray(userIds), [userId]);
     }
     var changes = isDriverManager ? {
-      administrators: JSON.stringify(changedUserIds)
+      administrators: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
     } : {
-      drivers: JSON.stringify(changedUserIds)
+      drivers: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
     };
     handleUpdateDriversGroup(groupId, changes);
   };
