@@ -35,7 +35,8 @@ function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" !=
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSetting(props) {
   var userId = props.userId,
-    UIComponent = props.UIComponent;
+    UIComponent = props.UIComponent,
+    isDriverManager = props.isDriverManager;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -108,7 +109,7 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
               };
             }
             _context.next = 10;
-            return fetch("".concat(ordering.root, "/drivergroups?params=name,drivers,type&where=").concat(JSON.stringify(where)), requestOptions);
+            return fetch("".concat(ordering.root, "/drivergroups?params=name,drivers,administrators,type&where=").concat(JSON.stringify(where)), requestOptions);
           case 10:
             response = _context.sent;
             _context.next = 13;
@@ -215,23 +216,27 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     };
   }();
   var handleCheckboxClick = function handleCheckboxClick(groupId) {
-    var _selectedGroup$driver;
+    var _selectedGroup$admini, _selectedGroup$driver;
     var selectedGroup = driversGroupsState.groups.find(function (group) {
       return group.id === groupId;
     });
-    var driverIds = (_selectedGroup$driver = selectedGroup.drivers) === null || _selectedGroup$driver === void 0 ? void 0 : _selectedGroup$driver.reduce(function (ids, driver) {
+    var userIds = isDriverManager ? (_selectedGroup$admini = selectedGroup.administrators) === null || _selectedGroup$admini === void 0 ? void 0 : _selectedGroup$admini.reduce(function (ids, admin) {
+      return [].concat(_toConsumableArray(ids), [admin.id]);
+    }, []) : (_selectedGroup$driver = selectedGroup.drivers) === null || _selectedGroup$driver === void 0 ? void 0 : _selectedGroup$driver.reduce(function (ids, driver) {
       return [].concat(_toConsumableArray(ids), [driver.id]);
     }, []);
-    var changedDriverIds = [];
-    if (driverIds.includes(userId)) {
-      changedDriverIds = driverIds.filter(function (id) {
+    var changedUserIds = [];
+    if (userIds.includes(userId)) {
+      changedUserIds = userIds.filter(function (id) {
         return id !== userId;
       });
     } else {
-      changedDriverIds = [].concat(_toConsumableArray(driverIds), [userId]);
+      changedUserIds = [].concat(_toConsumableArray(userIds), [userId]);
     }
-    var changes = {
-      drivers: JSON.stringify(changedDriverIds)
+    var changes = isDriverManager ? {
+      administrators: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
+    } : {
+      drivers: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
     };
     handleUpdateDriversGroup(groupId, changes);
   };
@@ -239,7 +244,9 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     var _driversGroupsState$g;
     if (driversGroupsState.loading) return;
     var groupIds = (_driversGroupsState$g = driversGroupsState.groups) === null || _driversGroupsState$g === void 0 ? void 0 : _driversGroupsState$g.reduce(function (ids, group) {
-      var found = group.drivers.find(function (driver) {
+      var found = isDriverManager ? group.administrators.find(function (admin) {
+        return admin.id === userId;
+      }) : group.drivers.find(function (driver) {
         return driver.id === userId;
       });
       if (found) return [].concat(_toConsumableArray(ids), [group.id]);else return _toConsumableArray(ids);
