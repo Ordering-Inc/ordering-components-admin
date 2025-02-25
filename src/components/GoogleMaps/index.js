@@ -46,32 +46,51 @@ export const GoogleMaps = (props) => {
    * @param {Google map} map
    */
   const generateMarkers = (map) => {
+    // Validación básica de locations
+    if (!Array.isArray(locations)) {
+      console.warn('Locations must be an array')
+      return
+    }
+
     const bounds = new window.google.maps.LatLngBounds()
     let businessesNear = 0
-    for (let i = 0; i < locations.length; i++) {
+
+    // Filtrar ubicaciones inválidas
+    const validLocations = locations.filter(loc =>
+      loc && typeof loc.lat !== 'undefined' &&
+      typeof loc.lng !== 'undefined' &&
+      !isNaN(Number(loc.lat)) &&
+      !isNaN(Number(loc.lng))
+    )
+
+    for (let i = 0; i < validLocations.length; i++) {
       let formatUrl = null
       if (i === 1 || businessMap) {
-        formatUrl = optimizeImage(locations[i]?.icon, 'r_max')
+        formatUrl = optimizeImage(validLocations[i]?.icon, 'r_max')
       }
       if (isHeatMap && markerIcon) {
         formatUrl = markerIcon
       }
       const marker = new window.google.maps.Marker({
-        position: new window.google.maps.LatLng(locations[i]?.lat, locations[i]?.lng),
+        position: new window.google.maps.LatLng(Number(validLocations[i].lat), Number(validLocations[i].lng)),
         map,
-        title: locations[i]?.slug,
-        icon: locations[i]?.icon ? {
-          url: formatUrl || locations[i].icon,
-          scaledSize: new window.google.maps.Size(45, 45)
-        } : (isHeatMap ? {
-          url: formatUrl,
-          scaledSize: new window.google.maps.Size(40, 40)
-        } : null)
+        title: validLocations[i]?.slug,
+        icon: validLocations[i]?.icon
+          ? {
+            url: formatUrl || validLocations[i].icon,
+            scaledSize: new window.google.maps.Size(45, 45)
+          }
+          : (isHeatMap
+            ? {
+              url: formatUrl,
+              scaledSize: new window.google.maps.Size(40, 40)
+            }
+            : null)
       })
       if (businessMap) {
         const isNear = validateResult(googleMap, marker, marker.getPosition())
         if (isNear) {
-          marker.addListener('click', () => onBusinessClick(locations[i]?.slug))
+          marker.addListener('click', () => onBusinessClick(validLocations[i]?.slug))
           bounds.extend(marker.position)
           setMarkers(markers => [...markers, marker])
           businessesNear = businessesNear + 1
@@ -196,11 +215,13 @@ export const GoogleMaps = (props) => {
 
   useEffect(() => {
     if (googleReady && googleMap && googleMapMarker && isHeatMap && markerCluster) {
-      heatMap.setMap(heatMap.getMap() ? null : googleMap)
+      heatMap && heatMap.setMap(heatMap.getMap() ? null : googleMap)
       if (heatMap.getMap()) {
         markerCluster.clearMarkers()
       } else {
-        markerCluster.addMarkers(markers)
+        if (Array.isArray(markers)) {
+          markerCluster.addMarkers(markers)
+        }
       }
     }
   }, [isHeat])
@@ -228,8 +249,8 @@ export const GoogleMaps = (props) => {
         mapTypeControl: mapControls?.mapTypeControl,
         mapTypeId: mapControls?.mapTypeId,
         mapTypeControlOptions: {
-          style: window.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-          position: window.google.maps.ControlPosition.TOP_LEFT,
+          style: window?.google?.maps?.MapTypeControlStyle?.HORIZONTAL_BAR || 'HORIZONTAL_BAR',
+          position: window?.google?.maps?.ControlPosition?.TOP_LEFT || 'TOP_LEFT',
           ...mapControls?.mapTypeControlOptions
         }
       })
@@ -312,17 +333,19 @@ export const GoogleMaps = (props) => {
         }
 
         if (isHeatMap && !markerCluster && window.google.maps.visualization) {
+          const locationsData = Array.isArray(locations) ? locations : []
+
           const _heatMap = new window.google.maps.visualization.HeatmapLayer({
-            data: locations?.map(location => {
-              return new window.google.maps.LatLng(location.lat, location.lng)
+            data: locationsData.map(location => {
+              return new window.google.maps.LatLng(location?.lat, location?.lng)
             }),
             map: null,
             radius: 17
           })
           setHeatMap(_heatMap)
-          // Add a marker clusterer to manage the markers.
+
           if (window.MarkerClusterer) {
-            const _markerCluster = new window.MarkerClusterer(googleMap, markers, {
+            const _markerCluster = new window.MarkerClusterer(googleMap, Array.isArray(markers) ? markers : [], {
               imagePath:
                 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             })
