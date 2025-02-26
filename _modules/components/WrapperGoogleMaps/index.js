@@ -60,7 +60,7 @@ var WrapperGoogleMaps = exports.WrapperGoogleMaps = function WrapperGoogleMaps(C
       js.id = '__googleMapsScriptId';
       js.async = true;
       js.defer = true;
-      js.src = "https://maps.googleapis.com/maps/api/js?key=".concat(apiKey, "&libraries=places,geometry,visualization,drawing&callback=googleAsyncInit");
+      js.src = "https://maps.googleapis.com/maps/api/js?key=".concat(apiKey, "&libraries=places,geometry,visualization,drawing&callback=googleAsyncInit&loading=async");
       window.document.body.appendChild(js);
       return function () {
         if (checker) {

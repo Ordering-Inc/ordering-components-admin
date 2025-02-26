@@ -92,24 +92,34 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
    * @param {Google map} map
    */
   var generateMarkers = function generateMarkers(map) {
+    // Validación básica de locations
+    if (!Array.isArray(locations)) {
+      console.warn('Locations must be an array');
+      return;
+    }
     var bounds = new window.google.maps.LatLngBounds();
     var businessesNear = 0;
+
+    // Filtrar ubicaciones inválidas
+    var validLocations = locations.filter(function (loc) {
+      return loc && typeof loc.lat !== 'undefined' && typeof loc.lng !== 'undefined' && !isNaN(Number(loc.lat)) && !isNaN(Number(loc.lng));
+    });
     var _loop = function _loop(i) {
-      var _locations$i2, _locations$i3, _locations$i4, _locations$i5;
+      var _validLocations$i2, _validLocations$i3;
       var formatUrl = null;
       if (i === 1 || businessMap) {
-        var _locations$i;
-        formatUrl = optimizeImage((_locations$i = locations[i]) === null || _locations$i === void 0 ? void 0 : _locations$i.icon, 'r_max');
+        var _validLocations$i;
+        formatUrl = optimizeImage((_validLocations$i = validLocations[i]) === null || _validLocations$i === void 0 ? void 0 : _validLocations$i.icon, 'r_max');
       }
       if (isHeatMap && markerIcon) {
         formatUrl = markerIcon;
       }
       var marker = new window.google.maps.Marker({
-        position: new window.google.maps.LatLng((_locations$i2 = locations[i]) === null || _locations$i2 === void 0 ? void 0 : _locations$i2.lat, (_locations$i3 = locations[i]) === null || _locations$i3 === void 0 ? void 0 : _locations$i3.lng),
+        position: new window.google.maps.LatLng(Number(validLocations[i].lat), Number(validLocations[i].lng)),
         map: map,
-        title: (_locations$i4 = locations[i]) === null || _locations$i4 === void 0 ? void 0 : _locations$i4.slug,
-        icon: (_locations$i5 = locations[i]) !== null && _locations$i5 !== void 0 && _locations$i5.icon ? {
-          url: formatUrl || locations[i].icon,
+        title: (_validLocations$i2 = validLocations[i]) === null || _validLocations$i2 === void 0 ? void 0 : _validLocations$i2.slug,
+        icon: (_validLocations$i3 = validLocations[i]) !== null && _validLocations$i3 !== void 0 && _validLocations$i3.icon ? {
+          url: formatUrl || validLocations[i].icon,
           scaledSize: new window.google.maps.Size(45, 45)
         } : isHeatMap ? {
           url: formatUrl,
@@ -120,8 +130,8 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
         var isNear = validateResult(googleMap, marker, marker.getPosition());
         if (isNear) {
           marker.addListener('click', function () {
-            var _locations$i6;
-            return onBusinessClick((_locations$i6 = locations[i]) === null || _locations$i6 === void 0 ? void 0 : _locations$i6.slug);
+            var _validLocations$i4;
+            return onBusinessClick((_validLocations$i4 = validLocations[i]) === null || _validLocations$i4 === void 0 ? void 0 : _validLocations$i4.slug);
           });
           bounds.extend(marker.position);
           setMarkers(function (markers) {
@@ -138,7 +148,7 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
         });
       }
     };
-    for (var i = 0; i < locations.length; i++) {
+    for (var i = 0; i < validLocations.length; i++) {
       _loop(i);
     }
     businessesNear === 0 && setErrors && setErrors('ERROR_NOT_FOUND_BUSINESSES');
@@ -267,11 +277,13 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
   };
   (0, _react.useEffect)(function () {
     if (googleReady && googleMap && googleMapMarker && isHeatMap && markerCluster) {
-      heatMap.setMap(heatMap.getMap() ? null : googleMap);
+      heatMap && heatMap.setMap(heatMap.getMap() ? null : googleMap);
       if (heatMap.getMap()) {
         markerCluster.clearMarkers();
       } else {
-        markerCluster.addMarkers(markers);
+        if (Array.isArray(markers)) {
+          markerCluster.addMarkers(markers);
+        }
       }
     }
   }, [isHeat]);
@@ -290,7 +302,7 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
   }, [googleMapMarker]);
   (0, _react.useEffect)(function () {
     if (googleReady) {
-      var _location$zoom;
+      var _location$zoom, _window, _window2;
       var map = new window.google.maps.Map(divRef.current, {
         zoom: (_location$zoom = location.zoom) !== null && _location$zoom !== void 0 ? _location$zoom : mapControls.defaultZoom,
         center: center,
@@ -300,8 +312,8 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
         mapTypeControl: mapControls === null || mapControls === void 0 ? void 0 : mapControls.mapTypeControl,
         mapTypeId: mapControls === null || mapControls === void 0 ? void 0 : mapControls.mapTypeId,
         mapTypeControlOptions: _objectSpread({
-          style: window.google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-          position: window.google.maps.ControlPosition.TOP_LEFT
+          style: ((_window = window) === null || _window === void 0 || (_window = _window.google) === null || _window === void 0 || (_window = _window.maps) === null || _window === void 0 || (_window = _window.MapTypeControlStyle) === null || _window === void 0 ? void 0 : _window.HORIZONTAL_BAR) || 'HORIZONTAL_BAR',
+          position: ((_window2 = window) === null || _window2 === void 0 || (_window2 = _window2.google) === null || _window2 === void 0 || (_window2 = _window2.maps) === null || _window2 === void 0 || (_window2 = _window2.ControlPosition) === null || _window2 === void 0 ? void 0 : _window2.TOP_LEFT) || 'TOP_LEFT'
         }, mapControls === null || mapControls === void 0 ? void 0 : mapControls.mapTypeControlOptions)
       });
       var marker = null;
@@ -375,17 +387,17 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
           }
         }
         if (isHeatMap && !markerCluster && window.google.maps.visualization) {
+          var locationsData = Array.isArray(locations) ? locations : [];
           var _heatMap = new window.google.maps.visualization.HeatmapLayer({
-            data: locations === null || locations === void 0 ? void 0 : locations.map(function (location) {
-              return new window.google.maps.LatLng(location.lat, location.lng);
+            data: locationsData.map(function (location) {
+              return new window.google.maps.LatLng(location === null || location === void 0 ? void 0 : location.lat, location === null || location === void 0 ? void 0 : location.lng);
             }),
             map: null,
             radius: 17
           });
           setHeatMap(_heatMap);
-          // Add a marker clusterer to manage the markers.
           if (window.MarkerClusterer) {
-            var _markerCluster = new window.MarkerClusterer(googleMap, markers, {
+            var _markerCluster = new window.MarkerClusterer(googleMap, Array.isArray(markers) ? markers : [], {
               imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
             });
             setMarkerCluster(_markerCluster);
