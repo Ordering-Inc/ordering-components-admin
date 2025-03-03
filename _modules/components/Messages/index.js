@@ -133,6 +133,13 @@ var Messages = exports.Messages = function Messages(props) {
   var getVehicleSmmary = function getVehicleSmmary(vehicle) {
     return (vehicle === null || vehicle === void 0 ? void 0 : vehicle.type) + ' ' + (vehicle === null || vehicle === void 0 ? void 0 : vehicle.model) + ' ' + (vehicle === null || vehicle === void 0 ? void 0 : vehicle.car_registration) + ' ' + (vehicle === null || vehicle === void 0 ? void 0 : vehicle.color);
   };
+  var getAuthor = function getAuthor(message) {
+    if (message !== null && message !== void 0 && message.author_id) {
+      var _message$author, _message$author2, _message$author3;
+      return ((message === null || message === void 0 || (_message$author = message.author) === null || _message$author === void 0 ? void 0 : _message$author.name) || '') + (message !== null && message !== void 0 && (_message$author2 = message.author) !== null && _message$author2 !== void 0 && _message$author2.lastname ? ' ' + (message === null || message === void 0 || (_message$author3 = message.author) === null || _message$author3 === void 0 ? void 0 : _message$author3.lastname) : '');
+    }
+    return t('AUTHOR_SYSTEM', 'System');
+  };
   var getHistoryComment = function getHistoryComment(message) {
     var _message$change;
     var comment = '';
@@ -181,7 +188,7 @@ var Messages = exports.Messages = function Messages(props) {
       if (user.level === 0 || user.level === 2) {
         comment += '<br>-';
         if (message.app_id) comment += '<br><strong>' + t('APP_ID') + ':</strong> ' + message.app_id;
-        comment += '<br><strong>' + t('AUTHOR') + ':</strong> ' + (message.author ? message.author.name + (message.author.lastname ? ' ' + message.author.lastname : '') : t('GUEST_USER'));
+        comment += '<br><strong>' + t('AUTHOR', 'Author') + ':</strong> ' + getAuthor(message);
         if (message.user_agent) comment += '<br><strong>' + t('USER_AGENT') + ':</strong> ' + message.user_agent;
         if (message.location) comment += '<br><strong>' + t('LOCATION') + ':</strong> <img src="' + getStaticMapByLocation(message.location, '250x100') + '" />';
         comment += '<br><strong>' + t('IP') + ':</strong> ' + message.ip;
