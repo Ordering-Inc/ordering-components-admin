@@ -99,9 +99,9 @@ var OrderingWebsite = exports.OrderingWebsite = function OrderingWebsite(props) 
     setFormState = _useState16[1];
 
   /**
-   * Update form data
-   * @param {EventTarget} e Related HTML event
-   */
+  * Update form data
+  * @param {EventTarget} e Related HTML event
+  */
   var handleChangeInput = function handleChangeInput(e) {
     setFormState(_objectSpread(_objectSpread({}, formState), {}, {
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, e.target.name, e.target.value))
@@ -635,7 +635,7 @@ var OrderingWebsite = exports.OrderingWebsite = function OrderingWebsite(props) 
     }
   }, [JSON.stringify(themesList.themes), orderingTheme === null || orderingTheme === void 0 ? void 0 : orderingTheme.siteId]);
   (0, _react.useEffect)(function () {
-    var _orderingTheme$themes5, _orderingTheme$themes6, _orderingTheme$themes7, _orderingTheme$themes9, _orderingTheme$themes10;
+    var _orderingTheme$themes5, _orderingTheme$themes6, _orderingTheme$themes7, _orderingTheme$themes9, _orderingTheme$themes12, _orderingTheme$themes15, _orderingTheme$themes16;
     if (!((_orderingTheme$themes5 = orderingTheme.themes[0]) !== null && _orderingTheme$themes5 !== void 0 && _orderingTheme$themes5.values)) return;
     if (((_orderingTheme$themes6 = orderingTheme.themes[0]) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.values) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.business_view) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.components) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.products) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.components) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.product) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.components) === null || _orderingTheme$themes6 === void 0 || (_orderingTheme$themes6 = _orderingTheme$themes6.favorite) === null || _orderingTheme$themes6 === void 0 ? void 0 : _orderingTheme$themes6.hidden) === undefined && (_orderingTheme$themes7 = orderingTheme.themes[0]) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.values) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.business_view) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.components) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.products) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.components) !== null && _orderingTheme$themes7 !== void 0 && (_orderingTheme$themes7 = _orderingTheme$themes7.product) !== null && _orderingTheme$themes7 !== void 0 && _orderingTheme$themes7.components) {
       var _orderingTheme$themes8;
@@ -643,8 +643,28 @@ var OrderingWebsite = exports.OrderingWebsite = function OrderingWebsite(props) 
         hidden: (_orderingTheme$themes8 = orderingTheme.themes[0]) === null || _orderingTheme$themes8 === void 0 || (_orderingTheme$themes8 = _orderingTheme$themes8.values) === null || _orderingTheme$themes8 === void 0 || (_orderingTheme$themes8 = _orderingTheme$themes8.business_view) === null || _orderingTheme$themes8 === void 0 || (_orderingTheme$themes8 = _orderingTheme$themes8.components) === null || _orderingTheme$themes8 === void 0 || (_orderingTheme$themes8 = _orderingTheme$themes8.product) === null || _orderingTheme$themes8 === void 0 || (_orderingTheme$themes8 = _orderingTheme$themes8.components) === null || _orderingTheme$themes8 === void 0 ? void 0 : _orderingTheme$themes8.favorite
       };
     }
-    setAdvancedValues(JSON.parse(JSON.stringify((_orderingTheme$themes9 = orderingTheme.themes[0]) === null || _orderingTheme$themes9 === void 0 ? void 0 : _orderingTheme$themes9.values)));
-    var _themeValues = (_orderingTheme$themes10 = orderingTheme.themes[0]) === null || _orderingTheme$themes10 === void 0 || (_orderingTheme$themes10 = _orderingTheme$themes10.values) === null || _orderingTheme$themes10 === void 0 || (_orderingTheme$themes10 = _orderingTheme$themes10.my_products) === null || _orderingTheme$themes10 === void 0 ? void 0 : _orderingTheme$themes10.components;
+    if (((_orderingTheme$themes9 = orderingTheme.themes[0]) === null || _orderingTheme$themes9 === void 0 || (_orderingTheme$themes9 = _orderingTheme$themes9.values) === null || _orderingTheme$themes9 === void 0 || (_orderingTheme$themes9 = _orderingTheme$themes9.theme_settings) === null || _orderingTheme$themes9 === void 0 || (_orderingTheme$themes9 = _orderingTheme$themes9.components) === null || _orderingTheme$themes9 === void 0 || (_orderingTheme$themes9 = _orderingTheme$themes9.values) === null || _orderingTheme$themes9 === void 0 ? void 0 : _orderingTheme$themes9.homepage_content) === undefined) {
+      var _orderingTheme$themes10, _orderingTheme$themes11;
+      orderingTheme.themes[0].values.theme_settings = _objectSpread(_objectSpread({}, orderingTheme.themes[0].values.theme_settings), {}, {
+        components: _objectSpread(_objectSpread({}, (_orderingTheme$themes10 = orderingTheme.themes[0].values.theme_settings) === null || _orderingTheme$themes10 === void 0 ? void 0 : _orderingTheme$themes10.components), {}, {
+          values: _objectSpread(_objectSpread({}, (_orderingTheme$themes11 = orderingTheme.themes[0].values.theme_settings) === null || _orderingTheme$themes11 === void 0 || (_orderingTheme$themes11 = _orderingTheme$themes11.components) === null || _orderingTheme$themes11 === void 0 ? void 0 : _orderingTheme$themes11.values), {}, {
+            homepage_content: ''
+          })
+        })
+      });
+    }
+    if (((_orderingTheme$themes12 = orderingTheme.themes[0]) === null || _orderingTheme$themes12 === void 0 || (_orderingTheme$themes12 = _orderingTheme$themes12.values) === null || _orderingTheme$themes12 === void 0 || (_orderingTheme$themes12 = _orderingTheme$themes12.theme_settings) === null || _orderingTheme$themes12 === void 0 || (_orderingTheme$themes12 = _orderingTheme$themes12.components) === null || _orderingTheme$themes12 === void 0 || (_orderingTheme$themes12 = _orderingTheme$themes12.values) === null || _orderingTheme$themes12 === void 0 ? void 0 : _orderingTheme$themes12.footer_content) === undefined) {
+      var _orderingTheme$themes13, _orderingTheme$themes14;
+      orderingTheme.themes[0].values.theme_settings = _objectSpread(_objectSpread({}, orderingTheme.themes[0].values.theme_settings), {}, {
+        components: _objectSpread(_objectSpread({}, (_orderingTheme$themes13 = orderingTheme.themes[0].values.theme_settings) === null || _orderingTheme$themes13 === void 0 ? void 0 : _orderingTheme$themes13.components), {}, {
+          values: _objectSpread(_objectSpread({}, (_orderingTheme$themes14 = orderingTheme.themes[0].values.theme_settings) === null || _orderingTheme$themes14 === void 0 || (_orderingTheme$themes14 = _orderingTheme$themes14.components) === null || _orderingTheme$themes14 === void 0 ? void 0 : _orderingTheme$themes14.values), {}, {
+            footer_content: ''
+          })
+        })
+      });
+    }
+    setAdvancedValues(JSON.parse(JSON.stringify((_orderingTheme$themes15 = orderingTheme.themes[0]) === null || _orderingTheme$themes15 === void 0 ? void 0 : _orderingTheme$themes15.values)));
+    var _themeValues = (_orderingTheme$themes16 = orderingTheme.themes[0]) === null || _orderingTheme$themes16 === void 0 || (_orderingTheme$themes16 = _orderingTheme$themes16.values) === null || _orderingTheme$themes16 === void 0 || (_orderingTheme$themes16 = _orderingTheme$themes16.my_products) === null || _orderingTheme$themes16 === void 0 ? void 0 : _orderingTheme$themes16.components;
     if (!_themeValues) return;
     setThemeValues(JSON.parse(JSON.stringify(_themeValues)));
   }, [orderingTheme === null || orderingTheme === void 0 ? void 0 : orderingTheme.themes]);
