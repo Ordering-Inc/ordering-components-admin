@@ -25,7 +25,7 @@ export const OrderingWebsite = (props) => {
   const [franchisesList, setFranchisesList] = useState({ loading: false, franchises: [], error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, error: null })
 
-/**
+  /**
  * Update form data
  * @param {EventTarget} e Related HTML event
  */
@@ -368,6 +368,34 @@ export const OrderingWebsite = (props) => {
     ) {
       orderingTheme.themes[0].values.business_view.components.products.components.product.components.favorite = {
         hidden: orderingTheme.themes[0]?.values?.business_view?.components?.product?.components?.favorite
+      }
+    }
+    if (
+      orderingTheme.themes[0]?.values?.theme_settings?.components?.values?.homepage_content === undefined
+    ) {
+      orderingTheme.themes[0].values.theme_settings = {
+        ...orderingTheme.themes[0].values.theme_settings,
+        components: {
+          ...orderingTheme.themes[0].values.theme_settings?.components,
+          values: {
+            ...orderingTheme.themes[0].values.theme_settings?.components?.values,
+            homepage_content: ''
+          }
+        }
+      }
+    }
+    if (
+      orderingTheme.themes[0]?.values?.theme_settings?.components?.values?.footer_content === undefined
+    ) {
+      orderingTheme.themes[0].values.theme_settings = {
+        ...orderingTheme.themes[0].values.theme_settings,
+        components: {
+          ...orderingTheme.themes[0].values.theme_settings?.components,
+          values: {
+            ...orderingTheme.themes[0].values.theme_settings?.components?.values,
+            footer_content: ''
+          }
+        }
       }
     }
     setAdvancedValues(JSON.parse(JSON.stringify(orderingTheme.themes[0]?.values)))
