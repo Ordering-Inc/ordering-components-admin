@@ -380,7 +380,6 @@ export const DriversGroupsList = (props) => {
   }, [selectedGroupList, startSeveralDeleteStart])
 
   useEffect(() => {
-    if (!searchValue) return
     getHeaderDriversGroups(paginationSettings?.initialPage, paginationProps?.pageSize)
   }, [searchValue])
 
@@ -397,7 +396,13 @@ export const DriversGroupsList = (props) => {
 
   useEffect(() => {
     if (isHeaderComponent) return
-    getDriversGroups(paginationProps?.currentPage, paginationProps?.pageSize)
+    if (driversGroupsState.loading || driversGroupsState.groups.length > 0 || paginationProps.totalPages <= 1) {
+      if (searchValue) {
+        getHeaderDriversGroups(paginationProps?.currentPage, paginationProps?.pageSize)
+      } else {
+        getDriversGroups(paginationProps?.currentPage, paginationProps?.pageSize)
+      }
+    }
   }, [paginationProps?.currentPage, paginationProps?.pageSize])
 
   return (
