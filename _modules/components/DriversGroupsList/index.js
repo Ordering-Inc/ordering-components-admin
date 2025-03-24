@@ -765,7 +765,6 @@ var DriversGroupsList = exports.DriversGroupsList = function DriversGroupsList(p
     handleDeleteDriversGroup(selectedGroupList[0]);
   }, [selectedGroupList, startSeveralDeleteStart]);
   (0, _react.useEffect)(function () {
-    if (!searchValue) return;
     getHeaderDriversGroups(paginationSettings === null || paginationSettings === void 0 ? void 0 : paginationSettings.initialPage, paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.pageSize);
   }, [searchValue]);
   (0, _react.useEffect)(function () {
@@ -780,7 +779,13 @@ var DriversGroupsList = exports.DriversGroupsList = function DriversGroupsList(p
   }, []);
   (0, _react.useEffect)(function () {
     if (isHeaderComponent) return;
-    getDriversGroups(paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.currentPage, paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.pageSize);
+    if (driversGroupsState.loading || driversGroupsState.groups.length > 0 || paginationProps.totalPages <= 1) {
+      if (searchValue) {
+        getHeaderDriversGroups(paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.currentPage, paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.pageSize);
+      } else {
+        getDriversGroups(paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.currentPage, paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.pageSize);
+      }
+    }
   }, [paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.currentPage, paginationProps === null || paginationProps === void 0 ? void 0 : paginationProps.pageSize]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     driversGroupsState: driversGroupsState,
