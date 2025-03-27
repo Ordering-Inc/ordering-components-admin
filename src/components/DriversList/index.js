@@ -21,7 +21,9 @@ export const DriversList = (props) => {
     useDriversByProps,
     paginationSettings,
     disableDriverLocationsSockets,
-    enableSocketEventDriverRoom
+    enableSocketEventDriverRoom,
+    setOrderForMap,
+    orderForMap
   } = props
 
   const [ordering] = useApi()
@@ -514,6 +516,13 @@ export const DriversList = (props) => {
 
       if (selectedDriver?.id && locationMap.has(selectedDriver.id)) {
         setSelectedDriver((prevState) => ({ ...prevState, location: locationMap.get(selectedDriver.id) }))
+        setOrderForMap && setOrderForMap({
+          ...orderForMap,
+          driver: {
+            ...orderForMap.driver,
+            location: locationMap.get(selectedDriver.id)
+          }
+        })
       }
 
       setDriversList((prevState) => {
@@ -537,7 +546,13 @@ export const DriversList = (props) => {
         socket.off('batch_driver_changes', handleBatchDriverChanges)
       }
     }
-  }, [socket, session?.loading, props.driversList?.loading, selectedDriver?.id])
+  }, [socket, session?.loading, props.driversList?.loading, selectedDriver?.id, orderForMap?.id])
+
+  useEffect(() => {
+    if (orderForMap?.driver) {
+      setSelectedDriver(orderForMap.driver)
+    }
+  }, [orderForMap?.driver?.id])
 
   const handleJoinMainRooms = () => {
     if (!disableDriverLocationsSockets) {
