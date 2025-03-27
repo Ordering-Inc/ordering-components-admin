@@ -31,7 +31,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
 function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 var DriversList = exports.DriversList = function DriversList(props) {
-  var _paginationSettings$p, _props$driversList, _props$driversList5, _props$driversList7, _props$driversList8, _driversList$drivers3;
+  var _paginationSettings$p, _props$driversList, _props$driversList5, _props$driversList7, _props$driversList8, _orderForMap$driver, _driversList$drivers3;
   var UIComponent = props.UIComponent,
     propsToFetch = props.propsToFetch,
     isSearchByName = props.isSearchByName,
@@ -45,7 +45,9 @@ var DriversList = exports.DriversList = function DriversList(props) {
     useDriversByProps = props.useDriversByProps,
     paginationSettings = props.paginationSettings,
     disableDriverLocationsSockets = props.disableDriverLocationsSockets,
-    enableSocketEventDriverRoom = props.enableSocketEventDriverRoom;
+    enableSocketEventDriverRoom = props.enableSocketEventDriverRoom,
+    setOrderForMap = props.setOrderForMap,
+    orderForMap = props.orderForMap;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -784,6 +786,11 @@ var DriversList = exports.DriversList = function DriversList(props) {
             location: locationMap.get(selectedDriver.id)
           });
         });
+        setOrderForMap && setOrderForMap(_objectSpread(_objectSpread({}, orderForMap), {}, {
+          driver: _objectSpread(_objectSpread({}, orderForMap.driver), {}, {
+            location: locationMap.get(selectedDriver.id)
+          })
+        }));
       }
       setDriversList(function (prevState) {
         var updatedDrivers = prevState.drivers.map(function (driver) {
@@ -810,7 +817,12 @@ var DriversList = exports.DriversList = function DriversList(props) {
         socket.off('batch_driver_changes', handleBatchDriverChanges);
       }
     };
-  }, [socket, session === null || session === void 0 ? void 0 : session.loading, (_props$driversList8 = props.driversList) === null || _props$driversList8 === void 0 ? void 0 : _props$driversList8.loading, selectedDriver === null || selectedDriver === void 0 ? void 0 : selectedDriver.id]);
+  }, [socket, session === null || session === void 0 ? void 0 : session.loading, (_props$driversList8 = props.driversList) === null || _props$driversList8 === void 0 ? void 0 : _props$driversList8.loading, selectedDriver === null || selectedDriver === void 0 ? void 0 : selectedDriver.id, orderForMap === null || orderForMap === void 0 ? void 0 : orderForMap.id]);
+  (0, _react.useEffect)(function () {
+    if (orderForMap !== null && orderForMap !== void 0 && orderForMap.driver) {
+      setSelectedDriver(orderForMap.driver);
+    }
+  }, [orderForMap === null || orderForMap === void 0 || (_orderForMap$driver = orderForMap.driver) === null || _orderForMap$driver === void 0 ? void 0 : _orderForMap$driver.id]);
   var handleJoinMainRooms = function handleJoinMainRooms() {
     var _session$user2;
     if (!disableDriverLocationsSockets) {
