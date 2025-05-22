@@ -21,6 +21,48 @@ export const DriverGroupSetting = (props) => {
   const [actionState, setActionState] = useState({ loading: false, error: null })
   const [includedGroupIds, setIncludedGroupIds] = useState([])
 
+  const requestBase = {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }
+
+  /**
+   * Method to handle select all or none drivers groups
+   * @param {Boolean} isSelectAll - true for select all, false for select none
+   */
+  const handleSelectAllDriver = async (isSelectAll) => {
+    try {
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      setActionState({ ...actionState, loading: true, error: null })
+
+      const requestOptions = {
+        ...requestBase,
+        headers: {
+          ...requestBase.headers,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          driver_group_ids: isSelectAll ? driversGroupsState?.groups?.map(group => group.id) : []
+        })
+      }
+
+      const response = await fetch(`${ordering.root}/users/${userId}/drivergroups`, requestOptions)
+      const content = await response.json()
+
+      if (!content.error) {
+        setActionState({ error: null, loading: false })
+        setIncludedGroupIds(isSelectAll ? driversGroupsState.groups.map(group => group.id) : [])
+        showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
+      } else {
+        setActionState({ ...actionState, loading: false, error: content.result })
+      }
+    } catch (err) {
+      setActionState({ loading: false, error: [err.message] })
+    }
+  }
+
   /**
    * Method to get the drivers groups from API
    */
@@ -28,10 +70,11 @@ export const DriverGroupSetting = (props) => {
     try {
       setDriversGroupsState({ ...driversGroupsState, loading: true })
       const requestOptions = {
+        ...requestBase,
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          ...requestBase.headers,
+          'Content-Type': 'application/json'
         }
       }
       let where = []
@@ -73,10 +116,11 @@ export const DriverGroupSetting = (props) => {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionState({ ...actionState, loading: true, error: null })
       const requestOptions = {
+        ...requestBase,
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
+          ...requestBase.headers,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(changes)
       }
@@ -146,6 +190,7 @@ export const DriverGroupSetting = (props) => {
             includedGroupIds={includedGroupIds}
             actionState={actionState}
             handleCheckboxClick={handleCheckboxClick}
+            handleSelectAllDriver={handleSelectAllDriver}
           />
         )
       }
