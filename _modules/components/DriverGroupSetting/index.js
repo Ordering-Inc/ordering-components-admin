@@ -68,27 +68,101 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     _useState6 = _slicedToArray(_useState5, 2),
     includedGroupIds = _useState6[0],
     setIncludedGroupIds = _useState6[1];
+  var requestBase = {
+    method: 'POST',
+    headers: {
+      Authorization: "Bearer ".concat(token)
+    }
+  };
+
+  /**
+   * Method to handle select all or none drivers groups
+   * @param {Boolean} isSelectAll - true for select all, false for select none
+   */
+  var handleSelectAllDriver = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(isSelectAll) {
+      var _driversGroupsState$g, requestOptions, response, content;
+      return _regeneratorRuntime().wrap(function _callee$(_context) {
+        while (1) switch (_context.prev = _context.next) {
+          case 0:
+            _context.prev = 0;
+            showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
+            setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+              loading: true,
+              error: null
+            }));
+            requestOptions = _objectSpread(_objectSpread({}, requestBase), {}, {
+              headers: _objectSpread(_objectSpread({}, requestBase.headers), {}, {
+                'Content-Type': 'application/json'
+              }),
+              body: JSON.stringify({
+                driver_group_ids: isSelectAll ? driversGroupsState === null || driversGroupsState === void 0 || (_driversGroupsState$g = driversGroupsState.groups) === null || _driversGroupsState$g === void 0 ? void 0 : _driversGroupsState$g.map(function (group) {
+                  return group.id;
+                }) : []
+              })
+            });
+            _context.next = 6;
+            return fetch("".concat(ordering.root, "/users/").concat(userId, "/drivergroups"), requestOptions);
+          case 6:
+            response = _context.sent;
+            _context.next = 9;
+            return response.json();
+          case 9:
+            content = _context.sent;
+            if (!content.error) {
+              setActionState({
+                error: null,
+                loading: false
+              });
+              setIncludedGroupIds(isSelectAll ? driversGroupsState.groups.map(function (group) {
+                return group.id;
+              }) : []);
+              showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
+            } else {
+              setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
+                loading: false,
+                error: content.result
+              }));
+            }
+            _context.next = 16;
+            break;
+          case 13:
+            _context.prev = 13;
+            _context.t0 = _context["catch"](0);
+            setActionState({
+              loading: false,
+              error: [_context.t0.message]
+            });
+          case 16:
+          case "end":
+            return _context.stop();
+        }
+      }, _callee, null, [[0, 13]]);
+    }));
+    return function handleSelectAllDriver(_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
 
   /**
    * Method to get the drivers groups from API
    */
   var getDriversGroups = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
       var requestOptions, where, conditions, response, content;
-      return _regeneratorRuntime().wrap(function _callee$(_context) {
-        while (1) switch (_context.prev = _context.next) {
+      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            _context.prev = 0;
+            _context2.prev = 0;
             setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
               loading: true
             }));
-            requestOptions = {
+            requestOptions = _objectSpread(_objectSpread({}, requestBase), {}, {
               method: 'GET',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: "Bearer ".concat(token)
-              }
-            };
+              headers: _objectSpread(_objectSpread({}, requestBase.headers), {}, {
+                'Content-Type': 'application/json'
+              })
+            });
             where = [];
             conditions = [];
             conditions.push({
@@ -108,37 +182,37 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
                 conector: 'AND'
               };
             }
-            _context.next = 10;
+            _context2.next = 10;
             return fetch("".concat(ordering.root, "/drivergroups?params=name,drivers,administrators,type&where=").concat(JSON.stringify(where)), requestOptions);
           case 10:
-            response = _context.sent;
-            _context.next = 13;
+            response = _context2.sent;
+            _context2.next = 13;
             return response.json();
           case 13:
-            content = _context.sent;
+            content = _context2.sent;
             if (!content.error) {
               setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
                 groups: content.result,
                 loading: false
               }));
             }
-            _context.next = 20;
+            _context2.next = 20;
             break;
           case 17:
-            _context.prev = 17;
-            _context.t0 = _context["catch"](0);
+            _context2.prev = 17;
+            _context2.t0 = _context2["catch"](0);
             setDriversGroupsState(_objectSpread(_objectSpread({}, driversGroupsState), {}, {
               loading: false,
-              error: [_context.t0.message]
+              error: [_context2.t0.message]
             }));
           case 20:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
-      }, _callee, null, [[0, 17]]);
+      }, _callee2, null, [[0, 17]]);
     }));
     return function getDriversGroups() {
-      return _ref.apply(this, arguments);
+      return _ref2.apply(this, arguments);
     };
   }();
 
@@ -148,33 +222,32 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
    * @param {Object} changes
    */
   var handleUpdateDriversGroup = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(driverGroupId, changes) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(driverGroupId, changes) {
       var requestOptions, response, content, groups;
-      return _regeneratorRuntime().wrap(function _callee2$(_context2) {
-        while (1) switch (_context2.prev = _context2.next) {
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
           case 0:
-            _context2.prev = 0;
+            _context3.prev = 0;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
               loading: true,
               error: null
             }));
-            requestOptions = {
+            requestOptions = _objectSpread(_objectSpread({}, requestBase), {}, {
               method: 'PUT',
-              headers: {
-                'Content-Type': 'application/json',
-                Authorization: "Bearer ".concat(token)
-              },
+              headers: _objectSpread(_objectSpread({}, requestBase.headers), {}, {
+                'Content-Type': 'application/json'
+              }),
               body: JSON.stringify(changes)
-            };
-            _context2.next = 6;
+            });
+            _context3.next = 6;
             return fetch("".concat(ordering.root, "/drivergroups/").concat(driverGroupId), requestOptions);
           case 6:
-            response = _context2.sent;
-            _context2.next = 9;
+            response = _context3.sent;
+            _context3.next = 9;
             return response.json();
           case 9:
-            content = _context2.sent;
+            content = _context3.sent;
             if (!content.error) {
               setActionState({
                 error: null,
@@ -196,23 +269,23 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
                 error: content.result
               }));
             }
-            _context2.next = 16;
+            _context3.next = 16;
             break;
           case 13:
-            _context2.prev = 13;
-            _context2.t0 = _context2["catch"](0);
+            _context3.prev = 13;
+            _context3.t0 = _context3["catch"](0);
             setActionState({
               loading: false,
-              error: [_context2.t0.message]
+              error: [_context3.t0.message]
             });
           case 16:
           case "end":
-            return _context2.stop();
+            return _context3.stop();
         }
-      }, _callee2, null, [[0, 13]]);
+      }, _callee3, null, [[0, 13]]);
     }));
-    return function handleUpdateDriversGroup(_x, _x2) {
-      return _ref2.apply(this, arguments);
+    return function handleUpdateDriversGroup(_x2, _x3) {
+      return _ref3.apply(this, arguments);
     };
   }();
   var handleCheckboxClick = function handleCheckboxClick(groupId) {
@@ -241,9 +314,9 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     handleUpdateDriversGroup(groupId, changes);
   };
   (0, _react.useEffect)(function () {
-    var _driversGroupsState$g;
+    var _driversGroupsState$g2;
     if (driversGroupsState.loading) return;
-    var groupIds = (_driversGroupsState$g = driversGroupsState.groups) === null || _driversGroupsState$g === void 0 ? void 0 : _driversGroupsState$g.reduce(function (ids, group) {
+    var groupIds = (_driversGroupsState$g2 = driversGroupsState.groups) === null || _driversGroupsState$g2 === void 0 ? void 0 : _driversGroupsState$g2.reduce(function (ids, group) {
       var found = isDriverManager ? group.administrators.find(function (admin) {
         return admin.id === userId;
       }) : group.drivers.find(function (driver) {
@@ -260,7 +333,8 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     driversGroupsState: driversGroupsState,
     includedGroupIds: includedGroupIds,
     actionState: actionState,
-    handleCheckboxClick: handleCheckboxClick
+    handleCheckboxClick: handleCheckboxClick,
+    handleSelectAllDriver: handleSelectAllDriver
   })));
 };
 DriverGroupSetting.propTypes = {
