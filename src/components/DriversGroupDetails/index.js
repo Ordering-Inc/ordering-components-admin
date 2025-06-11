@@ -439,6 +439,21 @@ export const DriversGroupDetails = (props) => {
     handleChangesState(changes)
   }
 
+  const handleSelectAllManagers = (isAll) => {
+    const managerIds = driversManagers?.reduce((ids, manager) => [...ids, manager.id], [])
+    let filteredIds = []
+    if (isAll) {
+      filteredIds = [...managerIds]
+    } else {
+      filteredIds = []
+    }
+    setSelectedDriverManager(filteredIds)
+    setChangesState({
+      ...changesState,
+      administrators: JSON.stringify(filteredIds)
+    })
+  }
+
   useEffect(() => {
     setChangesState({})
     if (curDriversGroup) {
@@ -522,6 +537,7 @@ export const DriversGroupDetails = (props) => {
             handleSelectDriversCompany={handleSelectDriversCompany}
             handleSelectAllPaymethod={handleSelectAllPaymethod}
             handleSelectAllDriver={handleSelectAllDriver}
+            handleSelectAllManagers={handleSelectAllManagers}
             handleSelectAllDriversCompany={handleSelectAllDriversCompany}
             handleUpdateDriversGroup={handleUpdateDriversGroup}
             handleDeleteDriversGroup={handleDeleteDriversGroup}
