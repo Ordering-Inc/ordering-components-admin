@@ -650,6 +650,21 @@ var DriversGroupDetails = exports.DriversGroupDetails = function DriversGroupDet
     };
     handleChangesState(changes);
   };
+  var handleSelectAllManagers = function handleSelectAllManagers(isAll) {
+    var managerIds = driversManagers === null || driversManagers === void 0 ? void 0 : driversManagers.reduce(function (ids, manager) {
+      return [].concat(_toConsumableArray(ids), [manager.id]);
+    }, []);
+    var filteredIds = [];
+    if (isAll) {
+      filteredIds = _toConsumableArray(managerIds);
+    } else {
+      filteredIds = [];
+    }
+    setSelectedDriverManager(filteredIds);
+    setChangesState(_objectSpread(_objectSpread({}, changesState), {}, {
+      administrators: JSON.stringify(filteredIds)
+    }));
+  };
   (0, _react.useEffect)(function () {
     setChangesState({});
     if (curDriversGroup) {
@@ -730,6 +745,7 @@ var DriversGroupDetails = exports.DriversGroupDetails = function DriversGroupDet
     handleSelectDriversCompany: handleSelectDriversCompany,
     handleSelectAllPaymethod: handleSelectAllPaymethod,
     handleSelectAllDriver: handleSelectAllDriver,
+    handleSelectAllManagers: handleSelectAllManagers,
     handleSelectAllDriversCompany: handleSelectAllDriversCompany,
     handleUpdateDriversGroup: handleUpdateDriversGroup,
     handleDeleteDriversGroup: handleDeleteDriversGroup,
