@@ -53,7 +53,10 @@ export const DriverGroupSetting = (props) => {
 
       if (!content.error) {
         setActionState({ error: null, loading: false })
-        setIncludedGroupIds(isSelectAll ? driversGroupsState.groups.map(group => group.id) : [])
+        const newIncludedIds = isSelectAll ? driversGroupsState.groups.map(group => group.id) : []
+        setIncludedGroupIds(newIncludedIds)
+
+        getDriversGroups()
         showToast(ToastType.Success, t('CHANGES_SAVED', 'Changes saved'))
       } else {
         setActionState({ ...actionState, loading: false, error: content.result })
@@ -150,31 +153,55 @@ export const DriverGroupSetting = (props) => {
       ? selectedGroup.administrators?.reduce((ids, admin) => [...ids, admin.id], [])
       : selectedGroup.drivers?.reduce((ids, driver) => [...ids, driver.id], [])
 
+    const numericUserIds = userIds.map(id => Number(id))
+    const numericUserId = Number(userId)
+
     let changedUserIds = []
-    if (userIds.includes(userId)) {
-      changedUserIds = userIds.filter(id => id !== userId)
+    if (numericUserIds.includes(numericUserId)) {
+      changedUserIds = numericUserIds.filter(id => id !== numericUserId)
     } else {
-      changedUserIds = [...userIds, userId]
+      changedUserIds = [...numericUserIds, numericUserId]
     }
 
     const changes = isDriverManager
       ? { administrators: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null }
       : { drivers: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null }
 
+    if (changedUserIds.includes(numericUserId)) {
+      setIncludedGroupIds(prev => {
+        if (prev.includes(groupId)) {
+          return prev
+        }
+        const newIds = [...prev, groupId]
+        return newIds
+      })
+    } else {
+      setIncludedGroupIds(prev => {
+        const newIds = prev.filter(id => id !== groupId)
+        return newIds
+      })
+    }
+
     handleUpdateDriversGroup(groupId, changes)
   }
 
   useEffect(() => {
-    if (driversGroupsState.loading) return
+    if (driversGroupsState.loading || !driversGroupsState.groups.length) {
+      return
+    }
+
     const groupIds = driversGroupsState.groups?.reduce((ids, group) => {
       const found = isDriverManager
-        ? group.administrators.find(admin => admin.id === userId)
-        : group.drivers.find(driver => driver.id === userId)
+        ? group.administrators.find(admin => Number(admin.id) === Number(userId))
+        : group.drivers.find(driver => Number(driver.id) === Number(userId))
       if (found) return [...ids, group.id]
       else return [...ids]
     }, [])
-    setIncludedGroupIds(groupIds)
-  }, [userId, driversGroupsState])
+
+    if (JSON.stringify(groupIds) !== JSON.stringify(includedGroupIds)) {
+      setIncludedGroupIds(groupIds)
+    }
+  }, [userId, driversGroupsState.groups])
 
   useEffect(() => {
     getDriversGroups()
