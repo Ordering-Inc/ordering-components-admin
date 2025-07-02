@@ -81,7 +81,7 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
    */
   var handleSelectAllDriver = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(isSelectAll) {
-      var _driversGroupsState$g, requestOptions, response, content;
+      var _driversGroupsState$g, requestOptions, response, content, newIncludedIds;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -114,9 +114,11 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
                 error: null,
                 loading: false
               });
-              setIncludedGroupIds(isSelectAll ? driversGroupsState.groups.map(function (group) {
+              newIncludedIds = isSelectAll ? driversGroupsState.groups.map(function (group) {
                 return group.id;
-              }) : []);
+              }) : [];
+              setIncludedGroupIds(newIncludedIds);
+              getDriversGroups();
               showToast(_ToastContext.ToastType.Success, t('CHANGES_SAVED', 'Changes saved'));
             } else {
               setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
@@ -298,34 +300,58 @@ var DriverGroupSetting = exports.DriverGroupSetting = function DriverGroupSettin
     }, []) : (_selectedGroup$driver = selectedGroup.drivers) === null || _selectedGroup$driver === void 0 ? void 0 : _selectedGroup$driver.reduce(function (ids, driver) {
       return [].concat(_toConsumableArray(ids), [driver.id]);
     }, []);
+    var numericUserIds = userIds.map(function (id) {
+      return Number(id);
+    });
+    var numericUserId = Number(userId);
     var changedUserIds = [];
-    if (userIds.includes(userId)) {
-      changedUserIds = userIds.filter(function (id) {
-        return id !== userId;
+    if (numericUserIds.includes(numericUserId)) {
+      changedUserIds = numericUserIds.filter(function (id) {
+        return id !== numericUserId;
       });
     } else {
-      changedUserIds = [].concat(_toConsumableArray(userIds), [userId]);
+      changedUserIds = [].concat(_toConsumableArray(numericUserIds), [numericUserId]);
     }
     var changes = isDriverManager ? {
       administrators: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
     } : {
       drivers: changedUserIds.length > 0 ? JSON.stringify(changedUserIds) : null
     };
+    if (changedUserIds.includes(numericUserId)) {
+      setIncludedGroupIds(function (prev) {
+        if (prev.includes(groupId)) {
+          return prev;
+        }
+        var newIds = [].concat(_toConsumableArray(prev), [groupId]);
+        return newIds;
+      });
+    } else {
+      setIncludedGroupIds(function (prev) {
+        var newIds = prev.filter(function (id) {
+          return id !== groupId;
+        });
+        return newIds;
+      });
+    }
     handleUpdateDriversGroup(groupId, changes);
   };
   (0, _react.useEffect)(function () {
     var _driversGroupsState$g2;
-    if (driversGroupsState.loading) return;
+    if (driversGroupsState.loading || !driversGroupsState.groups.length) {
+      return;
+    }
     var groupIds = (_driversGroupsState$g2 = driversGroupsState.groups) === null || _driversGroupsState$g2 === void 0 ? void 0 : _driversGroupsState$g2.reduce(function (ids, group) {
       var found = isDriverManager ? group.administrators.find(function (admin) {
-        return admin.id === userId;
+        return Number(admin.id) === Number(userId);
       }) : group.drivers.find(function (driver) {
-        return driver.id === userId;
+        return Number(driver.id) === Number(userId);
       });
       if (found) return [].concat(_toConsumableArray(ids), [group.id]);else return _toConsumableArray(ids);
     }, []);
-    setIncludedGroupIds(groupIds);
-  }, [userId, driversGroupsState]);
+    if (JSON.stringify(groupIds) !== JSON.stringify(includedGroupIds)) {
+      setIncludedGroupIds(groupIds);
+    }
+  }, [userId, driversGroupsState.groups]);
   (0, _react.useEffect)(function () {
     getDriversGroups();
   }, []);
