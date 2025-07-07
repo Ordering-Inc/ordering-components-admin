@@ -158,29 +158,28 @@ export const BusinessDetails = (props) => {
   }
 
   /**
-   * Method to delet the business owner
+   * Method to delete the business owner
    */
-  const handleDeleteBusinessOwner = async (owners) => {
+  const handleDeleteBusinessOwner = async (owners, { type = 'owners' } = {}) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ [type]: owners })
       setActionStatus({
         ...actionStatus,
         loading: false,
         error: error ? result : null
       })
       if (!error) {
-        const _owners = businessState?.business?.owners.filter(owner => owners.includes(owner.id))
         const _business = {
           ...businessState?.business,
-          owners: _owners
+          [type]: businessState?.business?.[type]?.filter(owner => owners.includes(owner.id))
         }
         setBusinessState({
           ...businessState,
           business: _business
         })
-        showToast(ToastType.Success, t('BUSINESS_OWNER_DELETED', 'Business owner deleted'))
+        showToast(ToastType.Success, t(`BUSINESS_${type.toUpperCase()}_DELETED`, `${type.toUpperCase()} deleted`))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
@@ -188,35 +187,34 @@ export const BusinessDetails = (props) => {
   }
 
   /**
-   * Method to delet the business owner
+   * Method to add the business owner
    */
-  const handleAddBusinessOwner = async (owners, newOwner) => {
+  const handleAddBusinessOwner = async (owners, newOwner, { type = 'owners' } = {}) => {
     try {
       showToast(ToastType.Info, t('LOADING', 'Loading'))
       setActionStatus({ ...actionStatus, loading: true })
-      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ owners: owners })
+      const { content: { error, result } } = await ordering.setAccessToken(session.token).businesses(businessId).save({ [type]: owners })
       setActionStatus({
         ...actionStatus,
         loading: false,
         error: error ? result : null
       })
       if (!error) {
-        const _owners = [...businessState?.business?.owners, newOwner]
+        const _owners = [...businessState?.business?.[type], newOwner]
         const _business = {
           ...businessState?.business,
-          owners: _owners
+          [type]: _owners
         }
         setBusinessState({
           ...businessState,
           business: _business
         })
-        showToast(ToastType.Success, t('BUSINESS_OWNER_ADDED', 'Business owner added'))
+        showToast(ToastType.Success, t(`BUSINESS_${type.toUpperCase()}_ADDED`, `${type.toUpperCase()} added`))
       }
     } catch (err) {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
     }
   }
-
   /**
    * Method to update the business from the API
    */
@@ -530,5 +528,5 @@ BusinessDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'drivergroups']
+  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'drivergroups', 'agents']
 }

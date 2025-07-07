@@ -89,7 +89,7 @@ export const SettingsList = (props) => {
   const handleClickUpdate = () => {
     if (!formState?.changes || formState?.changes?.length === 0) return
     const _changes = formState?.changes.map(item => {
-      if (item.key === 'driver_tip_options') {
+      if (['country_autocomplete', 'driver_tip_options'].includes(item.key)) {
         return {
           ...item,
           value: transformArray(item?.value)
