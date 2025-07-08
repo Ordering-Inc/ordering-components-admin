@@ -9,7 +9,8 @@ export const BusinessManagerBusinesses = (props) => {
   const {
     UIComponent,
     userId,
-    busienssesPropsToFetch
+    busienssesPropsToFetch,
+    typeBusinessPropToFetch = 'businesses'
   } = props
 
   const [ordering] = useApi()
@@ -30,11 +31,11 @@ export const BusinessManagerBusinesses = (props) => {
         ...actionState,
         loading: true
       })
-      const fetchEndpoint = ordering.setAccessToken(token).users(userId).select(['businesses'])
+      const fetchEndpoint = ordering.setAccessToken(token).users(userId).select([typeBusinessPropToFetch])
       const { content: { error, result } } = await fetchEndpoint.get()
       if (!error) {
         setActionState({ loading: false, error: null })
-        const businessIds = result.businesses?.reduce((ids, business) => [...ids, business.id], [])
+        const businessIds = result[typeBusinessPropToFetch]?.reduce((ids, business) => [...ids, business.id], [])
         setSelectedBusinessIds(businessIds)
       } else {
         setActionState({ loading: false, error: result })
@@ -121,7 +122,7 @@ export const BusinessManagerBusinesses = (props) => {
 
   useEffect(() => {
     getDefaultBusinesses()
-  }, [])
+  }, [userId])
 
   return (
     <>
