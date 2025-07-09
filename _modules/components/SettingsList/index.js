@@ -152,7 +152,7 @@ var SettingsList = exports.SettingsList = function SettingsList(props) {
     var _formState$changes2;
     if (!(formState !== null && formState !== void 0 && formState.changes) || (formState === null || formState === void 0 || (_formState$changes2 = formState.changes) === null || _formState$changes2 === void 0 ? void 0 : _formState$changes2.length) === 0) return;
     var _changes = formState === null || formState === void 0 ? void 0 : formState.changes.map(function (item) {
-      if (item.key === 'driver_tip_options') {
+      if (['country_autocomplete', 'driver_tip_options'].includes(item.key)) {
         return _objectSpread(_objectSpread({}, item), {}, {
           value: transformArray(item === null || item === void 0 ? void 0 : item.value)
         });

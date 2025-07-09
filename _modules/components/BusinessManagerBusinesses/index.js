@@ -36,7 +36,9 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 var BusinessManagerBusinesses = exports.BusinessManagerBusinesses = function BusinessManagerBusinesses(props) {
   var UIComponent = props.UIComponent,
     userId = props.userId,
-    busienssesPropsToFetch = props.busienssesPropsToFetch;
+    busienssesPropsToFetch = props.busienssesPropsToFetch,
+    _props$typeBusinessPr = props.typeBusinessPropToFetch,
+    typeBusinessPropToFetch = _props$typeBusinessPr === void 0 ? 'businesses' : _props$typeBusinessPr;
   var _useApi = (0, _ApiContext.useApi)(),
     _useApi2 = _slicedToArray(_useApi, 1),
     ordering = _useApi2[0];
@@ -74,7 +76,7 @@ var BusinessManagerBusinesses = exports.BusinessManagerBusinesses = function Bus
    */
   var getDefaultBusinesses = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, _result$businesses, businessIds;
+      var fetchEndpoint, _yield$fetchEndpoint$, _yield$fetchEndpoint$2, error, result, _result$typeBusinessP, businessIds;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -82,7 +84,7 @@ var BusinessManagerBusinesses = exports.BusinessManagerBusinesses = function Bus
             setActionState(_objectSpread(_objectSpread({}, actionState), {}, {
               loading: true
             }));
-            fetchEndpoint = ordering.setAccessToken(token).users(userId).select(['businesses']);
+            fetchEndpoint = ordering.setAccessToken(token).users(userId).select([typeBusinessPropToFetch]);
             _context.next = 5;
             return fetchEndpoint.get();
           case 5:
@@ -95,7 +97,7 @@ var BusinessManagerBusinesses = exports.BusinessManagerBusinesses = function Bus
                 loading: false,
                 error: null
               });
-              businessIds = (_result$businesses = result.businesses) === null || _result$businesses === void 0 ? void 0 : _result$businesses.reduce(function (ids, business) {
+              businessIds = (_result$typeBusinessP = result[typeBusinessPropToFetch]) === null || _result$typeBusinessP === void 0 ? void 0 : _result$typeBusinessP.reduce(function (ids, business) {
                 return [].concat(_toConsumableArray(ids), [business.id]);
               }, []);
               setSelectedBusinessIds(businessIds);
@@ -270,7 +272,7 @@ var BusinessManagerBusinesses = exports.BusinessManagerBusinesses = function Bus
   }, [props.businesses]);
   (0, _react.useEffect)(function () {
     getDefaultBusinesses();
-  }, []);
+  }, [userId]);
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, UIComponent && /*#__PURE__*/_react.default.createElement(UIComponent, _extends({}, props, {
     actionState: actionState,
     businessesState: businessesState,

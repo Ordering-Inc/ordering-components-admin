@@ -330,24 +330,32 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
   }();
 
   /**
-   * Method to delet the business owner
+   * Method to delete the business owner
    */
   var handleDeleteBusinessOwner = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(owners) {
-      var _yield$ordering$setAc3, _yield$ordering$setAc4, error, result, _businessState$busine, _owners, _business;
+      var _ref6,
+        _ref6$type,
+        type,
+        _yield$ordering$setAc3,
+        _yield$ordering$setAc4,
+        error,
+        result,
+        _businessState$busine,
+        _business,
+        _args5 = arguments;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
-            _context5.prev = 0;
+            _ref6 = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : {}, _ref6$type = _ref6.type, type = _ref6$type === void 0 ? 'owners' : _ref6$type;
+            _context5.prev = 1;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: true
             }));
-            _context5.next = 5;
-            return ordering.setAccessToken(session.token).businesses(businessId).save({
-              owners: owners
-            });
-          case 5:
+            _context5.next = 6;
+            return ordering.setAccessToken(session.token).businesses(businessId).save(_defineProperty({}, type, owners));
+          case 6:
             _yield$ordering$setAc3 = _context5.sent;
             _yield$ordering$setAc4 = _yield$ordering$setAc3.content;
             error = _yield$ordering$setAc4.error;
@@ -357,31 +365,28 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
               error: error ? result : null
             }));
             if (!error) {
-              _owners = businessState === null || businessState === void 0 || (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.owners.filter(function (owner) {
+              _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, _defineProperty({}, type, businessState === null || businessState === void 0 || (_businessState$busine = businessState.business) === null || _businessState$busine === void 0 || (_businessState$busine = _businessState$busine[type]) === null || _businessState$busine === void 0 ? void 0 : _businessState$busine.filter(function (owner) {
                 return owners.includes(owner.id);
-              });
-              _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
-                owners: _owners
-              });
+              })));
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 business: _business
               }));
-              showToast(_ToastContext.ToastType.Success, t('BUSINESS_OWNER_DELETED', 'Business owner deleted'));
+              showToast(_ToastContext.ToastType.Success, t("BUSINESS_".concat(type.toUpperCase(), "_DELETED"), "".concat(type.toUpperCase(), " deleted")));
             }
-            _context5.next = 16;
+            _context5.next = 17;
             break;
-          case 13:
-            _context5.prev = 13;
-            _context5.t0 = _context5["catch"](0);
+          case 14:
+            _context5.prev = 14;
+            _context5.t0 = _context5["catch"](1);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
               error: [_context5.t0.message]
             }));
-          case 16:
+          case 17:
           case "end":
             return _context5.stop();
         }
-      }, _callee5, null, [[0, 13]]);
+      }, _callee5, null, [[1, 14]]);
     }));
     return function handleDeleteBusinessOwner(_x2) {
       return _ref5.apply(this, arguments);
@@ -389,24 +394,33 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
   }();
 
   /**
-   * Method to delet the business owner
+   * Method to add the business owner
    */
   var handleAddBusinessOwner = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(owners, newOwner) {
-      var _yield$ordering$setAc5, _yield$ordering$setAc6, error, result, _businessState$busine2, _owners, _business;
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(owners, newOwner) {
+      var _ref8,
+        _ref8$type,
+        type,
+        _yield$ordering$setAc5,
+        _yield$ordering$setAc6,
+        error,
+        result,
+        _businessState$busine2,
+        _owners,
+        _business,
+        _args6 = arguments;
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
-            _context6.prev = 0;
+            _ref8 = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : {}, _ref8$type = _ref8.type, type = _ref8$type === void 0 ? 'owners' : _ref8$type;
+            _context6.prev = 1;
             showToast(_ToastContext.ToastType.Info, t('LOADING', 'Loading'));
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: true
             }));
-            _context6.next = 5;
-            return ordering.setAccessToken(session.token).businesses(businessId).save({
-              owners: owners
-            });
-          case 5:
+            _context6.next = 6;
+            return ordering.setAccessToken(session.token).businesses(businessId).save(_defineProperty({}, type, owners));
+          case 6:
             _yield$ordering$setAc5 = _context6.sent;
             _yield$ordering$setAc6 = _yield$ordering$setAc5.content;
             error = _yield$ordering$setAc6.error;
@@ -416,40 +430,37 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
               error: error ? result : null
             }));
             if (!error) {
-              _owners = [].concat(_toConsumableArray(businessState === null || businessState === void 0 || (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2.owners), [newOwner]);
-              _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, {
-                owners: _owners
-              });
+              _owners = [].concat(_toConsumableArray(businessState === null || businessState === void 0 || (_businessState$busine2 = businessState.business) === null || _businessState$busine2 === void 0 ? void 0 : _businessState$busine2[type]), [newOwner]);
+              _business = _objectSpread(_objectSpread({}, businessState === null || businessState === void 0 ? void 0 : businessState.business), {}, _defineProperty({}, type, _owners));
               setBusinessState(_objectSpread(_objectSpread({}, businessState), {}, {
                 business: _business
               }));
-              showToast(_ToastContext.ToastType.Success, t('BUSINESS_OWNER_ADDED', 'Business owner added'));
+              showToast(_ToastContext.ToastType.Success, t("BUSINESS_".concat(type.toUpperCase(), "_ADDED"), "".concat(type.toUpperCase(), " added")));
             }
-            _context6.next = 16;
+            _context6.next = 17;
             break;
-          case 13:
-            _context6.prev = 13;
-            _context6.t0 = _context6["catch"](0);
+          case 14:
+            _context6.prev = 14;
+            _context6.t0 = _context6["catch"](1);
             setActionStatus(_objectSpread(_objectSpread({}, actionStatus), {}, {
               loading: false,
               error: [_context6.t0.message]
             }));
-          case 16:
+          case 17:
           case "end":
             return _context6.stop();
         }
-      }, _callee6, null, [[0, 13]]);
+      }, _callee6, null, [[1, 14]]);
     }));
     return function handleAddBusinessOwner(_x3, _x4) {
-      return _ref6.apply(this, arguments);
+      return _ref7.apply(this, arguments);
     };
   }();
-
   /**
    * Method to update the business from the API
    */
   var handleUpdateBusinessClick = /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
+    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7() {
       var response;
       return _regeneratorRuntime().wrap(function _callee7$(_context7) {
         while (1) switch (_context7.prev = _context7.next) {
@@ -495,7 +506,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
       }, _callee7, null, [[0, 10]]);
     }));
     return function handleUpdateBusinessClick() {
-      return _ref7.apply(this, arguments);
+      return _ref9.apply(this, arguments);
     };
   }();
 
@@ -503,7 +514,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
    * Method to set Spoonity key
    */
   var handleUpdateSpoonityKey = /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(key, config) {
+    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(key, config) {
       var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee8$(_context8) {
         while (1) switch (_context8.prev = _context8.next) {
@@ -559,7 +570,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
       }, _callee8, null, [[0, 13]]);
     }));
     return function handleUpdateSpoonityKey(_x5, _x6) {
-      return _ref8.apply(this, arguments);
+      return _ref10.apply(this, arguments);
     };
   }();
 
@@ -595,7 +606,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
     }));
   };
   var handleUpdatePreorderConfigs = /*#__PURE__*/function () {
-    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(params, configId) {
+    var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(params, configId) {
       var requestOptions, response, content;
       return _regeneratorRuntime().wrap(function _callee9$(_context9) {
         while (1) switch (_context9.prev = _context9.next) {
@@ -658,7 +669,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
       }, _callee9, null, [[0, 13]]);
     }));
     return function handleUpdatePreorderConfigs(_x7, _x8) {
-      return _ref9.apply(this, arguments);
+      return _ref11.apply(this, arguments);
     };
   }();
 
@@ -666,7 +677,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
    * Method to get the themes from API
    */
   var getSites = /*#__PURE__*/function () {
-    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
+    var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10() {
       var requestOptions, response, _yield$response$json, error, result, site;
       return _regeneratorRuntime().wrap(function _callee10$(_context10) {
         while (1) switch (_context10.prev = _context10.next) {
@@ -722,11 +733,11 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
       }, _callee10, null, [[0, 14]]);
     }));
     return function getSites() {
-      return _ref10.apply(this, arguments);
+      return _ref12.apply(this, arguments);
     };
   }();
   var handleSyncEvent = /*#__PURE__*/function () {
-    var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11() {
       var event,
         _businessState$busine3,
         response,
@@ -781,7 +792,7 @@ var BusinessDetails = exports.BusinessDetails = function BusinessDetails(props) 
       }, _callee11, null, [[1, 15]]);
     }));
     return function handleSyncEvent() {
-      return _ref11.apply(this, arguments);
+      return _ref13.apply(this, arguments);
     };
   }();
   (0, _react.useEffect)(function () {
@@ -866,5 +877,5 @@ BusinessDetails.defaultProps = {
   afterComponents: [],
   beforeElements: [],
   afterElements: [],
-  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'drivergroups']
+  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'drivergroups', 'agents']
 };
