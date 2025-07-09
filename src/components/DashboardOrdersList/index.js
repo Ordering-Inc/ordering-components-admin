@@ -786,6 +786,9 @@ export const DashboardOrdersList = (props) => {
     if (filterValues?.coupon) {
       if (!order?.coupon?.toString().includes(filterValues?.coupon)) filterCheck = false
     }
+    if (filterValues?.timeStatus) {
+      if (order?.time_status !== filterValues?.timeStatus) filterCheck = false
+    }
     return filterCheck
   }
 
