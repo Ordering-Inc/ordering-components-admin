@@ -820,6 +820,9 @@ var DashboardOrdersList = exports.DashboardOrdersList = function DashboardOrders
       var _order$coupon;
       if (!(order !== null && order !== void 0 && (_order$coupon = order.coupon) !== null && _order$coupon !== void 0 && _order$coupon.toString().includes(filterValues === null || filterValues === void 0 ? void 0 : filterValues.coupon))) filterCheck = false;
     }
+    if (filterValues !== null && filterValues !== void 0 && filterValues.timeStatus) {
+      if ((order === null || order === void 0 ? void 0 : order.time_status) !== (filterValues === null || filterValues === void 0 ? void 0 : filterValues.timeStatus)) filterCheck = false;
+    }
     return filterCheck;
   };
   var loadOrders = /*#__PURE__*/function () {
