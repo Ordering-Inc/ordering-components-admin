@@ -4,8 +4,10 @@ import { useSession } from '../../contexts/SessionContext'
 import { useApi } from '../../contexts/ApiContext'
 import { useToast, ToastType } from '../../contexts/ToastContext'
 import { useLanguage } from '../../contexts/LanguageContext'
+import { useEvent } from '../../contexts/EventContext'
 
 export const BusinessDetails = (props) => {
+  props = { ...defaultProps, ...props }
   const {
     asDashboard,
     business,
@@ -14,18 +16,26 @@ export const BusinessDetails = (props) => {
     UIComponent,
     handleSucessUpdateBusiness,
     handleSucessRemoveBusiness,
-    handleSucessAddBusiness
+    handleSucessAddBusiness,
+    notGetSites,
+    notGetTaxes
   } = props
 
   const [ordering] = useApi()
   const [session] = useSession()
   const [, { showToast }] = useToast()
   const [, t] = useLanguage()
+  const [events] = useEvent()
   const [businessState, setBusinessState] = useState({ business: null, loading: true, error: null })
   const [actionStatus, setActionStatus] = useState({ loading: false, error: null })
   const [formState, setFormState] = useState({ loading: false, changes: {}, result: { error: false } })
   const [spoonityKeyState, setSpoonityKeyState] = useState({ loading: false, key: '', result: { error: false } })
   const [siteState, setSiteState] = useState({ site: null, loading: false, error: null })
+  const [formTaxChanges, setFormTaxChanges] = useState({})
+  const [taxes, setTaxes] = useState({})
+  const [fees, setFees] = useState({})
+  const [taxToEdit, setTaxToEdit] = useState({ action: null, payload: null })
+  const [formTaxState, setFormTaxState] = useState({ loading: false, changes: {}, result: { error: false } })
 
   /**
    * Clean formState
@@ -215,19 +225,21 @@ export const BusinessDetails = (props) => {
       setActionStatus({ ...actionStatus, loading: false, error: [err.message] })
     }
   }
+
   /**
    * Method to update the business from the API
    */
-  const handleUpdateBusinessClick = async () => {
+  const handleUpdateBusinessClick = async (changes = {}) => {
     try {
       setFormState({ ...formState, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      const response = await ordering.businesses(businessId).save(formState.changes, {
+      const changesToSend = Object.keys(changes).length > 0 && !changes.target ? changes : formState.changes
+      const response = await ordering.businesses(businessId).save(changesToSend, {
         accessToken: session.token
       })
       setFormState({
         ...formState,
-        changes: response.content.error ? formState.changes : {},
+        changes: response.content.error ? changesToSend : {},
         result: response.content,
         loading: false
       })
@@ -332,7 +344,7 @@ export const BusinessDetails = (props) => {
     Object.assign(business, result)
     setBusinessState({
       ...businessState,
-      business: business
+      business
     })
   }
 
@@ -388,7 +400,7 @@ export const BusinessDetails = (props) => {
       const { error, result } = await response.json()
       if (!error) {
         const site = result.find(site => site.code === 'website')
-        setSiteState({ ...siteState, loading: false, site: site })
+        setSiteState({ ...siteState, loading: false, site })
       } else {
         setSiteState({ ...siteState, loading: false, error: result })
       }
@@ -428,6 +440,221 @@ export const BusinessDetails = (props) => {
     }
   }
 
+  const handleChangeTax = (name, value, orderType) => {
+    if (value === null) {
+      const _formTaxChanges = { ...formTaxChanges }
+      delete _formTaxChanges.order_type_rates
+      setFormTaxChanges(_formTaxChanges)
+      return
+    }
+    if (orderType) {
+      setFormTaxChanges((prev) => ({
+        ...prev,
+        order_type_rates: {
+          ...prev.order_type_rates,
+          [orderType]: {
+            ...prev.order_type_rates?.[orderType],
+            [name]: parseFloat(value)
+          }
+        }
+      }))
+    } else {
+      setFormTaxChanges((prev) => ({
+        ...prev,
+        [name]: value
+      }))
+    }
+  }
+
+  const getTaxes = async () => {
+    const taxesObject = {}
+    setFormTaxState({
+      ...formTaxState,
+      loading: true
+    })
+    const response = await fetch(`${ordering.root}/taxes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${session.token}`
+      }
+    })
+    const { error, result } = await response.json()
+    if (!error) {
+      result.forEach(tax => (taxesObject[`id:${tax?.id}`] = tax))
+      setTaxes(taxesObject)
+      return
+    }
+    setFormTaxState({
+      ...formTaxState,
+      result: {
+        error: true,
+        result: taxesObject
+      },
+      loading: false
+    })
+  }
+
+  const handleSaveTax = async (id, action, _data) => {
+    try {
+      setFormTaxState({
+        ...formState,
+        loading: true
+      })
+      let result
+      showToast(ToastType.Info, t('LOADING', 'Loading'))
+      if (id) {
+        const response = await fetch(`${ordering.root}/${action}/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.auth}`
+          },
+          body: JSON.stringify({
+            ...formTaxChanges,
+            ..._data
+          })
+        })
+        const { result: data } = await response.json()
+        result = data
+        if (action === 'taxes') {
+          setTaxes({
+            ...taxes,
+            [`id:${data.id}`]: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              rate: data.rate,
+              type: data.type,
+              order_type_rates: data.order_type_rates || null
+            }
+          })
+          events.emit('tax_changed', {
+            tax: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              rate: data.rate,
+              type: data.type,
+              order_type_rates: data.order_type_rates || null
+            }
+          })
+          showToast(ToastType.Success, t('TAX_SAVED', 'Tax saved'))
+        } else {
+          setFees({
+            ...fees,
+            [`id:${data.id}`]: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              fixed: data.fixed,
+              percentage: data.percentage
+            }
+          })
+          events.emit('fee_changed', {
+            fee: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              fixed: data.fixed,
+              percentage: data.percentage
+            }
+          })
+          showToast(ToastType.Success, t('FEE_SAVED', 'Fee saved'))
+        }
+      } else {
+        const response = await fetch(`${ordering.root}/${action}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${session.auth}`
+          },
+          body: JSON.stringify({
+            ...formTaxChanges,
+            ..._data
+          })
+        })
+        const { result: data } = await response.json()
+        if (action === 'taxes') {
+          setTaxes({
+            ...taxes,
+            [`id:${data.id}`]: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              rate: data.rate,
+              type: data.type,
+              order_type_rates: data.order_type_rates || null
+            }
+          })
+          showToast(ToastType.Success, t('TAX_SAVED', 'Tax saved'))
+        } else {
+          setFees({
+            ...fees,
+            [`id:${data.id}`]: {
+              name: data.name,
+              description: data.description,
+              id: data.id,
+              fixed: data.fixed,
+              percentage: data.percentage
+            }
+          })
+          showToast(ToastType.Success, t('FEE_SAVED', 'Fee saved'))
+        }
+        return data
+      }
+      if (result?.error) return
+      setTaxToEdit({ action: null, payload: null })
+    } catch (err) {
+      setFormTaxState({
+        ...formTaxState,
+        loading: false
+      })
+    } finally {
+      setFormTaxState({
+        ...formTaxState,
+        loading: false
+      })
+    }
+  }
+
+  const handleDeleteTax = async (id, action) => {
+    setFormTaxState({
+      ...formTaxState,
+      loading: true
+    })
+    showToast(ToastType.Info, t('LOADING', 'Loading'))
+    if (id) {
+      const response = await fetch(`${ordering.root}/${action}/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${session.auth}`
+        }
+      })
+      const { error } = await response.json()
+      if (!error) {
+        if (action === 'taxes') {
+          const newTaxes = taxes
+          events.emit('tax_deleted', { tax: newTaxes[`id:${id}`], isRemove: true })
+          delete newTaxes[`id:${id}`]
+          setTaxes(newTaxes)
+          showToast(ToastType.Success, t('TAX_DELETED', 'tax deleted'))
+        } else {
+          const newFees = fees
+          events.emit('fee_deleted', { tax: newFees[`id:${id}`], isRemove: true })
+          delete newFees[`id:${id}`]
+          setFees(newFees)
+          showToast(ToastType.Success, t('FEE_DELETED', 'Fee deleted'))
+        }
+      }
+    }
+    setFormTaxState({
+      ...formTaxState,
+      loading: false
+    })
+  }
+
   useEffect(() => {
     if (!businessState?.business) return
     handleSucessUpdateBusiness && handleSucessUpdateBusiness(businessState?.business)
@@ -438,7 +665,7 @@ export const BusinessDetails = (props) => {
       setBusinessState({
         ...businessState,
         loading: false,
-        business: business
+        business
       })
     } else {
       getBusinesses()
@@ -446,7 +673,12 @@ export const BusinessDetails = (props) => {
   }, [businessId, business])
 
   useEffect(() => {
-    getSites()
+    if (!notGetSites) {
+      getSites()
+    }
+    if (!notGetTaxes) {
+      getTaxes()
+    }
   }, [])
 
   return (
@@ -470,10 +702,22 @@ export const BusinessDetails = (props) => {
             handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
             handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
             handleUpdatePreorderConfigs={handleUpdatePreorderConfigs}
+            handleUpdateBusinessConfigs={handleUpdatePreorderConfigs}
             handleUpdateSpoonityKey={handleUpdateSpoonityKey}
             handleSyncEvent={handleSyncEvent}
             spoonityKeyState={spoonityKeyState}
             siteState={siteState}
+            taxes={taxes}
+            fees={fees}
+            taxToEdit={taxToEdit}
+            setTaxToEdit={setTaxToEdit}
+            formTaxChanges={formTaxChanges}
+            setFormTaxChanges={setFormTaxChanges}
+            formTaxState={formTaxState}
+            handleSaveTax={handleSaveTax}
+            handleDeleteTax={handleDeleteTax}
+            getTaxes={getTaxes}
+            handleChangeTax={handleChangeTax}
           />
         )
       }
@@ -500,33 +744,9 @@ BusinessDetails.propTypes = {
   /**
   * Business, this must be contains an object with all business info
   */
-  business: PropTypes.object,
-  /**
-   * Components types before order details
-   * Array of type components, the parent props will pass to these components
-   */
-  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
-  /**
-  * Components types after order details
-  * Array of type components, the parent props will pass to these components
-  */
-  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
-  /**
-  * Elements before order details
-  * Array of HTML/Components elements, these components will not get the parent props
-  */
-  beforeElements: PropTypes.arrayOf(PropTypes.element),
-  /**
-  * Elements after order details
-  * Array of HTML/Components elements, these components will not get the parent props
-  */
-  afterElements: PropTypes.arrayOf(PropTypes.element)
+  business: PropTypes.object
 }
 
-BusinessDetails.defaultProps = {
-  beforeComponents: [],
-  afterComponents: [],
-  beforeElements: [],
-  afterElements: [],
-  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'drivergroups', 'agents']
+const defaultProps = {
+  propsToFetch: ['id', 'name', 'email', 'slug', 'schedule', 'description', 'about', 'logo', 'header', 'phone', 'cellphone', 'owner_id', 'city_id', 'address', 'address_notes', 'zipcode', 'location', 'featured', 'timezone', 'currency', 'food', 'alcohol', 'groceries', 'laundry', 'use_printer', 'printer_id', 'minimum', 'delivery_price', 'always_deliver', 'tax_type', 'tax', 'delivery_time', 'pickup_time', 'service_fee', 'fixed_usage_fee', 'percentage_usage_fee', 'order_default_priority', 'cancel_order_after_minutes', 'enabled', 'preorder_time', 'maximum', 'schedule_ranges', 'franchise_id', 'external_id', 'front_layout', 'seo_image', 'seo_title', 'seo_description', 'eta_status_times', 'eta_variation_time', 'price_level', 'facebook_profile', 'instagram_profile', 'tiktok_profile', 'snapchat_profile', 'pinterest_profile', 'whatsapp_number', 'delivery_tax_rate', 'delivery_tax_type', 'disabled_reason', 'menus_count', 'available_menus_count', 'menus_shared_count', 'available_menus_shared_count', 'professionals', 'configs', 'checkoutfields', 'reviews', 'open', 'today', 'lazy_load_products_recommended', 'available_products_count', 'valid_service', 'num_zones', 'types', 'metafields', 'owners', 'gallery', 'city', 'webhooks', 'maximums', 'paymethods', 'ribbon', 'offers', 'agents', 'tax_id', 'custom_tax']
 }
