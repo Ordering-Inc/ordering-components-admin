@@ -55,7 +55,7 @@ export const ProductDetailsAdvanced = (props) => {
           ...formState,
           result: {
             error: true,
-            result: result
+            result
           },
           loading: false
         })
@@ -85,11 +85,30 @@ export const ProductDetailsAdvanced = (props) => {
     })
   }
 
-  const handleChangeTax = (name, value) => {
-    setFormTaxChanges({
-      ...formTaxChanges,
-      [name]: value
-    })
+  const handleChangeTax = (name, value, orderType) => {
+    if (value === null) {
+      const _formTaxChanges = { ...formTaxChanges }
+      delete _formTaxChanges.order_type_rates
+      setFormTaxChanges(_formTaxChanges)
+      return
+    }
+    if (orderType) {
+      setFormTaxChanges((prev) => ({
+        ...prev,
+        order_type_rates: {
+          ...prev.order_type_rates,
+          [orderType]: {
+            ...prev.order_type_rates?.[orderType],
+            [name]: parseFloat(value)
+          }
+        }
+      }))
+    } else {
+      setFormTaxChanges((prev) => ({
+        ...prev,
+        [name]: value
+      }))
+    }
   }
 
   const handleSaveTax = async (id, action) => {
@@ -116,7 +135,8 @@ export const ProductDetailsAdvanced = (props) => {
             description: data.description,
             id: data.id,
             rate: data.rate,
-            type: data.type
+            type: data.type,
+            order_type_rates: data.order_type_rates || null
           }
         })
         events.emit('tax_changed', {
@@ -125,7 +145,8 @@ export const ProductDetailsAdvanced = (props) => {
             description: data.description,
             id: data.id,
             rate: data.rate,
-            type: data.type
+            type: data.type,
+            order_type_rates: data.order_type_rates || null
           }
         })
         showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
@@ -169,7 +190,8 @@ export const ProductDetailsAdvanced = (props) => {
             description: data.description,
             id: data.id,
             rate: data.rate,
-            type: data.type
+            type: data.type,
+            order_type_rates: data.order_type_rates || null
           }
         })
         showToast(ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'))
@@ -251,6 +273,8 @@ export const ProductDetailsAdvanced = (props) => {
           handleSaveTax={handleSaveTax}
           handleDeleteTax={handleDeleteTax}
           handleUpdateClick={handleUpdateClick}
+          formTaxChanges={formTaxChanges}
+          setFormTaxChanges={setFormTaxChanges}
         />
       )}
     </>
@@ -261,32 +285,5 @@ ProductDetailsAdvanced.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
-  UIComponent: PropTypes.elementType,
-  /**
-   * Components types before product details advanced
-   * Array of type components, the parent props will pass to these components
-   */
-  beforeComponents: PropTypes.arrayOf(PropTypes.elementType),
-  /**
-   * Components types after product details advanced
-   * Array of type components, the parent props will pass to these components
-   */
-  afterComponents: PropTypes.arrayOf(PropTypes.elementType),
-  /**
-   * Elements before product details advanced
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
-  beforeElements: PropTypes.arrayOf(PropTypes.element),
-  /**
-   * Elements after product details advanced
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
-  afterElements: PropTypes.arrayOf(PropTypes.element)
-}
-
-ProductDetailsAdvanced.defaultProps = {
-  beforeComponents: [],
-  afterComponents: [],
-  beforeElements: [],
-  afterElements: []
+  UIComponent: PropTypes.elementType
 }
