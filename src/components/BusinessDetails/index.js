@@ -348,7 +348,7 @@ export const BusinessDetails = (props) => {
     })
   }
 
-  const handleUpdateBusinessConfigs = async (params, configId) => {
+  const handleUpdatePreorderConfigs = async (params, configId) => {
     try {
       setActionStatus({ ...actionStatus, loading: true })
       showToast(ToastType.Info, t('LOADING', 'Loading'))
@@ -438,18 +438,6 @@ export const BusinessDetails = (props) => {
         loading: false
       })
     }
-  }
-
-  const handleSyncClover = async () => {
-    const params = {
-      business_id: businessState?.business?.id,
-      user_id: session.user?.id,
-      project: ordering.project,
-      token: session.token
-    }
-    const transformedParams = Object.keys(params).map(key => `${key}=${params[key]}`).join('&')
-    const url = `https://integrations.ordering.co/clover-store/sync.php?${transformedParams}`
-    window.open(url, '_blank')
   }
 
   const handleChangeTax = (name, value, orderType) => {
@@ -713,10 +701,10 @@ export const BusinessDetails = (props) => {
             handleUpdateBusinessState={handleUpdateBusinessState}
             handleSuccessAddBusinessItem={handleSuccessAddBusinessItem}
             handleSuccessDeleteBusinessItem={handleSuccessDeleteBusinessItem}
-            handleUpdateBusinessConfigs={handleUpdateBusinessConfigs}
+            handleUpdatePreorderConfigs={handleUpdatePreorderConfigs}
+            handleUpdateBusinessConfigs={handleUpdatePreorderConfigs}
             handleUpdateSpoonityKey={handleUpdateSpoonityKey}
             handleSyncEvent={handleSyncEvent}
-            handleSyncClover={handleSyncClover}
             spoonityKeyState={spoonityKeyState}
             siteState={siteState}
             taxes={taxes}
