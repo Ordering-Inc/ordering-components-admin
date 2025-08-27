@@ -164,8 +164,25 @@ var ProductDetailsAdvanced = exports.ProductDetailsAdvanced = function ProductDe
       changes: _objectSpread(_objectSpread({}, formState.changes), {}, _defineProperty({}, key, value))
     }));
   };
-  var handleChangeTax = function handleChangeTax(name, value) {
-    setFormTaxChanges(_objectSpread(_objectSpread({}, formTaxChanges), {}, _defineProperty({}, name, value)));
+  var handleChangeTax = function handleChangeTax(name, value, orderType) {
+    if (value === null) {
+      var _formTaxChanges = _objectSpread({}, formTaxChanges);
+      delete _formTaxChanges.order_type_rates;
+      setFormTaxChanges(_formTaxChanges);
+      return;
+    }
+    if (orderType) {
+      setFormTaxChanges(function (prev) {
+        var _prev$order_type_rate;
+        return _objectSpread(_objectSpread({}, prev), {}, {
+          order_type_rates: _objectSpread(_objectSpread({}, prev.order_type_rates), {}, _defineProperty({}, orderType, _objectSpread(_objectSpread({}, (_prev$order_type_rate = prev.order_type_rates) === null || _prev$order_type_rate === void 0 ? void 0 : _prev$order_type_rate[orderType]), {}, _defineProperty({}, name, parseFloat(value)))))
+        });
+      });
+    } else {
+      setFormTaxChanges(function (prev) {
+        return _objectSpread(_objectSpread({}, prev), {}, _defineProperty({}, name, value));
+      });
+    }
   };
   var handleSaveTax = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(id, action) {
@@ -202,7 +219,8 @@ var ProductDetailsAdvanced = exports.ProductDetailsAdvanced = function ProductDe
                 description: data.description,
                 id: data.id,
                 rate: data.rate,
-                type: data.type
+                type: data.type,
+                order_type_rates: data.order_type_rates || null
               })));
               events.emit('tax_changed', {
                 tax: {
@@ -210,7 +228,8 @@ var ProductDetailsAdvanced = exports.ProductDetailsAdvanced = function ProductDe
                   description: data.description,
                   id: data.id,
                   rate: data.rate,
-                  type: data.type
+                  type: data.type,
+                  order_type_rates: data.order_type_rates || null
                 }
               });
               showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
@@ -258,7 +277,8 @@ var ProductDetailsAdvanced = exports.ProductDetailsAdvanced = function ProductDe
                 description: _data.description,
                 id: _data.id,
                 rate: _data.rate,
-                type: _data.type
+                type: _data.type,
+                order_type_rates: _data.order_type_rates || null
               })));
               showToast(_ToastContext.ToastType.Success, t('PRODUCT_TAX_SAVED', 'Product tax saved'));
             } else {
@@ -373,38 +393,14 @@ var ProductDetailsAdvanced = exports.ProductDetailsAdvanced = function ProductDe
     setTaxToEdit: setTaxToEdit,
     handleSaveTax: handleSaveTax,
     handleDeleteTax: handleDeleteTax,
-    handleUpdateClick: handleUpdateClick
+    handleUpdateClick: handleUpdateClick,
+    formTaxChanges: formTaxChanges,
+    setFormTaxChanges: setFormTaxChanges
   })));
 };
 ProductDetailsAdvanced.propTypes = {
   /**
    * UI Component, this must be containt all graphic elements and use parent props
    */
-  UIComponent: _propTypes.default.elementType,
-  /**
-   * Components types before product details advanced
-   * Array of type components, the parent props will pass to these components
-   */
-  beforeComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
-  /**
-   * Components types after product details advanced
-   * Array of type components, the parent props will pass to these components
-   */
-  afterComponents: _propTypes.default.arrayOf(_propTypes.default.elementType),
-  /**
-   * Elements before product details advanced
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
-  beforeElements: _propTypes.default.arrayOf(_propTypes.default.element),
-  /**
-   * Elements after product details advanced
-   * Array of HTML/Components elements, these components will not get the parent props
-   */
-  afterElements: _propTypes.default.arrayOf(_propTypes.default.element)
-};
-ProductDetailsAdvanced.defaultProps = {
-  beforeComponents: [],
-  afterComponents: [],
-  beforeElements: [],
-  afterElements: []
+  UIComponent: _propTypes.default.elementType
 };
