@@ -49,7 +49,8 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
     fillStyle = props.fillStyle,
     placeId = props.placeId,
     setDetails = props.setDetails,
-    onlyMarkerChangeCenter = props.onlyMarkerChangeCenter;
+    onlyMarkerChangeCenter = props.onlyMarkerChangeCenter,
+    disableAutoFit = props.disableAutoFit;
   var _useUtils = (0, _UtilsContext.useUtils)(),
     _useUtils2 = _slicedToArray(_useUtils, 1),
     optimizeImage = _useUtils2[0].optimizeImage;
@@ -81,6 +82,10 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
     _useState12 = _slicedToArray(_useState11, 2),
     markerCluster = _useState12[0],
     setMarkerCluster = _useState12[1];
+  var _useState13 = (0, _react.useState)(false),
+    _useState14 = _slicedToArray(_useState13, 2),
+    hasInitialFit = _useState14[0],
+    setHasInitialFit = _useState14[1];
   var location = fixedLocation || props.location;
   var center = {
     lat: location === null || location === void 0 ? void 0 : location.lat,
@@ -152,7 +157,14 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
       _loop(i);
     }
     businessesNear === 0 && setErrors && setErrors('ERROR_NOT_FOUND_BUSINESSES');
-    (map === null || map === void 0 ? void 0 : map.fitBounds) && map.fitBounds(bounds);
+    if (disableAutoFit) {
+      if (!hasInitialFit && map !== null && map !== void 0 && map.fitBounds) {
+        map.fitBounds(bounds);
+        setHasInitialFit(true);
+      }
+    } else {
+      (map === null || map === void 0 ? void 0 : map.fitBounds) && map.fitBounds(bounds);
+    }
     setBoundMap(bounds);
   };
 
@@ -427,23 +439,25 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
     }
   }, [location]);
   (0, _react.useEffect)(function () {
-    if (!businessMap) {
+    if (!businessMap && !disableAutoFit) {
       var interval = setInterval(function () {
         if (googleReady && googleMap) {
           var driverLocation = locations[0];
-          var newLocation = new window.google.maps.LatLng(driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lat, driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lng);
-          if (markers[0]) markers[0].setPosition(newLocation);
-          markers.forEach(function (marker) {
-            return boundMap.extend(marker.position);
-          });
-          googleMap.fitBounds(boundMap);
+          if (driverLocation) {
+            var newLocation = new window.google.maps.LatLng(driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lat, driverLocation === null || driverLocation === void 0 ? void 0 : driverLocation.lng);
+            if (markers[0]) markers[0].setPosition(newLocation);
+            markers.forEach(function (marker) {
+              return boundMap.extend(marker.position);
+            });
+            googleMap.fitBounds(boundMap);
+          }
         }
       }, 1000);
       return function () {
         return clearInterval(interval);
       };
     }
-  }, [locations]);
+  }, [locations, disableAutoFit]);
   (0, _react.useEffect)(function () {
     if (googleMap && placeId) {
       var request = {
