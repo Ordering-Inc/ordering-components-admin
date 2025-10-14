@@ -25,7 +25,8 @@ export const GoogleMaps = (props) => {
     fillStyle,
     placeId,
     setDetails,
-    onlyMarkerChangeCenter
+    onlyMarkerChangeCenter,
+    disableAutoFit
   } = props
 
   const [{ optimizeImage }] = useUtils()
@@ -37,6 +38,7 @@ export const GoogleMaps = (props) => {
   const [boundMap, setBoundMap] = useState(null)
   const [heatMap, setHeatMap] = useState(null)
   const [markerCluster, setMarkerCluster] = useState(null)
+  const [hasInitialFit, setHasInitialFit] = useState(false)
 
   const location = fixedLocation || props.location
   const center = { lat: location?.lat, lng: location?.lng }
@@ -103,7 +105,14 @@ export const GoogleMaps = (props) => {
       }
     }
     businessesNear === 0 && setErrors && setErrors('ERROR_NOT_FOUND_BUSINESSES')
-    map?.fitBounds && map.fitBounds(bounds)
+    if (disableAutoFit) {
+      if (!hasInitialFit && map?.fitBounds) {
+        map.fitBounds(bounds)
+        setHasInitialFit(true)
+      }
+    } else {
+      map?.fitBounds && map.fitBounds(bounds)
+    }
     setBoundMap(bounds)
   }
 
@@ -379,19 +388,21 @@ export const GoogleMaps = (props) => {
   }, [location])
 
   useEffect(() => {
-    if (!businessMap) {
+    if (!businessMap && !disableAutoFit) {
       const interval = setInterval(() => {
         if (googleReady && googleMap) {
           const driverLocation = locations[0]
-          const newLocation = new window.google.maps.LatLng(driverLocation?.lat, driverLocation?.lng)
-          if (markers[0]) markers[0].setPosition(newLocation)
-          markers.forEach(marker => boundMap.extend(marker.position))
-          googleMap.fitBounds(boundMap)
+          if (driverLocation) {
+            const newLocation = new window.google.maps.LatLng(driverLocation?.lat, driverLocation?.lng)
+            if (markers[0]) markers[0].setPosition(newLocation)
+            markers.forEach(marker => boundMap.extend(marker.position))
+            googleMap.fitBounds(boundMap)
+          }
         }
       }, 1000)
       return () => clearInterval(interval)
     }
-  }, [locations])
+  }, [locations, disableAutoFit])
 
   useEffect(() => {
     if (googleMap && placeId) {
