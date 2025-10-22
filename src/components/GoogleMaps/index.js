@@ -237,18 +237,30 @@ export const GoogleMaps = (props) => {
 
   useEffect(() => {
     if (googleReady && googleMap && googleMapMarker && isFitCenter) {
-      googleMap.addListener('center_changed', () => {
-        const timeOUt = setTimeout(() => {
+      let timeoutId = null
+      const listener = googleMap.addListener('center_changed', () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+        timeoutId = setTimeout(() => {
           googleMapMarker.setPosition(googleMap.getCenter())
           handleChangeCenter && handleChangeCenter(googleMap.getCenter())
         }, 200)
-        return () => clearTimeout(timeOUt)
       })
+      return () => {
+        if (timeoutId) {
+          clearTimeout(timeoutId)
+        }
+        if (listener && window.google?.maps?.event) {
+          window.google.maps.event.removeListener(listener)
+        }
+      }
     }
   }, [googleMapMarker])
 
   useEffect(() => {
-    if (googleReady) {
+    if (!googleReady || !window.google?.maps) return
+    try {
       const map = new window.google.maps.Map(divRef.current, {
         zoom: location.zoom ?? mapControls.defaultZoom,
         center,
@@ -314,6 +326,8 @@ export const GoogleMaps = (props) => {
           }
         })
       }
+    } catch (error) {
+      console.error('Error initializing Google Maps:', error)
     }
   }, [googleReady])
 
@@ -388,8 +402,9 @@ export const GoogleMaps = (props) => {
   }, [location])
 
   useEffect(() => {
+    let interval = null
     if (!businessMap && !disableAutoFit) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         if (googleReady && googleMap) {
           const driverLocation = locations[0]
           if (driverLocation) {
@@ -400,7 +415,11 @@ export const GoogleMaps = (props) => {
           }
         }
       }, 1000)
-      return () => clearInterval(interval)
+    }
+    return () => {
+      if (interval) {
+        clearInterval(interval)
+      }
     }
   }, [locations, disableAutoFit])
 
