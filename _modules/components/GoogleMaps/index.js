@@ -301,19 +301,31 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
   }, [isHeat]);
   (0, _react.useEffect)(function () {
     if (googleReady && googleMap && googleMapMarker && isFitCenter) {
-      googleMap.addListener('center_changed', function () {
-        var timeOUt = setTimeout(function () {
+      var timeoutId = null;
+      var listener = googleMap.addListener('center_changed', function () {
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(function () {
           googleMapMarker.setPosition(googleMap.getCenter());
           handleChangeCenter && handleChangeCenter(googleMap.getCenter());
         }, 200);
-        return function () {
-          return clearTimeout(timeOUt);
-        };
       });
+      return function () {
+        var _window$google;
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        if (listener && (_window$google = window.google) !== null && _window$google !== void 0 && (_window$google = _window$google.maps) !== null && _window$google !== void 0 && _window$google.event) {
+          window.google.maps.event.removeListener(listener);
+        }
+      };
     }
   }, [googleMapMarker]);
   (0, _react.useEffect)(function () {
-    if (googleReady) {
+    var _window$google2;
+    if (!googleReady || !((_window$google2 = window.google) !== null && _window$google2 !== void 0 && _window$google2.maps)) return;
+    try {
       var _location$zoom, _window, _window2;
       var map = new window.google.maps.Map(divRef.current, {
         zoom: (_location$zoom = location.zoom) !== null && _location$zoom !== void 0 ? _location$zoom : mapControls.defaultZoom,
@@ -375,6 +387,8 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
           }
         });
       }
+    } catch (error) {
+      console.error('Error initializing Google Maps:', error);
     }
   }, [googleReady]);
   (0, _react.useEffect)(function () {
@@ -439,8 +453,9 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
     }
   }, [location]);
   (0, _react.useEffect)(function () {
+    var interval = null;
     if (!businessMap && !disableAutoFit) {
-      var interval = setInterval(function () {
+      interval = setInterval(function () {
         if (googleReady && googleMap) {
           var driverLocation = locations[0];
           if (driverLocation) {
@@ -453,10 +468,12 @@ var GoogleMaps = exports.GoogleMaps = function GoogleMaps(props) {
           }
         }
       }, 1000);
-      return function () {
-        return clearInterval(interval);
-      };
     }
+    return function () {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [locations, disableAutoFit]);
   (0, _react.useEffect)(function () {
     if (googleMap && placeId) {
