@@ -43,7 +43,14 @@ export const Home = (props) => {
    * Method to update task list
    */
   const handleUpdateTaskList = (data) => {
-    setTaskList({ ...taskList, data: data })
+    setTaskList({ ...taskList, data })
+  }
+
+  const getLocalDateYYYYMMDD = (date = new Date()) => {
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
   }
 
   /**
@@ -52,7 +59,7 @@ export const Home = (props) => {
   const getOrders = async () => {
     if (loading) return
     try {
-      setOrdersList({ ...ordersList, loading: true })
+      setOrdersList((prev) => ({ ...prev, loading: true }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -65,30 +72,23 @@ export const Home = (props) => {
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
+        const todayDate = getLocalDateYYYYMMDD()
+        const ordersForToday = Array.isArray(result)
+          ? result.filter((order) => String(order?.time ?? '').slice(0, 10) === todayDate)
+          : []
+
         let totalOrders = 0
-        if (result?.length > 0) {
-          for (const order of result) {
-            totalOrders += parseInt(order.orders)
+        if (ordersForToday.length > 0) {
+          for (const order of ordersForToday) {
+            totalOrders += Number.parseInt(order?.orders, 10) || 0
           }
         }
-        setOrdersList({
-          ...ordersList,
-          loading: false,
-          orders: totalOrders
-        })
+        setOrdersList((prev) => ({ ...prev, loading: false, orders: totalOrders }))
       } else {
-        setOrdersList({
-          ...ordersList,
-          loading: true,
-          error: result
-        })
+        setOrdersList((prev) => ({ ...prev, loading: false, error: result }))
       }
     } catch (err) {
-      setOrdersList({
-        ...ordersList,
-        loading: false,
-        error: err
-      })
+      setOrdersList((prev) => ({ ...prev, loading: false, error: err }))
     }
   }
 
@@ -98,7 +98,7 @@ export const Home = (props) => {
   const getSales = async () => {
     if (loading) return
     try {
-      setTodaySalesList({ ...todaySalelsList, loading: true })
+      setTodaySalesList((prev) => ({ ...prev, loading: true }))
       const requestOptions = {
         method: 'GET',
         headers: {
@@ -111,30 +111,23 @@ export const Home = (props) => {
       const response = await fetch(functionFetch, requestOptions)
       const { error, result } = await response.json()
       if (!error) {
+        const todayDate = getLocalDateYYYYMMDD()
+        const salesForToday = Array.isArray(result)
+          ? result.filter((sale) => String(sale?.time ?? '').slice(0, 10) === todayDate)
+          : []
+
         let totalSales = 0
-        if (result?.length > 0) {
-          for (const sale of result) {
-            totalSales += sale.sales
+        if (salesForToday.length > 0) {
+          for (const sale of salesForToday) {
+            totalSales += Number(sale?.sales) || 0
           }
         }
-        setTodaySalesList({
-          ...todaySalelsList,
-          loading: false,
-          sales: totalSales
-        })
+        setTodaySalesList((prev) => ({ ...prev, loading: false, sales: totalSales }))
       } else {
-        setTodaySalesList({
-          ...todaySalelsList,
-          loading: true,
-          error: result
-        })
+        setTodaySalesList((prev) => ({ ...prev, loading: false, error: result }))
       }
     } catch (err) {
-      setTodaySalesList({
-        ...todaySalelsList,
-        loading: false,
-        error: err
-      })
+      setTodaySalesList((prev) => ({ ...prev, loading: false, error: err }))
     }
   }
 
