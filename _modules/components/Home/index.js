@@ -136,13 +136,20 @@ var Home = exports.Home = function Home(props) {
       data: data
     }));
   };
+  var getLocalDateYYYYMMDD = function getLocalDateYYYYMMDD() {
+    var date = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : new Date();
+    var year = date.getFullYear();
+    var month = String(date.getMonth() + 1).padStart(2, '0');
+    var day = String(date.getDate()).padStart(2, '0');
+    return "".concat(year, "-").concat(month, "-").concat(day);
+  };
 
   /**
    * Method to get orders list
    */
   var getOrders = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
-      var requestOptions, functionFetch, response, _yield$response$json, error, result, totalOrders, _iterator, _step, order;
+      var requestOptions, functionFetch, response, _yield$response$json, error, result, todayDate, ordersForToday, totalOrders, _iterator, _step, order;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -153,9 +160,11 @@ var Home = exports.Home = function Home(props) {
             return _context.abrupt("return");
           case 2:
             _context.prev = 2;
-            setOrdersList(_objectSpread(_objectSpread({}, ordersList), {}, {
-              loading: true
-            }));
+            setOrdersList(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: true
+              });
+            });
             requestOptions = {
               method: 'GET',
               headers: {
@@ -175,13 +184,18 @@ var Home = exports.Home = function Home(props) {
             error = _yield$response$json.error;
             result = _yield$response$json.result;
             if (!error) {
+              todayDate = getLocalDateYYYYMMDD();
+              ordersForToday = Array.isArray(result) ? result.filter(function (order) {
+                var _order$time;
+                return String((_order$time = order === null || order === void 0 ? void 0 : order.time) !== null && _order$time !== void 0 ? _order$time : '').slice(0, 10) === todayDate;
+              }) : [];
               totalOrders = 0;
-              if ((result === null || result === void 0 ? void 0 : result.length) > 0) {
-                _iterator = _createForOfIteratorHelper(result);
+              if (ordersForToday.length > 0) {
+                _iterator = _createForOfIteratorHelper(ordersForToday);
                 try {
                   for (_iterator.s(); !(_step = _iterator.n()).done;) {
                     order = _step.value;
-                    totalOrders += parseInt(order.orders);
+                    totalOrders += Number.parseInt(order === null || order === void 0 ? void 0 : order.orders, 10) || 0;
                   }
                 } catch (err) {
                   _iterator.e(err);
@@ -189,25 +203,31 @@ var Home = exports.Home = function Home(props) {
                   _iterator.f();
                 }
               }
-              setOrdersList(_objectSpread(_objectSpread({}, ordersList), {}, {
-                loading: false,
-                orders: totalOrders
-              }));
+              setOrdersList(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  loading: false,
+                  orders: totalOrders
+                });
+              });
             } else {
-              setOrdersList(_objectSpread(_objectSpread({}, ordersList), {}, {
-                loading: true,
-                error: result
-              }));
+              setOrdersList(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  loading: false,
+                  error: result
+                });
+              });
             }
             _context.next = 20;
             break;
           case 17:
             _context.prev = 17;
             _context.t0 = _context["catch"](2);
-            setOrdersList(_objectSpread(_objectSpread({}, ordersList), {}, {
-              loading: false,
-              error: _context.t0
-            }));
+            setOrdersList(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: false,
+                error: _context.t0
+              });
+            });
           case 20:
           case "end":
             return _context.stop();
@@ -224,7 +244,7 @@ var Home = exports.Home = function Home(props) {
    */
   var getSales = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2() {
-      var requestOptions, functionFetch, response, _yield$response$json2, error, result, totalSales, _iterator2, _step2, sale;
+      var requestOptions, functionFetch, response, _yield$response$json2, error, result, todayDate, salesForToday, totalSales, _iterator2, _step2, sale;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
@@ -235,9 +255,11 @@ var Home = exports.Home = function Home(props) {
             return _context2.abrupt("return");
           case 2:
             _context2.prev = 2;
-            setTodaySalesList(_objectSpread(_objectSpread({}, todaySalelsList), {}, {
-              loading: true
-            }));
+            setTodaySalesList(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: true
+              });
+            });
             requestOptions = {
               method: 'GET',
               headers: {
@@ -257,13 +279,18 @@ var Home = exports.Home = function Home(props) {
             error = _yield$response$json2.error;
             result = _yield$response$json2.result;
             if (!error) {
+              todayDate = getLocalDateYYYYMMDD();
+              salesForToday = Array.isArray(result) ? result.filter(function (sale) {
+                var _sale$time;
+                return String((_sale$time = sale === null || sale === void 0 ? void 0 : sale.time) !== null && _sale$time !== void 0 ? _sale$time : '').slice(0, 10) === todayDate;
+              }) : [];
               totalSales = 0;
-              if ((result === null || result === void 0 ? void 0 : result.length) > 0) {
-                _iterator2 = _createForOfIteratorHelper(result);
+              if (salesForToday.length > 0) {
+                _iterator2 = _createForOfIteratorHelper(salesForToday);
                 try {
                   for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
                     sale = _step2.value;
-                    totalSales += sale.sales;
+                    totalSales += Number(sale === null || sale === void 0 ? void 0 : sale.sales) || 0;
                   }
                 } catch (err) {
                   _iterator2.e(err);
@@ -271,25 +298,31 @@ var Home = exports.Home = function Home(props) {
                   _iterator2.f();
                 }
               }
-              setTodaySalesList(_objectSpread(_objectSpread({}, todaySalelsList), {}, {
-                loading: false,
-                sales: totalSales
-              }));
+              setTodaySalesList(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  loading: false,
+                  sales: totalSales
+                });
+              });
             } else {
-              setTodaySalesList(_objectSpread(_objectSpread({}, todaySalelsList), {}, {
-                loading: true,
-                error: result
-              }));
+              setTodaySalesList(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  loading: false,
+                  error: result
+                });
+              });
             }
             _context2.next = 20;
             break;
           case 17:
             _context2.prev = 17;
             _context2.t0 = _context2["catch"](2);
-            setTodaySalesList(_objectSpread(_objectSpread({}, todaySalelsList), {}, {
-              loading: false,
-              error: _context2.t0
-            }));
+            setTodaySalesList(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: false,
+                error: _context2.t0
+              });
+            });
           case 20:
           case "end":
             return _context2.stop();
