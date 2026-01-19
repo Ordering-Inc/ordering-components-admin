@@ -29,7 +29,7 @@ export const SitesList = (props) => {
    */
   const getSites = async (page, pageSize) => {
     try {
-      setSitesListState({ ...sitesListState, loading: true })
+      setSitesListState((prev) => ({ ...prev, loading: true }))
       let where = null
       const conditions = []
       if (searchValue) {
@@ -87,28 +87,28 @@ export const SitesList = (props) => {
           sites: content.result,
           error: null
         })
-        setPaginationProps({
-          ...paginationProps,
+        setPaginationProps((prev) => ({
+          ...prev,
           currentPage: content.pagination.current_page,
           totalPages: content.pagination.total_pages,
           totalItems: content.pagination.total,
           from: content.pagination.from,
           to: content.pagination.to
-        })
+        }))
       } else {
-        setSitesListState({
-          ...sitesListState,
+        setSitesListState((prev) => ({
+          ...prev,
           loading: false,
           error: content.result
-        })
+        }))
       }
       firstRender.current = false
     } catch (err) {
-      setSitesListState({
-        ...sitesListState,
+      setSitesListState((prev) => ({
+        ...prev,
         loading: false,
         error: [err.message]
-      })
+      }))
     }
   }
 
@@ -116,10 +116,10 @@ export const SitesList = (props) => {
    * Function to update the site list
    */
   const handleSuccessUpdateSites = (updateSites) => {
-    setSitesListState({
-      ...sitesListState,
+    setSitesListState((prev) => ({
+      ...prev,
       sites: updateSites
-    })
+    }))
   }
 
   useEffect(() => {
