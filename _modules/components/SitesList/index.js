@@ -71,9 +71,11 @@ var SitesList = exports.SitesList = function SitesList(props) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
-              loading: true
-            }));
+            setSitesListState(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: true
+              });
+            });
             where = null;
             conditions = [];
             if (searchValue) {
@@ -129,18 +131,22 @@ var SitesList = exports.SitesList = function SitesList(props) {
                 sites: content.result,
                 error: null
               });
-              setPaginationProps(_objectSpread(_objectSpread({}, paginationProps), {}, {
-                currentPage: content.pagination.current_page,
-                totalPages: content.pagination.total_pages,
-                totalItems: content.pagination.total,
-                from: content.pagination.from,
-                to: content.pagination.to
-              }));
+              setPaginationProps(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  currentPage: content.pagination.current_page,
+                  totalPages: content.pagination.total_pages,
+                  totalItems: content.pagination.total,
+                  from: content.pagination.from,
+                  to: content.pagination.to
+                });
+              });
             } else {
-              setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
-                loading: false,
-                error: content.result
-              }));
+              setSitesListState(function (prev) {
+                return _objectSpread(_objectSpread({}, prev), {}, {
+                  loading: false,
+                  error: content.result
+                });
+              });
             }
             firstRender.current = false;
             _context.next = 21;
@@ -148,10 +154,12 @@ var SitesList = exports.SitesList = function SitesList(props) {
           case 18:
             _context.prev = 18;
             _context.t0 = _context["catch"](0);
-            setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
-              loading: false,
-              error: [_context.t0.message]
-            }));
+            setSitesListState(function (prev) {
+              return _objectSpread(_objectSpread({}, prev), {}, {
+                loading: false,
+                error: [_context.t0.message]
+              });
+            });
           case 21:
           case "end":
             return _context.stop();
@@ -167,9 +175,11 @@ var SitesList = exports.SitesList = function SitesList(props) {
    * Function to update the site list
    */
   var handleSuccessUpdateSites = function handleSuccessUpdateSites(updateSites) {
-    setSitesListState(_objectSpread(_objectSpread({}, sitesListState), {}, {
-      sites: updateSites
-    }));
+    setSitesListState(function (prev) {
+      return _objectSpread(_objectSpread({}, prev), {}, {
+        sites: updateSites
+      });
+    });
   };
   (0, _react.useEffect)(function () {
     if (sitesListState.loading) return;
