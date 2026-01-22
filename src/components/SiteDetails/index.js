@@ -32,13 +32,14 @@ export const SiteDetails = (props) => {
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeInput = (e) => {
-    setFormState({
-      ...formState,
+    const { name, value } = e.target
+    setFormState((prev) => ({
+      ...prev,
       changes: {
-        ...formState.changes,
-        [e.target.name]: e.target.value
+        ...prev.changes,
+        [name]: value
       }
-    })
+    }))
   }
 
   /**
