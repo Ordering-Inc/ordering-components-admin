@@ -50,34 +50,36 @@ export const SiteDetails = (props) => {
     const reader = new window.FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
-      setFormState({
-        ...formState,
+      setFormState((prev) => ({
+        ...prev,
         changes: {
-          ...formState.changes,
+          ...prev.changes,
           [name]: reader.result
         }
-      })
+      }))
     }
-    reader.onerror = error => console.log(error)
   }
 
   /**
    * Function to update site details from API
    */
-  const handleUpdateSite = async () => {
+  const handleUpdateSite = async (_changes) => {
     try {
+      const changesToSend = _changes && typeof _changes === 'object' ? _changes : formState.changes
+      if (!changesToSend || Object.keys(changesToSend).length === 0) return
+
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({
-        ...formState,
+      setFormState((prev) => ({
+        ...prev,
         loading: true
-      })
+      }))
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState.changes)
+        body: JSON.stringify(changesToSend)
       }
       const response = await fetch(`${ordering.root}/sites/${site.id}`, requestOptions)
       const content = await response.json()
@@ -88,6 +90,9 @@ export const SiteDetails = (props) => {
           site: content.result
         })
         cleanFormState()
+        if (content.result?.code === 'website') {
+          window.localStorage.setItem('website_site_details', JSON.stringify(content.result))
+        }
         if (handleSuccessUpdateSites) {
           const updatedSites = sitesList.filter(_site => {
             if (_site.id === site.id) {
@@ -99,18 +104,18 @@ export const SiteDetails = (props) => {
         }
         showToast(ToastType.Success, t('SITE_SAVED', 'Site saved'))
       } else {
-        setFormState({
-          ...formState,
+        setFormState((prev) => ({
+          ...prev,
           loading: false,
           error: content.result
-        })
+        }))
       }
     } catch (err) {
-      setFormState({
-        ...formState,
+      setFormState((prev) => ({
+        ...prev,
         loading: false,
         error: [err.message]
-      })
+      }))
     }
   }
 
@@ -159,20 +164,23 @@ export const SiteDetails = (props) => {
   /**
    * Function to add new site from API
    */
-  const handleAddSite = async () => {
+  const handleAddSite = async (_changes) => {
     try {
+      const changesToSend = _changes && typeof _changes === 'object' ? { ...formState.changes, ..._changes } : formState.changes
+      if (!changesToSend || Object.keys(changesToSend).length === 0) return
+
       showToast(ToastType.Info, t('LOADING', 'Loading'))
-      setFormState({
-        ...formState,
+      setFormState((prev) => ({
+        ...prev,
         loading: true
-      })
+      }))
       const requestOptions = {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(formState.changes)
+        body: JSON.stringify(changesToSend)
       }
       const response = await fetch(`${ordering.root}/sites`, requestOptions)
       const content = await response.json()
@@ -184,20 +192,29 @@ export const SiteDetails = (props) => {
         }
         props.onClose && props.onClose()
       } else {
-        setFormState({
-          ...formState,
+        setFormState((prev) => ({
+          ...prev,
           loading: false,
           error: content.result
-        })
+        }))
       }
     } catch (err) {
-      setFormState({
-        ...formState,
+      setFormState((prev) => ({
+        ...prev,
         loading: false,
         error: [err.message]
-      })
+      }))
     }
   }
+
+  useEffect(() => {
+    if (sitesList?.length > 0) {
+      const websiteSite = sitesList.find(s => s?.code === 'website')
+      if (websiteSite) {
+        window.localStorage.setItem('website_site_details', JSON.stringify(websiteSite))
+      }
+    }
+  }, [sitesList])
 
   useEffect(() => {
     if (site) {
@@ -205,7 +222,7 @@ export const SiteDetails = (props) => {
       cleanFormState()
       setSiteState({
         ...siteState,
-        site: site
+        site
       })
     } else {
       setIsAddMode(true)
