@@ -87,9 +87,12 @@ var SiteDetails = exports.SiteDetails = function SiteDetails(props) {
    * @param {EventTarget} e Related HTML event
    */
   var handleChangeInput = function handleChangeInput(e) {
+    var _e$target = e.target,
+      name = _e$target.name,
+      value = _e$target.value;
     setFormState(function (prev) {
       return _objectSpread(_objectSpread({}, prev), {}, {
-        changes: _objectSpread(_objectSpread({}, prev.changes), {}, _defineProperty({}, e.target.name, e.target.value))
+        changes: _objectSpread(_objectSpread({}, prev.changes), {}, _defineProperty({}, name, value))
       });
     });
   };
@@ -115,7 +118,7 @@ var SiteDetails = exports.SiteDetails = function SiteDetails(props) {
    */
   var handleUpdateSite = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(_changes) {
-      var changesToSend, requestOptions, response, content, updatedSites;
+      var changesToSend, requestOptions, response, content, _content$result, updatedSites;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
@@ -154,6 +157,9 @@ var SiteDetails = exports.SiteDetails = function SiteDetails(props) {
                 site: content.result
               }));
               cleanFormState();
+              if (((_content$result = content.result) === null || _content$result === void 0 ? void 0 : _content$result.code) === 'website') {
+                window.localStorage.setItem('website_site_details', JSON.stringify(content.result));
+              }
               if (handleSuccessUpdateSites) {
                 updatedSites = sitesList.filter(function (_site) {
                   if (_site.id === site.id) {
@@ -333,6 +339,16 @@ var SiteDetails = exports.SiteDetails = function SiteDetails(props) {
       return _ref3.apply(this, arguments);
     };
   }();
+  (0, _react.useEffect)(function () {
+    if ((sitesList === null || sitesList === void 0 ? void 0 : sitesList.length) > 0) {
+      var websiteSite = sitesList.find(function (s) {
+        return (s === null || s === void 0 ? void 0 : s.code) === 'website';
+      });
+      if (websiteSite) {
+        window.localStorage.setItem('website_site_details', JSON.stringify(websiteSite));
+      }
+    }
+  }, [sitesList]);
   (0, _react.useEffect)(function () {
     if (site) {
       setIsAddMode(false);
