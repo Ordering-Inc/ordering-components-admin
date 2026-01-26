@@ -32,11 +32,12 @@ export const SiteDetails = (props) => {
    * @param {EventTarget} e Related HTML event
    */
   const handleChangeInput = (e) => {
+    const { name, value } = e.target
     setFormState((prev) => ({
       ...prev,
       changes: {
         ...prev.changes,
-        [e.target.name]: e.target.value
+        [name]: value
       }
     }))
   }
@@ -89,6 +90,9 @@ export const SiteDetails = (props) => {
           site: content.result
         })
         cleanFormState()
+        if (content.result?.code === 'website') {
+          window.localStorage.setItem('website_site_details', JSON.stringify(content.result))
+        }
         if (handleSuccessUpdateSites) {
           const updatedSites = sitesList.filter(_site => {
             if (_site.id === site.id) {
@@ -202,6 +206,15 @@ export const SiteDetails = (props) => {
       }))
     }
   }
+
+  useEffect(() => {
+    if (sitesList?.length > 0) {
+      const websiteSite = sitesList.find(s => s?.code === 'website')
+      if (websiteSite) {
+        window.localStorage.setItem('website_site_details', JSON.stringify(websiteSite))
+      }
+    }
+  }, [sitesList])
 
   useEffect(() => {
     if (site) {
